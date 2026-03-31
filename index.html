@@ -704,7 +704,11 @@
         }
         if (action === 'getEquipment') {
           const { data } = await sb.from('equipment').select('*').order('name');
-          return data || [];
+          return (data || []).map((r, idx) => ({
+            ...r,
+            eq_id: r.eq_id || r.id || `eq-${idx}`,
+            serial_no: r.serial_no || r.code || null
+          }));
         }
         if (action === 'getBorrows') {
           let q = sb.from('borrow_records').select('*');
@@ -742,24 +746,39 @@
         if (action === 'addEquipment') {
           const eid = 'EQ' + Date.now();
           const qty = Number(params.quantity) || 1;
-          const { error } = await sb.from('equipment').insert([{
+          // Try legacy schema first.
+          let { error } = await sb.from('equipment').insert([{
             eq_id: eid, name: params.name, category: params.category || '',
             serial_no: params.serial_no || null, quantity: qty, available: qty,
             created_at: new Date().toISOString()
           }]);
-          if (error) throw error;
+          if (error) {
+            // Fallback for new migration schema (id UUID default, required code, optional no serial_no).
+            const code = (params.serial_no || params.name || '').toUpperCase().replace(/[^A-Z0-9]+/g, '-').replace(/^-+|-+$/g,'').slice(0, 24) || `EQ-${Date.now()}`;
+            const payload = { code, name: params.name, category: params.category || '', quantity: qty, available: qty };
+            const res = await sb.from('equipment').insert([payload]);
+            if (res.error) throw res.error;
+          }
           return { ok: true, eq_id: eid };
         }
         if (action === 'updateEquipment') {
           const upd = { name: params.name, category: params.category, serial_no: params.serial_no || null, quantity: Number(params.quantity) || 1 };
           if (params.available !== undefined) upd.available = Number(params.available);
-          const { error } = await sb.from('equipment').update(upd).eq('eq_id', params.eq_id);
-          if (error) throw error;
+          let { error } = await sb.from('equipment').update(upd).eq('eq_id', params.eq_id);
+          if (error) {
+            const upd2 = { name: params.name, category: params.category, quantity: Number(params.quantity) || 1 };
+            if (params.available !== undefined) upd2.available = Number(params.available);
+            const res = await sb.from('equipment').update(upd2).eq('id', params.eq_id);
+            if (res.error) throw res.error;
+          }
           return { ok: true };
         }
         if (action === 'deleteEquipment') {
-          const { error } = await sb.from('equipment').delete().eq('eq_id', params.eq_id);
-          if (error) throw error;
+          let { error } = await sb.from('equipment').delete().eq('eq_id', params.eq_id);
+          if (error) {
+            const res = await sb.from('equipment').delete().eq('id', params.eq_id);
+            if (res.error) throw res.error;
+          }
           return { ok: true };
         }
         if (action === 'addUser') {
