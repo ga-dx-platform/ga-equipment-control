@@ -1,1 +1,1511 @@
+<!doctype html>
+<html lang="th" class="h-full">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GA Equipment Control</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#185FA5', 'brand-light': '#E8F0FA',
+            success: '#0F6E56', 'success-light': '#E6F5F0',
+            warn: '#D97706', 'warn-light': '#FEF3C7',
+            danger: '#DC2626', 'danger-light': '#FEF2F2',
+            surface: '#F7F7F5', card: '#FFFFFF',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --gd-brand: #2563EB;
+      --gd-brand-strong: #1E40AF;
+      --gd-brand-vivid: #3B82F6;
+      --gd-cyan: #06B6D4;
+      --gd-violet: #7C3AED;
+      --gd-brand-soft: #EAF1FF;
+      --gd-surface: #F4F7FC;
+      --gd-card: #FFFFFF;
+      --gd-text: #0F172A;
+      --gd-muted: #64748B;
+      --gd-border: #E2E8F0;
+      --gd-radius-card: 24px;
+      --gd-radius-control: 10px;
+      --gd-shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.05);
+      --gd-shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --gd-shadow-hover: 0 15px 40px rgba(15, 23, 42, 0.12);
+    }
+
+    html, body {
+      height: 100%; margin: 0;
+      font-family: 'Noto Sans Thai', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--gd-text); background: var(--gd-surface);
+    }
+
+    * { -webkit-tap-highlight-color: transparent; }
+
+    .screen { display: none; height: 100%; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    .card-shadow { box-shadow: var(--gd-shadow-sm); }
+    .card-shadow-md { box-shadow: var(--gd-shadow-md); }
+
+    .pin-dot {
+      width: 14px; height: 14px; border-radius: 50%;
+      border: 2px solid #CBD5E1; transition: all 0.15s ease;
+    }
+    .pin-dot.filled { background: #185FA5; border-color: #185FA5; transform: scale(1.15); }
+    .pin-dot.error { background: #EF4444; border-color: #EF4444; animation: shake 0.4s ease; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0) }
+      25% { transform: translateX(-6px) }
+      75% { transform: translateX(6px) }
+    }
+
+    .numpad-key {
+      width: 72px; height: 52px; border-radius: var(--gd-radius-control);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 600; color: #1E293B;
+      cursor: pointer; transition: background 0.15s ease, transform 0.15s ease;
+      user-select: none; -webkit-user-select: none; border: 1px solid transparent;
+    }
+    .numpad-key:active { background: #E2E8F0; transform: scale(0.98); }
+
+    .tab-active {
+      color: #0f172a; border: 1px solid #dbeafe;
+      background: linear-gradient(160deg, #ffffff 0%, #f8fbff 100%);
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.14); font-weight: 700;
+    }
+    .tab-inactive { color: #64748b; border: 1px solid transparent; background: transparent; }
+
+    .chip {
+      padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 500;
+      white-space: nowrap; cursor: pointer; transition: all 0.2s ease;
+      border: 1.5px solid var(--gd-border); background: rgba(255,255,255,0.88); color: var(--gd-muted);
+    }
+    .chip.active {
+      background: linear-gradient(140deg, #2563eb, #1d4ed8); color: white;
+      border-color: #1d4ed8; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+    }
+
+    .fade-in { animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: translateY(0) } }
+
+    input, select, textarea {
+      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      border-radius: var(--gd-radius-control); border-color: var(--gd-border);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: #93c5fd !important;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14); background: #fff;
+    }
+
+    button { transition: all 0.2s ease; font-family: 'Noto Sans Thai', 'Inter', sans-serif; }
+    button:active { transform: translateY(0.5px) scale(0.99); }
+
+    .gd-shell {
+      background:
+        radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.26), transparent 36%),
+        radial-gradient(circle at 100% 0%, rgba(6, 182, 212, 0.16), transparent 38%),
+        radial-gradient(circle at 50% 100%, rgba(124, 58, 237, 0.1), transparent 45%),
+        linear-gradient(180deg, #f6faff 0%, #edf4ff 48%, #e8f1ff 100%);
+    }
+    .gd-header {
+      background: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(10px);
+    }
+    .gd-card {
+      background: var(--gd-card); border: 1px solid rgba(148, 163, 184, 0.24);
+      border-radius: var(--gd-radius-card); box-shadow: var(--gd-shadow-sm);
+      transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    }
+    .gd-card:hover {
+      box-shadow: 0 20px 36px rgba(30, 64, 175, 0.14), 0 4px 14px rgba(6, 182, 212, 0.1);
+      border-color: rgba(59, 130, 246, 0.38); transform: translateY(-2px);
+    }
+    .gd-card-soft { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; }
+    .gd-input {
+      width: 100%; height: 44px; padding: 0 14px; border: 1px solid var(--gd-border);
+      border-radius: 10px; background: #f8fafc; font-size: 14px; color: #0F172A;
+    }
+    .gd-btn-primary {
+      background: linear-gradient(135deg, var(--gd-brand) 0%, #1d4ed8 48%, var(--gd-violet) 100%);
+      color: #fff; border-radius: 12px; font-size: 14px; font-weight: 600; min-height: 44px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 14px 30px rgba(37, 99, 235, 0.32), 0 6px 14px rgba(67, 56, 202, 0.2);
+    }
+    .gd-btn-primary:hover { transform: translateY(-1px); filter: saturate(1.08); }
+    .gd-btn-primary:disabled, .gd-btn-primary.is-disabled {
+      background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%); color: #e2e8f0;
+      opacity: 0.72; box-shadow: none; cursor: not-allowed; pointer-events: none;
+    }
+    .gd-btn-secondary {
+      border: 1px solid #CBD5E1; background: #fff; color: #475569;
+      border-radius: 12px; font-size: 14px; font-weight: 600; min-height: 44px;
+    }
+    .gd-btn-danger {
+      border: 1px solid #fecaca; background: #fef2f2; color: #dc2626;
+      border-radius: 12px; font-size: 14px; font-weight: 600; min-height: 44px;
+    }
+    .gd-section-title {
+      font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #64748B;
+    }
+    .gd-page { padding: 24px 16px 32px; }
+    .gd-page-header {
+      margin-bottom: 16px; padding: 18px 20px; border-radius: 20px;
+      border: 1px solid rgba(96, 165, 250, 0.28);
+      background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(236,246,255,0.95) 56%, rgba(240,249,255,0.92) 100%);
+      box-shadow: var(--gd-shadow-sm);
+    }
+    .gd-modal-panel {
+      background: linear-gradient(160deg, #ffffff 0%, #f9fbff 100%); border-radius: 24px;
+      border: 1px solid #e2e8f0; box-shadow: 0 20px 45px rgba(15, 23, 42, 0.2); padding: 24px;
+    }
+    .gd-empty {
+      border: 1px dashed #cbd5e1; border-radius: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    /* Status badges */
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      min-height: 26px; padding: 5px 10px; border-radius: 999px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
+      border: 1px solid transparent; white-space: nowrap;
+    }
+    .status-dot { width: 7px; height: 7px; border-radius: 999px; flex-shrink: 0; }
+    .status-borrowed { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+    .status-returned { background: #ECFDF3; color: #047857; border-color: #A7F3D0; }
+    .status-overdue { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; }
+
+    /* Stat cards */
+    .stat-card { transition: transform 0.15s; border: 1px solid rgba(148,163,184,0.16); border-radius: var(--gd-radius-card); }
+    .stat-card:active { transform: scale(0.97); }
+
+    /* Signature pad */
+    .signature-pad {
+      position: relative; border: 1px solid #E2E8F0; border-radius: 16px;
+      background: #F8FAFC; padding: 16px;
+    }
+    .signature-pad__header {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px;
+    }
+    .signature-pad__title { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #64748B; }
+    .signature-pad__clear {
+      display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 8px 12px;
+      border: 1px solid #CBD5E1; border-radius: 10px; background: #FFFFFF;
+      color: #334155; font-size: 12px; font-weight: 600;
+    }
+    .signature-pad__frame {
+      position: relative; border: 1px dashed #CBD5E1; border-radius: 12px;
+      background: #FFFFFF; padding: 12px; overflow: hidden;
+    }
+    canvas.sig-canvas {
+      touch-action: none; pointer-events: auto; background: #fff;
+      border-radius: 12px; display: block; user-select: none; border: 1px solid #E2E8F0;
+    }
+
+    /* Login */
+    .login-shell {
+      min-height: 100%; padding: 24px 18px 32px;
+      background:
+        radial-gradient(circle at 14% 10%, rgba(191,219,254,0.95) 0%, rgba(147,197,253,0.18) 34%, rgba(37,99,235,0) 58%),
+        radial-gradient(circle at 100% 0%, rgba(96,165,250,0.35) 0%, rgba(29,78,216,0) 48%),
+        linear-gradient(155deg, #EEF5FF 0%, #D9E8FF 45%, #C9DFFF 100%);
+    }
+    .login-card {
+      width: 100%; max-width: 432px; border-radius: 24px; padding: 32px;
+      border: 1px solid rgba(255,255,255,0.55);
+      background: linear-gradient(140deg, rgba(255,255,255,0.88), rgba(255,255,255,0.76));
+      box-shadow: 0 28px 52px rgba(30,64,175,0.15), 0 8px 20px rgba(15,23,42,0.08);
+      backdrop-filter: blur(16px);
+    }
+    .user-card {
+      border: 1px solid rgba(148,163,184,0.22); border-radius: 16px;
+      background: rgba(255,255,255,0.86);
+      transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+      cursor: pointer;
+    }
+    .user-card:hover { transform: translateY(-1px); box-shadow: 0 14px 28px rgba(15,23,42,0.08); border-color: rgba(59,130,246,0.35); }
+    .user-card:active { transform: scale(0.988); }
+    .user-card.selected { border-color: rgba(37,99,235,0.65); box-shadow: 0 0 0 3px rgba(59,130,246,0.12), 0 12px 24px rgba(30,64,175,0.12); }
+    .avatar-gradient { box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 6px 14px rgba(59,130,246,0.28); color: #EAF3FF; }
+    .admin-card { border-color: rgba(148,163,184,0.3); background: linear-gradient(120deg, rgba(241,245,249,0.8), rgba(248,250,252,0.95)); }
+
+    /* Tab bar */
+    #mainTabBar { gap: 8px; border: 0; border-radius: 16px; padding: 6px; background: #eff4fb; }
+    #mainTabBar .main-tab { letter-spacing: 0.01em; border-radius: 12px; transition: all 0.2s ease; }
+    #mainTabBar .main-tab:hover { color: #1e3a8a; background: rgba(255,255,255,0.8); }
+
+    /* Toast */
+    .toast-success { background: linear-gradient(135deg, #047857, #065F46); }
+    .toast-error { background: linear-gradient(135deg, #B91C1C, #991B1B); }
+    .toast-warning { background: linear-gradient(135deg, #B45309, #92400E); }
+    .toast-info { background: linear-gradient(135deg, #1E293B, #334155); }
+
+    /* Skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%; animation: shimmer 1.4s infinite;
+    }
+    @keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
+
+    ::-webkit-scrollbar { width: 0; height: 0; }
+
+    @keyframes spin { to { transform: rotate(360deg) } }
+
+    @media (max-width: 480px) {
+      .login-card { padding: 24px; border-radius: 22px; }
+      .login-shell { padding: 16px; }
+    }
+  </style>
+</head>
+
+<body class="h-full gd-shell">
+  <div id="app-root" class="h-full w-full flex justify-center overflow-auto">
+    <div class="w-full xl:px-8" style="max-width:1180px;height:100%;position:relative;">
+
+      <!-- LOADING -->
+      <div id="screen-loading" class="screen active">
+        <div class="flex-1 flex flex-col items-center justify-center gap-4 px-6">
+          <div class="w-14 h-14 rounded-2xl bg-brand flex items-center justify-center mb-2">
+            <span class="text-white text-xl font-bold">EC</span>
+          </div>
+          <div class="flex flex-col items-center gap-3">
+            <div class="w-8 h-8 border-3 border-brand-light border-t-brand rounded-full animate-spin"
+              style="border-width:3px;border-top-color:#185FA5;border-color:#E8F0FA;animation:spin .8s linear infinite"></div>
+            <p class="text-sm text-gray-400 font-medium">กำลังโหลด...</p>
+            <p id="loadingMsg" class="text-xs text-gray-300"></p>
+            <p id="loadingSlowHint" class="hidden text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-3 py-1">
+              เครือข่ายช้า กำลังพยายามเชื่อมต่อ...</p>
+            <button id="loadingRetryBtn" onclick="init(true)"
+              class="hidden mt-1 px-4 py-2 text-sm font-semibold gd-btn-secondary">ลองใหม่</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="screen-login" class="screen">
+        <div class="login-shell flex-1 overflow-auto flex items-center justify-center">
+          <div class="login-card fade-in">
+            <div class="text-center mb-8">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-br from-blue-400 to-blue-600 shadow-lg shadow-blue-500/30 mb-5">
+                <span class="text-white text-2xl font-extrabold tracking-tight">EC</span>
+              </div>
+              <h1 class="text-[2rem] leading-tight font-extrabold tracking-[-0.02em] text-slate-900">Equipment Control</h1>
+              <p class="text-sm text-slate-500 mt-2">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
+            </div>
+
+            <div class="mb-8">
+              <p class="gd-section-title mb-3">Select user</p>
+              <div class="space-y-3" id="gaUserList"></div>
+            </div>
+
+            <div class="mb-4 gd-card-soft p-4">
+              <p class="gd-section-title mb-3 flex items-center gap-1.5">
+                <i data-lucide="shield" class="w-3.5 h-3.5"></i>Admin access
+              </p>
+              <div class="space-y-3" id="mgrUserList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIN -->
+      <div id="screen-pin" class="screen">
+        <div class="flex-1 flex flex-col items-center justify-center px-6 pb-8">
+          <button onclick="goScreen('login')"
+            class="self-start mb-6 p-2 -ml-2 rounded-full hover:bg-gray-100 transition">
+            <i data-lucide="arrow-left" class="w-5 h-5 text-gray-500"></i>
+          </button>
+          <div id="pin-avatar"
+            class="w-16 h-16 rounded-full bg-blue-100 text-brand flex items-center justify-center font-bold text-lg mb-3"></div>
+          <p id="pin-name" class="font-semibold text-gray-900 mb-1"></p>
+          <p class="text-sm text-gray-400 mb-8">กรอก PIN 6 หลัก</p>
+          <div class="flex gap-3 mb-10" id="pin-dots">
+            <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+            <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+          </div>
+          <div id="pin-error" class="text-red-500 text-sm mb-3 h-5 font-medium"></div>
+          <div class="grid grid-cols-3 gap-3">
+            <div class="numpad-key" onclick="enterPin('1')">1</div>
+            <div class="numpad-key" onclick="enterPin('2')">2</div>
+            <div class="numpad-key" onclick="enterPin('3')">3</div>
+            <div class="numpad-key" onclick="enterPin('4')">4</div>
+            <div class="numpad-key" onclick="enterPin('5')">5</div>
+            <div class="numpad-key" onclick="enterPin('6')">6</div>
+            <div class="numpad-key" onclick="enterPin('7')">7</div>
+            <div class="numpad-key" onclick="enterPin('8')">8</div>
+            <div class="numpad-key" onclick="enterPin('9')">9</div>
+            <div class="numpad-key"></div>
+            <div class="numpad-key" onclick="enterPin('0')">0</div>
+            <div class="numpad-key" onclick="deletePin()"><i data-lucide="delete" class="w-5 h-5 text-gray-400"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN -->
+      <div id="screen-main" class="screen">
+        <div class="gd-header px-4 lg:px-8 pt-6 pb-4" style="position:sticky;top:0;z-index:20;">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <div id="main-avatar" class="w-10 h-10 rounded-full bg-blue-100 text-brand flex items-center justify-center font-bold text-sm"></div>
+              <div>
+                <p id="main-user-name" class="font-semibold text-gray-900 text-sm leading-tight"></p>
+                <p id="main-user-role" class="text-xs text-gray-400">GA Staff</p>
+              </div>
+            </div>
+            <button onclick="confirmLogout()" class="p-2.5 rounded-xl hover:bg-slate-100 transition">
+              <i data-lucide="log-out" class="w-4 h-4 text-gray-400"></i>
+            </button>
+          </div>
+          <div class="flex" id="mainTabBar"></div>
+        </div>
+        <!-- GA Tabs -->
+        <div id="tab-borrow" class="flex-1 overflow-auto hidden"></div>
+        <div id="tab-return" class="flex-1 overflow-auto hidden"></div>
+        <div id="tab-history" class="flex-1 overflow-auto hidden"></div>
+        <!-- MGR Tabs -->
+        <div id="tab-dashboard" class="flex-1 overflow-auto hidden"></div>
+        <div id="tab-mgr-history" class="flex-1 overflow-auto hidden"></div>
+        <div id="tab-equipment" class="flex-1 overflow-auto hidden"></div>
+        <div id="tab-members" class="flex-1 overflow-auto hidden"></div>
+      </div>
+
+      <!-- BORROW FORM (overlay) -->
+      <div id="screen-borrow-form" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--gd-surface);">
+        <div class="gd-header px-4 py-3 flex items-center gap-3" style="position:sticky;top:0;z-index:10;">
+          <button onclick="closeBorrowForm()" class="p-1.5 rounded-full hover:bg-gray-100 transition">
+            <i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i>
+          </button>
+          <div class="flex-1">
+            <p class="font-semibold text-gray-900 text-sm">ยืมอุปกรณ์</p>
+            <p id="bf-eq-name" class="text-xs text-gray-400"></p>
+          </div>
+        </div>
+        <div class="flex-1 overflow-auto px-4 pt-4 pb-6" id="bf-body"></div>
+      </div>
+
+      <!-- RETURN DETAIL (overlay) -->
+      <div id="screen-return-detail" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--gd-surface);">
+        <div class="gd-header px-4 py-3 flex items-center gap-3" style="position:sticky;top:0;z-index:10;">
+          <button onclick="closeReturnDetail()" class="p-1.5 rounded-full hover:bg-gray-100 transition">
+            <i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i>
+          </button>
+          <div class="flex-1">
+            <p class="font-semibold text-gray-900 text-sm">คืนอุปกรณ์</p>
+            <p id="rd-eq-name" class="text-xs text-gray-400"></p>
+          </div>
+          <span id="rd-badge" class="text-xs px-2.5 py-1 rounded-full font-medium"></span>
+        </div>
+        <div class="flex-1 overflow-auto px-4 pt-4 pb-6" id="rd-body"></div>
+      </div>
+
+    </div><!-- end max-width wrapper -->
+  </div><!-- end app-root -->
+
+  <!-- Equipment Modal (Add/Edit) -->
+  <div id="equipModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
+    <div class="absolute inset-0 bg-black/40" onclick="closeEquipModal()"></div>
+    <div class="relative w-full gd-modal-panel" style="max-width:380px;">
+      <h3 id="equipModalTitle" class="font-bold text-gray-900 text-lg mb-4">เพิ่มอุปกรณ์</h3>
+      <div class="space-y-4">
+        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่ออุปกรณ์</label>
+          <input type="text" id="eqName" placeholder="เช่น โน๊ตบุ๊ค Dell" class="gd-input"></div>
+        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">หมวดหมู่</label>
+          <select id="eqCategory" class="gd-input">
+            <option value="">เลือกหมวดหมู่</option>
+            <option>คอมพิวเตอร์</option><option>โสตทัศนูปกรณ์</option>
+            <option>เครื่องใช้สำนักงาน</option><option>เครื่องมือช่าง</option><option>อื่นๆ</option>
+          </select></div>
+        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">Serial No. <span class="font-normal text-gray-400">(ไม่บังคับ)</span></label>
+          <input type="text" id="eqSerial" placeholder="เช่น SN-12345" class="gd-input"></div>
+        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">จำนวนทั้งหมด</label>
+          <input type="number" id="eqQty" placeholder="1" min="1" class="gd-input"></div>
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button onclick="closeEquipModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
+        <button onclick="submitEquipment()" class="flex-1 py-2.5 gd-btn-primary" id="eqSubmitBtn">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Equipment Modal -->
+  <div id="deleteEquipModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
+    <div class="absolute inset-0 bg-black/40" onclick="closeDeleteEquipModal()"></div>
+    <div class="relative w-full gd-modal-panel" style="max-width:320px;">
+      <div class="flex flex-col items-center text-center mb-5">
+        <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-3">
+          <i data-lucide="trash-2" class="w-6 h-6 text-red-500"></i></div>
+        <p class="font-semibold text-gray-900 text-base">ลบอุปกรณ์นี้?</p>
+        <p id="deleteEquipName" class="text-sm text-brand font-medium mt-1"></p>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="closeDeleteEquipModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
+        <button onclick="executeDeleteEquipment()" class="flex-1 py-2.5 gd-btn-danger" id="delEquipBtn">ลบเลย</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Modal (Add) -->
+  <div id="userModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
+    <div class="absolute inset-0 bg-black/40" onclick="closeUserModal()"></div>
+    <div class="relative w-full gd-modal-panel" style="max-width:360px;">
+      <h3 class="font-bold text-gray-900 text-lg mb-4">เพิ่มสมาชิกใหม่</h3>
+      <div class="space-y-4">
+        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
+          <input type="text" id="newUserName" placeholder="เช่น สมชาย ใจดี" class="gd-input"></div>
+        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ตำแหน่ง/สิทธิ์</label>
+          <select id="newUserRole" class="gd-input">
+            <option value="ga">เจ้าหน้าที่ GA</option>
+            <option value="mgr">ผู้ดูแลระบบ (Manager)</option>
+          </select></div>
+        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">รหัส PIN (6 หลัก)</label>
+          <input type="password" id="newUserPin" maxlength="6" placeholder="••••••" class="gd-input text-center tracking-widest font-bold"></div>
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button onclick="closeUserModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
+        <button onclick="confirmAddUser()" class="flex-1 py-2.5 gd-btn-primary" id="addUserBtn">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete User Modal -->
+  <div id="deleteUserModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
+    <div class="absolute inset-0 bg-black/40" onclick="closeDeleteUserModal()"></div>
+    <div class="relative w-full gd-modal-panel" style="max-width:320px;">
+      <div class="flex flex-col items-center text-center mb-5">
+        <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-3">
+          <i data-lucide="user-x" class="w-6 h-6 text-red-500"></i></div>
+        <p class="font-semibold text-gray-900 text-base">ลบสมาชิก?</p>
+        <p id="deleteUserNameLabel" class="text-sm text-brand font-semibold mt-1"></p>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="closeDeleteUserModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
+        <button onclick="executeDeleteUser()" class="flex-1 py-2.5 gd-btn-danger" id="deleteUserConfirmBtn">ลบเลย</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reset PIN Modal -->
+  <div id="resetPinModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
+    <div class="absolute inset-0 bg-black/40" onclick="closeResetPinModal()"></div>
+    <div class="relative w-full gd-modal-panel" style="max-width:320px;">
+      <div class="flex flex-col items-center text-center mb-5">
+        <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center mb-3">
+          <i data-lucide="key-round" class="w-6 h-6 text-amber-500"></i></div>
+        <p class="font-semibold text-gray-900 text-base">Reset PIN</p>
+        <p id="resetPinNameLabel" class="text-sm text-brand font-semibold mt-1"></p>
+      </div>
+      <div class="flex items-center justify-center gap-3 bg-amber-50 rounded-xl py-4 mb-5">
+        <span id="resetPinValue" class="text-3xl font-bold tracking-widest text-amber-700 font-mono select-all"></span>
+        <button onclick="regeneratePin()" class="p-1.5 rounded-lg hover:bg-amber-100 transition text-amber-400 hover:text-amber-600">
+          <i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="closeResetPinModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
+        <button onclick="executeResetPin()" class="flex-1 py-2.5 gd-btn-primary" id="resetPinConfirmBtn">ยืนยัน Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logout Modal -->
+  <div id="logoutModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
+    <div class="absolute inset-0 bg-black/40" onclick="closeLogoutModal()"></div>
+    <div class="relative w-full gd-modal-panel" style="max-width:320px;">
+      <div class="flex flex-col items-center text-center mb-5">
+        <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-3">
+          <i data-lucide="log-out" class="w-6 h-6 text-red-500"></i></div>
+        <p class="font-semibold text-gray-900 text-base">ออกจากระบบ?</p>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="closeLogoutModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
+        <button onclick="logout()" class="flex-1 py-2.5 gd-btn-danger">ออกจากระบบ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast"
+    class="fixed left-1/2 -translate-x-1/2 px-4 py-3 text-white text-sm font-medium rounded-xl card-shadow-md transition-all duration-300 opacity-0 pointer-events-none toast-info"
+    style="bottom:max(24px, calc(env(safe-area-inset-bottom) + 16px));z-index:200;max-width:360px;">
+    <div class="flex items-center gap-2.5">
+      <i id="toastIcon" data-lucide="info" class="w-4 h-4"></i>
+      <p id="toastText" class="leading-tight"></p>
+    </div>
+  </div>
+
+  <script>
+    // ===== CONFIG =====
+    const SUPABASE_URL = 'https://npxbjktnxqycmifyrwrb.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_LbcwYbfDXmBrRJ6lFe9eHQ_mK3oNyL1';
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ===== STATE =====
+    let AU = { ga: [], mgr: [] }, CU = null, SU = null, PB = '';
+    let EQ = [], BORROWS = [];
+    let PIN_ATTEMPTS = 0, PIN_LOCKED_UNTIL = 0;
+    const PIN_MAX_ATTEMPTS = 5, PIN_LOCK_MS = 60000;
+    let _alTimer = null, _alWarnTimer = null;
+    const AUTO_LOGOUT_MS = 15 * 60 * 1000;
+    let DC = null; // donut chart instance
+    let drawing = false, sctx = null, hasSignatureStroke = false;
+    let signatureCanvasEl = null, signatureListenersCleanup = null;
+    let _editEqId = null, _deleteEqId = null, _deleteUserTarget = null, _resetPinTarget = null, _resetPinNew = '';
+    let borrowConfirmState = false, returnConfirmState = false;
+    let currentBorrowEq = null, currentReturnRecord = null;
+    let borrowSearchQ = '', borrowCatFilter = '';
+    let historyFilter = '';
+
+    // ===== AVATAR COLORS =====
+    const AVATARS = [
+      { bg: 'bg-blue-100', tc: 'text-brand' }, { bg: 'bg-emerald-100', tc: 'text-success' },
+      { bg: 'bg-amber-100', tc: 'text-amber-700' }, { bg: 'bg-purple-100', tc: 'text-purple-700' },
+      { bg: 'bg-rose-100', tc: 'text-rose-600' }, { bg: 'bg-cyan-100', tc: 'text-cyan-700' },
+    ];
+    function avc(i) { return AVATARS[i % AVATARS.length]; }
+    function ini(n) { const p = (n || '').trim().split(' '); return p.length >= 2 ? p[0][0] + p[1][0] : (n || '').slice(0, 2); }
+
+    // ===== UTILS =====
+    function he(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    async function sha256(str) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+    function fd(d) {
+      if (!d) return '-';
+      try { const dt = new Date(d); if (isNaN(dt)) return d; return `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()+543}`; } catch(e) { return d; }
+    }
+    function fdFull(d) {
+      if (!d) return '-';
+      try { const dt = new Date(d); if (isNaN(dt)) return d; return `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()+543} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`; } catch(e) { return d; }
+    }
+    function daysUntil(dateStr) {
+      if (!dateStr) return 999;
+      const now = new Date(); now.setHours(0,0,0,0);
+      const d = new Date(dateStr); d.setHours(0,0,0,0);
+      return Math.ceil((d - now) / 86400000);
+    }
+    function goScreen(name) {
+      document.querySelectorAll('.screen').forEach(s => { s.classList.remove('active'); s.style.display = 'none'; });
+      const t = document.getElementById('screen-' + name);
+      if (!t) return;
+      t.classList.add('active'); t.style.display = 'flex';
+    }
+    function showModal(id) { const m = document.getElementById(id); if(m) { m.classList.remove('pointer-events-none','opacity-0'); m.classList.add('pointer-events-auto','opacity-100'); lucide.createIcons(); } }
+    function hideModal(id) { const m = document.getElementById(id); if(m) { m.classList.add('pointer-events-none','opacity-0'); m.classList.remove('pointer-events-auto','opacity-100'); } }
+    function toast(msg, tone='info') {
+      const t = document.getElementById('toast'), icon = document.getElementById('toastIcon'), text = document.getElementById('toastText');
+      if (!t||!icon||!text) return;
+      text.textContent = msg;
+      t.classList.remove('toast-success','toast-error','toast-warning','toast-info');
+      const im = { success:'check-circle-2', error:'x-circle', warning:'alert-triangle', info:'info' };
+      t.classList.add('toast-'+(im[tone]?tone:'info'));
+      icon.setAttribute('data-lucide', im[tone]||'info'); lucide.createIcons();
+      t.style.opacity='1'; t.style.pointerEvents='auto';
+      setTimeout(()=>{ t.style.opacity='0'; t.style.pointerEvents='none'; }, 2600);
+    }
+    function skeletonCards(n) {
+      return Array(n).fill(0).map(()=>`<div class="gd-card p-4 mb-3"><div class="flex justify-between mb-2"><div><div class="h-3.5 skeleton rounded w-36 mb-1.5"></div><div class="h-3 skeleton rounded w-24"></div></div><div class="h-5 skeleton rounded-full w-14"></div></div></div>`).join('');
+    }
+
+    // ===== CACHE =====
+    const CACHE_TTL = 10*60*1000;
+    function cacheSet(k,v) { try { localStorage.setItem(k, JSON.stringify({t:Date.now(),v})); } catch(e){} }
+    function cacheGet(k) { try { const c=JSON.parse(localStorage.getItem(k)||'null'); if(c&&Date.now()-c.t<CACHE_TTL) return c.v; } catch(e){} return null; }
+    function cacheDel(k) { try { localStorage.removeItem(k); } catch(e){} }
+
+    // ===== STATUS HELPERS =====
+    function statusMeta(s) {
+      return {
+        borrowed: { th:'กำลังยืม', style:'status-borrowed', dot:'bg-amber-500', icon:'clock-3' },
+        returned: { th:'คืนแล้ว', style:'status-returned', dot:'bg-emerald-500', icon:'check-circle-2' },
+        overdue:  { th:'เกินกำหนด', style:'status-overdue', dot:'bg-red-500', icon:'alert-triangle' },
+      }[s] || { th:s||'-', style:'status-borrowed', dot:'bg-slate-400', icon:'help-circle' };
+    }
+    function statusBadge(s) {
+      const m = statusMeta(s);
+      return `<span class="status-badge ${m.style}"><span class="status-dot ${m.dot}"></span>${m.th}</span>`;
+    }
+    function detectOverdue(records) {
+      const today = new Date(); today.setHours(0,0,0,0);
+      return records.map(r => {
+        if (r.status === 'borrowed' && r.due_date) {
+          const d = new Date(r.due_date); d.setHours(0,0,0,0);
+          if (d < today) r.status = 'overdue';
+        }
+        return r;
+      });
+    }
+
+    // ===== API =====
+    async function api(action, params = {}) {
+      try {
+        if (action === 'getUsers') {
+          const { data: ga } = await sb.from('ga_staff').select('name, role, email');
+          const { data: mgr } = await sb.from('managers').select('name, role, email');
+          return { ga: (ga||[]).map(r=>({name:r.name,role:r.role,email:r.email||''})), mgr: (mgr||[]).map(r=>({name:r.name,role:r.role,email:r.email||''})) };
+        }
+        if (action === 'verifyPin') {
+          const table = params.role==='ga'?'ga_staff':'managers';
+          const { data } = await sb.from(table).select('*').eq('name',params.name).single();
+          if (!data) return { ok:false };
+          const stored = String(data.pin), input = String(params.pin).padStart(6,'0'), hInput = await sha256(input);
+          if (stored===hInput) return { ok:true };
+          if (stored===input) { await sb.from(table).update({pin:hInput}).eq('name',params.name); return { ok:true }; }
+          return { ok:false };
+        }
+        if (action === 'changePin') {
+          const table = params.role==='ga'?'ga_staff':'managers';
+          const h = await sha256(String(params.newPin).padStart(6,'0'));
+          const { error } = await sb.from(table).update({pin:h}).eq('name',params.name);
+          return { ok:!error };
+        }
+        if (action === 'getEquipment') {
+          const { data } = await sb.from('equipment').select('*').order('name');
+          return data || [];
+        }
+        if (action === 'getBorrows') {
+          let q = sb.from('borrow_records').select('*');
+          if (params.role === 'ga') q = q.eq('ga_staff', params.name);
+          const { data } = await q.order('borrowed_at', { ascending: false });
+          return detectOverdue(data || []);
+        }
+        if (action === 'createBorrow') {
+          const rid = 'BR' + Date.now();
+          const { error: brErr } = await sb.from('borrow_records').insert([{
+            record_id: rid, eq_id: params.eq_id, eq_name: params.eq_name,
+            qty_borrowed: params.qty, borrower_name: params.borrower_name,
+            borrower_dept: params.borrower_dept, ga_staff: params.ga_staff,
+            borrowed_at: new Date().toISOString(), due_date: params.due_date,
+            sign_img: params.sign_img || '', note: params.note || '', status: 'borrowed'
+          }]);
+          if (brErr) throw brErr;
+          const { data: eq } = await sb.from('equipment').select('available').eq('eq_id', params.eq_id).single();
+          if (eq) await sb.from('equipment').update({ available: Math.max(0, eq.available - params.qty) }).eq('eq_id', params.eq_id);
+          return { ok: true, record_id: rid };
+        }
+        if (action === 'returnBorrow') {
+          const { error } = await sb.from('borrow_records').update({
+            status: 'returned', returned_at: new Date().toISOString(),
+            return_sign_img: params.return_sign_img || ''
+          }).eq('record_id', params.record_id);
+          if (error) throw error;
+          const { data: rec } = await sb.from('borrow_records').select('eq_id, qty_borrowed').eq('record_id', params.record_id).single();
+          if (rec) {
+            const { data: eq } = await sb.from('equipment').select('available, quantity').eq('eq_id', rec.eq_id).single();
+            if (eq) await sb.from('equipment').update({ available: Math.min(eq.quantity, eq.available + rec.qty_borrowed) }).eq('eq_id', rec.eq_id);
+          }
+          return { ok: true };
+        }
+        if (action === 'addEquipment') {
+          const eid = 'EQ' + Date.now();
+          const qty = Number(params.quantity) || 1;
+          const { error } = await sb.from('equipment').insert([{
+            eq_id: eid, name: params.name, category: params.category || '',
+            serial_no: params.serial_no || null, quantity: qty, available: qty,
+            created_at: new Date().toISOString()
+          }]);
+          if (error) throw error;
+          return { ok: true, eq_id: eid };
+        }
+        if (action === 'updateEquipment') {
+          const upd = { name: params.name, category: params.category, serial_no: params.serial_no || null, quantity: Number(params.quantity) || 1 };
+          if (params.available !== undefined) upd.available = Number(params.available);
+          const { error } = await sb.from('equipment').update(upd).eq('eq_id', params.eq_id);
+          if (error) throw error;
+          return { ok: true };
+        }
+        if (action === 'deleteEquipment') {
+          const { error } = await sb.from('equipment').delete().eq('eq_id', params.eq_id);
+          if (error) throw error;
+          return { ok: true };
+        }
+        if (action === 'addUser') {
+          const table = params.role==='ga'?'ga_staff':'managers';
+          const h = await sha256(String(params.pin).padStart(6,'0'));
+          const { error } = await sb.from(table).insert([{ name:params.name, pin:h, role:params.role }]);
+          if (error) throw error;
+          return { ok:true };
+        }
+        if (action === 'deleteUser') {
+          const table = params.role==='ga'?'ga_staff':'managers';
+          const { error } = await sb.from(table).delete().eq('name', params.name);
+          if (error) throw error;
+          return { ok:true };
+        }
+        throw new Error('Unknown action: '+action);
+      } catch(err) { console.error('API Error:', err); throw err; }
+    }
+
+    // ===== SIGNATURE PAD =====
+    function getSignaturePoint(canvas, e) {
+      const rc = canvas.getBoundingClientRect();
+      const src = e.touches?.[0] ?? e.changedTouches?.[0] ?? e;
+      return [src.clientX - rc.left, src.clientY - rc.top];
+    }
+    function drawStart(canvas, e) {
+      if (!sctx) return; if (e.cancelable) e.preventDefault();
+      drawing = true;
+      if (typeof e.pointerId === 'number' && canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+      const [x,y] = getSignaturePoint(canvas, e); sctx.beginPath(); sctx.moveTo(x,y);
+    }
+    function drawMove(canvas, e) {
+      if (!sctx || !drawing) return; if (e.cancelable) e.preventDefault();
+      const [x,y] = getSignaturePoint(canvas, e); sctx.lineTo(x,y); sctx.stroke(); hasSignatureStroke = true;
+    }
+    function drawEnd(canvas, e) {
+      if (e?.cancelable) e.preventDefault(); drawing = false;
+      if (typeof e?.pointerId === 'number' && canvas.releasePointerCapture) try { canvas.releasePointerCapture(e.pointerId); } catch(_){}
+    }
+    function sizeSignatureCanvas(canvas) {
+      if (!canvas) return;
+      const w = canvas.offsetWidth, h = canvas.offsetHeight;
+      if (!w || !h) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+      sctx = canvas.getContext('2d'); if (!sctx) return;
+      sctx.setTransform(dpr,0,0,dpr,0,0);
+      sctx.strokeStyle = '#1E293B'; sctx.lineWidth = 2; sctx.lineCap = 'round'; sctx.lineJoin = 'round';
+      sctx.fillStyle = '#FFFFFF'; sctx.fillRect(0,0,w,h);
+      hasSignatureStroke = false;
+    }
+    function bindSignatureEvents(canvas) {
+      if (signatureListenersCleanup) signatureListenersCleanup();
+      const opts = { passive: false };
+      const handlers = [
+        ['pointerdown', e=>drawStart(canvas,e)], ['pointermove', e=>drawMove(canvas,e)],
+        ['pointerup', e=>drawEnd(canvas,e)], ['pointercancel', e=>drawEnd(canvas,e)],
+        ['touchstart', e=>drawStart(canvas,e)], ['touchmove', e=>drawMove(canvas,e)],
+        ['touchend', e=>drawEnd(canvas,e)],
+      ];
+      handlers.forEach(([ev,fn]) => canvas.addEventListener(ev,fn,opts));
+      signatureListenersCleanup = () => { handlers.forEach(([ev,fn]) => canvas.removeEventListener(ev,fn,opts)); signatureListenersCleanup = null; };
+    }
+    function initSignCanvas(canvasId, retries=0) {
+      const c = document.getElementById(canvasId);
+      if (!c) return;
+      if (c.offsetWidth === 0 && retries < 10) { requestAnimationFrame(()=>initSignCanvas(canvasId, retries+1)); return; }
+      signatureCanvasEl = c; c.style.touchAction = 'none';
+      sizeSignatureCanvas(c); bindSignatureEvents(c);
+    }
+    function clearSignCanvas(canvasId) {
+      const c = document.getElementById(canvasId); if (!c) return;
+      sctx = c.getContext('2d');
+      if (sctx) { const w=c.offsetWidth, h=c.offsetHeight; sctx.clearRect(0,0,w*2,h*2); sctx.fillStyle='#FFFFFF'; sctx.fillRect(0,0,w*2,h*2); hasSignatureStroke = false; }
+    }
+    function isCanvasBlank() { return !hasSignatureStroke; }
+    function exportSignature(canvas) {
+      const out = document.createElement('canvas'); out.width = canvas.width; out.height = canvas.height;
+      const ctx = out.getContext('2d'); ctx.fillStyle='#FFFFFF'; ctx.fillRect(0,0,out.width,out.height);
+      ctx.drawImage(canvas, 0, 0);
+      return out.toDataURL('image/jpeg', 0.85);
+    }
+
+    // ===== LOGIN =====
+    function buildLoginScreen() {
+      const gaList = document.getElementById('gaUserList'), mgrList = document.getElementById('mgrUserList');
+      const grads = ['from-sky-400 to-blue-600','from-emerald-400 to-teal-600','from-violet-400 to-purple-600','from-amber-300 to-orange-500','from-fuchsia-400 to-indigo-600','from-cyan-400 to-blue-600'];
+      function row(u, i, role) {
+        const isMgr = role === 'mgr';
+        const icon = isMgr
+          ? `<div class="w-11 h-11 rounded-full bg-gradient-to-br from-slate-300 to-slate-500 text-slate-50 flex items-center justify-center shadow-sm shrink-0"><i data-lucide="shield" class="w-5 h-5"></i></div>`
+          : `<div class="avatar-gradient w-11 h-11 rounded-full bg-gradient-to-br ${grads[i%grads.length]} flex items-center justify-center text-[15px] font-bold tracking-wide shrink-0">${he(ini(u.name))}</div>`;
+        return `<button type="button" class="user-card ${isMgr?'admin-card':''} w-full flex items-center gap-3.5 px-4 py-3.5 text-left" data-name="${he(u.name)}" data-role="${role}" onclick="selectUser(this.dataset.name,this.dataset.role)">
+          ${icon}<div class="flex-1 min-w-0"><p class="font-semibold ${isMgr?'text-slate-700':'text-slate-900'} text-[15px] leading-tight truncate">${he(u.name)}</p>
+          <p class="text-xs text-slate-500 mt-1">${isMgr?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 shrink-0"></i></button>`;
+      }
+      gaList.innerHTML = AU.ga.map((u,i) => row(u,i,'ga')).join('');
+      mgrList.innerHTML = AU.mgr.map((u,i) => row(u,i,'mgr')).join('');
+      lucide.createIcons();
+    }
+    function selectUser(name, role) {
+      const list = role==='ga'?AU.ga:AU.mgr;
+      const idx = list.findIndex(u=>u.name===name);
+      const a = avc(role==='ga'?idx:idx+4);
+      SU = { name, role, av: a }; PIN_ATTEMPTS = 0; PB = '';
+      const av = document.getElementById('pin-avatar');
+      av.className = `w-16 h-16 rounded-full ${a.bg} ${a.tc} flex items-center justify-center font-bold text-lg mb-3`;
+      av.textContent = ini(name);
+      document.getElementById('pin-name').textContent = name;
+      updatePinDots(); document.getElementById('pin-error').textContent = '';
+      goScreen('pin'); lucide.createIcons();
+    }
+
+    // ===== PIN =====
+    function enterPin(d) {
+      if (PB.length>=6) return;
+      if (navigator.vibrate) navigator.vibrate(8);
+      PB += d; updatePinDots();
+      if (PB.length===6) setTimeout(checkPin, 150);
+    }
+    function deletePin() { PB = PB.slice(0,-1); updatePinDots(); document.getElementById('pin-error').textContent = ''; }
+    function updatePinDots() { document.querySelectorAll('#pin-dots .pin-dot').forEach((dot,i)=>{ dot.classList.toggle('filled',i<PB.length); dot.classList.remove('error'); }); }
+
+    async function checkPin() {
+      const now = Date.now();
+      if (PIN_LOCKED_UNTIL > now) { document.getElementById('pin-error').textContent = `ล็อกชั่วคราว ${Math.ceil((PIN_LOCKED_UNTIL-now)/1000)} วินาที`; PB=''; updatePinDots(); return; }
+      document.querySelectorAll('#screen-pin .numpad-key').forEach(b=>b.style.pointerEvents='none');
+      document.getElementById('pin-error').innerHTML = '<span class="text-brand flex items-center justify-center gap-1.5"><svg class="animate-spin w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> กำลังตรวจสอบ...</span>';
+      try {
+        const [res, eqData, brData] = await Promise.all([
+          api('verifyPin', { name:SU.name, pin:PB, role:SU.role }),
+          api('getEquipment'),
+          api('getBorrows', { name:SU.name, role:SU.role })
+        ]);
+        if (res.ok) {
+          PIN_ATTEMPTS = 0; CU = { ...SU }; EQ = eqData; BORROWS = brData;
+          toast('ยินดีต้อนรับ ' + CU.name.split(' ')[0]);
+          buildMain(); goScreen('main'); lucide.createIcons(); startAutoLogout();
+        } else {
+          PIN_ATTEMPTS++;
+          const rem = PIN_MAX_ATTEMPTS - PIN_ATTEMPTS;
+          if (PIN_ATTEMPTS >= PIN_MAX_ATTEMPTS) { PIN_LOCKED_UNTIL = Date.now()+PIN_LOCK_MS; document.getElementById('pin-error').textContent = `ล็อกชั่วคราว ${PIN_LOCK_MS/1000} วินาที`; }
+          else document.getElementById('pin-error').textContent = `PIN ไม่ถูกต้อง (เหลือ ${rem} ครั้ง)`;
+          document.querySelectorAll('#pin-dots .pin-dot').forEach(d=>{ d.classList.remove('filled'); d.classList.add('error'); });
+          setTimeout(()=>{ PB=''; updatePinDots(); document.querySelectorAll('#pin-dots .pin-dot').forEach(d=>d.classList.remove('error')); }, 700);
+        }
+      } catch(e) {
+        document.getElementById('pin-error').textContent = 'เกิดข้อผิดพลาด ลองใหม่';
+        setTimeout(()=>{ PB=''; updatePinDots(); document.getElementById('pin-error').textContent=''; }, 1200);
+      }
+      document.querySelectorAll('#screen-pin .numpad-key').forEach(b=>b.style.pointerEvents='');
+    }
+
+    // ===== LOGOUT & AUTO-LOGOUT =====
+    function confirmLogout() { showModal('logoutModal'); }
+    function closeLogoutModal() { hideModal('logoutModal'); }
+    function logout() {
+      closeLogoutModal(); stopAutoLogout();
+      CU=null; SU=null; EQ=[]; BORROWS=[]; goScreen('login'); lucide.createIcons();
+    }
+    function startAutoLogout() {
+      stopAutoLogout();
+      _alWarnTimer = setTimeout(()=>toast('ระบบจะออกอัตโนมัติใน 1 นาที','warning'), AUTO_LOGOUT_MS - 60000);
+      _alTimer = setTimeout(()=>{ if(CU){ toast('ออกจากระบบอัตโนมัติ'); setTimeout(logout, 2000); } }, AUTO_LOGOUT_MS);
+    }
+    function resetAutoLogout() { if(CU) startAutoLogout(); }
+    function stopAutoLogout() { clearTimeout(_alTimer); clearTimeout(_alWarnTimer); }
+    ['click','touchstart','keydown','scroll'].forEach(e=>document.addEventListener(e, resetAutoLogout, {passive:true}));
+
+    // ===== MAIN SCREEN =====
+    function buildMain() {
+      const isMgr = CU.role === 'mgr';
+      const a = CU.av;
+      const av = document.getElementById('main-avatar');
+      av.className = `w-8 h-8 rounded-full ${a.bg} ${a.tc} flex items-center justify-center font-bold text-xs`;
+      av.textContent = ini(CU.name);
+      document.getElementById('main-user-name').textContent = CU.name;
+      document.getElementById('main-user-role').textContent = isMgr ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่ GA';
+      const bar = document.getElementById('mainTabBar');
+      if (isMgr) {
+        bar.innerHTML = ['Dashboard','ประวัติ','อุปกรณ์','สมาชิก'].map((t,i)=>
+          `<button class="main-tab flex-1 px-3 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}</button>`).join('');
+      } else {
+        bar.innerHTML = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ'].map((t,i)=>
+          `<button class="main-tab flex-1 px-3 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}</button>`).join('');
+      }
+      switchTab(0);
+    }
+    function switchTab(idx) {
+      const isMgr = CU.role === 'mgr';
+      document.querySelectorAll('.main-tab').forEach((b,i)=> b.className = `main-tab flex-1 px-3 py-2.5 text-center text-sm font-semibold ${i===idx?'tab-active':'tab-inactive'}`);
+      ['borrow','return','history','dashboard','mgr-history','equipment','members'].forEach(t=> { const el=document.getElementById('tab-'+t); if(el) el.style.display='none'; });
+      if (isMgr) {
+        if(idx===0){ document.getElementById('tab-dashboard').style.display='block'; renderDashboard(); }
+        if(idx===1){ document.getElementById('tab-mgr-history').style.display='block'; renderMgrHistory(); }
+        if(idx===2){ document.getElementById('tab-equipment').style.display='block'; renderEquipmentTab(); }
+        if(idx===3){ document.getElementById('tab-members').style.display='block'; renderMembersTab(); }
+      } else {
+        if(idx===0){ document.getElementById('tab-borrow').style.display='block'; renderBorrowTab(); }
+        if(idx===1){ document.getElementById('tab-return').style.display='block'; renderReturnTab(); }
+        if(idx===2){ document.getElementById('tab-history').style.display='block'; renderHistoryTab(); }
+      }
+      lucide.createIcons();
+    }
+
+    // ===== GA: BORROW TAB =====
+    function renderBorrowTab() {
+      const avail = EQ.filter(e=> e.available > 0);
+      const cats = [...new Set(EQ.map(e=>e.category).filter(Boolean))];
+      const filtered = avail.filter(e=> {
+        if (borrowCatFilter && e.category !== borrowCatFilter) return false;
+        if (borrowSearchQ && !e.name.toLowerCase().includes(borrowSearchQ.toLowerCase())) return false;
+        return true;
+      });
+      const el = document.getElementById('tab-borrow');
+      el.innerHTML = `<div class="gd-page fade-in">
+        <div class="gd-page-header">
+          <p class="gd-section-title mb-2">Borrow</p>
+          <h2 class="text-xl font-bold tracking-tight text-slate-900">ยืมอุปกรณ์</h2>
+          <p class="text-sm text-slate-500 mt-1">เลือกอุปกรณ์ที่ต้องการยืม (คงเหลือ > 0)</p>
+        </div>
+        <div class="mb-4">
+          <input type="text" placeholder="ค้นหาอุปกรณ์..." class="gd-input" value="${he(borrowSearchQ)}"
+            oninput="borrowSearchQ=this.value;renderBorrowTab()">
+        </div>
+        <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
+          <div class="chip ${borrowCatFilter===''?'active':''}" onclick="borrowCatFilter='';renderBorrowTab()">ทั้งหมด</div>
+          ${cats.map(c=>`<div class="chip ${borrowCatFilter===c?'active':''}" onclick="borrowCatFilter='${he(c)}';renderBorrowTab()">${he(c)}</div>`).join('')}
+        </div>
+        <div class="space-y-3" id="eqGrid">
+          ${filtered.length ? filtered.map(e=>`<div class="gd-card p-4 cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
+            <div class="flex items-start justify-between mb-2">
+              <div><p class="font-semibold text-gray-900 text-sm">${he(e.name)}</p>
+              <p class="text-xs text-gray-400">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p></div>
+              <span class="text-xs px-2.5 py-1 rounded-full font-semibold ${e.available<=2?'bg-amber-50 text-amber-700 border border-amber-200':'bg-blue-50 text-brand border border-blue-200'}">คงเหลือ ${e.available}/${e.quantity}</span>
+            </div>
+            <div class="flex items-center justify-end"><button class="text-xs font-semibold text-brand flex items-center gap-1"><i data-lucide="hand" class="w-3.5 h-3.5"></i> ยืม</button></div>
+          </div>`).join('') : `<div class="text-center py-14 gd-empty flex flex-col items-center gap-3">
+            <div class="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center"><i data-lucide="package-x" class="w-8 h-8 text-slate-400"></i></div>
+            <p class="font-semibold text-slate-600 text-sm">ไม่พบอุปกรณ์ที่พร้อมยืม</p></div>`}
+        </div>
+      </div>`;
+      lucide.createIcons();
+    }
+
+    // ===== GA: BORROW FORM =====
+    function openBorrowForm(eqId) {
+      const eq = EQ.find(e=>e.eq_id===eqId);
+      if (!eq) { toast('ไม่พบอุปกรณ์','error'); return; }
+      currentBorrowEq = eq; borrowConfirmState = false;
+      document.getElementById('bf-eq-name').textContent = eq.name + ' (คงเหลือ ' + eq.available + ')';
+      const defaultDue = new Date(); defaultDue.setDate(defaultDue.getDate()+7);
+      const dueStr = defaultDue.toISOString().slice(0,10);
+      document.getElementById('bf-body').innerHTML = `
+        <div class="gd-card p-4 mb-4">
+          <div class="flex items-center gap-3 mb-1">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center"><i data-lucide="box" class="w-5 h-5 text-brand"></i></div>
+            <div><p class="font-semibold text-gray-900">${he(eq.name)}</p>
+            <p class="text-xs text-gray-400">${he(eq.category||'')}${eq.serial_no?' · '+he(eq.serial_no):''} · คงเหลือ ${eq.available}</p></div>
+          </div>
+        </div>
+        <div class="space-y-4 mb-6">
+          <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">จำนวนที่ยืม</label>
+            <input type="number" id="bfQty" min="1" max="${eq.available}" value="1" class="gd-input"></div>
+          <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่อผู้ยืม</label>
+            <input type="text" id="bfBorrower" placeholder="ชื่อ-นามสกุลผู้ยืม" class="gd-input"></div>
+          <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">แผนก</label>
+            <select id="bfDept" class="gd-input">
+              <option value="">เลือกแผนก</option>
+              <option>ฝ่ายบัญชี</option><option>ฝ่ายการเงิน</option><option>ฝ่ายจัดซื้อ</option>
+              <option>ฝ่ายบุคคล</option><option>ฝ่ายไอที</option><option>ฝ่ายการตลาด</option>
+              <option>ฝ่ายปฏิบัติการ</option><option>ฝ่ายกฎหมาย</option><option>อื่นๆ</option>
+            </select></div>
+          <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">กำหนดคืน</label>
+            <input type="date" id="bfDue" value="${dueStr}" class="gd-input"></div>
+          <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">หมายเหตุ <span class="font-normal text-gray-400">(ไม่บังคับ)</span></label>
+            <textarea id="bfNote" rows="2" placeholder="เช่น ใช้งานประชุมลูกค้า" class="gd-input" style="height:auto;padding:10px 14px;"></textarea></div>
+        </div>
+        <div class="signature-pad mb-6">
+          <div class="signature-pad__header">
+            <span class="signature-pad__title">ลายเซ็นผู้ยืม</span>
+            <button onclick="clearSignCanvas('bfSignCanvas')" class="signature-pad__clear"><i data-lucide="eraser" class="w-3.5 h-3.5"></i> ล้าง</button>
+          </div>
+          <div class="signature-pad__frame">
+            <canvas id="bfSignCanvas" class="sig-canvas" style="width:100%;height:140px;"></canvas>
+          </div>
+        </div>
+        <button onclick="submitBorrow()" id="bfSubmitBtn" class="w-full py-3 gd-btn-primary text-sm font-semibold flex items-center justify-center gap-2">
+          <i data-lucide="check" class="w-4 h-4"></i> ยืนยันการยืม
+        </button>`;
+      goScreen('borrow-form'); lucide.createIcons();
+      setTimeout(()=>initSignCanvas('bfSignCanvas'), 100);
+    }
+    function closeBorrowForm() { currentBorrowEq=null; borrowConfirmState=false; goScreen('main'); switchTab(0); }
+
+    async function submitBorrow() {
+      const qty = parseInt(document.getElementById('bfQty')?.value)||1;
+      const borrower = document.getElementById('bfBorrower')?.value.trim();
+      const dept = document.getElementById('bfDept')?.value;
+      const due = document.getElementById('bfDue')?.value;
+      const note = document.getElementById('bfNote')?.value.trim();
+      if (!borrower) { toast('กรุณากรอกชื่อผู้ยืม'); return; }
+      if (!dept) { toast('กรุณาเลือกแผนก'); return; }
+      if (!due) { toast('กรุณาระบุกำหนดคืน'); return; }
+      if (isCanvasBlank()) { toast('กรุณาเซ็นลายเซ็นก่อนยืนยัน'); return; }
+      if (qty < 1 || qty > currentBorrowEq.available) { toast('จำนวนไม่ถูกต้อง'); return; }
+      const btn = document.getElementById('bfSubmitBtn');
+      if (!borrowConfirmState) {
+        borrowConfirmState = true;
+        btn.innerHTML = '<i data-lucide="alert-triangle" class="w-4 h-4"></i> แตะอีกครั้งเพื่อยืนยัน';
+        btn.classList.add('bg-warn'); btn.classList.remove('gd-btn-primary'); lucide.createIcons();
+        setTimeout(()=>{ if(borrowConfirmState){ borrowConfirmState=false; if(btn){ btn.innerHTML='<i data-lucide="check" class="w-4 h-4"></i> ยืนยันการยืม'; btn.classList.remove('bg-warn'); btn.classList.add('gd-btn-primary'); lucide.createIcons(); } } }, 3000);
+        return;
+      }
+      borrowConfirmState = false;
+      btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
+      try {
+        const canvas = document.getElementById('bfSignCanvas');
+        const sig = canvas ? exportSignature(canvas) : '';
+        await api('createBorrow', {
+          eq_id: currentBorrowEq.eq_id, eq_name: currentBorrowEq.name, qty,
+          borrower_name: borrower, borrower_dept: dept, ga_staff: CU.name,
+          due_date: due, sign_img: sig, note
+        });
+        EQ = await api('getEquipment');
+        BORROWS = await api('getBorrows', { name:CU.name, role:CU.role });
+        toast('ยืมอุปกรณ์สำเร็จ','success');
+        closeBorrowForm();
+      } catch(e) { console.error(e); toast('บันทึกไม่สำเร็จ','error'); btn.disabled=false; btn.innerHTML='<i data-lucide="check" class="w-4 h-4"></i> ยืนยันการยืม'; btn.classList.remove('bg-warn'); btn.classList.add('gd-btn-primary'); lucide.createIcons(); }
+    }
+
+    // ===== GA: RETURN TAB =====
+    function renderReturnTab() {
+      const active = BORROWS.filter(r=> r.status==='borrowed'||r.status==='overdue');
+      const el = document.getElementById('tab-return');
+      el.innerHTML = `<div class="gd-page fade-in">
+        <div class="gd-page-header">
+          <p class="gd-section-title mb-2">Return</p>
+          <h2 class="text-xl font-bold tracking-tight text-slate-900">คืนอุปกรณ์</h2>
+          <p class="text-sm text-slate-500 mt-1">รายการอุปกรณ์ที่กำลังยืมอยู่</p>
+        </div>
+        <div class="space-y-3">
+          ${active.length ? active.map(r=>{
+            const days = daysUntil(r.due_date);
+            const isOD = r.status==='overdue';
+            return `<div class="gd-card p-4 cursor-pointer ${isOD?'border-red-200 bg-red-50/30':''}" onclick="openReturnDetail('${he(r.record_id)}')">
+              <div class="flex items-start justify-between mb-2">
+                <div><p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
+                <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · ${he(r.borrower_dept)}</p></div>
+                ${statusBadge(r.status)}
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-gray-400">ยืม ${fd(r.borrowed_at)} · กำหนดคืน ${fd(r.due_date)}</span>
+                <span class="${isOD?'text-red-600 font-semibold':'text-gray-500'}">${isOD?'เกิน '+Math.abs(days)+' วัน':(days===0?'วันนี้':days+' วัน')}</span>
+              </div>
+              ${r.qty_borrowed>1?`<p class="text-xs text-gray-400 mt-1">จำนวน: ${r.qty_borrowed} ชิ้น</p>`:''}
+            </div>`;
+          }).join('') : `<div class="text-center py-14 gd-empty flex flex-col items-center gap-3">
+            <div class="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center"><i data-lucide="check-circle-2" class="w-8 h-8 text-slate-400"></i></div>
+            <p class="font-semibold text-slate-600 text-sm">ไม่มีอุปกรณ์ที่ต้องคืน</p></div>`}
+        </div>
+      </div>`;
+      lucide.createIcons();
+    }
+
+    // ===== GA: RETURN DETAIL =====
+    function openReturnDetail(rid) {
+      const rec = BORROWS.find(r=>r.record_id===rid);
+      if (!rec) { toast('ไม่พบรายการ','error'); return; }
+      currentReturnRecord = rec; returnConfirmState = false;
+      document.getElementById('rd-eq-name').textContent = rec.eq_name;
+      const isOD = rec.status === 'overdue';
+      document.getElementById('rd-badge').innerHTML = statusBadge(rec.status);
+      document.getElementById('rd-body').innerHTML = `
+        <div class="gd-card p-4 mb-4">
+          <h4 class="font-semibold text-gray-900 text-sm mb-3 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4 text-brand"></i> รายละเอียด</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-gray-400">อุปกรณ์</span><span class="font-medium">${he(rec.eq_name)}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">จำนวน</span><span class="font-medium">${rec.qty_borrowed} ชิ้น</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">ผู้ยืม</span><span class="font-medium">${he(rec.borrower_name)}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">แผนก</span><span class="font-medium">${he(rec.borrower_dept)}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">วันที่ยืม</span><span class="font-medium">${fdFull(rec.borrowed_at)}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">กำหนดคืน</span><span class="font-medium ${isOD?'text-red-600':''}">${fd(rec.due_date)}${isOD?' (เกินกำหนด!)':''}</span></div>
+            ${rec.note?`<div class="flex justify-between"><span class="text-gray-400">หมายเหตุ</span><span class="font-medium">${he(rec.note)}</span></div>`:''}
+          </div>
+          ${rec.sign_img?`<div class="mt-3 pt-3 border-t border-gray-100"><p class="text-xs text-gray-400 mb-2">ลายเซ็นตอนยืม</p><img src="${rec.sign_img}" class="w-full h-20 object-contain bg-white rounded-lg border border-gray-200 p-1"></div>`:''}
+        </div>
+        <div class="signature-pad mb-6">
+          <div class="signature-pad__header">
+            <span class="signature-pad__title">ลายเซ็นยืนยันคืน</span>
+            <button onclick="clearSignCanvas('rdSignCanvas')" class="signature-pad__clear"><i data-lucide="eraser" class="w-3.5 h-3.5"></i> ล้าง</button>
+          </div>
+          <div class="signature-pad__frame">
+            <canvas id="rdSignCanvas" class="sig-canvas" style="width:100%;height:140px;"></canvas>
+          </div>
+        </div>
+        <button onclick="submitReturn()" id="rdSubmitBtn" class="w-full py-3 gd-btn-primary text-sm font-semibold flex items-center justify-center gap-2">
+          <i data-lucide="check" class="w-4 h-4"></i> ยืนยันการคืน
+        </button>`;
+      goScreen('return-detail'); lucide.createIcons();
+      setTimeout(()=>initSignCanvas('rdSignCanvas'), 100);
+    }
+    function closeReturnDetail() { currentReturnRecord=null; returnConfirmState=false; goScreen('main'); switchTab(1); }
+
+    async function submitReturn() {
+      if (isCanvasBlank()) { toast('กรุณาเซ็นลายเซ็นยืนยันคืน'); return; }
+      const btn = document.getElementById('rdSubmitBtn');
+      if (!returnConfirmState) {
+        returnConfirmState = true;
+        btn.innerHTML = '<i data-lucide="alert-triangle" class="w-4 h-4"></i> แตะอีกครั้งเพื่อยืนยัน';
+        btn.classList.add('bg-warn'); btn.classList.remove('gd-btn-primary'); lucide.createIcons();
+        setTimeout(()=>{ if(returnConfirmState){ returnConfirmState=false; if(btn){ btn.innerHTML='<i data-lucide="check" class="w-4 h-4"></i> ยืนยันการคืน'; btn.classList.remove('bg-warn'); btn.classList.add('gd-btn-primary'); lucide.createIcons(); } } }, 3000);
+        return;
+      }
+      returnConfirmState = false;
+      btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
+      try {
+        const canvas = document.getElementById('rdSignCanvas');
+        const sig = canvas ? exportSignature(canvas) : '';
+        await api('returnBorrow', { record_id: currentReturnRecord.record_id, return_sign_img: sig });
+        EQ = await api('getEquipment');
+        BORROWS = await api('getBorrows', { name:CU.name, role:CU.role });
+        toast('คืนอุปกรณ์สำเร็จ','success');
+        closeReturnDetail();
+      } catch(e) { console.error(e); toast('บันทึกไม่สำเร็จ','error'); btn.disabled=false; btn.innerHTML='<i data-lucide="check" class="w-4 h-4"></i> ยืนยันการคืน'; btn.classList.remove('bg-warn'); btn.classList.add('gd-btn-primary'); lucide.createIcons(); }
+    }
+
+    // ===== GA: HISTORY TAB =====
+    function renderHistoryTab() {
+      const list = BORROWS.filter(r=> !historyFilter || r.status === historyFilter);
+      const el = document.getElementById('tab-history');
+      el.innerHTML = `<div class="gd-page fade-in">
+        <div class="gd-page-header">
+          <p class="gd-section-title mb-2">History</p>
+          <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการยืม-คืน</h2>
+        </div>
+        <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
+          <div class="chip ${historyFilter===''?'active':''}" onclick="historyFilter='';renderHistoryTab()">ทั้งหมด</div>
+          <div class="chip ${historyFilter==='borrowed'?'active':''}" onclick="historyFilter='borrowed';renderHistoryTab()">กำลังยืม</div>
+          <div class="chip ${historyFilter==='overdue'?'active':''}" onclick="historyFilter='overdue';renderHistoryTab()">เกินกำหนด</div>
+          <div class="chip ${historyFilter==='returned'?'active':''}" onclick="historyFilter='returned';renderHistoryTab()">คืนแล้ว</div>
+        </div>
+        <div class="space-y-3">
+          ${list.length ? list.map(r=>`<div class="gd-card p-4">
+            <div class="flex items-start justify-between mb-1">
+              <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
+              ${statusBadge(r.status)}
+            </div>
+            <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · ${he(r.borrower_dept)}</p>
+            <div class="flex justify-between text-xs text-gray-400 mt-2">
+              <span>ยืม ${fd(r.borrowed_at)}</span>
+              <span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span>
+            </div>
+          </div>`).join('') : `<div class="text-center py-14 gd-empty flex flex-col items-center gap-3">
+            <div class="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center"><i data-lucide="inbox" class="w-8 h-8 text-slate-400"></i></div>
+            <p class="font-semibold text-slate-600 text-sm">ไม่มีประวัติ</p></div>`}
+        </div>
+      </div>`;
+      lucide.createIcons();
+    }
+
+    // ===== MGR: DASHBOARD =====
+    function renderDashboard() {
+      const totalEq = EQ.length;
+      const borrowed = BORROWS.filter(r=>r.status==='borrowed').length;
+      const overdue = BORROWS.filter(r=>r.status==='overdue').length;
+      const returned = BORROWS.filter(r=>r.status==='returned').length;
+      const cats = {};
+      BORROWS.filter(r=>r.status==='borrowed'||r.status==='overdue').forEach(r=>{
+        const eq = EQ.find(e=>e.eq_id===r.eq_id);
+        const cat = eq?.category || 'อื่นๆ';
+        cats[cat] = (cats[cat]||0) + r.qty_borrowed;
+      });
+      const catLabels = Object.keys(cats), catData = Object.values(cats);
+      const catColors = ['#2563EB','#D97706','#0F6E56','#7C3AED','#DC2626','#06B6D4'];
+
+      const el = document.getElementById('tab-dashboard');
+      el.innerHTML = `<div class="gd-page fade-in">
+        <div class="gd-page-header">
+          <p class="gd-section-title mb-2">Dashboard</p>
+          <h2 class="text-xl font-bold tracking-tight text-slate-900">ภาพรวมระบบ</h2>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
+            <div class="w-8 h-8 rounded-lg bg-brand-light flex items-center justify-center mb-2"><i data-lucide="box" class="w-4 h-4 text-brand"></i></div>
+            <p class="text-2xl font-bold text-gray-900">${totalEq}</p><p class="text-xs text-gray-400 mt-0.5">อุปกรณ์ทั้งหมด</p></div>
+          <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
+            <div class="w-8 h-8 rounded-lg bg-warn-light flex items-center justify-center mb-2"><i data-lucide="clock-3" class="w-4 h-4 text-warn"></i></div>
+            <p class="text-2xl font-bold text-gray-900">${borrowed}</p><p class="text-xs text-gray-400 mt-0.5">กำลังยืม</p></div>
+          <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
+            <div class="w-8 h-8 rounded-lg bg-success-light flex items-center justify-center mb-2"><i data-lucide="check-circle" class="w-4 h-4 text-success"></i></div>
+            <p class="text-2xl font-bold text-gray-900">${returned}</p><p class="text-xs text-gray-400 mt-0.5">คืนแล้ว</p></div>
+          <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
+            <div class="w-8 h-8 rounded-lg bg-danger-light flex items-center justify-center mb-2"><i data-lucide="alert-triangle" class="w-4 h-4 text-danger"></i></div>
+            <p class="text-2xl font-bold text-gray-900">${overdue}</p><p class="text-xs text-gray-400 mt-0.5">เกินกำหนด</p></div>
+        </div>
+        ${catLabels.length ? `<div class="gd-card p-4 mb-4">
+          <h4 class="font-semibold text-gray-900 text-sm mb-4">อุปกรณ์ที่กำลังยืม (แยกหมวด)</h4>
+          <div class="flex items-center gap-6">
+            <div class="relative flex-shrink-0" style="width:120px;height:120px;">
+              <canvas id="dashDonut" width="120" height="120"></canvas>
+              <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <p class="text-lg font-bold text-gray-900">${borrowed+overdue}</p><p class="text-[10px] text-gray-400">รายการ</p></div>
+            </div>
+            <div class="space-y-2.5 flex-1">
+              ${catLabels.map((c,i)=>`<div class="flex items-center gap-3"><div class="w-3 h-3 rounded-full" style="background:${catColors[i%catColors.length]}"></div><span class="text-xs text-gray-600 flex-1">${he(c)}</span><span class="text-xs font-semibold">${catData[i]}</span></div>`).join('')}
+            </div>
+          </div>
+        </div>` : ''}
+        <div class="gd-card p-4 mb-4">
+          <h4 class="font-semibold text-gray-900 text-sm mb-3">รายการเกินกำหนด</h4>
+          ${BORROWS.filter(r=>r.status==='overdue').length ? BORROWS.filter(r=>r.status==='overdue').map(r=>`<div class="flex items-center gap-3 py-2.5 border-b border-gray-100 last:border-0">
+            <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center"><i data-lucide="alert-triangle" class="w-4 h-4 text-red-500"></i></div>
+            <div class="flex-1 min-w-0"><p class="text-sm font-medium text-gray-900">${he(r.eq_name)}</p>
+            <p class="text-xs text-gray-400">${he(r.borrower_name)} · เกิน ${Math.abs(daysUntil(r.due_date))} วัน</p></div>
+          </div>`).join('') : `<p class="text-xs text-gray-400 text-center py-4">ไม่มีรายการเกินกำหนด</p>`}
+        </div>
+      </div>`;
+      lucide.createIcons();
+      if (catLabels.length) setTimeout(()=>{
+        const c = document.getElementById('dashDonut'); if (!c||!window.Chart) return;
+        if (DC) { DC.destroy(); DC=null; }
+        DC = new Chart(c, { type:'doughnut', data:{ labels:catLabels, datasets:[{data:catData, backgroundColor:catColors.slice(0,catLabels.length), borderWidth:0}] }, options:{ cutout:'72%', plugins:{legend:{display:false},tooltip:{enabled:true}}, animation:{duration:400} } });
+      }, 60);
+    }
+
+    // ===== MGR: ALL HISTORY =====
+    function renderMgrHistory() {
+      const el = document.getElementById('tab-mgr-history');
+      el.innerHTML = `<div class="gd-page fade-in">
+        <div class="gd-page-header">
+          <p class="gd-section-title mb-2">All Records</p>
+          <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติทั้งหมด</h2>
+        </div>
+        <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
+          <div class="chip ${historyFilter===''?'active':''}" onclick="historyFilter='';renderMgrHistory()">ทั้งหมด</div>
+          <div class="chip ${historyFilter==='borrowed'?'active':''}" onclick="historyFilter='borrowed';renderMgrHistory()">กำลังยืม</div>
+          <div class="chip ${historyFilter==='overdue'?'active':''}" onclick="historyFilter='overdue';renderMgrHistory()">เกินกำหนด</div>
+          <div class="chip ${historyFilter==='returned'?'active':''}" onclick="historyFilter='returned';renderMgrHistory()">คืนแล้ว</div>
+        </div>
+        <div class="space-y-3">
+          ${BORROWS.filter(r=>!historyFilter||r.status===historyFilter).length ? BORROWS.filter(r=>!historyFilter||r.status===historyFilter).map(r=>`<div class="gd-card p-4">
+            <div class="flex items-start justify-between mb-1">
+              <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
+              ${statusBadge(r.status)}
+            </div>
+            <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · ${he(r.borrower_dept)} · GA: ${he(r.ga_staff)}</p>
+            <div class="flex justify-between text-xs text-gray-400 mt-2">
+              <span>ยืม ${fd(r.borrowed_at)}</span>
+              <span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span>
+            </div>
+          </div>`).join('') : `<div class="text-center py-14 gd-empty flex flex-col items-center gap-3">
+            <div class="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center"><i data-lucide="inbox" class="w-8 h-8 text-slate-400"></i></div>
+            <p class="font-semibold text-slate-600 text-sm">ไม่มีประวัติ</p></div>`}
+        </div>
+      </div>`;
+      lucide.createIcons();
+    }
+
+    // ===== MGR: EQUIPMENT TAB =====
+    function renderEquipmentTab() {
+      const el = document.getElementById('tab-equipment');
+      el.innerHTML = `<div class="gd-page fade-in">
+        <div class="flex items-center justify-between mb-4">
+          <h4 class="font-semibold text-gray-900 text-sm">รายการอุปกรณ์</h4>
+          <button onclick="showAddEquipment()" class="flex items-center gap-1.5 px-3 py-1.5 bg-brand text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition shadow-sm">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> เพิ่มอุปกรณ์</button>
+        </div>
+        <div class="space-y-3">
+          ${EQ.map(e=>`<div class="gd-card p-4">
+            <div class="flex items-start justify-between mb-2">
+              <div><p class="font-semibold text-gray-900 text-sm">${he(e.name)}</p>
+              <p class="text-xs text-gray-400">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p></div>
+              <span class="text-xs px-2.5 py-1 rounded-full font-semibold bg-blue-50 text-brand border border-blue-200">${e.available}/${e.quantity}</span>
+            </div>
+            <div class="flex justify-end gap-1">
+              <button data-id="${he(e.eq_id)}" onclick="showEditEquipment(this.dataset.id)" class="p-2 rounded-lg text-gray-300 hover:text-brand hover:bg-blue-50"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+              <button data-id="${he(e.eq_id)}" onclick="confirmDeleteEquip(this.dataset.id)" class="p-2 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>`;
+      lucide.createIcons();
+    }
+    function showAddEquipment() {
+      _editEqId = null;
+      document.getElementById('equipModalTitle').textContent = 'เพิ่มอุปกรณ์';
+      document.getElementById('eqName').value = '';
+      document.getElementById('eqCategory').value = '';
+      document.getElementById('eqSerial').value = '';
+      document.getElementById('eqQty').value = '1';
+      showModal('equipModal');
+    }
+    function showEditEquipment(eqId) {
+      const eq = EQ.find(e=>e.eq_id===eqId); if(!eq) return;
+      _editEqId = eqId;
+      document.getElementById('equipModalTitle').textContent = 'แก้ไขอุปกรณ์';
+      document.getElementById('eqName').value = eq.name;
+      document.getElementById('eqCategory').value = eq.category||'';
+      document.getElementById('eqSerial').value = eq.serial_no||'';
+      document.getElementById('eqQty').value = eq.quantity;
+      showModal('equipModal');
+    }
+    function closeEquipModal() { hideModal('equipModal'); _editEqId=null; }
+    async function submitEquipment() {
+      const name = document.getElementById('eqName').value.trim();
+      const cat = document.getElementById('eqCategory').value;
+      const serial = document.getElementById('eqSerial').value.trim();
+      const qty = parseInt(document.getElementById('eqQty').value)||1;
+      if (!name) { toast('กรุณากรอกชื่ออุปกรณ์'); return; }
+      if (!cat) { toast('กรุณาเลือกหมวดหมู่'); return; }
+      const btn = document.getElementById('eqSubmitBtn');
+      btn.disabled=true; btn.textContent='กำลังบันทึก...';
+      try {
+        if (_editEqId) {
+          const old = EQ.find(e=>e.eq_id===_editEqId);
+          const diff = qty - (old?.quantity||0);
+          const newAvail = Math.max(0, (old?.available||0) + diff);
+          await api('updateEquipment', { eq_id:_editEqId, name, category:cat, serial_no:serial, quantity:qty, available:newAvail });
+        } else {
+          await api('addEquipment', { name, category:cat, serial_no:serial, quantity:qty });
+        }
+        EQ = await api('getEquipment');
+        toast(_editEqId?'แก้ไขสำเร็จ':'เพิ่มอุปกรณ์สำเร็จ','success');
+        closeEquipModal(); renderEquipmentTab();
+      } catch(e) { console.error(e); toast('บันทึกไม่สำเร็จ','error'); }
+      btn.disabled=false; btn.textContent='บันทึก';
+    }
+    function confirmDeleteEquip(eqId) {
+      const eq = EQ.find(e=>e.eq_id===eqId); if(!eq) return;
+      _deleteEqId = eqId;
+      document.getElementById('deleteEquipName').textContent = eq.name;
+      showModal('deleteEquipModal');
+    }
+    function closeDeleteEquipModal() { hideModal('deleteEquipModal'); _deleteEqId=null; }
+    async function executeDeleteEquipment() {
+      if(!_deleteEqId) return;
+      const btn = document.getElementById('delEquipBtn');
+      btn.disabled=true; btn.textContent='กำลังลบ...';
+      try {
+        await api('deleteEquipment', { eq_id:_deleteEqId });
+        EQ = await api('getEquipment');
+        toast('ลบอุปกรณ์สำเร็จ','success');
+        closeDeleteEquipModal(); renderEquipmentTab();
+      } catch(e) { toast('ลบไม่สำเร็จ','error'); }
+      btn.disabled=false; btn.textContent='ลบเลย';
+    }
+
+    // ===== MGR: MEMBERS TAB =====
+    function renderMembersTab() {
+      const el = document.getElementById('tab-members');
+      el.innerHTML = `<div class="gd-page fade-in">
+        <div class="flex items-center justify-between mb-4">
+          <h4 class="font-semibold text-gray-900 text-sm">รายชื่อสมาชิก</h4>
+          <button onclick="openUserModal()" class="flex items-center gap-1.5 px-3 py-1.5 bg-brand text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition shadow-sm">
+            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> เพิ่มสมาชิก</button>
+        </div>
+        <div class="space-y-3">
+          ${[...AU.ga.map(u=>({...u,type:'ga'})),...AU.mgr.map(u=>({...u,type:'mgr'}))].map((u,i)=>{
+            const a = avc(u.type==='ga'?i:i+4);
+            return `<div class="gd-card p-3 flex items-center justify-between fade-in">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full ${a.bg} ${a.tc} flex items-center justify-center font-bold text-sm">${he(ini(u.name))}</div>
+                <div><p class="font-medium text-gray-900 text-sm">${he(u.name)}</p>
+                <p class="text-[10px] font-medium uppercase tracking-wider ${u.type==='mgr'?'text-purple-600':'text-gray-400'}">${u.type==='mgr'?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
+              </div>
+              <div class="flex items-center gap-1">
+                <button data-name="${he(u.name)}" data-utype="${u.type}" onclick="openResetPinModal(this.dataset.name,this.dataset.utype)" class="p-2 rounded-lg text-gray-300 hover:text-amber-500 hover:bg-amber-50"><i data-lucide="key-round" class="w-4 h-4"></i></button>
+                <button data-name="${he(u.name)}" data-utype="${u.type}" onclick="confirmDeleteUser(this.dataset.name,this.dataset.utype)" class="p-2 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+      lucide.createIcons();
+    }
+    function openUserModal() { showModal('userModal'); document.getElementById('newUserName').value=''; document.getElementById('newUserPin').value=''; document.getElementById('newUserRole').value='ga'; }
+    function closeUserModal() { hideModal('userModal'); }
+    async function confirmAddUser() {
+      const name = document.getElementById('newUserName').value.trim();
+      const role = document.getElementById('newUserRole').value;
+      const pin = document.getElementById('newUserPin').value.trim();
+      if(!name||!pin){ toast('กรุณากรอกข้อมูลให้ครบ'); return; }
+      if(!/^\d{6}$/.test(pin)){ toast('PIN ต้องเป็นตัวเลข 6 หลัก'); return; }
+      if([...AU.ga,...AU.mgr].some(u=>u.name===name)){ toast('ชื่อซ้ำ'); return; }
+      const btn = document.getElementById('addUserBtn');
+      btn.disabled=true; btn.textContent='กำลังบันทึก...';
+      try {
+        await api('addUser', { name, role, pin });
+        if(role==='ga') AU.ga.push({name,role,email:''}); else AU.mgr.push({name,role,email:''});
+        toast('เพิ่มสมาชิกสำเร็จ','success');
+        closeUserModal(); renderMembersTab(); buildLoginScreen();
+      } catch(e){ toast('เพิ่มไม่สำเร็จ','error'); }
+      btn.disabled=false; btn.textContent='บันทึก';
+    }
+    function confirmDeleteUser(name, role) {
+      if(name===CU.name){ toast('ไม่สามารถลบตัวเองได้'); return; }
+      _deleteUserTarget = { name, role };
+      document.getElementById('deleteUserNameLabel').textContent = name;
+      showModal('deleteUserModal');
+    }
+    function closeDeleteUserModal() { hideModal('deleteUserModal'); _deleteUserTarget=null; }
+    async function executeDeleteUser() {
+      if(!_deleteUserTarget) return;
+      const {name,role} = _deleteUserTarget;
+      const btn = document.getElementById('deleteUserConfirmBtn');
+      btn.disabled=true; btn.textContent='กำลังลบ...';
+      try {
+        await api('deleteUser', { name, role });
+        if(role==='ga') AU.ga=AU.ga.filter(u=>u.name!==name); else AU.mgr=AU.mgr.filter(u=>u.name!==name);
+        toast('ลบสมาชิกสำเร็จ','success');
+        closeDeleteUserModal(); renderMembersTab(); buildLoginScreen();
+      } catch(e){ toast('ลบไม่สำเร็จ','error'); }
+      btn.disabled=false; btn.textContent='ลบเลย';
+    }
+    function openResetPinModal(name, role) {
+      _resetPinTarget = { name, role };
+      _resetPinNew = String((crypto.getRandomValues(new Uint32Array(1))[0] % 900000) + 100000);
+      document.getElementById('resetPinNameLabel').textContent = name;
+      document.getElementById('resetPinValue').textContent = _resetPinNew;
+      showModal('resetPinModal');
+    }
+    function closeResetPinModal() { hideModal('resetPinModal'); _resetPinTarget=null; }
+    function regeneratePin() {
+      _resetPinNew = String((crypto.getRandomValues(new Uint32Array(1))[0] % 900000) + 100000);
+      document.getElementById('resetPinValue').textContent = _resetPinNew;
+    }
+    async function executeResetPin() {
+      if(!_resetPinTarget) return;
+      const btn = document.getElementById('resetPinConfirmBtn');
+      btn.disabled=true; btn.textContent='กำลัง Reset...';
+      try {
+        await api('changePin', { name:_resetPinTarget.name, newPin:_resetPinNew, role:_resetPinTarget.role });
+        toast('Reset PIN สำเร็จ','success');
+        closeResetPinModal();
+      } catch(e){ toast('Reset ไม่สำเร็จ','error'); }
+      btn.disabled=false; btn.textContent='ยืนยัน Reset';
+    }
+
+    // ===== INIT =====
+    async function init(forceRefresh = false) {
+      goScreen('loading');
+      document.getElementById('loadingMsg').textContent = 'กำลังดึงข้อมูลผู้ใช้...';
+      document.getElementById('loadingSlowHint').classList.add('hidden');
+      document.getElementById('loadingRetryBtn').classList.add('hidden');
+      try {
+        const cached = forceRefresh ? null : cacheGet('users');
+        if (cached) {
+          AU = cached; buildLoginScreen(); goScreen('login'); lucide.createIcons();
+          api('getUsers').then(d=>{ AU=d; cacheSet('users',d); }).catch(()=>{});
+          return;
+        }
+        AU = await api('getUsers');
+        cacheSet('users', AU);
+        buildLoginScreen(); goScreen('login'); lucide.createIcons();
+      } catch(e) {
+        console.error('[init]', e);
+        document.getElementById('loadingMsg').textContent = 'ไม่สามารถเชื่อมต่อได้ กรุณาลองใหม่';
+        document.getElementById('loadingSlowHint').classList.remove('hidden');
+        document.getElementById('loadingRetryBtn').classList.remove('hidden');
+      }
+    }
+
+    // ===== REFRESH DATA =====
+    async function refreshData() {
+      try {
+        EQ = await api('getEquipment');
+        BORROWS = await api('getBorrows', { name:CU.name, role:CU.role });
+      } catch(e) { console.warn('[refresh]', e); }
+    }
+
+    // Start app
+    document.addEventListener('DOMContentLoaded', () => init());
+  </script>
+</body>
+</html>
