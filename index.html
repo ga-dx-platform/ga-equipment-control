@@ -556,6 +556,12 @@
 
     // ===== STATE =====
     let AU = { ga: [], mgr: [] }, CU = null, SU = null, PB = '';
+    let AUTH_MODE = 'legacy'; // legacy | users_no_pin | demo
+    const FALLBACK_PIN = '123456';
+    const FALLBACK_USERS = {
+      ga: [{ name: 'GA Staff Demo', role: 'ga', email: '' }],
+      mgr: [{ name: 'Admin Access', role: 'mgr', email: '' }]
+    };
     let EQ = [], BORROWS = [];
     let PIN_ATTEMPTS = 0, PIN_LOCKED_UNTIL = 0;
     const PIN_MAX_ATTEMPTS = 5, PIN_LOCK_MS = 60000;
@@ -655,11 +661,33 @@
     async function api(action, params = {}) {
       try {
         if (action === 'getUsers') {
-          const { data: ga } = await sb.from('ga_staff').select('name, role, email');
-          const { data: mgr } = await sb.from('managers').select('name, role, email');
-          return { ga: (ga||[]).map(r=>({name:r.name,role:r.role,email:r.email||''})), mgr: (mgr||[]).map(r=>({name:r.name,role:r.role,email:r.email||''})) };
+          const { data: ga, error: gaErr } = await sb.from('ga_staff').select('name, role, email');
+          const { data: mgr, error: mgrErr } = await sb.from('managers').select('name, role, email');
+          if (!gaErr && !mgrErr) {
+            AUTH_MODE = 'legacy';
+            return { ga: (ga||[]).map(r=>({name:r.name,role:r.role,email:r.email||''})), mgr: (mgr||[]).map(r=>({name:r.name,role:r.role,email:r.email||''})) };
+          }
+
+          const { data: users, error: usersErr } = await sb.from('users').select('full_name, role, email, is_active').eq('is_active', true);
+          if (!usersErr && Array.isArray(users)) {
+            const mapped = {
+              ga: users.filter(u=>u.role==='ga').map(u=>({name:u.full_name,role:'ga',email:u.email||''})),
+              mgr: users.filter(u=>u.role==='mgr').map(u=>({name:u.full_name,role:'mgr',email:u.email||''}))
+            };
+            if (mapped.ga.length || mapped.mgr.length) {
+              AUTH_MODE = 'users_no_pin';
+              return mapped;
+            }
+          }
+
+          AUTH_MODE = 'demo';
+          return FALLBACK_USERS;
         }
         if (action === 'verifyPin') {
+          if (AUTH_MODE !== 'legacy') {
+            const input = String(params.pin).padStart(6,'0');
+            return { ok: input === FALLBACK_PIN };
+          }
           const table = params.role==='ga'?'ga_staff':'managers';
           const { data } = await sb.from(table).select('*').eq('name',params.name).single();
           if (!data) return { ok:false };
@@ -1486,6 +1514,7 @@
           return;
         }
         AU = await api('getUsers');
+        if (AUTH_MODE !== 'legacy') toast(`โหมดเริ่มต้น: ใช้ PIN ${FALLBACK_PIN} สำหรับการเข้าใช้งาน`, 'warning');
         cacheSet('users', AU);
         buildLoginScreen(); goScreen('login'); lucide.createIcons();
       } catch(e) {
