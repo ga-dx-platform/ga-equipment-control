@@ -302,7 +302,7 @@
         <div class="login-shell flex-1 overflow-auto flex items-center justify-center">
           <div class="login-card fade-in">
             <div class="text-center mb-8">
-              <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-br from-blue-400 to-blue-600 shadow-lg shadow-blue-500/30 mb-5">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-br from-orange-400 to-orange-600 shadow-lg shadow-orange-500/30 mb-5">
                 <span class="text-white text-2xl font-extrabold tracking-tight">EC</span>
               </div>
               <h1 class="text-[2rem] leading-tight font-extrabold tracking-[-0.02em] text-slate-900">Equipment Control</h1>
@@ -332,7 +332,7 @@
             <i data-lucide="arrow-left" class="w-5 h-5 text-gray-500"></i>
           </button>
           <div id="pin-avatar"
-            class="w-16 h-16 rounded-full bg-blue-100 text-brand flex items-center justify-center font-bold text-lg mb-3"></div>
+            class="w-16 h-16 rounded-full bg-orange-100 text-brand flex items-center justify-center font-bold text-lg mb-3"></div>
           <p id="pin-name" class="font-semibold text-gray-900 mb-1"></p>
           <p class="text-sm text-gray-400 mb-8">กรอก PIN 6 หลัก</p>
           <div class="flex gap-3 mb-10" id="pin-dots">
@@ -362,7 +362,7 @@
         <div class="gd-header px-4 lg:px-8 pt-6 pb-4" style="position:sticky;top:0;z-index:20;">
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-3">
-              <div id="main-avatar" class="w-10 h-10 rounded-full bg-blue-100 text-brand flex items-center justify-center font-bold text-sm"></div>
+              <div id="main-avatar" class="w-10 h-10 rounded-full bg-orange-100 text-brand flex items-center justify-center font-bold text-sm"></div>
               <div>
                 <p id="main-user-name" class="font-semibold text-gray-900 text-sm leading-tight"></p>
                 <p id="main-user-role" class="text-xs text-gray-400">GA Staff</p>
@@ -578,9 +578,9 @@
 
     // ===== AVATAR COLORS =====
     const AVATARS = [
-      { bg: 'bg-blue-100', tc: 'text-brand' }, { bg: 'bg-emerald-100', tc: 'text-success' },
-      { bg: 'bg-amber-100', tc: 'text-amber-700' }, { bg: 'bg-purple-100', tc: 'text-purple-700' },
-      { bg: 'bg-rose-100', tc: 'text-rose-600' }, { bg: 'bg-cyan-100', tc: 'text-cyan-700' },
+      { bg: 'bg-orange-100', tc: 'text-brand' }, { bg: 'bg-amber-100', tc: 'text-amber-700' },
+      { bg: 'bg-emerald-100', tc: 'text-success' }, { bg: 'bg-rose-100', tc: 'text-rose-600' },
+      { bg: 'bg-red-100', tc: 'text-red-700' }, { bg: 'bg-yellow-100', tc: 'text-yellow-700' },
     ];
     function avc(i) { return AVATARS[i % AVATARS.length]; }
     function ini(n) { const p = (n || '').trim().split(' '); return p.length >= 2 ? p[0][0] + p[1][0] : (n || '').slice(0, 2); }
@@ -846,7 +846,7 @@
     // ===== LOGIN =====
     function buildLoginScreen() {
       const gaList = document.getElementById('gaUserList'), mgrList = document.getElementById('mgrUserList');
-      const grads = ['from-sky-400 to-blue-600','from-emerald-400 to-teal-600','from-violet-400 to-purple-600','from-amber-300 to-orange-500','from-fuchsia-400 to-indigo-600','from-cyan-400 to-blue-600'];
+      const grads = ['from-orange-400 to-orange-600','from-amber-300 to-orange-500','from-rose-400 to-red-600','from-yellow-300 to-amber-500','from-red-400 to-rose-600','from-orange-300 to-amber-500'];
       function row(u, i, role) {
         const isMgr = role === 'mgr';
         const icon = isMgr
