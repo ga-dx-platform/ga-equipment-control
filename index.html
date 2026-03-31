@@ -650,6 +650,7 @@
       return seeded;
     }
     function demoEqSet(rows) { try { localStorage.setItem('demo_equipment', JSON.stringify(rows || [])); } catch(_) {} }
+    function canUseLocalFallback() { return AUTH_MODE !== 'legacy'; }
 
     // ===== STATUS HELPERS =====
     function statusMeta(s) {
@@ -721,13 +722,16 @@
         }
         if (action === 'getEquipment') {
           const { data, error } = await sb.from('equipment').select('*').order('name');
-          if (error) return demoEqGet();
+          if (error) {
+            if (canUseLocalFallback()) return demoEqGet();
+            throw error;
+          }
           const normalized = (data || []).map((r, idx) => ({
             ...r,
             eq_id: r.eq_id || r.id || `eq-${idx}`,
             serial_no: r.serial_no || r.code || null
           }));
-          if (!normalized.length && AUTH_MODE !== 'legacy') return demoEqGet();
+          if (!normalized.length && canUseLocalFallback()) return demoEqGet();
           return normalized;
         }
         if (action === 'getBorrows') {
@@ -778,6 +782,7 @@
             const payload = { code, name: params.name, category: params.category || '', quantity: qty, available: qty };
             const res = await sb.from('equipment').insert([payload]);
             if (res.error) {
+              if (!canUseLocalFallback()) throw res.error;
               const rows = demoEqGet();
               rows.push({ eq_id: eid, code, name: params.name, category: params.category || '', serial_no: params.serial_no || code, quantity: qty, available: qty });
               demoEqSet(rows);
@@ -794,6 +799,7 @@
             if (params.available !== undefined) upd2.available = Number(params.available);
             const res = await sb.from('equipment').update(upd2).eq('id', params.eq_id);
             if (res.error) {
+              if (!canUseLocalFallback()) throw res.error;
               const rows = demoEqGet().map(r => r.eq_id === params.eq_id ? { ...r, ...upd, ...upd2, serial_no: params.serial_no || r.serial_no || null } : r);
               demoEqSet(rows);
             }
@@ -805,6 +811,7 @@
           if (error) {
             const res = await sb.from('equipment').delete().eq('id', params.eq_id);
             if (res.error) {
+              if (!canUseLocalFallback()) throw res.error;
               demoEqSet(demoEqGet().filter(r => r.eq_id !== params.eq_id));
             }
           }
