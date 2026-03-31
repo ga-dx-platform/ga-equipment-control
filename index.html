@@ -28,13 +28,13 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap');
 
     :root {
-      --gd-brand: #2563EB;
-      --gd-brand-strong: #1E40AF;
-      --gd-brand-vivid: #3B82F6;
-      --gd-cyan: #06B6D4;
-      --gd-violet: #7C3AED;
-      --gd-brand-soft: #EAF1FF;
-      --gd-surface: #F4F7FC;
+      --gd-brand: #EA580C;
+      --gd-brand-strong: #C2410C;
+      --gd-brand-vivid: #F97316;
+      --gd-cyan: #FB923C;
+      --gd-violet: #FDBA74;
+      --gd-brand-soft: #FFF2E8;
+      --gd-surface: #FFF7ED;
       --gd-card: #FFFFFF;
       --gd-text: #0F172A;
       --gd-muted: #64748B;
@@ -64,7 +64,7 @@
       width: 14px; height: 14px; border-radius: 50%;
       border: 2px solid #CBD5E1; transition: all 0.15s ease;
     }
-    .pin-dot.filled { background: #185FA5; border-color: #185FA5; transform: scale(1.15); }
+    .pin-dot.filled { background: #EA580C; border-color: #EA580C; transform: scale(1.15); }
     .pin-dot.error { background: #EF4444; border-color: #EF4444; animation: shake 0.4s ease; }
 
     @keyframes shake {
@@ -83,9 +83,9 @@
     .numpad-key:active { background: #E2E8F0; transform: scale(0.98); }
 
     .tab-active {
-      color: #0f172a; border: 1px solid #dbeafe;
-      background: linear-gradient(160deg, #ffffff 0%, #f8fbff 100%);
-      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.14); font-weight: 700;
+      color: #0f172a; border: 1px solid #fed7aa;
+      background: linear-gradient(160deg, #fff7ed 0%, #ffedd5 100%);
+      box-shadow: 0 8px 18px rgba(249, 115, 22, 0.2); font-weight: 700;
     }
     .tab-inactive { color: #64748b; border: 1px solid transparent; background: transparent; }
 
@@ -95,8 +95,8 @@
       border: 1.5px solid var(--gd-border); background: rgba(255,255,255,0.88); color: var(--gd-muted);
     }
     .chip.active {
-      background: linear-gradient(140deg, #2563eb, #1d4ed8); color: white;
-      border-color: #1d4ed8; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+      background: linear-gradient(140deg, #f97316, #ea580c); color: white;
+      border-color: #c2410c; box-shadow: 0 10px 20px rgba(234, 88, 12, 0.3);
     }
 
     .fade-in { animation: fadeIn 0.25s ease; }
@@ -108,8 +108,8 @@
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
     input:focus, select:focus, textarea:focus {
-      outline: none; border-color: #93c5fd !important;
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14); background: #fff;
+      outline: none; border-color: #fdba74 !important;
+      box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.18); background: #fff;
     }
 
     button { transition: all 0.2s ease; font-family: 'Noto Sans Thai', 'Inter', sans-serif; }
@@ -117,10 +117,10 @@
 
     .gd-shell {
       background:
-        radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.26), transparent 36%),
-        radial-gradient(circle at 100% 0%, rgba(6, 182, 212, 0.16), transparent 38%),
-        radial-gradient(circle at 50% 100%, rgba(124, 58, 237, 0.1), transparent 45%),
-        linear-gradient(180deg, #f6faff 0%, #edf4ff 48%, #e8f1ff 100%);
+        radial-gradient(circle at 0% 0%, rgba(251, 146, 60, 0.28), transparent 36%),
+        radial-gradient(circle at 100% 0%, rgba(249, 115, 22, 0.18), transparent 38%),
+        radial-gradient(circle at 50% 100%, rgba(234, 88, 12, 0.12), transparent 45%),
+        linear-gradient(180deg, #fff7ed 0%, #ffedd5 48%, #fed7aa 100%);
     }
     .gd-header {
       background: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(148, 163, 184, 0.22);
@@ -132,8 +132,8 @@
       transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
     }
     .gd-card:hover {
-      box-shadow: 0 20px 36px rgba(30, 64, 175, 0.14), 0 4px 14px rgba(6, 182, 212, 0.1);
-      border-color: rgba(59, 130, 246, 0.38); transform: translateY(-2px);
+      box-shadow: 0 20px 36px rgba(234, 88, 12, 0.16), 0 4px 14px rgba(251, 146, 60, 0.12);
+      border-color: rgba(249, 115, 22, 0.45); transform: translateY(-2px);
     }
     .gd-card-soft { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; }
     .gd-input {
@@ -141,10 +141,10 @@
       border-radius: 10px; background: #f8fafc; font-size: 14px; color: #0F172A;
     }
     .gd-btn-primary {
-      background: linear-gradient(135deg, var(--gd-brand) 0%, #1d4ed8 48%, var(--gd-violet) 100%);
+      background: linear-gradient(135deg, var(--gd-brand) 0%, #f97316 48%, var(--gd-violet) 100%);
       color: #fff; border-radius: 12px; font-size: 14px; font-weight: 600; min-height: 44px;
       border: 1px solid rgba(255, 255, 255, 0.18);
-      box-shadow: 0 14px 30px rgba(37, 99, 235, 0.32), 0 6px 14px rgba(67, 56, 202, 0.2);
+      box-shadow: 0 14px 30px rgba(234, 88, 12, 0.35), 0 6px 14px rgba(249, 115, 22, 0.22);
     }
     .gd-btn-primary:hover { transform: translateY(-1px); filter: saturate(1.08); }
     .gd-btn-primary:disabled, .gd-btn-primary.is-disabled {
@@ -166,8 +166,8 @@
     .gd-page { padding: 24px 16px 32px; }
     .gd-page-header {
       margin-bottom: 16px; padding: 18px 20px; border-radius: 20px;
-      border: 1px solid rgba(96, 165, 250, 0.28);
-      background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(236,246,255,0.95) 56%, rgba(240,249,255,0.92) 100%);
+      border: 1px solid rgba(251, 146, 60, 0.34);
+      background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(255,237,213,0.95) 56%, rgba(255,247,237,0.92) 100%);
       box-shadow: var(--gd-shadow-sm);
     }
     .gd-modal-panel {
@@ -302,7 +302,7 @@
         <div class="login-shell flex-1 overflow-auto flex items-center justify-center">
           <div class="login-card fade-in">
             <div class="text-center mb-8">
-              <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-br from-blue-400 to-blue-600 shadow-lg shadow-blue-500/30 mb-5">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-br from-orange-400 to-orange-600 shadow-lg shadow-orange-500/30 mb-5">
                 <span class="text-white text-2xl font-extrabold tracking-tight">EC</span>
               </div>
               <h1 class="text-[2rem] leading-tight font-extrabold tracking-[-0.02em] text-slate-900">Equipment Control</h1>
@@ -332,7 +332,7 @@
             <i data-lucide="arrow-left" class="w-5 h-5 text-gray-500"></i>
           </button>
           <div id="pin-avatar"
-            class="w-16 h-16 rounded-full bg-blue-100 text-brand flex items-center justify-center font-bold text-lg mb-3"></div>
+            class="w-16 h-16 rounded-full bg-orange-100 text-brand flex items-center justify-center font-bold text-lg mb-3"></div>
           <p id="pin-name" class="font-semibold text-gray-900 mb-1"></p>
           <p class="text-sm text-gray-400 mb-8">กรอก PIN 6 หลัก</p>
           <div class="flex gap-3 mb-10" id="pin-dots">
@@ -362,7 +362,7 @@
         <div class="gd-header px-4 lg:px-8 pt-6 pb-4" style="position:sticky;top:0;z-index:20;">
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-3">
-              <div id="main-avatar" class="w-10 h-10 rounded-full bg-blue-100 text-brand flex items-center justify-center font-bold text-sm"></div>
+              <div id="main-avatar" class="w-10 h-10 rounded-full bg-orange-100 text-brand flex items-center justify-center font-bold text-sm"></div>
               <div>
                 <p id="main-user-name" class="font-semibold text-gray-900 text-sm leading-tight"></p>
                 <p id="main-user-role" class="text-xs text-gray-400">GA Staff</p>
@@ -550,12 +550,18 @@
 
   <script>
     // ===== CONFIG =====
-    const SUPABASE_URL = window.__SUPABASE_URL__ || 'https://npxbjktnxqycmifyrwrb.supabase.co';
-    const SUPABASE_ANON_KEY = window.__SUPABASE_ANON_KEY__ || 'sb_publishable_LbcwYbfDXmBrRJ6lFe9eHQ_mK3oNyL1';
+    const SUPABASE_URL = window.__SUPABASE_URL__ || 'https://varwpgmppjamaxpjgxja.supabase.co';
+    const SUPABASE_ANON_KEY = window.__SUPABASE_ANON_KEY__ || 'sb_publishable_KDARMx5ViP3-bTDu3sMnZg_ZGbv_ZFN';
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // ===== STATE =====
     let AU = { ga: [], mgr: [] }, CU = null, SU = null, PB = '';
+    let AUTH_MODE = 'legacy'; // legacy | users_no_pin | demo
+    const FALLBACK_PIN = '123456';
+    const FALLBACK_USERS = {
+      ga: [{ name: 'GA Staff Demo', role: 'ga', email: '' }],
+      mgr: [{ name: 'Admin Access', role: 'mgr', email: '' }]
+    };
     let EQ = [], BORROWS = [];
     let PIN_ATTEMPTS = 0, PIN_LOCKED_UNTIL = 0;
     const PIN_MAX_ATTEMPTS = 5, PIN_LOCK_MS = 60000;
@@ -572,9 +578,9 @@
 
     // ===== AVATAR COLORS =====
     const AVATARS = [
-      { bg: 'bg-blue-100', tc: 'text-brand' }, { bg: 'bg-emerald-100', tc: 'text-success' },
-      { bg: 'bg-amber-100', tc: 'text-amber-700' }, { bg: 'bg-purple-100', tc: 'text-purple-700' },
-      { bg: 'bg-rose-100', tc: 'text-rose-600' }, { bg: 'bg-cyan-100', tc: 'text-cyan-700' },
+      { bg: 'bg-orange-100', tc: 'text-brand' }, { bg: 'bg-amber-100', tc: 'text-amber-700' },
+      { bg: 'bg-emerald-100', tc: 'text-success' }, { bg: 'bg-rose-100', tc: 'text-rose-600' },
+      { bg: 'bg-red-100', tc: 'text-red-700' }, { bg: 'bg-yellow-100', tc: 'text-yellow-700' },
     ];
     function avc(i) { return AVATARS[i % AVATARS.length]; }
     function ini(n) { const p = (n || '').trim().split(' '); return p.length >= 2 ? p[0][0] + p[1][0] : (n || '').slice(0, 2); }
@@ -655,11 +661,33 @@
     async function api(action, params = {}) {
       try {
         if (action === 'getUsers') {
-          const { data: ga } = await sb.from('ga_staff').select('name, role, email');
-          const { data: mgr } = await sb.from('managers').select('name, role, email');
-          return { ga: (ga||[]).map(r=>({name:r.name,role:r.role,email:r.email||''})), mgr: (mgr||[]).map(r=>({name:r.name,role:r.role,email:r.email||''})) };
+          const { data: ga, error: gaErr } = await sb.from('ga_staff').select('name, role, email');
+          const { data: mgr, error: mgrErr } = await sb.from('managers').select('name, role, email');
+          if (!gaErr && !mgrErr) {
+            AUTH_MODE = 'legacy';
+            return { ga: (ga||[]).map(r=>({name:r.name,role:r.role,email:r.email||''})), mgr: (mgr||[]).map(r=>({name:r.name,role:r.role,email:r.email||''})) };
+          }
+
+          const { data: users, error: usersErr } = await sb.from('users').select('full_name, role, email, is_active').eq('is_active', true);
+          if (!usersErr && Array.isArray(users)) {
+            const mapped = {
+              ga: users.filter(u=>u.role==='ga').map(u=>({name:u.full_name,role:'ga',email:u.email||''})),
+              mgr: users.filter(u=>u.role==='mgr').map(u=>({name:u.full_name,role:'mgr',email:u.email||''}))
+            };
+            if (mapped.ga.length || mapped.mgr.length) {
+              AUTH_MODE = 'users_no_pin';
+              return mapped;
+            }
+          }
+
+          AUTH_MODE = 'demo';
+          return FALLBACK_USERS;
         }
         if (action === 'verifyPin') {
+          if (AUTH_MODE !== 'legacy') {
+            const input = String(params.pin).padStart(6,'0');
+            return { ok: input === FALLBACK_PIN };
+          }
           const table = params.role==='ga'?'ga_staff':'managers';
           const { data } = await sb.from(table).select('*').eq('name',params.name).single();
           if (!data) return { ok:false };
@@ -818,7 +846,7 @@
     // ===== LOGIN =====
     function buildLoginScreen() {
       const gaList = document.getElementById('gaUserList'), mgrList = document.getElementById('mgrUserList');
-      const grads = ['from-sky-400 to-blue-600','from-emerald-400 to-teal-600','from-violet-400 to-purple-600','from-amber-300 to-orange-500','from-fuchsia-400 to-indigo-600','from-cyan-400 to-blue-600'];
+      const grads = ['from-orange-400 to-orange-600','from-amber-300 to-orange-500','from-rose-400 to-red-600','from-yellow-300 to-amber-500','from-red-400 to-rose-600','from-orange-300 to-amber-500'];
       function row(u, i, role) {
         const isMgr = role === 'mgr';
         const icon = isMgr
@@ -1486,6 +1514,7 @@
           return;
         }
         AU = await api('getUsers');
+        if (AUTH_MODE !== 'legacy') toast(`โหมดเริ่มต้น: ใช้ PIN ${FALLBACK_PIN} สำหรับการเข้าใช้งาน`, 'warning');
         cacheSet('users', AU);
         buildLoginScreen(); goScreen('login'); lucide.createIcons();
       } catch(e) {
