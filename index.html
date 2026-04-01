@@ -624,8 +624,8 @@
     let AUTH_MODE = 'legacy'; // legacy | users_no_pin | demo
     const FALLBACK_PIN = '123456';
     const FALLBACK_USERS = {
-      ga: [{ name: 'GA Staff Demo', role: 'ga', email: '' }],
-      mgr: [{ name: 'Admin Access', role: 'mgr', email: '' }]
+      ga: [{ name: 'GA Staff Demo', role: 'ga' }],
+      mgr: [{ name: 'Admin Access', role: 'mgr' }]
     };
     let EQ = [], BORROWS = [];
     let PIN_ATTEMPTS = 0, PIN_LOCKED_UNTIL = 0;
@@ -752,18 +752,18 @@
     async function api(action, params = {}) {
       try {
         if (action === 'getUsers') {
-          const { data: ga, error: gaErr } = await sb.from('ga_staff').select('name, role, email');
-          const { data: mgr, error: mgrErr } = await sb.from('managers').select('name, role, email');
+          const { data: ga, error: gaErr } = await sb.from('ga_staff').select('name, role');
+          const { data: mgr, error: mgrErr } = await sb.from('managers').select('name, role');
           if (!gaErr && !mgrErr) {
             AUTH_MODE = 'legacy';
-            return { ga: (ga||[]).map(r=>({name:r.name,role:r.role,email:r.email||''})), mgr: (mgr||[]).map(r=>({name:r.name,role:r.role,email:r.email||''})) };
+            return { ga: (ga||[]).map(r=>({name:r.name,role:r.role})), mgr: (mgr||[]).map(r=>({name:r.name,role:r.role})) };
           }
 
-          const { data: users, error: usersErr } = await sb.from('users').select('full_name, role, email, is_active').eq('is_active', true);
+          const { data: users, error: usersErr } = await sb.from('users').select('full_name, role, is_active').eq('is_active', true);
           if (!usersErr && Array.isArray(users)) {
             const mapped = {
-              ga: users.filter(u=>u.role==='ga').map(u=>({name:u.full_name,role:'ga',email:u.email||''})),
-              mgr: users.filter(u=>u.role==='mgr').map(u=>({name:u.full_name,role:'mgr',email:u.email||''}))
+              ga: users.filter(u=>u.role==='ga').map(u=>({name:u.full_name,role:'ga'})),
+              mgr: users.filter(u=>u.role==='mgr').map(u=>({name:u.full_name,role:'mgr'}))
             };
             if (mapped.ga.length || mapped.mgr.length) {
               AUTH_MODE = 'users_no_pin';
@@ -1793,7 +1793,7 @@
       btn.disabled=true; btn.textContent='กำลังบันทึก...';
       try {
         await api('addUser', { name, role, pin });
-        if(role==='ga') AU.ga.push({name,role,email:''}); else AU.mgr.push({name,role,email:''});
+        if(role==='ga') AU.ga.push({name,role}); else AU.mgr.push({name,role});
         toast('เพิ่มสมาชิกสำเร็จ','success');
         closeUserModal(); renderMembersTab(); buildLoginScreen();
       } catch(e){ toast('เพิ่มไม่สำเร็จ','error'); }
