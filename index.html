@@ -383,6 +383,7 @@
         <div id="tab-mgr-history" class="flex-1 overflow-auto hidden"></div>
         <div id="tab-equipment" class="flex-1 overflow-auto hidden"></div>
         <div id="tab-members" class="flex-1 overflow-auto hidden"></div>
+        <div id="tab-audit-log" class="flex-1 overflow-auto hidden"></div>
       </div>
 
       <!-- BORROW FORM (overlay) -->
@@ -575,6 +576,21 @@
     let currentBorrowEq = null, currentReturnRecord = null;
     let borrowSearchQ = '', borrowCatFilter = '';
     let historyFilter = '';
+    let AUDIT_LOGS = [], auditFilter = '', auditSearch = '';
+
+    // ===== AUDIT LOG HELPER =====
+    async function logAction(action_type, target_table, target_id, old_data, new_data) {
+      try {
+        await sb.from('app_audit_logs').insert([{
+          action_type,
+          target_table: target_table || null,
+          target_id: target_id ? String(target_id) : null,
+          actor_name: CU?.name || null,
+          old_data: old_data || null,
+          new_data: new_data || null
+        }]);
+      } catch(e) { console.warn('[logAction]', e); } // non-blocking
+    }
 
     // ===== AVATAR COLORS =====
     const AVATARS = [
@@ -700,6 +716,7 @@
           const table = params.role==='ga'?'ga_staff':'managers';
           const h = await sha256(String(params.newPin).padStart(6,'0'));
           const { error } = await sb.from(table).update({pin:h}).eq('name',params.name);
+          if (!error) await logAction('MEMBER_RESET_PIN','users',params.name,null,{name:params.name,role:params.role});
           return { ok:!error };
         }
         if (action === 'getEquipment') {
@@ -734,6 +751,7 @@
             const r = await sb.from('equipment').select('available').eq('eq_id', params.eq_id).maybeSingle();
             if (r.data) await sb.from('equipment').update({ available: Math.max(0, r.data.available - params.qty) }).eq('eq_id', params.eq_id);
           }
+          await logAction('BORROW','borrow_records',rid,null,{eq_name:params.eq_name,borrower_name:params.borrower_name,borrower_dept:params.borrower_dept,qty:params.qty,due_date:params.due_date});
           return { ok: true, record_id: rid };
         }
         if (action === 'returnBorrow') {
@@ -742,6 +760,7 @@
             return_sign_img: params.return_sign_img || ''
           }).eq('record_id', params.record_id);
           if (error) throw error;
+          await logAction('RETURN','borrow_records',params.record_id,null,{returned_at:new Date().toISOString()});
           const { data: rec } = await sb.from('borrow_records').select('eq_id, qty_borrowed').eq('record_id', params.record_id).single();
           if (rec) {
             // Try new schema (id UUID) first, then legacy (eq_id text)
@@ -764,6 +783,7 @@
           const payload = { code, name: params.name, category: params.category || null, quantity: qty, available: qty };
           const { data, error } = await sb.from('equipment').insert([payload]).select('id').single();
           if (error) throw error;
+          await logAction('EQUIPMENT_CREATE','equipment',data.id,null,{name:params.name,category:params.category,quantity:qty});
           return { ok: true, eq_id: data.id };
         }
         if (action === 'updateEquipment') {
@@ -775,6 +795,7 @@
             const res = await sb.from('equipment').update(upd).eq('eq_id', params.eq_id);
             if (res.error) throw res.error;
           }
+          await logAction('EQUIPMENT_UPDATE','equipment',params.eq_id,null,{name:params.name,category:params.category,quantity:Number(params.quantity)});
           return { ok: true };
         }
         if (action === 'deleteEquipment') {
@@ -784,6 +805,7 @@
             const res = await sb.from('equipment').delete().eq('eq_id', params.eq_id);
             if (res.error) throw res.error;
           }
+          await logAction('EQUIPMENT_DELETE','equipment',params.eq_id,null,null);
           return { ok: true };
         }
         if (action === 'addUser') {
@@ -791,12 +813,14 @@
           const h = await sha256(String(params.pin).padStart(6,'0'));
           const { error } = await sb.from(table).insert([{ name:params.name, pin:h, role:params.role }]);
           if (error) throw error;
+          await logAction('MEMBER_CREATE','users',params.name,null,{name:params.name,role:params.role});
           return { ok:true };
         }
         if (action === 'deleteUser') {
           const table = params.role==='ga'?'ga_staff':'managers';
           const { error } = await sb.from(table).delete().eq('name', params.name);
           if (error) throw error;
+          await logAction('MEMBER_DELETE','users',params.name,null,{name:params.name,role:params.role});
           return { ok:true };
         }
         throw new Error('Unknown action: '+action);
@@ -965,8 +989,8 @@
       document.getElementById('main-user-role').textContent = isMgr ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่ GA';
       const bar = document.getElementById('mainTabBar');
       if (isMgr) {
-        bar.innerHTML = ['Dashboard','ประวัติ','อุปกรณ์','สมาชิก'].map((t,i)=>
-          `<button class="main-tab flex-1 px-3 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}</button>`).join('');
+        bar.innerHTML = ['Dashboard','ประวัติ','อุปกรณ์','สมาชิก','Audit'].map((t,i)=>
+          `<button class="main-tab flex-1 px-2 py-2.5 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}</button>`).join('');
       } else {
         bar.innerHTML = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ'].map((t,i)=>
           `<button class="main-tab flex-1 px-3 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}</button>`).join('');
@@ -976,12 +1000,13 @@
     function switchTab(idx) {
       const isMgr = CU.role === 'mgr';
       document.querySelectorAll('.main-tab').forEach((b,i)=> b.className = `main-tab flex-1 px-3 py-2.5 text-center text-sm font-semibold ${i===idx?'tab-active':'tab-inactive'}`);
-      ['borrow','return','history','dashboard','mgr-history','equipment','members'].forEach(t=> { const el=document.getElementById('tab-'+t); if(el) el.style.display='none'; });
+      ['borrow','return','history','dashboard','mgr-history','equipment','members','audit-log'].forEach(t=> { const el=document.getElementById('tab-'+t); if(el) el.style.display='none'; });
       if (isMgr) {
         if(idx===0){ document.getElementById('tab-dashboard').style.display='block'; renderDashboard(); }
         if(idx===1){ document.getElementById('tab-mgr-history').style.display='block'; renderMgrHistory(); }
         if(idx===2){ document.getElementById('tab-equipment').style.display='block'; renderEquipmentTab(); }
         if(idx===3){ document.getElementById('tab-members').style.display='block'; renderMembersTab(); }
+        if(idx===4){ document.getElementById('tab-audit-log').style.display='block'; renderAuditLogTab(); }
       } else {
         if(idx===0){ document.getElementById('tab-borrow').style.display='block'; renderBorrowTab(); }
         if(idx===1){ document.getElementById('tab-return').style.display='block'; renderReturnTab(); }
@@ -1522,6 +1547,93 @@
         closeResetPinModal();
       } catch(e){ toast('Reset ไม่สำเร็จ','error'); }
       btn.disabled=false; btn.textContent='ยืนยัน Reset';
+    }
+
+    // ===== MGR: AUDIT LOG TAB =====
+    const AUDIT_TYPE_META = {
+      BORROW:           { label:'ยืม',           cls:'bg-blue-50 text-brand' },
+      RETURN:           { label:'คืน',            cls:'bg-green-50 text-success' },
+      RETURN_BY_MANAGER:{ label:'คืนแทน',         cls:'bg-purple-50 text-purple-600' },
+      EQUIPMENT_CREATE: { label:'เพิ่มอุปกรณ์',   cls:'bg-amber-50 text-warn' },
+      EQUIPMENT_UPDATE: { label:'แก้ไขอุปกรณ์',   cls:'bg-amber-50 text-warn' },
+      EQUIPMENT_DELETE: { label:'ลบอุปกรณ์',      cls:'bg-red-50 text-danger' },
+      MEMBER_CREATE:    { label:'เพิ่มสมาชิก',    cls:'bg-gray-100 text-gray-600' },
+      MEMBER_DELETE:    { label:'ลบสมาชิก',       cls:'bg-red-50 text-danger' },
+      MEMBER_RESET_PIN: { label:'Reset PIN',      cls:'bg-gray-100 text-gray-600' },
+      OVERDUE_FLAGGED:  { label:'เกินกำหนด',      cls:'bg-red-50 text-danger' },
+    };
+    function auditTypeBadge(t) {
+      const m = AUDIT_TYPE_META[t] || { label: t, cls: 'bg-gray-100 text-gray-500' };
+      return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${m.cls}">${he(m.label)}</span>`;
+    }
+    function auditDetail(r) {
+      const d = r.new_data || {};
+      if (r.action_type === 'BORROW') return `${he(d.eq_name||'')} · ${he(d.borrower_name||'')} (${he(d.borrower_dept||'')}) จำนวน ${d.qty||''}`;
+      if (r.action_type === 'RETURN' || r.action_type === 'RETURN_BY_MANAGER') return `record: ${he(r.target_id||'')}`;
+      if (r.action_type?.startsWith('EQUIPMENT')) return `${he(d.name||'')}${d.category?' · '+he(d.category):''}${d.quantity?' · '+d.quantity+' ชิ้น':''}`;
+      if (r.action_type?.startsWith('MEMBER')) return `${he(d.name||'')}${d.role?' ('+he(d.role)+')':''}`;
+      return r.target_id ? he(r.target_id) : '';
+    }
+    async function renderAuditLogTab() {
+      const el = document.getElementById('tab-audit-log');
+      el.innerHTML = `<div class="gd-page fade-in"><div class="gd-page-header"><p class="gd-section-title mb-2">Audit Log</p><h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการดำเนินการ</h2></div>${skeletonCards(5)}</div>`;
+      const { data, error } = await sb.from('app_audit_logs').select('*').order('created_at', { ascending: false }).limit(300);
+      if (error) { el.innerHTML = `<div class="gd-page fade-in"><p class="text-sm text-danger text-center py-10">โหลดข้อมูลไม่สำเร็จ</p></div>`; return; }
+      AUDIT_LOGS = data || [];
+      _renderAuditList();
+    }
+    function _renderAuditList() {
+      const el = document.getElementById('tab-audit-log');
+      if (!el) return;
+      const filterTypes = ['BORROW','RETURN','EQUIPMENT_CREATE','EQUIPMENT_UPDATE','EQUIPMENT_DELETE','MEMBER_CREATE','MEMBER_DELETE','MEMBER_RESET_PIN'];
+      const filtered = AUDIT_LOGS
+        .filter(r => !auditFilter || r.action_type === auditFilter)
+        .filter(r => !auditSearch || (r.actor_name||'').toLowerCase().includes(auditSearch.toLowerCase()));
+      el.innerHTML = `<div class="gd-page fade-in">
+        <div class="gd-page-header">
+          <p class="gd-section-title mb-2">Audit Log</p>
+          <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการดำเนินการ</h2>
+        </div>
+        <div class="flex gap-2 mb-3">
+          <input id="auditSearchInput" type="text" placeholder="ค้นหาผู้ดำเนินการ..." value="${he(auditSearch)}"
+            oninput="auditSearch=this.value;_renderAuditList()"
+            class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30">
+          <button onclick="exportAuditCSV()" class="flex items-center gap-1.5 px-3 py-2 bg-brand text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition shadow-sm whitespace-nowrap">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV</button>
+        </div>
+        <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
+          <div class="chip ${auditFilter===''?'active':''}" onclick="auditFilter='';_renderAuditList()">ทั้งหมด</div>
+          ${filterTypes.map(t=>`<div class="chip ${auditFilter===t?'active':''}" onclick="auditFilter='${t}';_renderAuditList()">${AUDIT_TYPE_META[t]?.label||t}</div>`).join('')}
+        </div>
+        <div class="space-y-2">
+          ${filtered.length ? filtered.map(r=>`<div class="gd-card p-3.5">
+            <div class="flex items-start justify-between gap-2 mb-1">
+              ${auditTypeBadge(r.action_type)}
+              <span class="text-[11px] text-gray-400 shrink-0">${fdFull(r.created_at)}</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">${he(r.actor_name||'—')}<span class="text-gray-300 mx-1">·</span>${auditDetail(r)}</p>
+          </div>`).join('') : `<div class="text-center py-14 gd-empty flex flex-col items-center gap-3">
+            <div class="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center"><i data-lucide="inbox" class="w-8 h-8 text-slate-400"></i></div>
+            <p class="font-semibold text-slate-600 text-sm">ไม่มีข้อมูล</p></div>`}
+        </div>
+      </div>`;
+      lucide.createIcons();
+    }
+    function exportAuditCSV() {
+      const filtered = AUDIT_LOGS
+        .filter(r => !auditFilter || r.action_type === auditFilter)
+        .filter(r => !auditSearch || (r.actor_name||'').toLowerCase().includes(auditSearch.toLowerCase()));
+      const headers = ['วันที่/เวลา','ประเภท','ผู้ดำเนินการ','ตาราง','ID','รายละเอียด'];
+      const lines = filtered.map(r => [
+        fdFull(r.created_at), r.action_type||'', r.actor_name||'',
+        r.target_table||'', r.target_id||'',
+        r.new_data ? JSON.stringify(r.new_data) : ''
+      ].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','));
+      const csv = [headers.join(','), ...lines].join('\n');
+      const blob = new Blob(['\ufeff'+csv], { type:'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download=`audit-log-${new Date().toISOString().slice(0,10)}.csv`; a.click();
+      URL.revokeObjectURL(url);
     }
 
     // ===== INIT =====
