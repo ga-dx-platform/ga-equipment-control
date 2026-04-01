@@ -552,6 +552,41 @@
     </div>
   </div>
 
+  <!-- Add Recipient Modal -->
+  <div id="recipientModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
+    <div class="absolute inset-0 bg-black/40" onclick="closeRecipientModal()"></div>
+    <div class="relative w-full gd-modal-panel" style="max-width:360px;">
+      <h3 class="font-bold text-gray-900 text-lg mb-4">เพิ่มผู้รับรายงาน</h3>
+      <div class="space-y-4">
+        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
+          <input type="text" id="recipientName" placeholder="เช่น สมชาย จิตรดี" class="gd-input"></div>
+        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">อีเมล</label>
+          <input type="email" id="recipientEmail" placeholder="example@company.com" class="gd-input"></div>
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button onclick="closeRecipientModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
+        <button onclick="confirmAddRecipient()" id="addRecipientBtn" class="flex-1 py-2.5 gd-btn-primary">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Recipient Modal -->
+  <div id="deleteRecipientModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
+    <div class="absolute inset-0 bg-black/40" onclick="closeDeleteRecipientModal()"></div>
+    <div class="relative w-full gd-modal-panel" style="max-width:320px;">
+      <div class="flex flex-col items-center text-center mb-5">
+        <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-3">
+          <i data-lucide="mail-x" class="w-6 h-6 text-red-500"></i></div>
+        <p class="font-semibold text-gray-900 text-base">ลบผู้รับรายงาน?</p>
+        <p id="deleteRecipientLabel" class="text-sm text-danger font-medium mt-1"></p>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="closeDeleteRecipientModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
+        <button onclick="executeDeleteRecipient()" id="delRecipientBtn" class="flex-1 py-2.5 gd-btn-danger">ลบเลย</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Logout Modal -->
   <div id="logoutModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
     <div class="absolute inset-0 bg-black/40" onclick="closeLogoutModal()"></div>
@@ -601,6 +636,7 @@
     let drawing = false, sctx = null, hasSignatureStroke = false;
     let signatureCanvasEl = null, signatureListenersCleanup = null;
     let _editEqId = null, _deleteEqId = null, _deleteUserTarget = null, _resetPinTarget = null, _resetPinNew = '';
+    let RECIPIENTS = [], _recipientDeleteId = null;
     let borrowConfirmState = false, returnConfirmState = false;
     let currentBorrowEq = null, currentReturnRecord = null;
     let returnCondition = '';
@@ -883,6 +919,28 @@
           if (error) throw error;
           await logAction('MEMBER_DELETE','users',params.name,null,{name:params.name,role:params.role});
           return { ok:true };
+        }
+        if (action === 'getRecipients') {
+          const { data, error } = await sb.from('report_recipients').select('*').order('created_at');
+          if (error) throw error;
+          return data || [];
+        }
+        if (action === 'addRecipient') {
+          const { data, error } = await sb.from('report_recipients').insert([{
+            name: params.name, email: params.email, is_active: true
+          }]).select().single();
+          if (error) throw error;
+          return data;
+        }
+        if (action === 'toggleRecipient') {
+          const { error } = await sb.from('report_recipients').update({ is_active: params.is_active }).eq('id', params.id);
+          if (error) throw error;
+          return { ok: true };
+        }
+        if (action === 'deleteRecipient') {
+          const { error } = await sb.from('report_recipients').delete().eq('id', params.id);
+          if (error) throw error;
+          return { ok: true };
         }
         throw new Error('Unknown action: '+action);
       } catch(err) { console.error('API Error:', err); throw err; }
@@ -1699,8 +1757,28 @@
             </div>`;
           }).join('')}
         </div>
+        <div class="mt-6 border-t border-gray-100 pt-5">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="font-semibold text-gray-900 text-sm flex items-center gap-2">
+              <i data-lucide="mail" class="w-4 h-4 text-brand"></i> ตั้งค่าการแจ้งเตือน Email
+            </h4>
+          </div>
+          <p class="text-xs text-gray-400 mb-3">รายชื่อผู้รับรายงานประจำสัปดาห์</p>
+          <div id="notif-recipients-list" class="space-y-2 mb-3">
+            <div class="flex items-center justify-center py-4">
+              <span class="text-xs text-gray-400">กำลังโหลด...</span>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="openRecipientModal()" class="flex items-center gap-1.5 px-3 py-2 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i> เพิ่มเมลล์</button>
+            <button id="sendTestReportBtn" onclick="sendTestReport()" class="flex items-center gap-1.5 px-3 py-2 border border-brand/30 rounded-lg text-xs font-semibold text-brand hover:bg-blue-50 transition">
+              <i data-lucide="send" class="w-3.5 h-3.5"></i> ส่งทดสอบตอนนี้</button>
+          </div>
+        </div>
       </div>`;
       lucide.createIcons();
+      loadAndRenderRecipients();
     }
     function openUserModal() { showModal('userModal'); document.getElementById('newUserName').value=''; document.getElementById('newUserPin').value=''; document.getElementById('newUserRole').value='ga'; }
     function closeUserModal() { hideModal('userModal'); }
@@ -1763,6 +1841,106 @@
         closeResetPinModal();
       } catch(e){ toast('Reset ไม่สำเร็จ','error'); }
       btn.disabled=false; btn.textContent='ยืนยัน Reset';
+    }
+
+    // ===== MGR: NOTIFICATION / RECIPIENTS =====
+    async function loadAndRenderRecipients() {
+      try {
+        RECIPIENTS = await api('getRecipients');
+        renderRecipientsList();
+      } catch(e) {
+        const el = document.getElementById('notif-recipients-list');
+        if (el) el.innerHTML = `<p class="text-xs text-red-400 text-center py-2">โหลดไม่สำเร็จ</p>`;
+      }
+    }
+    function renderRecipientsList() {
+      const el = document.getElementById('notif-recipients-list');
+      if (!el) return;
+      if (!RECIPIENTS.length) {
+        el.innerHTML = `<p class="text-xs text-gray-400 text-center py-3">ยังไม่มีผู้รับรายงาน</p>`;
+        return;
+      }
+      el.innerHTML = RECIPIENTS.map(r => `<div class="gd-card p-3 flex items-center justify-between">
+        <div class="flex items-center gap-2.5 min-w-0 flex-1 pr-2">
+          <span class="text-base shrink-0">${r.is_active ? '✅' : '⬜'}</span>
+          <div class="min-w-0">
+            <p class="text-sm font-medium text-gray-900 truncate">${he(r.name)}</p>
+            <p class="text-xs text-gray-400 truncate">${he(r.email)}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1 shrink-0">
+          <button data-id="${r.id}" data-active="${r.is_active}"
+            onclick="toggleRecipient(this.dataset.id, this.dataset.active==='true')"
+            class="text-xs px-2.5 py-1 rounded-lg border font-semibold transition ${r.is_active ? 'border-amber-200 text-amber-600 hover:bg-amber-50' : 'border-green-200 text-green-600 hover:bg-green-50'}">
+            ${r.is_active ? 'ปิด' : 'เปิด'}</button>
+          <button data-id="${r.id}" data-label="${he(r.name+' · '+r.email)}"
+            onclick="confirmDeleteRecipient(this.dataset.id, this.dataset.label)"
+            class="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50 transition">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+        </div>
+      </div>`).join('');
+      lucide.createIcons();
+    }
+    function openRecipientModal() {
+      document.getElementById('recipientName').value = '';
+      document.getElementById('recipientEmail').value = '';
+      showModal('recipientModal');
+    }
+    function closeRecipientModal() { hideModal('recipientModal'); }
+    async function confirmAddRecipient() {
+      const name = document.getElementById('recipientName').value.trim();
+      const email = document.getElementById('recipientEmail').value.trim();
+      if (!name) { toast('กรุณากรอกชื่อ'); return; }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast('กรุณากรอกอีเมลให้ถูกต้อง'); return; }
+      const btn = document.getElementById('addRecipientBtn');
+      btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
+      try {
+        const rec = await api('addRecipient', { name, email });
+        RECIPIENTS.push(rec);
+        toast('เพิ่มผู้รับสำเร็จ', 'success');
+        closeRecipientModal(); renderRecipientsList();
+      } catch(e) { toast('เพิ่มไม่สำเร็จ', 'error'); }
+      btn.disabled = false; btn.textContent = 'บันทึก';
+    }
+    async function toggleRecipient(id, currentlyActive) {
+      try {
+        await api('toggleRecipient', { id, is_active: !currentlyActive });
+        const r = RECIPIENTS.find(r => r.id === id);
+        if (r) r.is_active = !currentlyActive;
+        renderRecipientsList();
+      } catch(e) { toast('บันทึกไม่สำเร็จ', 'error'); }
+    }
+    function confirmDeleteRecipient(id, label) {
+      _recipientDeleteId = id;
+      document.getElementById('deleteRecipientLabel').textContent = label;
+      showModal('deleteRecipientModal');
+    }
+    function closeDeleteRecipientModal() { hideModal('deleteRecipientModal'); _recipientDeleteId = null; }
+    async function executeDeleteRecipient() {
+      if (!_recipientDeleteId) return;
+      const btn = document.getElementById('delRecipientBtn');
+      btn.disabled = true; btn.textContent = 'กำลังลบ...';
+      try {
+        await api('deleteRecipient', { id: _recipientDeleteId });
+        RECIPIENTS = RECIPIENTS.filter(r => r.id !== _recipientDeleteId);
+        toast('ลบผู้รับสำเร็จ', 'success');
+        closeDeleteRecipientModal(); renderRecipientsList();
+      } catch(e) { toast('ลบไม่สำเร็จ', 'error'); }
+      btn.disabled = false; btn.textContent = 'ลบเลย';
+    }
+    async function sendTestReport() {
+      const btn = document.getElementById('sendTestReportBtn');
+      if (!btn) return;
+      btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i> กำลังส่ง...';
+      lucide.createIcons();
+      try {
+        const { data, error } = await sb.functions.invoke('send-weekly-report');
+        if (error) throw error;
+        const sent = data?.sent ?? '?';
+        toast(`ส่งรายงานทดสอบเรียบร้อย (${sent} เมลล์)`, 'success');
+      } catch(e) { toast('เกิดข้อผิดพลาด: ' + (e.message || 'ลองใหม่อีกครั้ง'), 'error'); }
+      btn.disabled = false; btn.innerHTML = '<i data-lucide="send" class="w-3.5 h-3.5"></i> ส่งทดสอบตอนนี้';
+      lucide.createIcons();
     }
 
     // ===== MGR: AUDIT LOG TAB =====
