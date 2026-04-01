@@ -603,6 +603,7 @@
     let _editEqId = null, _deleteEqId = null, _deleteUserTarget = null, _resetPinTarget = null, _resetPinNew = '';
     let borrowConfirmState = false, returnConfirmState = false;
     let currentBorrowEq = null, currentReturnRecord = null;
+    let returnCondition = '';
     let borrowSearchQ = '', borrowCatFilter = '';
     let historyFilter = '';
     let gaHistorySearch = '';
@@ -693,6 +694,12 @@
     function statusBadge(s) {
       const m = statusMeta(s);
       return `<span class="status-badge ${m.style}"><span class="status-dot ${m.dot}"></span>${m.th}</span>`;
+    }
+    function conditionBadge(c) {
+      if (!c) return '';
+      const map = { normal: ['bg-green-50 text-green-700','ปกติ'], damaged: ['bg-amber-50 text-amber-700','ชำรุด'], lost: ['bg-red-50 text-red-700','สูญหาย'] };
+      const [cls, label] = map[c] || ['bg-gray-50 text-gray-500', c];
+      return `<span class="text-[10px] px-2 py-0.5 rounded-full font-semibold ${cls}">${label}</span>`;
     }
     function detectOverdue(records) {
       const today = new Date(); today.setHours(0,0,0,0);
@@ -787,10 +794,13 @@
           return { ok: true, record_id: rid };
         }
         if (action === 'returnBorrow') {
-          const { error } = await sb.from('borrow_records').update({
+          const patch = {
             status: 'returned', returned_at: new Date().toISOString(),
             return_sign_img: params.return_sign_img || ''
-          }).eq('record_id', params.record_id);
+          };
+          if (params.condition_on_return) patch.condition_on_return = params.condition_on_return;
+          if (params.condition_note) patch.condition_note = params.condition_note;
+          const { error } = await sb.from('borrow_records').update(patch).eq('record_id', params.record_id);
           if (error) throw error;
           await logAction('RETURN','borrow_records',params.record_id,null,{returned_at:new Date().toISOString()});
           const { data: rec } = await sb.from('borrow_records').select('eq_id, qty_borrowed').eq('record_id', params.record_id).single();
@@ -1244,10 +1254,20 @@
     }
 
     // ===== GA: RETURN DETAIL =====
+    function setReturnCondition(val) {
+      returnCondition = val;
+      ['normal','damaged','lost'].forEach(c => {
+        const btn = document.getElementById('rc-'+c);
+        if (!btn) return;
+        btn.classList.toggle('ring-2', c===val);
+        btn.classList.toggle('ring-offset-1', c===val);
+      });
+      document.getElementById('rc-note-wrap').style.display = (val==='damaged'||val==='lost') ? 'block' : 'none';
+    }
     function openReturnDetail(rid) {
       const rec = BORROWS.find(r=>r.record_id===rid);
       if (!rec) { toast('ไม่พบรายการ','error'); return; }
-      currentReturnRecord = rec; returnConfirmState = false;
+      currentReturnRecord = rec; returnConfirmState = false; returnCondition = '';
       document.getElementById('rd-eq-name').textContent = rec.eq_name;
       const isOD = rec.status === 'overdue';
       document.getElementById('rd-badge').innerHTML = statusBadge(rec.status);
@@ -1264,6 +1284,24 @@
             ${rec.note?`<div class="flex justify-between"><span class="text-gray-400">หมายเหตุ</span><span class="font-medium">${he(rec.note)}</span></div>`:''}
           </div>
           ${rec.sign_img?`<div class="mt-3 pt-3 border-t border-gray-100"><p class="text-xs text-gray-400 mb-2">ลายเซ็นตอนยืม</p><img src="${rec.sign_img}" class="w-full h-20 object-contain bg-white rounded-lg border border-gray-200 p-1"></div>`:''}
+        </div>
+        <div class="gd-card p-4 mb-4">
+          <h4 class="font-semibold text-gray-900 text-sm mb-3 flex items-center gap-2"><i data-lucide="clipboard-check" class="w-4 h-4 text-brand"></i> สภาพอุปกรณ์เมื่อคืน</h4>
+          <div class="flex gap-2 mb-3">
+            <button id="rc-normal" onclick="setReturnCondition('normal')"
+              class="flex-1 py-2.5 rounded-xl border-2 border-green-300 bg-green-50 text-green-700 text-xs font-semibold transition ring-green-400 hover:bg-green-100">
+              <span class="block text-base">✅</span>ปกติ</button>
+            <button id="rc-damaged" onclick="setReturnCondition('damaged')"
+              class="flex-1 py-2.5 rounded-xl border-2 border-amber-300 bg-amber-50 text-amber-700 text-xs font-semibold transition ring-amber-400 hover:bg-amber-100">
+              <span class="block text-base">⚠️</span>ชำรุด</button>
+            <button id="rc-lost" onclick="setReturnCondition('lost')"
+              class="flex-1 py-2.5 rounded-xl border-2 border-red-300 bg-red-50 text-red-700 text-xs font-semibold transition ring-red-400 hover:bg-red-100">
+              <span class="block text-base">❌</span>สูญหาย</button>
+          </div>
+          <div id="rc-note-wrap" style="display:none;">
+            <textarea id="rc-note" rows="2" placeholder="ระบุรายละเอียด (เช่น รอยแตก, หายไปบางส่วน)"
+              class="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-brand resize-none"></textarea>
+          </div>
         </div>
         <div class="signature-pad mb-6">
           <div class="signature-pad__header">
@@ -1283,6 +1321,7 @@
     function closeReturnDetail() { currentReturnRecord=null; returnConfirmState=false; goScreen('main'); switchTab(1); }
 
     async function submitReturn() {
+      if (!returnCondition) { toast('กรุณาเลือกสภาพอุปกรณ์ก่อนยืนยัน'); return; }
       if (isCanvasBlank()) { toast('กรุณาเซ็นลายเซ็นยืนยันคืน'); return; }
       const btn = document.getElementById('rdSubmitBtn');
       if (!returnConfirmState) {
@@ -1297,7 +1336,13 @@
       try {
         const canvas = document.getElementById('rdSignCanvas');
         const sig = canvas ? exportSignature(canvas) : '';
-        await api('returnBorrow', { record_id: currentReturnRecord.record_id, return_sign_img: sig });
+        const note = (document.getElementById('rc-note')?.value || '').trim();
+        await api('returnBorrow', {
+          record_id: currentReturnRecord.record_id,
+          return_sign_img: sig,
+          condition_on_return: returnCondition,
+          condition_note: note || null
+        });
         EQ = await api('getEquipment');
         BORROWS = await api('getBorrows', { name:CU.name, role:CU.role });
         toast('คืนอุปกรณ์สำเร็จ','success');
@@ -1330,13 +1375,14 @@
           ${list.length ? list.map(r=>`<div class="gd-card p-4">
             <div class="flex items-start justify-between mb-1">
               <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
-              ${statusBadge(r.status)}
+              <div class="flex items-center gap-1.5">${conditionBadge(r.condition_on_return)}${statusBadge(r.status)}</div>
             </div>
             <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · ${he(r.borrower_dept)}</p>
             <div class="flex justify-between text-xs text-gray-400 mt-2">
               <span>ยืม ${fd(r.borrowed_at)}</span>
               <span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span>
             </div>
+            ${r.condition_note?`<p class="text-xs text-gray-400 mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : `<div class="text-center py-14 gd-empty flex flex-col items-center gap-3">
             <div class="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center"><i data-lucide="inbox" class="w-8 h-8 text-slate-400"></i></div>
             <p class="font-semibold text-slate-600 text-sm">ไม่มีประวัติ</p></div>`}
@@ -1487,13 +1533,14 @@
           ${list.length ? list.map(r=>`<div class="gd-card p-4">
             <div class="flex items-start justify-between mb-1">
               <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
-              ${statusBadge(r.status)}
+              <div class="flex items-center gap-1.5">${conditionBadge(r.condition_on_return)}${statusBadge(r.status)}</div>
             </div>
             <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · ${he(r.borrower_dept)} · GA: ${he(r.ga_staff)}</p>
             <div class="flex justify-between text-xs text-gray-400 mt-2">
               <span>ยืม ${fd(r.borrowed_at)}</span>
               <span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span>
             </div>
+            ${r.condition_note?`<p class="text-xs text-gray-400 mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : `<div class="text-center py-14 gd-empty flex flex-col items-center gap-3">
             <div class="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center"><i data-lucide="inbox" class="w-8 h-8 text-slate-400"></i></div>
             <p class="font-semibold text-slate-600 text-sm">ไม่มีประวัติ</p></div>`}
