@@ -1,15 +1,13 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
-
 Deno.serve(async (req) => {
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response('ok', {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'authorization, content-type',
+      },
+    });
   }
 
   try {
@@ -26,7 +24,7 @@ Deno.serve(async (req) => {
     if (recipientsError) throw recipientsError;
     if (!recipients || recipients.length === 0) {
       return new Response(JSON.stringify({ sent: 0 }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
       });
     }
 
@@ -74,12 +72,12 @@ Deno.serve(async (req) => {
     }
 
     return new Response(JSON.stringify({ sent }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
     });
   } catch (error) {
     return new Response(JSON.stringify({ error: (error as Error).message }), {
       status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
     });
   }
 });
