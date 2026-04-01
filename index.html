@@ -584,6 +584,8 @@
     let currentBorrowEq = null, currentReturnRecord = null;
     let borrowSearchQ = '', borrowCatFilter = '';
     let historyFilter = '';
+    let gaHistorySearch = '';
+    let mgrHistorySearch = '', mgrHistoryDept = '', mgrHistoryGa = '', mgrHistoryFrom = '', mgrHistoryTo = '';
     let AUDIT_LOGS = [], auditFilter = '', auditSearch = '';
 
     // ===== AUDIT LOG HELPER =====
@@ -1264,13 +1266,19 @@
 
     // ===== GA: HISTORY TAB =====
     function renderHistoryTab() {
-      const list = BORROWS.filter(r=> !historyFilter || r.status === historyFilter);
+      const sq = gaHistorySearch.toLowerCase();
+      const list = BORROWS
+        .filter(r => !historyFilter || r.status === historyFilter)
+        .filter(r => !sq || (r.eq_name||'').toLowerCase().includes(sq));
       const el = document.getElementById('tab-history');
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="gd-page-header">
           <p class="gd-section-title mb-2">History</p>
           <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการยืม-คืน</h2>
         </div>
+        <input type="text" placeholder="ค้นหาชื่ออุปกรณ์..." value="${he(gaHistorySearch)}"
+          oninput="gaHistorySearch=this.value;renderHistoryTab()"
+          class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-brand/30">
         <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
           <div class="chip ${historyFilter===''?'active':''}" onclick="historyFilter='';renderHistoryTab()">ทั้งหมด</div>
           <div class="chip ${historyFilter==='borrowed'?'active':''}" onclick="historyFilter='borrowed';renderHistoryTab()">กำลังยืม</div>
@@ -1360,11 +1368,38 @@
 
     // ===== MGR: ALL HISTORY =====
     function renderMgrHistory() {
+      const depts = [...new Set(BORROWS.map(r=>r.borrower_dept).filter(Boolean))].sort();
+      const gaStaffs = [...new Set(BORROWS.map(r=>r.ga_staff).filter(Boolean))].sort();
+      const sq = mgrHistorySearch.toLowerCase();
+      const list = BORROWS
+        .filter(r => !historyFilter || r.status === historyFilter)
+        .filter(r => !sq || (r.eq_name||'').toLowerCase().includes(sq) || (r.borrower_name||'').toLowerCase().includes(sq))
+        .filter(r => !mgrHistoryDept || r.borrower_dept === mgrHistoryDept)
+        .filter(r => !mgrHistoryGa || r.ga_staff === mgrHistoryGa)
+        .filter(r => !mgrHistoryFrom || (r.borrowed_at||'') >= mgrHistoryFrom)
+        .filter(r => !mgrHistoryTo || (r.borrowed_at||'').slice(0,10) <= mgrHistoryTo);
+      const selectCls = 'border border-gray-200 rounded-lg px-2 py-1.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-brand/30';
       const el = document.getElementById('tab-mgr-history');
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="gd-page-header">
           <p class="gd-section-title mb-2">All Records</p>
           <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติทั้งหมด</h2>
+        </div>
+        <input type="text" placeholder="ค้นหาชื่ออุปกรณ์ หรือผู้ยืม..." value="${he(mgrHistorySearch)}"
+          oninput="mgrHistorySearch=this.value;renderMgrHistory()"
+          class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mb-2 focus:outline-none focus:ring-2 focus:ring-brand/30">
+        <div class="flex gap-2 mb-3 flex-wrap">
+          <select onchange="mgrHistoryDept=this.value;renderMgrHistory()" class="${selectCls}">
+            <option value="">แผนกทั้งหมด</option>
+            ${depts.map(d=>`<option value="${he(d)}" ${mgrHistoryDept===d?'selected':''}>${he(d)}</option>`).join('')}
+          </select>
+          <select onchange="mgrHistoryGa=this.value;renderMgrHistory()" class="${selectCls}">
+            <option value="">GA ทั้งหมด</option>
+            ${gaStaffs.map(g=>`<option value="${he(g)}" ${mgrHistoryGa===g?'selected':''}>${he(g)}</option>`).join('')}
+          </select>
+          <input type="date" value="${mgrHistoryFrom}" onchange="mgrHistoryFrom=this.value;renderMgrHistory()" class="${selectCls}" title="ตั้งแต่วันที่">
+          <input type="date" value="${mgrHistoryTo}" onchange="mgrHistoryTo=this.value;renderMgrHistory()" class="${selectCls}" title="ถึงวันที่">
+          ${(mgrHistoryDept||mgrHistoryGa||mgrHistoryFrom||mgrHistoryTo)?`<button onclick="mgrHistoryDept='';mgrHistoryGa='';mgrHistoryFrom='';mgrHistoryTo='';renderMgrHistory()" class="text-xs text-gray-400 hover:text-danger px-1">ล้าง</button>`:''}
         </div>
         <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
           <div class="chip ${historyFilter===''?'active':''}" onclick="historyFilter='';renderMgrHistory()">ทั้งหมด</div>
@@ -1373,7 +1408,7 @@
           <div class="chip ${historyFilter==='returned'?'active':''}" onclick="historyFilter='returned';renderMgrHistory()">คืนแล้ว</div>
         </div>
         <div class="space-y-3">
-          ${BORROWS.filter(r=>!historyFilter||r.status===historyFilter).length ? BORROWS.filter(r=>!historyFilter||r.status===historyFilter).map(r=>`<div class="gd-card p-4">
+          ${list.length ? list.map(r=>`<div class="gd-card p-4">
             <div class="flex items-start justify-between mb-1">
               <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
               ${statusBadge(r.status)}
