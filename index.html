@@ -1359,8 +1359,12 @@
       const el = document.getElementById('tab-history');
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="gd-page-header">
-          <p class="gd-section-title mb-2">History</p>
-          <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการยืม-คืน</h2>
+          <div class="flex items-center justify-between">
+            <div><p class="gd-section-title mb-2">History</p>
+            <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการยืม-คืน</h2></div>
+            <button onclick="exportHistoryCSV('ga')" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition shrink-0">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV</button>
+          </div>
         </div>
         <input type="text" placeholder="ค้นหาชื่ออุปกรณ์..." value="${he(gaHistorySearch)}"
           oninput="gaHistorySearch=this.value;renderHistoryTab()"
@@ -1504,8 +1508,12 @@
       const el = document.getElementById('tab-mgr-history');
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="gd-page-header">
-          <p class="gd-section-title mb-2">All Records</p>
-          <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติทั้งหมด</h2>
+          <div class="flex items-center justify-between">
+            <div><p class="gd-section-title mb-2">All Records</p>
+            <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติทั้งหมด</h2></div>
+            <button onclick="exportHistoryCSV('mgr')" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition shrink-0">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV</button>
+          </div>
         </div>
         <input type="text" placeholder="ค้นหาชื่ออุปกรณ์ หรือผู้ยืม..." value="${he(mgrHistorySearch)}"
           oninput="mgrHistorySearch=this.value;renderMgrHistory()"
@@ -1843,6 +1851,32 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href=url; a.download=`audit-log-${new Date().toISOString().slice(0,10)}.csv`; a.click();
       URL.revokeObjectURL(url);
+    }
+
+    function exportHistoryCSV(mode) {
+      const sq = mode === 'ga' ? gaHistorySearch.toLowerCase() : mgrHistorySearch.toLowerCase();
+      const rows = BORROWS
+        .filter(r => !historyFilter || r.status === historyFilter)
+        .filter(r => !sq || (r.eq_name||'').toLowerCase().includes(sq) || (r.borrower_name||'').toLowerCase().includes(sq))
+        .filter(r => mode === 'mgr' ? (!mgrHistoryDept || r.borrower_dept === mgrHistoryDept) : true)
+        .filter(r => mode === 'mgr' ? (!mgrHistoryGa   || r.ga_staff     === mgrHistoryGa)   : true)
+        .filter(r => mode === 'mgr' ? (!mgrHistoryFrom || (r.borrowed_at||'') >= mgrHistoryFrom) : true)
+        .filter(r => mode === 'mgr' ? (!mgrHistoryTo   || (r.borrowed_at||'').slice(0,10) <= mgrHistoryTo) : true);
+      const condLabel = { normal:'ปกติ', damaged:'ชำรุด', lost:'สูญหาย' };
+      const statusLabel = { borrowed:'กำลังยืม', returned:'คืนแล้ว', overdue:'เกินกำหนด' };
+      const headers = ['วันที่ยืม','ชื่ออุปกรณ์','ชื่อผู้ยืม','แผนก','จำนวน','กำหนดคืน','วันที่คืน','สถานะ','GA ที่รับผิดชอบ','สภาพอุปกรณ์','หมายเหตุสภาพ'];
+      const lines = rows.map(r => [
+        fdFull(r.borrowed_at), r.eq_name||'', r.borrower_name||'', r.borrower_dept||'',
+        r.qty_borrowed||1, fd(r.due_date), r.returned_at ? fdFull(r.returned_at) : '',
+        statusLabel[r.status]||r.status||'', r.ga_staff||'',
+        condLabel[r.condition_on_return]||'', r.condition_note||''
+      ].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','));
+      const csv = [headers.join(','), ...lines].join('\n');
+      const blob = new Blob(['\ufeff'+csv], { type:'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `history-${mode}-${new Date().toISOString().slice(0,10)}.csv`;
+      a.click(); URL.revokeObjectURL(url);
     }
 
     // ===== INIT =====
