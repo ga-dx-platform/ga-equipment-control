@@ -587,6 +587,7 @@
     let gaHistorySearch = '';
     let mgrHistorySearch = '', mgrHistoryDept = '', mgrHistoryGa = '', mgrHistoryFrom = '', mgrHistoryTo = '';
     let AUDIT_LOGS = [], auditFilter = '', auditSearch = '';
+    let eqSearch = '', eqCatFilter = '';
 
     // ===== AUDIT LOG HELPER =====
     async function logAction(action_type, target_table, target_id, old_data, new_data) {
@@ -1429,18 +1430,46 @@
     // ===== MGR: EQUIPMENT TAB =====
     function renderEquipmentTab() {
       const el = document.getElementById('tab-equipment');
+      const cats = [...new Set(EQ.map(e=>e.category).filter(Boolean))].sort();
+      const q = eqSearch.toLowerCase();
+      const filtered = EQ.filter(e => {
+        const matchSearch = !q || (e.name||'').toLowerCase().includes(q) || (e.serial_no||'').toLowerCase().includes(q);
+        const matchCat = !eqCatFilter || e.category === eqCatFilter;
+        return matchSearch && matchCat;
+      });
       el.innerHTML = `<div class="gd-page fade-in">
-        <div class="flex items-center justify-between mb-4">
-          <h4 class="font-semibold text-gray-900 text-sm">รายการอุปกรณ์</h4>
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="font-semibold text-gray-900 text-sm">รายการอุปกรณ์ <span class="text-gray-400 font-normal">(${filtered.length}/${EQ.length})</span></h4>
           <button onclick="showAddEquipment()" class="flex items-center gap-1.5 px-3 py-1.5 bg-brand text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition shadow-sm">
             <i data-lucide="plus" class="w-3.5 h-3.5"></i> เพิ่มอุปกรณ์</button>
         </div>
+        <div class="flex gap-2 mb-4">
+          <div class="relative flex-1">
+            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"></i>
+            <input id="eqSearchInput" type="text" placeholder="ค้นหาชื่อหรือ Serial No." value="${he(eqSearch)}"
+              oninput="eqSearch=this.value;renderEquipmentTab()"
+              class="w-full pl-9 pr-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-brand">
+          </div>
+          <select id="eqCatSelect" onchange="eqCatFilter=this.value;renderEquipmentTab()"
+            class="text-xs border border-gray-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-1 focus:ring-brand text-gray-700 min-w-[110px]">
+            <option value="">ทุกหมวด</option>
+            ${cats.map(c=>`<option value="${he(c)}"${eqCatFilter===c?' selected':''}>${he(c)}</option>`).join('')}
+          </select>
+        </div>
         <div class="space-y-3">
-          ${EQ.map(e=>`<div class="gd-card p-4">
+          ${filtered.length === 0 ? `<div class="text-center py-10 text-gray-400 text-sm">ไม่พบอุปกรณ์</div>` :
+          filtered.map(e=>`<div class="gd-card p-4">
             <div class="flex items-start justify-between mb-2">
-              <div><p class="font-semibold text-gray-900 text-sm">${he(e.name)}</p>
-              <p class="text-xs text-gray-400">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p></div>
-              <span class="text-xs px-2.5 py-1 rounded-full font-semibold bg-blue-50 text-brand border border-blue-200">${e.available}/${e.quantity}</span>
+              <div class="flex-1 min-w-0 pr-2">
+                <p class="font-semibold text-gray-900 text-sm">${he(e.name)}</p>
+                <p class="text-xs text-gray-400">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
+              </div>
+              <div class="flex flex-col items-end gap-1 shrink-0">
+                <span class="text-xs px-2.5 py-1 rounded-full font-semibold ${e.available===0?'bg-red-50 text-danger border border-red-200':e.available<e.quantity?'bg-amber-50 text-warn border border-amber-200':'bg-blue-50 text-brand border border-blue-200'}">
+                  ${e.available}/${e.quantity}
+                </span>
+                <span class="text-[10px] text-gray-400">${e.available===0?'หมด':e.available===e.quantity?'พร้อมใช้':'มีบางส่วน'}</span>
+              </div>
             </div>
             <div class="flex justify-end gap-1">
               <button data-id="${he(e.eq_id)}" onclick="showEditEquipment(this.dataset.id)" class="p-2 rounded-lg text-gray-300 hover:text-brand hover:bg-blue-50"><i data-lucide="pencil" class="w-4 h-4"></i></button>
