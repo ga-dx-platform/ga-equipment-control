@@ -374,6 +374,14 @@
           </div>
           <div class="flex" id="mainTabBar"></div>
         </div>
+        <!-- Overdue Banner -->
+        <div id="overdue-banner" class="hidden mx-4 mt-1 mb-0 rounded-xl px-4 py-3 flex items-center gap-3 bg-red-50 border border-red-200">
+          <i data-lucide="alert-triangle" class="w-4 h-4 text-red-500 shrink-0"></i>
+          <p id="overdue-banner-text" class="text-sm font-medium text-red-700 flex-1"></p>
+          <button onclick="document.getElementById('overdue-banner').classList.add('hidden')" class="p-1 rounded-lg hover:bg-red-100 transition">
+            <i data-lucide="x" class="w-3.5 h-3.5 text-red-400"></i>
+          </button>
+        </div>
         <!-- GA Tabs -->
         <div id="tab-borrow" class="flex-1 overflow-auto hidden"></div>
         <div id="tab-return" class="flex-1 overflow-auto hidden"></div>
@@ -457,6 +465,27 @@
       <div class="flex gap-3">
         <button onclick="closeDeleteEquipModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
         <button onclick="executeDeleteEquipment()" class="flex-1 py-2.5 gd-btn-danger" id="delEquipBtn">ลบเลย</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manager Return-on-behalf Modal -->
+  <div id="mgrReturnModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
+    <div class="absolute inset-0 bg-black/40" onclick="closeMgrReturnModal()"></div>
+    <div class="relative w-full gd-modal-panel" style="max-width:380px;">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center shrink-0">
+          <i data-lucide="arrow-left-right" class="w-5 h-5 text-purple-600"></i>
+        </div>
+        <div>
+          <p class="font-bold text-gray-900 text-base">คืนแทน GA Staff</p>
+          <p class="text-xs text-gray-400">Manager ดำเนินการแทน</p>
+        </div>
+      </div>
+      <div id="mgrReturnInfo" class="bg-gray-50 rounded-xl p-3 mb-4 space-y-2 text-sm"></div>
+      <div class="flex gap-3">
+        <button onclick="closeMgrReturnModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
+        <button onclick="executeMgrReturn()" id="mgrReturnBtn" class="flex-1 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition text-sm">ยืนยันคืน</button>
       </div>
     </div>
   </div>
@@ -574,9 +603,13 @@
     let _editEqId = null, _deleteEqId = null, _deleteUserTarget = null, _resetPinTarget = null, _resetPinNew = '';
     let borrowConfirmState = false, returnConfirmState = false;
     let currentBorrowEq = null, currentReturnRecord = null;
+    let returnCondition = '';
     let borrowSearchQ = '', borrowCatFilter = '';
     let historyFilter = '';
+    let gaHistorySearch = '';
+    let mgrHistorySearch = '', mgrHistoryDept = '', mgrHistoryGa = '', mgrHistoryFrom = '', mgrHistoryTo = '';
     let AUDIT_LOGS = [], auditFilter = '', auditSearch = '';
+    let eqSearch = '', eqCatFilter = '';
 
     // ===== AUDIT LOG HELPER =====
     async function logAction(action_type, target_table, target_id, old_data, new_data) {
@@ -661,6 +694,12 @@
     function statusBadge(s) {
       const m = statusMeta(s);
       return `<span class="status-badge ${m.style}"><span class="status-dot ${m.dot}"></span>${m.th}</span>`;
+    }
+    function conditionBadge(c) {
+      if (!c) return '';
+      const map = { normal: ['bg-green-50 text-green-700','ปกติ'], damaged: ['bg-amber-50 text-amber-700','ชำรุด'], lost: ['bg-red-50 text-red-700','สูญหาย'] };
+      const [cls, label] = map[c] || ['bg-gray-50 text-gray-500', c];
+      return `<span class="text-[10px] px-2 py-0.5 rounded-full font-semibold ${cls}">${label}</span>`;
     }
     function detectOverdue(records) {
       const today = new Date(); today.setHours(0,0,0,0);
@@ -755,15 +794,37 @@
           return { ok: true, record_id: rid };
         }
         if (action === 'returnBorrow') {
-          const { error } = await sb.from('borrow_records').update({
+          const patch = {
             status: 'returned', returned_at: new Date().toISOString(),
             return_sign_img: params.return_sign_img || ''
-          }).eq('record_id', params.record_id);
+          };
+          if (params.condition_on_return) patch.condition_on_return = params.condition_on_return;
+          if (params.condition_note) patch.condition_note = params.condition_note;
+          const { error } = await sb.from('borrow_records').update(patch).eq('record_id', params.record_id);
           if (error) throw error;
           await logAction('RETURN','borrow_records',params.record_id,null,{returned_at:new Date().toISOString()});
           const { data: rec } = await sb.from('borrow_records').select('eq_id, qty_borrowed').eq('record_id', params.record_id).single();
           if (rec) {
             // Try new schema (id UUID) first, then legacy (eq_id text)
+            let { data: eq } = await sb.from('equipment').select('available, quantity').eq('id', rec.eq_id).maybeSingle();
+            if (eq) {
+              await sb.from('equipment').update({ available: Math.min(eq.quantity, eq.available + rec.qty_borrowed) }).eq('id', rec.eq_id);
+            } else {
+              const r = await sb.from('equipment').select('available, quantity').eq('eq_id', rec.eq_id).maybeSingle();
+              if (r.data) await sb.from('equipment').update({ available: Math.min(r.data.quantity, r.data.available + rec.qty_borrowed) }).eq('eq_id', rec.eq_id);
+            }
+          }
+          return { ok: true };
+        }
+        if (action === 'returnByManager') {
+          const now = new Date().toISOString();
+          const { error } = await sb.from('borrow_records').update({
+            status: 'returned', returned_at: now, return_sign_img: ''
+          }).eq('record_id', params.record_id);
+          if (error) throw error;
+          await logAction('RETURN_BY_MANAGER','borrow_records',params.record_id,null,{returned_at:now,returned_by:CU?.name});
+          const { data: rec } = await sb.from('borrow_records').select('eq_id, qty_borrowed').eq('record_id', params.record_id).single();
+          if (rec) {
             let { data: eq } = await sb.from('equipment').select('available, quantity').eq('id', rec.eq_id).maybeSingle();
             if (eq) {
               await sb.from('equipment').update({ available: Math.min(eq.quantity, eq.available + rec.qty_borrowed) }).eq('id', rec.eq_id);
@@ -988,14 +1049,31 @@
       document.getElementById('main-user-name').textContent = CU.name;
       document.getElementById('main-user-role').textContent = isMgr ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่ GA';
       const bar = document.getElementById('mainTabBar');
+      const oc = BORROWS.filter(r => r.status === 'overdue').length;
+      const badge = oc > 0 ? `<span class="ml-1 inline-flex items-center justify-center min-w-[16px] h-4 px-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">${oc > 9 ? '9+' : oc}</span>` : '';
       if (isMgr) {
         bar.innerHTML = ['Dashboard','ประวัติ','อุปกรณ์','สมาชิก','Audit'].map((t,i)=>
-          `<button class="main-tab flex-1 px-2 py-2.5 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}</button>`).join('');
+          `<button class="main-tab flex-1 px-2 py-2.5 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
       } else {
         bar.innerHTML = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ'].map((t,i)=>
-          `<button class="main-tab flex-1 px-3 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}</button>`).join('');
+          `<button class="main-tab flex-1 px-3 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
       }
+      showOverdueBanner();
       switchTab(0);
+    }
+    function showOverdueBanner() {
+      const cnt = BORROWS.filter(r => r.status === 'overdue').length;
+      const banner = document.getElementById('overdue-banner');
+      const txt = document.getElementById('overdue-banner-text');
+      if (!banner || !txt) return;
+      if (cnt > 0) {
+        txt.textContent = CU?.role === 'mgr'
+          ? `มี ${cnt} รายการเกินกำหนดในระบบ`
+          : `คุณมี ${cnt} รายการเกินกำหนด กรุณาคืนโดยเร็ว`;
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
     }
     function switchTab(idx) {
       const isMgr = CU.role === 'mgr';
@@ -1176,10 +1254,20 @@
     }
 
     // ===== GA: RETURN DETAIL =====
+    function setReturnCondition(val) {
+      returnCondition = val;
+      ['normal','damaged','lost'].forEach(c => {
+        const btn = document.getElementById('rc-'+c);
+        if (!btn) return;
+        btn.classList.toggle('ring-2', c===val);
+        btn.classList.toggle('ring-offset-1', c===val);
+      });
+      document.getElementById('rc-note-wrap').style.display = (val==='damaged'||val==='lost') ? 'block' : 'none';
+    }
     function openReturnDetail(rid) {
       const rec = BORROWS.find(r=>r.record_id===rid);
       if (!rec) { toast('ไม่พบรายการ','error'); return; }
-      currentReturnRecord = rec; returnConfirmState = false;
+      currentReturnRecord = rec; returnConfirmState = false; returnCondition = '';
       document.getElementById('rd-eq-name').textContent = rec.eq_name;
       const isOD = rec.status === 'overdue';
       document.getElementById('rd-badge').innerHTML = statusBadge(rec.status);
@@ -1196,6 +1284,24 @@
             ${rec.note?`<div class="flex justify-between"><span class="text-gray-400">หมายเหตุ</span><span class="font-medium">${he(rec.note)}</span></div>`:''}
           </div>
           ${rec.sign_img?`<div class="mt-3 pt-3 border-t border-gray-100"><p class="text-xs text-gray-400 mb-2">ลายเซ็นตอนยืม</p><img src="${rec.sign_img}" class="w-full h-20 object-contain bg-white rounded-lg border border-gray-200 p-1"></div>`:''}
+        </div>
+        <div class="gd-card p-4 mb-4">
+          <h4 class="font-semibold text-gray-900 text-sm mb-3 flex items-center gap-2"><i data-lucide="clipboard-check" class="w-4 h-4 text-brand"></i> สภาพอุปกรณ์เมื่อคืน</h4>
+          <div class="flex gap-2 mb-3">
+            <button id="rc-normal" onclick="setReturnCondition('normal')"
+              class="flex-1 py-2.5 rounded-xl border-2 border-green-300 bg-green-50 text-green-700 text-xs font-semibold transition ring-green-400 hover:bg-green-100">
+              <span class="block text-base">✅</span>ปกติ</button>
+            <button id="rc-damaged" onclick="setReturnCondition('damaged')"
+              class="flex-1 py-2.5 rounded-xl border-2 border-amber-300 bg-amber-50 text-amber-700 text-xs font-semibold transition ring-amber-400 hover:bg-amber-100">
+              <span class="block text-base">⚠️</span>ชำรุด</button>
+            <button id="rc-lost" onclick="setReturnCondition('lost')"
+              class="flex-1 py-2.5 rounded-xl border-2 border-red-300 bg-red-50 text-red-700 text-xs font-semibold transition ring-red-400 hover:bg-red-100">
+              <span class="block text-base">❌</span>สูญหาย</button>
+          </div>
+          <div id="rc-note-wrap" style="display:none;">
+            <textarea id="rc-note" rows="2" placeholder="ระบุรายละเอียด (เช่น รอยแตก, หายไปบางส่วน)"
+              class="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-brand resize-none"></textarea>
+          </div>
         </div>
         <div class="signature-pad mb-6">
           <div class="signature-pad__header">
@@ -1215,6 +1321,7 @@
     function closeReturnDetail() { currentReturnRecord=null; returnConfirmState=false; goScreen('main'); switchTab(1); }
 
     async function submitReturn() {
+      if (!returnCondition) { toast('กรุณาเลือกสภาพอุปกรณ์ก่อนยืนยัน'); return; }
       if (isCanvasBlank()) { toast('กรุณาเซ็นลายเซ็นยืนยันคืน'); return; }
       const btn = document.getElementById('rdSubmitBtn');
       if (!returnConfirmState) {
@@ -1229,7 +1336,13 @@
       try {
         const canvas = document.getElementById('rdSignCanvas');
         const sig = canvas ? exportSignature(canvas) : '';
-        await api('returnBorrow', { record_id: currentReturnRecord.record_id, return_sign_img: sig });
+        const note = (document.getElementById('rc-note')?.value || '').trim();
+        await api('returnBorrow', {
+          record_id: currentReturnRecord.record_id,
+          return_sign_img: sig,
+          condition_on_return: returnCondition,
+          condition_note: note || null
+        });
         EQ = await api('getEquipment');
         BORROWS = await api('getBorrows', { name:CU.name, role:CU.role });
         toast('คืนอุปกรณ์สำเร็จ','success');
@@ -1239,13 +1352,23 @@
 
     // ===== GA: HISTORY TAB =====
     function renderHistoryTab() {
-      const list = BORROWS.filter(r=> !historyFilter || r.status === historyFilter);
+      const sq = gaHistorySearch.toLowerCase();
+      const list = BORROWS
+        .filter(r => !historyFilter || r.status === historyFilter)
+        .filter(r => !sq || (r.eq_name||'').toLowerCase().includes(sq));
       const el = document.getElementById('tab-history');
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="gd-page-header">
-          <p class="gd-section-title mb-2">History</p>
-          <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการยืม-คืน</h2>
+          <div class="flex items-center justify-between">
+            <div><p class="gd-section-title mb-2">History</p>
+            <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการยืม-คืน</h2></div>
+            <button onclick="exportHistoryCSV('ga')" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition shrink-0">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV</button>
+          </div>
         </div>
+        <input type="text" placeholder="ค้นหาชื่ออุปกรณ์..." value="${he(gaHistorySearch)}"
+          oninput="gaHistorySearch=this.value;renderHistoryTab()"
+          class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-brand/30">
         <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
           <div class="chip ${historyFilter===''?'active':''}" onclick="historyFilter='';renderHistoryTab()">ทั้งหมด</div>
           <div class="chip ${historyFilter==='borrowed'?'active':''}" onclick="historyFilter='borrowed';renderHistoryTab()">กำลังยืม</div>
@@ -1256,13 +1379,14 @@
           ${list.length ? list.map(r=>`<div class="gd-card p-4">
             <div class="flex items-start justify-between mb-1">
               <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
-              ${statusBadge(r.status)}
+              <div class="flex items-center gap-1.5">${conditionBadge(r.condition_on_return)}${statusBadge(r.status)}</div>
             </div>
             <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · ${he(r.borrower_dept)}</p>
             <div class="flex justify-between text-xs text-gray-400 mt-2">
               <span>ยืม ${fd(r.borrowed_at)}</span>
               <span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span>
             </div>
+            ${r.condition_note?`<p class="text-xs text-gray-400 mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : `<div class="text-center py-14 gd-empty flex flex-col items-center gap-3">
             <div class="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center"><i data-lucide="inbox" class="w-8 h-8 text-slate-400"></i></div>
             <p class="font-semibold text-slate-600 text-sm">ไม่มีประวัติ</p></div>`}
@@ -1273,18 +1397,12 @@
 
     // ===== MGR: DASHBOARD =====
     function renderDashboard() {
-      const totalEq = EQ.length;
-      const borrowed = BORROWS.filter(r=>r.status==='borrowed').length;
-      const overdue = BORROWS.filter(r=>r.status==='overdue').length;
-      const returned = BORROWS.filter(r=>r.status==='returned').length;
-      const cats = {};
-      BORROWS.filter(r=>r.status==='borrowed'||r.status==='overdue').forEach(r=>{
-        const eq = EQ.find(e=>e.eq_id===r.eq_id);
-        const cat = eq?.category || 'อื่นๆ';
-        cats[cat] = (cats[cat]||0) + r.qty_borrowed;
-      });
-      const catLabels = Object.keys(cats), catData = Object.values(cats);
-      const catColors = ['#2563EB','#D97706','#0F6E56','#7C3AED','#DC2626','#06B6D4'];
+      const totalBorrowed = BORROWS.filter(r=>r.status==='borrowed'||r.status==='overdue').length;
+      const overdueList = [...BORROWS.filter(r=>r.status==='overdue')].sort((a,b)=>new Date(a.due_date)-new Date(b.due_date));
+      const today = new Date().toISOString().slice(0,10);
+      const returnedToday = BORROWS.filter(r=>r.status==='returned'&&r.returned_at&&r.returned_at.slice(0,10)===today).length;
+      const availableEq = EQ.filter(e=>e.available>0).length;
+      const recent = [...BORROWS].sort((a,b)=>new Date(b.borrowed_at)-new Date(a.borrowed_at)).slice(0,10);
 
       const el = document.getElementById('tab-dashboard');
       el.innerHTML = `<div class="gd-page fade-in">
@@ -1294,55 +1412,124 @@
         </div>
         <div class="grid grid-cols-2 gap-3 mb-4">
           <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
-            <div class="w-8 h-8 rounded-lg bg-brand-light flex items-center justify-center mb-2"><i data-lucide="box" class="w-4 h-4 text-brand"></i></div>
-            <p class="text-2xl font-bold text-gray-900">${totalEq}</p><p class="text-xs text-gray-400 mt-0.5">อุปกรณ์ทั้งหมด</p></div>
-          <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
             <div class="w-8 h-8 rounded-lg bg-warn-light flex items-center justify-center mb-2"><i data-lucide="clock-3" class="w-4 h-4 text-warn"></i></div>
-            <p class="text-2xl font-bold text-gray-900">${borrowed}</p><p class="text-xs text-gray-400 mt-0.5">กำลังยืม</p></div>
-          <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
-            <div class="w-8 h-8 rounded-lg bg-success-light flex items-center justify-center mb-2"><i data-lucide="check-circle" class="w-4 h-4 text-success"></i></div>
-            <p class="text-2xl font-bold text-gray-900">${returned}</p><p class="text-xs text-gray-400 mt-0.5">คืนแล้ว</p></div>
+            <p class="text-2xl font-bold text-gray-900">${totalBorrowed}</p><p class="text-xs text-gray-400 mt-0.5">กำลังยืม</p></div>
           <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
             <div class="w-8 h-8 rounded-lg bg-danger-light flex items-center justify-center mb-2"><i data-lucide="alert-triangle" class="w-4 h-4 text-danger"></i></div>
-            <p class="text-2xl font-bold text-gray-900">${overdue}</p><p class="text-xs text-gray-400 mt-0.5">เกินกำหนด</p></div>
+            <p class="text-2xl font-bold text-danger">${overdueList.length}</p><p class="text-xs text-gray-400 mt-0.5">เกินกำหนด</p></div>
+          <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
+            <div class="w-8 h-8 rounded-lg bg-success-light flex items-center justify-center mb-2"><i data-lucide="check-circle" class="w-4 h-4 text-success"></i></div>
+            <p class="text-2xl font-bold text-gray-900">${returnedToday}</p><p class="text-xs text-gray-400 mt-0.5">คืนวันนี้</p></div>
+          <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
+            <div class="w-8 h-8 rounded-lg bg-brand-light flex items-center justify-center mb-2"><i data-lucide="box" class="w-4 h-4 text-brand"></i></div>
+            <p class="text-2xl font-bold text-gray-900">${availableEq}</p><p class="text-xs text-gray-400 mt-0.5">อุปกรณ์พร้อมใช้</p></div>
         </div>
-        ${catLabels.length ? `<div class="gd-card p-4 mb-4">
-          <h4 class="font-semibold text-gray-900 text-sm mb-4">อุปกรณ์ที่กำลังยืม (แยกหมวด)</h4>
-          <div class="flex items-center gap-6">
-            <div class="relative flex-shrink-0" style="width:120px;height:120px;">
-              <canvas id="dashDonut" width="120" height="120"></canvas>
-              <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <p class="text-lg font-bold text-gray-900">${borrowed+overdue}</p><p class="text-[10px] text-gray-400">รายการ</p></div>
-            </div>
-            <div class="space-y-2.5 flex-1">
-              ${catLabels.map((c,i)=>`<div class="flex items-center gap-3"><div class="w-3 h-3 rounded-full" style="background:${catColors[i%catColors.length]}"></div><span class="text-xs text-gray-600 flex-1">${he(c)}</span><span class="text-xs font-semibold">${catData[i]}</span></div>`).join('')}
-            </div>
-          </div>
-        </div>` : ''}
         <div class="gd-card p-4 mb-4">
           <h4 class="font-semibold text-gray-900 text-sm mb-3">รายการเกินกำหนด</h4>
-          ${BORROWS.filter(r=>r.status==='overdue').length ? BORROWS.filter(r=>r.status==='overdue').map(r=>`<div class="flex items-center gap-3 py-2.5 border-b border-gray-100 last:border-0">
-            <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center"><i data-lucide="alert-triangle" class="w-4 h-4 text-red-500"></i></div>
-            <div class="flex-1 min-w-0"><p class="text-sm font-medium text-gray-900">${he(r.eq_name)}</p>
-            <p class="text-xs text-gray-400">${he(r.borrower_name)} · เกิน ${Math.abs(daysUntil(r.due_date))} วัน</p></div>
+          ${overdueList.length ? overdueList.map(r=>`<div class="flex items-center gap-3 py-2.5 border-b border-gray-100 last:border-0">
+            <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0"><i data-lucide="alert-triangle" class="w-4 h-4 text-red-500"></i></div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-900 truncate">${he(r.eq_name)}</p>
+              <p class="text-xs text-gray-400">${he(r.borrower_name)} · เกิน ${Math.abs(daysUntil(r.due_date))} วัน</p>
+            </div>
+            <button data-rid="${he(r.record_id||r.id||'')}" onclick="returnByManager(this.dataset.rid)"
+              class="shrink-0 px-2.5 py-1.5 bg-brand text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition">คืนแทน</button>
           </div>`).join('') : `<p class="text-xs text-gray-400 text-center py-4">ไม่มีรายการเกินกำหนด</p>`}
+        </div>
+        <div class="gd-card p-4 mb-4">
+          <h4 class="font-semibold text-gray-900 text-sm mb-3">กิจกรรมล่าสุด</h4>
+          ${recent.length ? recent.map(r=>{
+            const isRet = r.status==='returned';
+            return `<div class="flex items-center gap-3 py-2 border-b border-gray-100 last:border-0">
+              <div class="w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${isRet?'bg-green-50':'bg-blue-50'}">
+                <i data-lucide="${isRet?'corner-up-left':'corner-down-right'}" class="w-3.5 h-3.5 ${isRet?'text-success':'text-brand'}"></i></div>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs font-medium text-gray-800 truncate">${he(r.eq_name)} · ${he(r.borrower_name)}</p>
+                <p class="text-[11px] text-gray-400">GA: ${he(r.ga_staff||'—')} · ${fd(isRet?r.returned_at:r.borrowed_at)}</p>
+              </div>
+              ${statusBadge(r.status)}
+            </div>`;
+          }).join('') : `<p class="text-xs text-gray-400 text-center py-4">ไม่มีกิจกรรม</p>`}
         </div>
       </div>`;
       lucide.createIcons();
-      if (catLabels.length) setTimeout(()=>{
-        const c = document.getElementById('dashDonut'); if (!c||!window.Chart) return;
-        if (DC) { DC.destroy(); DC=null; }
-        DC = new Chart(c, { type:'doughnut', data:{ labels:catLabels, datasets:[{data:catData, backgroundColor:catColors.slice(0,catLabels.length), borderWidth:0}] }, options:{ cutout:'72%', plugins:{legend:{display:false},tooltip:{enabled:true}}, animation:{duration:400} } });
-      }, 60);
+    }
+    // ===== MGR: RETURN ON BEHALF =====
+    let _mgrReturnRecordId = null;
+    function returnByManager(recordId) {
+      const r = BORROWS.find(b => (b.record_id||b.id) === recordId);
+      if (!r) { toast('ไม่พบข้อมูลการยืม','error'); return; }
+      _mgrReturnRecordId = recordId;
+      const overdueDays = daysUntil(r.due_date);
+      const isOverdue = overdueDays < 0;
+      document.getElementById('mgrReturnInfo').innerHTML = `
+        <div class="flex justify-between"><span class="text-gray-500">อุปกรณ์</span><span class="font-semibold text-gray-900 text-right max-w-[55%]">${he(r.eq_name)}</span></div>
+        <div class="flex justify-between"><span class="text-gray-500">ผู้ยืม</span><span class="font-semibold text-gray-900">${he(r.borrower_name)}</span></div>
+        <div class="flex justify-between"><span class="text-gray-500">แผนก</span><span class="text-gray-700">${he(r.borrower_dept||'-')}</span></div>
+        <div class="flex justify-between"><span class="text-gray-500">จำนวน</span><span class="text-gray-700">${r.qty_borrowed||1} ชิ้น</span></div>
+        <div class="flex justify-between"><span class="text-gray-500">GA ที่รับผิดชอบ</span><span class="text-gray-700">${he(r.ga_staff||'-')}</span></div>
+        <div class="flex justify-between"><span class="text-gray-500">กำหนดคืน</span>
+          <span class="${isOverdue?'text-danger font-semibold':'text-gray-700'}">${fd(r.due_date)}${isOverdue?` (เกิน ${Math.abs(overdueDays)} วัน)`:''}</span>
+        </div>`;
+      showModal('mgrReturnModal');
+    }
+    function closeMgrReturnModal() { hideModal('mgrReturnModal'); _mgrReturnRecordId = null; }
+    async function executeMgrReturn() {
+      if (!_mgrReturnRecordId) return;
+      const btn = document.getElementById('mgrReturnBtn');
+      btn.disabled = true; btn.textContent = 'กำลังดำเนินการ...';
+      try {
+        await api('returnByManager', { record_id: _mgrReturnRecordId });
+        EQ = await api('getEquipment');
+        BORROWS = await api('getBorrows', { name: CU.name, role: CU.role });
+        detectOverdue();
+        toast('คืนอุปกรณ์สำเร็จ','success');
+        closeMgrReturnModal();
+        renderDashboard();
+      } catch(e) {
+        console.error(e); toast('เกิดข้อผิดพลาด','error');
+      }
+      btn.disabled = false; btn.textContent = 'ยืนยันคืน';
     }
 
     // ===== MGR: ALL HISTORY =====
     function renderMgrHistory() {
+      const depts = [...new Set(BORROWS.map(r=>r.borrower_dept).filter(Boolean))].sort();
+      const gaStaffs = [...new Set(BORROWS.map(r=>r.ga_staff).filter(Boolean))].sort();
+      const sq = mgrHistorySearch.toLowerCase();
+      const list = BORROWS
+        .filter(r => !historyFilter || r.status === historyFilter)
+        .filter(r => !sq || (r.eq_name||'').toLowerCase().includes(sq) || (r.borrower_name||'').toLowerCase().includes(sq))
+        .filter(r => !mgrHistoryDept || r.borrower_dept === mgrHistoryDept)
+        .filter(r => !mgrHistoryGa || r.ga_staff === mgrHistoryGa)
+        .filter(r => !mgrHistoryFrom || (r.borrowed_at||'') >= mgrHistoryFrom)
+        .filter(r => !mgrHistoryTo || (r.borrowed_at||'').slice(0,10) <= mgrHistoryTo);
+      const selectCls = 'border border-gray-200 rounded-lg px-2 py-1.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-brand/30';
       const el = document.getElementById('tab-mgr-history');
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="gd-page-header">
-          <p class="gd-section-title mb-2">All Records</p>
-          <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติทั้งหมด</h2>
+          <div class="flex items-center justify-between">
+            <div><p class="gd-section-title mb-2">All Records</p>
+            <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติทั้งหมด</h2></div>
+            <button onclick="exportHistoryCSV('mgr')" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition shrink-0">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV</button>
+          </div>
+        </div>
+        <input type="text" placeholder="ค้นหาชื่ออุปกรณ์ หรือผู้ยืม..." value="${he(mgrHistorySearch)}"
+          oninput="mgrHistorySearch=this.value;renderMgrHistory()"
+          class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mb-2 focus:outline-none focus:ring-2 focus:ring-brand/30">
+        <div class="flex gap-2 mb-3 flex-wrap">
+          <select onchange="mgrHistoryDept=this.value;renderMgrHistory()" class="${selectCls}">
+            <option value="">แผนกทั้งหมด</option>
+            ${depts.map(d=>`<option value="${he(d)}" ${mgrHistoryDept===d?'selected':''}>${he(d)}</option>`).join('')}
+          </select>
+          <select onchange="mgrHistoryGa=this.value;renderMgrHistory()" class="${selectCls}">
+            <option value="">GA ทั้งหมด</option>
+            ${gaStaffs.map(g=>`<option value="${he(g)}" ${mgrHistoryGa===g?'selected':''}>${he(g)}</option>`).join('')}
+          </select>
+          <input type="date" value="${mgrHistoryFrom}" onchange="mgrHistoryFrom=this.value;renderMgrHistory()" class="${selectCls}" title="ตั้งแต่วันที่">
+          <input type="date" value="${mgrHistoryTo}" onchange="mgrHistoryTo=this.value;renderMgrHistory()" class="${selectCls}" title="ถึงวันที่">
+          ${(mgrHistoryDept||mgrHistoryGa||mgrHistoryFrom||mgrHistoryTo)?`<button onclick="mgrHistoryDept='';mgrHistoryGa='';mgrHistoryFrom='';mgrHistoryTo='';renderMgrHistory()" class="text-xs text-gray-400 hover:text-danger px-1">ล้าง</button>`:''}
         </div>
         <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
           <div class="chip ${historyFilter===''?'active':''}" onclick="historyFilter='';renderMgrHistory()">ทั้งหมด</div>
@@ -1351,16 +1538,17 @@
           <div class="chip ${historyFilter==='returned'?'active':''}" onclick="historyFilter='returned';renderMgrHistory()">คืนแล้ว</div>
         </div>
         <div class="space-y-3">
-          ${BORROWS.filter(r=>!historyFilter||r.status===historyFilter).length ? BORROWS.filter(r=>!historyFilter||r.status===historyFilter).map(r=>`<div class="gd-card p-4">
+          ${list.length ? list.map(r=>`<div class="gd-card p-4">
             <div class="flex items-start justify-between mb-1">
               <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
-              ${statusBadge(r.status)}
+              <div class="flex items-center gap-1.5">${conditionBadge(r.condition_on_return)}${statusBadge(r.status)}</div>
             </div>
             <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · ${he(r.borrower_dept)} · GA: ${he(r.ga_staff)}</p>
             <div class="flex justify-between text-xs text-gray-400 mt-2">
               <span>ยืม ${fd(r.borrowed_at)}</span>
               <span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span>
             </div>
+            ${r.condition_note?`<p class="text-xs text-gray-400 mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : `<div class="text-center py-14 gd-empty flex flex-col items-center gap-3">
             <div class="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center"><i data-lucide="inbox" class="w-8 h-8 text-slate-400"></i></div>
             <p class="font-semibold text-slate-600 text-sm">ไม่มีประวัติ</p></div>`}
@@ -1372,18 +1560,46 @@
     // ===== MGR: EQUIPMENT TAB =====
     function renderEquipmentTab() {
       const el = document.getElementById('tab-equipment');
+      const cats = [...new Set(EQ.map(e=>e.category).filter(Boolean))].sort();
+      const q = eqSearch.toLowerCase();
+      const filtered = EQ.filter(e => {
+        const matchSearch = !q || (e.name||'').toLowerCase().includes(q) || (e.serial_no||'').toLowerCase().includes(q);
+        const matchCat = !eqCatFilter || e.category === eqCatFilter;
+        return matchSearch && matchCat;
+      });
       el.innerHTML = `<div class="gd-page fade-in">
-        <div class="flex items-center justify-between mb-4">
-          <h4 class="font-semibold text-gray-900 text-sm">รายการอุปกรณ์</h4>
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="font-semibold text-gray-900 text-sm">รายการอุปกรณ์ <span class="text-gray-400 font-normal">(${filtered.length}/${EQ.length})</span></h4>
           <button onclick="showAddEquipment()" class="flex items-center gap-1.5 px-3 py-1.5 bg-brand text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition shadow-sm">
             <i data-lucide="plus" class="w-3.5 h-3.5"></i> เพิ่มอุปกรณ์</button>
         </div>
+        <div class="flex gap-2 mb-4">
+          <div class="relative flex-1">
+            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"></i>
+            <input id="eqSearchInput" type="text" placeholder="ค้นหาชื่อหรือ Serial No." value="${he(eqSearch)}"
+              oninput="eqSearch=this.value;renderEquipmentTab()"
+              class="w-full pl-9 pr-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-brand">
+          </div>
+          <select id="eqCatSelect" onchange="eqCatFilter=this.value;renderEquipmentTab()"
+            class="text-xs border border-gray-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-1 focus:ring-brand text-gray-700 min-w-[110px]">
+            <option value="">ทุกหมวด</option>
+            ${cats.map(c=>`<option value="${he(c)}"${eqCatFilter===c?' selected':''}>${he(c)}</option>`).join('')}
+          </select>
+        </div>
         <div class="space-y-3">
-          ${EQ.map(e=>`<div class="gd-card p-4">
+          ${filtered.length === 0 ? `<div class="text-center py-10 text-gray-400 text-sm">ไม่พบอุปกรณ์</div>` :
+          filtered.map(e=>`<div class="gd-card p-4">
             <div class="flex items-start justify-between mb-2">
-              <div><p class="font-semibold text-gray-900 text-sm">${he(e.name)}</p>
-              <p class="text-xs text-gray-400">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p></div>
-              <span class="text-xs px-2.5 py-1 rounded-full font-semibold bg-blue-50 text-brand border border-blue-200">${e.available}/${e.quantity}</span>
+              <div class="flex-1 min-w-0 pr-2">
+                <p class="font-semibold text-gray-900 text-sm">${he(e.name)}</p>
+                <p class="text-xs text-gray-400">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
+              </div>
+              <div class="flex flex-col items-end gap-1 shrink-0">
+                <span class="text-xs px-2.5 py-1 rounded-full font-semibold ${e.available===0?'bg-red-50 text-danger border border-red-200':e.available<e.quantity?'bg-amber-50 text-warn border border-amber-200':'bg-blue-50 text-brand border border-blue-200'}">
+                  ${e.available}/${e.quantity}
+                </span>
+                <span class="text-[10px] text-gray-400">${e.available===0?'หมด':e.available===e.quantity?'พร้อมใช้':'มีบางส่วน'}</span>
+              </div>
             </div>
             <div class="flex justify-end gap-1">
               <button data-id="${he(e.eq_id)}" onclick="showEditEquipment(this.dataset.id)" class="p-2 rounded-lg text-gray-300 hover:text-brand hover:bg-blue-50"><i data-lucide="pencil" class="w-4 h-4"></i></button>
@@ -1569,7 +1785,8 @@
     function auditDetail(r) {
       const d = r.new_data || {};
       if (r.action_type === 'BORROW') return `${he(d.eq_name||'')} · ${he(d.borrower_name||'')} (${he(d.borrower_dept||'')}) จำนวน ${d.qty||''}`;
-      if (r.action_type === 'RETURN' || r.action_type === 'RETURN_BY_MANAGER') return `record: ${he(r.target_id||'')}`;
+      if (r.action_type === 'RETURN') return `record: ${he(r.target_id||'')}`;
+      if (r.action_type === 'RETURN_BY_MANAGER') return `record: ${he(r.target_id||'')}${d.returned_by?' · โดย '+he(d.returned_by):''}`;
       if (r.action_type?.startsWith('EQUIPMENT')) return `${he(d.name||'')}${d.category?' · '+he(d.category):''}${d.quantity?' · '+d.quantity+' ชิ้น':''}`;
       if (r.action_type?.startsWith('MEMBER')) return `${he(d.name||'')}${d.role?' ('+he(d.role)+')':''}`;
       return r.target_id ? he(r.target_id) : '';
@@ -1634,6 +1851,32 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href=url; a.download=`audit-log-${new Date().toISOString().slice(0,10)}.csv`; a.click();
       URL.revokeObjectURL(url);
+    }
+
+    function exportHistoryCSV(mode) {
+      const sq = mode === 'ga' ? gaHistorySearch.toLowerCase() : mgrHistorySearch.toLowerCase();
+      const rows = BORROWS
+        .filter(r => !historyFilter || r.status === historyFilter)
+        .filter(r => !sq || (r.eq_name||'').toLowerCase().includes(sq) || (r.borrower_name||'').toLowerCase().includes(sq))
+        .filter(r => mode === 'mgr' ? (!mgrHistoryDept || r.borrower_dept === mgrHistoryDept) : true)
+        .filter(r => mode === 'mgr' ? (!mgrHistoryGa   || r.ga_staff     === mgrHistoryGa)   : true)
+        .filter(r => mode === 'mgr' ? (!mgrHistoryFrom || (r.borrowed_at||'') >= mgrHistoryFrom) : true)
+        .filter(r => mode === 'mgr' ? (!mgrHistoryTo   || (r.borrowed_at||'').slice(0,10) <= mgrHistoryTo) : true);
+      const condLabel = { normal:'ปกติ', damaged:'ชำรุด', lost:'สูญหาย' };
+      const statusLabel = { borrowed:'กำลังยืม', returned:'คืนแล้ว', overdue:'เกินกำหนด' };
+      const headers = ['วันที่ยืม','ชื่ออุปกรณ์','ชื่อผู้ยืม','แผนก','จำนวน','กำหนดคืน','วันที่คืน','สถานะ','GA ที่รับผิดชอบ','สภาพอุปกรณ์','หมายเหตุสภาพ'];
+      const lines = rows.map(r => [
+        fdFull(r.borrowed_at), r.eq_name||'', r.borrower_name||'', r.borrower_dept||'',
+        r.qty_borrowed||1, fd(r.due_date), r.returned_at ? fdFull(r.returned_at) : '',
+        statusLabel[r.status]||r.status||'', r.ga_staff||'',
+        condLabel[r.condition_on_return]||'', r.condition_note||''
+      ].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','));
+      const csv = [headers.join(','), ...lines].join('\n');
+      const blob = new Blob(['\ufeff'+csv], { type:'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `history-${mode}-${new Date().toISOString().slice(0,10)}.csv`;
+      a.click(); URL.revokeObjectURL(url);
     }
 
     // ===== INIT =====
