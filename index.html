@@ -374,6 +374,14 @@
           </div>
           <div class="flex" id="mainTabBar"></div>
         </div>
+        <!-- Overdue Banner -->
+        <div id="overdue-banner" class="hidden mx-4 mt-1 mb-0 rounded-xl px-4 py-3 flex items-center gap-3 bg-red-50 border border-red-200">
+          <i data-lucide="alert-triangle" class="w-4 h-4 text-red-500 shrink-0"></i>
+          <p id="overdue-banner-text" class="text-sm font-medium text-red-700 flex-1"></p>
+          <button onclick="document.getElementById('overdue-banner').classList.add('hidden')" class="p-1 rounded-lg hover:bg-red-100 transition">
+            <i data-lucide="x" class="w-3.5 h-3.5 text-red-400"></i>
+          </button>
+        </div>
         <!-- GA Tabs -->
         <div id="tab-borrow" class="flex-1 overflow-auto hidden"></div>
         <div id="tab-return" class="flex-1 overflow-auto hidden"></div>
@@ -988,14 +996,31 @@
       document.getElementById('main-user-name').textContent = CU.name;
       document.getElementById('main-user-role').textContent = isMgr ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่ GA';
       const bar = document.getElementById('mainTabBar');
+      const oc = BORROWS.filter(r => r.status === 'overdue').length;
+      const badge = oc > 0 ? `<span class="ml-1 inline-flex items-center justify-center min-w-[16px] h-4 px-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">${oc > 9 ? '9+' : oc}</span>` : '';
       if (isMgr) {
         bar.innerHTML = ['Dashboard','ประวัติ','อุปกรณ์','สมาชิก','Audit'].map((t,i)=>
-          `<button class="main-tab flex-1 px-2 py-2.5 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}</button>`).join('');
+          `<button class="main-tab flex-1 px-2 py-2.5 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
       } else {
         bar.innerHTML = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ'].map((t,i)=>
-          `<button class="main-tab flex-1 px-3 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}</button>`).join('');
+          `<button class="main-tab flex-1 px-3 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
       }
+      showOverdueBanner();
       switchTab(0);
+    }
+    function showOverdueBanner() {
+      const cnt = BORROWS.filter(r => r.status === 'overdue').length;
+      const banner = document.getElementById('overdue-banner');
+      const txt = document.getElementById('overdue-banner-text');
+      if (!banner || !txt) return;
+      if (cnt > 0) {
+        txt.textContent = CU?.role === 'mgr'
+          ? `มี ${cnt} รายการเกินกำหนดในระบบ`
+          : `คุณมี ${cnt} รายการเกินกำหนด กรุณาคืนโดยเร็ว`;
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
     }
     function switchTab(idx) {
       const isMgr = CU.role === 'mgr';
