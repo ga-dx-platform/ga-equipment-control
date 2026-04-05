@@ -1372,9 +1372,9 @@
               <div class="flex items-center gap-1.5">${conditionBadge(r.condition_on_return)}${statusBadge(r.status)}</div>
             </div>
             <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · ${he(r.borrower_dept)}</p>
-            <div class="flex justify-between text-xs text-gray-400 mt-2">
-              <span>ยืม ${fd(r.borrowed_at)}</span>
-              <span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span>
+            <div class="flex items-center justify-between text-xs text-gray-400 mt-2">
+              <div><span>ยืม ${fd(r.borrowed_at)}</span><span class="mx-1">·</span><span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span></div>
+              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">ดูรายละเอียด</button>
             </div>
             ${r.condition_note?`<p class="text-xs text-gray-400 mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
@@ -1522,9 +1522,9 @@
               <div class="flex items-center gap-1.5">${conditionBadge(r.condition_on_return)}${statusBadge(r.status)}</div>
             </div>
             <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · ${he(r.borrower_dept)} · GA: ${he(r.ga_staff)}</p>
-            <div class="flex justify-between text-xs text-gray-400 mt-2">
-              <span>ยืม ${fd(r.borrowed_at)}</span>
-              <span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span>
+            <div class="flex items-center justify-between text-xs text-gray-400 mt-2">
+              <div><span>ยืม ${fd(r.borrowed_at)}</span><span class="mx-1">·</span><span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span></div>
+              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">ดูรายละเอียด</button>
             </div>
             ${r.condition_note?`<p class="text-xs text-gray-400 mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
@@ -2000,8 +2000,113 @@
       } catch(e) { console.warn('[refresh]', e); }
     }
 
+    // ===== RECORD DETAIL =====
+    function renderTimelineItem(log) {
+      const actionLabels = {
+        BORROW:            { label: 'ยืมอุปกรณ์',      icon: '📋', color: 'text-amber-400' },
+        RETURN:            { label: 'คืนอุปกรณ์',       icon: '✅', color: 'text-emerald-400' },
+        RETURN_BY_MANAGER: { label: 'Manager คืนแทน',  icon: '👔', color: 'text-blue-400' },
+        OVERDUE_FLAGGED:   { label: 'เกินกำหนดคืน',    icon: '⏰', color: 'text-red-400' },
+      };
+      const a = actionLabels[log.action_type] || { label: log.action_type, icon: '📝', color: 'text-slate-400' };
+      return `<div class="flex gap-3">
+        <div class="flex flex-col items-center">
+          <span class="text-lg">${a.icon}</span>
+          <div class="w-px flex-1 bg-white/10 mt-1"></div>
+        </div>
+        <div class="pb-3">
+          <p class="${a.color} font-medium text-sm">${a.label}</p>
+          <p class="text-slate-400 text-xs mt-0.5">โดย ${he(log.actor_name||'-')}</p>
+          <p class="text-slate-500 text-xs">${fdFull(log.created_at)}</p>
+        </div>
+      </div>`;
+    }
+    async function openRecordDetail(recordId) {
+      document.getElementById('record-detail-modal').classList.remove('hidden');
+      const r = BORROWS.find(b => (b.record_id||b.id) === recordId);
+      if (!r) { document.getElementById('detail-timeline').innerHTML = '<p class="text-slate-500 text-sm">ไม่พบข้อมูล</p>'; return; }
+      document.getElementById('detail-equipment-name').textContent = r.eq_name || '-';
+      document.getElementById('detail-borrower-name').textContent = r.borrower_name || '-';
+      document.getElementById('detail-borrower-dept').textContent = r.borrower_dept || '-';
+      document.getElementById('detail-qty').textContent = `${r.qty_borrowed || 1} ชิ้น`;
+      document.getElementById('detail-ga-name').textContent = r.ga_staff || '-';
+      document.getElementById('detail-borrow-date').textContent = fd(r.borrowed_at);
+      document.getElementById('detail-due-date').textContent = fd(r.due_date);
+      document.getElementById('detail-return-date').textContent = fd(r.returned_at);
+      const condMap = { normal: 'ปกติ ✓', damaged: '🟡 ชำรุด', lost: '🔴 สูญหาย' };
+      document.getElementById('detail-condition').textContent = condMap[r.condition_on_return] || '-';
+      const statusMap = {
+        borrowed: { label: 'กำลังยืม',  cls: 'bg-amber-500/20 text-amber-400' },
+        overdue:  { label: 'เกินกำหนด', cls: 'bg-red-500/20 text-red-400' },
+        returned: { label: 'คืนแล้ว',   cls: 'bg-emerald-500/20 text-emerald-400' },
+      };
+      const s = statusMap[r.status] || { label: r.status, cls: 'bg-white/10 text-white' };
+      const badge = document.getElementById('detail-status-badge');
+      badge.textContent = s.label; badge.className = `shrink-0 px-3 py-1 rounded-full text-xs font-bold ${s.cls}`;
+      const noteSection = document.getElementById('detail-note-section');
+      if (r.note) { noteSection.classList.remove('hidden'); document.getElementById('detail-note').textContent = r.note; }
+      else { noteSection.classList.add('hidden'); }
+      const sigSection = document.getElementById('detail-signature-section');
+      if (r.sign_img) { document.getElementById('detail-signature').src = r.sign_img; sigSection.classList.remove('hidden'); }
+      else { sigSection.classList.add('hidden'); }
+      const timeline = document.getElementById('detail-timeline');
+      timeline.innerHTML = '<p class="text-slate-500 text-xs">กำลังโหลดประวัติ...</p>';
+      try {
+        const { data: logs } = await sb.from('app_audit_logs').select('*').eq('target_id', recordId).order('created_at', { ascending: true });
+        timeline.innerHTML = logs?.length ? logs.map(renderTimelineItem).join('') : '<p class="text-slate-500 text-sm">ไม่มีประวัติการดำเนินการ</p>';
+      } catch(e) { timeline.innerHTML = '<p class="text-slate-500 text-sm">โหลดประวัติไม่สำเร็จ</p>'; }
+    }
+    function closeRecordDetail() { document.getElementById('record-detail-modal').classList.add('hidden'); }
+
     // Start app
     document.addEventListener('DOMContentLoaded', () => init());
   </script>
+
+  <!-- Record Detail Modal -->
+  <div id="record-detail-modal" class="hidden fixed inset-0 z-[300] flex items-center justify-center">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeRecordDetail()"></div>
+    <div class="relative bg-slate-800 border border-white/10 rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+      <!-- Header -->
+      <div class="sticky top-0 bg-slate-800 border-b border-white/10 px-6 py-4 flex items-center justify-between">
+        <h3 class="font-bold text-white text-lg">รายละเอียดการยืม</h3>
+        <button onclick="closeRecordDetail()" class="text-slate-400 hover:text-white text-xl leading-none">✕</button>
+      </div>
+      <div class="p-6 space-y-5">
+        <!-- Equipment + Status -->
+        <div class="flex items-center justify-between gap-3">
+          <span id="detail-equipment-name" class="text-white font-bold text-xl leading-tight"></span>
+          <span id="detail-status-badge" class="shrink-0 px-3 py-1 rounded-full text-xs font-bold"></span>
+        </div>
+        <!-- Basic Info -->
+        <div class="bg-white/5 rounded-xl p-4 space-y-3">
+          <h4 class="text-amber-400 font-semibold text-sm">ข้อมูลการยืม</h4>
+          <div class="grid grid-cols-2 gap-3 text-sm">
+            <div><p class="text-slate-400">ผู้ยืม</p><p id="detail-borrower-name" class="text-white font-medium"></p></div>
+            <div><p class="text-slate-400">แผนก</p><p id="detail-borrower-dept" class="text-white font-medium"></p></div>
+            <div><p class="text-slate-400">จำนวน</p><p id="detail-qty" class="text-white font-medium"></p></div>
+            <div><p class="text-slate-400">GA ที่รับผิดชอบ</p><p id="detail-ga-name" class="text-white font-medium"></p></div>
+            <div><p class="text-slate-400">วันที่ยืม</p><p id="detail-borrow-date" class="text-white font-medium"></p></div>
+            <div><p class="text-slate-400">กำหนดคืน</p><p id="detail-due-date" class="text-white font-medium"></p></div>
+            <div><p class="text-slate-400">วันที่คืน</p><p id="detail-return-date" class="text-white font-medium"></p></div>
+            <div><p class="text-slate-400">สภาพตอนคืน</p><p id="detail-condition" class="text-white font-medium"></p></div>
+          </div>
+          <div id="detail-note-section" class="hidden pt-1 border-t border-white/10">
+            <p class="text-slate-400 text-sm">หมายเหตุ</p>
+            <p id="detail-note" class="text-white text-sm mt-1"></p>
+          </div>
+        </div>
+        <!-- Signature -->
+        <div id="detail-signature-section" class="bg-white/5 rounded-xl p-4">
+          <h4 class="text-amber-400 font-semibold text-sm mb-3">ลายเซ็นผู้ยืม</h4>
+          <img id="detail-signature" src="" alt="ลายเซ็น" class="bg-white rounded-lg max-h-24 object-contain"/>
+        </div>
+        <!-- Timeline -->
+        <div class="bg-white/5 rounded-xl p-4">
+          <h4 class="text-amber-400 font-semibold text-sm mb-4">ประวัติการดำเนินการ</h4>
+          <div id="detail-timeline" class="space-y-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
