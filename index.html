@@ -246,8 +246,9 @@
     .admin-card { border-color: rgba(148,163,184,0.3); background: linear-gradient(120deg, rgba(241,245,249,0.8), rgba(248,250,252,0.95)); }
 
     /* Tab bar */
-    #mainTabBar { gap: 8px; border: 0; border-radius: 16px; padding: 6px; background: #eff4fb; }
-    #mainTabBar .main-tab { letter-spacing: 0.01em; border-radius: 12px; transition: all 0.2s ease; }
+    #mainTabBar { gap: 8px; border: 0; border-radius: 16px; padding: 6px; background: #eff4fb; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    #mainTabBar::-webkit-scrollbar { display: none; }
+    #mainTabBar .main-tab { letter-spacing: 0.01em; border-radius: 12px; transition: all 0.2s ease; white-space: nowrap; }
     #mainTabBar .main-tab:hover { color: #1e3a8a; background: rgba(255,255,255,0.8); }
 
 
@@ -1047,10 +1048,10 @@
       const badge = oc > 0 ? `<span class="ml-1 inline-flex items-center justify-center min-w-[16px] h-4 px-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">${oc > 9 ? '9+' : oc}</span>` : '';
       if (isMgr) {
         bar.innerHTML = ['Dashboard','ประวัติ','อุปกรณ์','สมาชิก','Audit'].map((t,i)=>
-          `<button class="main-tab flex-1 px-2 py-2.5 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
+          `<button class="main-tab shrink-0 px-4 py-2.5 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
       } else {
         bar.innerHTML = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ'].map((t,i)=>
-          `<button class="main-tab flex-1 px-3 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
+          `<button class="main-tab flex-1 min-w-[90px] px-3 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
       }
       showOverdueBanner();
       switchTab(0);
@@ -1071,7 +1072,8 @@
     }
     function switchTab(idx) {
       const isMgr = CU.role === 'mgr';
-      document.querySelectorAll('.main-tab').forEach((b,i)=> b.className = `main-tab flex-1 px-3 py-2.5 text-center text-sm font-semibold ${i===idx?'tab-active':'tab-inactive'}`);
+      const tabBaseCls = isMgr ? 'main-tab shrink-0 px-4 py-2.5 text-center text-xs font-semibold' : 'main-tab flex-1 min-w-[90px] px-3 py-2.5 text-center text-sm font-semibold';
+      document.querySelectorAll('.main-tab').forEach((b,i)=> b.className = `${tabBaseCls} ${i===idx?'tab-active':'tab-inactive'}`);
       ['borrow','return','history','dashboard','mgr-history','equipment','members','audit-log'].forEach(t=> { const el=document.getElementById('tab-'+t); if(el) el.style.display='none'; });
       if (isMgr) {
         if(idx===0){ document.getElementById('tab-dashboard').style.display='block'; renderDashboard(); }
