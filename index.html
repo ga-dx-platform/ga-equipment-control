@@ -735,7 +735,7 @@
         }
         if (action === 'changePin') {
           const h = await sha256(String(params.newPin).padStart(6,'0'));
-          const { error } = await sb.from('users').update({ pin_hash: h }).eq('full_name', params.name);
+          const { error } = await sb.from('users').update({ pin_hash: h }).eq('full_name', params.name).eq('role', params.role);
           if (!error) await logAction('MEMBER_RESET_PIN','users',params.name,null,{name:params.name,role:params.role});
           return { ok: !error };
         }
@@ -861,7 +861,7 @@
           return { ok: true };
         }
         if (action === 'deleteUser') {
-          const { error } = await sb.from('users').delete().eq('full_name', params.name);
+          const { error } = await sb.from('users').delete().eq('full_name', params.name).eq('role', params.role);
           if (error) throw error;
           await logAction('MEMBER_DELETE','users',params.name,null,{name:params.name,role:params.role});
           return { ok: true };
