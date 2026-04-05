@@ -548,8 +548,15 @@
 
   <script>
     // ===== CONFIG =====
+    // SECURITY NOTE: Supabase anon key is a publishable key (safe to expose in client).
+    // Real protection comes from Row Level Security (RLS) policies on the Supabase project.
+    // For production: inject via window.__SUPABASE_URL__ and window.__SUPABASE_ANON_KEY__
+    // to avoid hardcoded values in source. Ensure RLS is enforced on all tables.
     const SUPABASE_URL = window.__SUPABASE_URL__ || 'https://varwpgmppjamaxpjgxja.supabase.co';
     const SUPABASE_ANON_KEY = window.__SUPABASE_ANON_KEY__ || 'sb_publishable_KDARMx5ViP3-bTDu3sMnZg_ZGbv_ZFN';
+    if (!window.__SUPABASE_URL__ || !window.__SUPABASE_ANON_KEY__) {
+      console.warn('[Security] Using hardcoded Supabase credentials. Inject via window.__SUPABASE_URL__ and window.__SUPABASE_ANON_KEY__ in production.');
+    }
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // ===== STATE =====
