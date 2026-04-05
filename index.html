@@ -555,7 +555,7 @@
     // ===== STATE =====
     let AU = { ga: [], mgr: [] }, CU = null, SU = null, PB = '';
     let AUTH_MODE = 'demo'; // users_with_pin | demo
-    const FALLBACK_PIN = '123456';
+    const FALLBACK_PIN = ''; // intentionally empty — demo login is disabled for security
     const FALLBACK_USERS = {
       ga: [{ name: 'GA Staff Demo', role: 'ga' }],
       mgr: [{ name: 'Admin Access', role: 'mgr' }]
@@ -2022,7 +2022,7 @@
           return;
         }
         AU = await api('getUsers');
-        if (AUTH_MODE === 'demo') toast(`โหมดเริ่มต้น: ใช้ PIN ${FALLBACK_PIN} สำหรับการเข้าใช้งาน`, 'warning');
+        if (AUTH_MODE === 'demo') toast('ไม่พบผู้ใช้ในระบบ — กรุณาติดต่อผู้ดูแลระบบ', 'warning');
         cacheSet('users', AU);
         buildLoginScreen(); goScreen('login'); lucide.createIcons();
       } catch(e) {
