@@ -1639,16 +1639,19 @@
       document.getElementById('equip-image-preview').classList.remove('hidden');
     }
     async function resizeImage(file, maxWidth = 400, quality = 0.8) {
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
+        const objectUrl = URL.createObjectURL(file);
         const img = new Image();
-        img.src = URL.createObjectURL(file);
         img.onload = () => {
+          URL.revokeObjectURL(objectUrl);
           const scale = Math.min(1, maxWidth / img.width);
           const canvas = document.createElement('canvas');
           canvas.width = img.width * scale; canvas.height = img.height * scale;
           canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-          canvas.toBlob(resolve, 'image/jpeg', quality);
+          canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('canvas.toBlob failed')), 'image/jpeg', quality);
         };
+        img.onerror = () => { URL.revokeObjectURL(objectUrl); reject(new Error('Image load failed')); };
+        img.src = objectUrl;
       });
     }
     async function uploadEquipImage(file, equipmentId) {
