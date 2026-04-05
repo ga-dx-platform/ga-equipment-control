@@ -448,40 +448,26 @@
     </div>
   </div>
 
-  <!-- Delete Equipment Modal -->
-  <div id="deleteEquipModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
-    <div class="absolute inset-0 bg-black/40" onclick="closeDeleteEquipModal()"></div>
-    <div class="relative w-full gd-modal-panel" style="max-width:320px;">
-      <div class="flex flex-col items-center text-center mb-5">
-        <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-3">
-          <i data-lucide="trash-2" class="w-6 h-6 text-red-500"></i></div>
-        <p class="font-semibold text-gray-900 text-base">ลบอุปกรณ์นี้?</p>
-        <p id="deleteEquipName" class="text-sm text-brand font-medium mt-1"></p>
-      </div>
-      <div class="flex gap-3">
-        <button onclick="closeDeleteEquipModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
-        <button onclick="executeDeleteEquipment()" class="flex-1 py-2.5 gd-btn-danger" id="delEquipBtn">ลบเลย</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Manager Return-on-behalf Modal -->
-  <div id="mgrReturnModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
-    <div class="absolute inset-0 bg-black/40" onclick="closeMgrReturnModal()"></div>
-    <div class="relative w-full gd-modal-panel" style="max-width:380px;">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center shrink-0">
-          <i data-lucide="arrow-left-right" class="w-5 h-5 text-purple-600"></i>
-        </div>
+  <!-- Confirm Dialog -->
+  <div id="confirm-dialog" class="hidden fixed inset-0 z-[300] flex items-center justify-center">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+    <div class="relative bg-slate-800 border border-white/10 rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-4">
+      <div class="flex items-start gap-4 mb-6">
+        <span id="confirm-icon" class="text-3xl"></span>
         <div>
-          <p class="font-bold text-gray-900 text-base">คืนแทน GA Staff</p>
-          <p class="text-xs text-gray-400">Manager ดำเนินการแทน</p>
+          <h3 id="confirm-title" class="font-bold text-white text-lg mb-1"></h3>
+          <p id="confirm-message" class="text-slate-400 text-sm"></p>
         </div>
       </div>
-      <div id="mgrReturnInfo" class="bg-gray-50 rounded-xl p-3 mb-4 space-y-2 text-sm"></div>
-      <div class="flex gap-3">
-        <button onclick="closeMgrReturnModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
-        <button onclick="executeMgrReturn()" id="mgrReturnBtn" class="flex-1 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition text-sm">ยืนยันคืน</button>
+      <div class="flex gap-3 justify-end">
+        <button id="confirm-cancel"
+                class="px-4 py-2 rounded-xl text-sm font-medium bg-white/5 hover:bg-white/10 text-slate-300 transition-colors">
+          ยกเลิก
+        </button>
+        <button id="confirm-ok"
+                class="px-4 py-2 rounded-xl text-sm font-medium text-white transition-colors">
+          ยืนยัน
+        </button>
       </div>
     </div>
   </div>
@@ -509,45 +495,6 @@
     </div>
   </div>
 
-  <!-- Delete User Modal -->
-  <div id="deleteUserModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
-    <div class="absolute inset-0 bg-black/40" onclick="closeDeleteUserModal()"></div>
-    <div class="relative w-full gd-modal-panel" style="max-width:320px;">
-      <div class="flex flex-col items-center text-center mb-5">
-        <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-3">
-          <i data-lucide="user-x" class="w-6 h-6 text-red-500"></i></div>
-        <p class="font-semibold text-gray-900 text-base">ลบสมาชิก?</p>
-        <p id="deleteUserNameLabel" class="text-sm text-brand font-semibold mt-1"></p>
-      </div>
-      <div class="flex gap-3">
-        <button onclick="closeDeleteUserModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
-        <button onclick="executeDeleteUser()" class="flex-1 py-2.5 gd-btn-danger" id="deleteUserConfirmBtn">ลบเลย</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Reset PIN Modal -->
-  <div id="resetPinModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
-    <div class="absolute inset-0 bg-black/40" onclick="closeResetPinModal()"></div>
-    <div class="relative w-full gd-modal-panel" style="max-width:320px;">
-      <div class="flex flex-col items-center text-center mb-5">
-        <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center mb-3">
-          <i data-lucide="key-round" class="w-6 h-6 text-amber-500"></i></div>
-        <p class="font-semibold text-gray-900 text-base">Reset PIN</p>
-        <p id="resetPinNameLabel" class="text-sm text-brand font-semibold mt-1"></p>
-      </div>
-      <div class="flex items-center justify-center gap-3 bg-amber-50 rounded-xl py-4 mb-5">
-        <span id="resetPinValue" class="text-3xl font-bold tracking-widest text-amber-700 font-mono select-all"></span>
-        <button onclick="regeneratePin()" class="p-1.5 rounded-lg hover:bg-amber-100 transition text-amber-400 hover:text-amber-600">
-          <i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
-      </div>
-      <div class="flex gap-3">
-        <button onclick="closeResetPinModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
-        <button onclick="executeResetPin()" class="flex-1 py-2.5 gd-btn-primary" id="resetPinConfirmBtn">ยืนยัน Reset</button>
-      </div>
-    </div>
-  </div>
-
   <!-- Add Recipient Modal -->
   <div id="recipientModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
     <div class="absolute inset-0 bg-black/40" onclick="closeRecipientModal()"></div>
@@ -562,23 +509,6 @@
       <div class="flex gap-3 mt-6">
         <button onclick="closeRecipientModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
         <button onclick="confirmAddRecipient()" id="addRecipientBtn" class="flex-1 py-2.5 gd-btn-primary">บันทึก</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Delete Recipient Modal -->
-  <div id="deleteRecipientModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
-    <div class="absolute inset-0 bg-black/40" onclick="closeDeleteRecipientModal()"></div>
-    <div class="relative w-full gd-modal-panel" style="max-width:320px;">
-      <div class="flex flex-col items-center text-center mb-5">
-        <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-3">
-          <i data-lucide="mail-x" class="w-6 h-6 text-red-500"></i></div>
-        <p class="font-semibold text-gray-900 text-base">ลบผู้รับรายงาน?</p>
-        <p id="deleteRecipientLabel" class="text-sm text-danger font-medium mt-1"></p>
-      </div>
-      <div class="flex gap-3">
-        <button onclick="closeDeleteRecipientModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
-        <button onclick="executeDeleteRecipient()" id="delRecipientBtn" class="flex-1 py-2.5 gd-btn-danger">ลบเลย</button>
       </div>
     </div>
   </div>
@@ -626,9 +556,8 @@
     let DC = null; // donut chart instance
     let drawing = false, sctx = null, hasSignatureStroke = false;
     let signatureCanvasEl = null, signatureListenersCleanup = null;
-    let _editEqId = null, _deleteEqId = null, _deleteUserTarget = null, _resetPinTarget = null, _resetPinNew = '';
-    let RECIPIENTS = [], _recipientDeleteId = null;
-    let borrowConfirmState = false, returnConfirmState = false;
+    let _editEqId = null;
+    let RECIPIENTS = [];
     let currentBorrowEq = null, currentReturnRecord = null;
     let returnCondition = '';
     let borrowSearchQ = '', borrowCatFilter = '';
@@ -703,6 +632,19 @@
       setTimeout(() => { el.classList.add('translate-x-full','opacity-0'); setTimeout(() => el.remove(), 300); }, 2600);
     }
     function toast(msg, tone='info') { showToast(msg, tone); }
+    function showConfirm({ title, message, icon = '❓', confirmText = 'ยืนยัน', confirmColor = 'bg-amber-500 hover:bg-amber-600', onConfirm }) {
+      const dialog = document.getElementById('confirm-dialog');
+      document.getElementById('confirm-title').textContent = title;
+      document.getElementById('confirm-message').textContent = message;
+      document.getElementById('confirm-icon').textContent = icon;
+      const okBtn = document.getElementById('confirm-ok');
+      okBtn.textContent = confirmText;
+      okBtn.className = `px-4 py-2 rounded-xl text-sm font-medium text-white transition-colors ${confirmColor}`;
+      dialog.classList.remove('hidden');
+      const close = () => dialog.classList.add('hidden');
+      okBtn.onclick = () => { close(); onConfirm(); };
+      document.getElementById('confirm-cancel').onclick = close;
+    }
     function skeletonCards(n) {
       return Array(n).fill(0).map(()=>`<div class="gd-card p-4 mb-3"><div class="flex justify-between mb-2"><div><div class="h-3.5 skeleton rounded w-36 mb-1.5"></div><div class="h-3 skeleton rounded w-24"></div></div><div class="h-5 skeleton rounded-full w-14"></div></div></div>`).join('');
     }
@@ -1178,7 +1120,7 @@
     function openBorrowForm(eqId) {
       const eq = EQ.find(e=>e.eq_id===eqId);
       if (!eq) { toast('ไม่พบอุปกรณ์','error'); return; }
-      currentBorrowEq = eq; borrowConfirmState = false;
+      currentBorrowEq = eq;
       document.getElementById('bf-eq-name').textContent = eq.name + ' (คงเหลือ ' + eq.available + ')';
       const defaultDue = new Date(); defaultDue.setDate(defaultDue.getDate()+7);
       const dueStr = defaultDue.toISOString().slice(0,10);
@@ -1222,7 +1164,7 @@
       goScreen('borrow-form'); lucide.createIcons();
       setTimeout(()=>initSignCanvas('bfSignCanvas'), 100);
     }
-    function closeBorrowForm() { currentBorrowEq=null; borrowConfirmState=false; goScreen('main'); switchTab(0); }
+    function closeBorrowForm() { currentBorrowEq=null; goScreen('main'); switchTab(0); }
 
     async function submitBorrow() {
       const qty = parseInt(document.getElementById('bfQty')?.value)||1;
@@ -1236,28 +1178,31 @@
       if (isCanvasBlank()) { toast('กรุณาเซ็นลายเซ็นก่อนยืนยัน'); return; }
       if (qty < 1 || qty > currentBorrowEq.available) { toast('จำนวนไม่ถูกต้อง'); return; }
       const btn = document.getElementById('bfSubmitBtn');
-      if (!borrowConfirmState) {
-        borrowConfirmState = true;
-        btn.innerHTML = '<i data-lucide="alert-triangle" class="w-4 h-4"></i> แตะอีกครั้งเพื่อยืนยัน';
-        btn.classList.add('bg-warn'); btn.classList.remove('gd-btn-primary'); lucide.createIcons();
-        setTimeout(()=>{ if(borrowConfirmState){ borrowConfirmState=false; if(btn){ btn.innerHTML='<i data-lucide="check" class="w-4 h-4"></i> ยืนยันการยืม'; btn.classList.remove('bg-warn'); btn.classList.add('gd-btn-primary'); lucide.createIcons(); } } }, 3000);
-        return;
-      }
-      borrowConfirmState = false;
-      btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
-      try {
-        const canvas = document.getElementById('bfSignCanvas');
-        const sig = canvas ? exportSignature(canvas) : '';
-        await api('createBorrow', {
-          eq_id: currentBorrowEq.eq_id, eq_name: currentBorrowEq.name, qty,
-          borrower_name: borrower, borrower_dept: dept, ga_staff: CU.name,
-          due_date: due, sign_img: sig, note
-        });
-        EQ = await api('getEquipment');
-        BORROWS = await api('getBorrows', { name:CU.name, role:CU.role });
-        toast('ยืมอุปกรณ์เรียบร้อยแล้ว','success');
-        closeBorrowForm();
-      } catch(e) { console.error(e); toast('บันทึกไม่สำเร็จ','error'); btn.disabled=false; btn.innerHTML='<i data-lucide="check" class="w-4 h-4"></i> ยืนยันการยืม'; btn.classList.remove('bg-warn'); btn.classList.add('gd-btn-primary'); lucide.createIcons(); }
+      showConfirm({
+        title: 'ยืนยันการยืม?',
+        message: `${currentBorrowEq.name} · ผู้ยืม: ${borrower} · ${qty} ชิ้น`,
+        icon: '📋', confirmText: 'ยืนยันการยืม', confirmColor: 'bg-amber-500 hover:bg-amber-600',
+        onConfirm: async () => {
+          btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
+          try {
+            const canvas = document.getElementById('bfSignCanvas');
+            const sig = canvas ? exportSignature(canvas) : '';
+            await api('createBorrow', {
+              eq_id: currentBorrowEq.eq_id, eq_name: currentBorrowEq.name, qty,
+              borrower_name: borrower, borrower_dept: dept, ga_staff: CU.name,
+              due_date: due, sign_img: sig, note
+            });
+            EQ = await api('getEquipment');
+            BORROWS = await api('getBorrows', { name:CU.name, role:CU.role });
+            toast('ยืมอุปกรณ์เรียบร้อยแล้ว','success');
+            closeBorrowForm();
+          } catch(e) {
+            console.error(e); toast('บันทึกไม่สำเร็จ','error');
+            btn.disabled=false; btn.innerHTML='<i data-lucide="check" class="w-4 h-4"></i> ยืนยันการยืม';
+            btn.classList.add('gd-btn-primary'); lucide.createIcons();
+          }
+        }
+      });
     }
 
     // ===== GA: RETURN TAB =====
@@ -1309,7 +1254,7 @@
     function openReturnDetail(rid) {
       const rec = BORROWS.find(r=>r.record_id===rid);
       if (!rec) { toast('ไม่พบรายการ','error'); return; }
-      currentReturnRecord = rec; returnConfirmState = false; returnCondition = '';
+      currentReturnRecord = rec; returnCondition = '';
       document.getElementById('rd-eq-name').textContent = rec.eq_name;
       const isOD = rec.status === 'overdue';
       document.getElementById('rd-badge').innerHTML = statusBadge(rec.status);
@@ -1360,36 +1305,39 @@
       goScreen('return-detail'); lucide.createIcons();
       setTimeout(()=>initSignCanvas('rdSignCanvas'), 100);
     }
-    function closeReturnDetail() { currentReturnRecord=null; returnConfirmState=false; goScreen('main'); switchTab(1); }
+    function closeReturnDetail() { currentReturnRecord=null; goScreen('main'); switchTab(1); }
 
     async function submitReturn() {
       if (!returnCondition) { toast('กรุณาเลือกสภาพอุปกรณ์ก่อนยืนยัน'); return; }
       if (isCanvasBlank()) { toast('กรุณาเซ็นลายเซ็นยืนยันคืน'); return; }
       const btn = document.getElementById('rdSubmitBtn');
-      if (!returnConfirmState) {
-        returnConfirmState = true;
-        btn.innerHTML = '<i data-lucide="alert-triangle" class="w-4 h-4"></i> แตะอีกครั้งเพื่อยืนยัน';
-        btn.classList.add('bg-warn'); btn.classList.remove('gd-btn-primary'); lucide.createIcons();
-        setTimeout(()=>{ if(returnConfirmState){ returnConfirmState=false; if(btn){ btn.innerHTML='<i data-lucide="check" class="w-4 h-4"></i> ยืนยันการคืน'; btn.classList.remove('bg-warn'); btn.classList.add('gd-btn-primary'); lucide.createIcons(); } } }, 3000);
-        return;
-      }
-      returnConfirmState = false;
-      btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
-      try {
-        const canvas = document.getElementById('rdSignCanvas');
-        const sig = canvas ? exportSignature(canvas) : '';
-        const note = (document.getElementById('rc-note')?.value || '').trim();
-        await api('returnBorrow', {
-          record_id: currentReturnRecord.record_id,
-          return_sign_img: sig,
-          condition_on_return: returnCondition,
-          condition_note: note || null
-        });
-        EQ = await api('getEquipment');
-        BORROWS = await api('getBorrows', { name:CU.name, role:CU.role });
-        toast('คืนอุปกรณ์เรียบร้อยแล้ว','success');
-        closeReturnDetail();
-      } catch(e) { console.error(e); toast('บันทึกไม่สำเร็จ','error'); btn.disabled=false; btn.innerHTML='<i data-lucide="check" class="w-4 h-4"></i> ยืนยันการคืน'; btn.classList.remove('bg-warn'); btn.classList.add('gd-btn-primary'); lucide.createIcons(); }
+      showConfirm({
+        title: 'ยืนยันการคืน?',
+        message: `${currentReturnRecord.eq_name} · สภาพ: ${returnCondition}`,
+        icon: '✅', confirmText: 'ยืนยันการคืน', confirmColor: 'bg-emerald-500 hover:bg-emerald-600',
+        onConfirm: async () => {
+          btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
+          try {
+            const canvas = document.getElementById('rdSignCanvas');
+            const sig = canvas ? exportSignature(canvas) : '';
+            const note = (document.getElementById('rc-note')?.value || '').trim();
+            await api('returnBorrow', {
+              record_id: currentReturnRecord.record_id,
+              return_sign_img: sig,
+              condition_on_return: returnCondition,
+              condition_note: note || null
+            });
+            EQ = await api('getEquipment');
+            BORROWS = await api('getBorrows', { name:CU.name, role:CU.role });
+            toast('คืนอุปกรณ์เรียบร้อยแล้ว','success');
+            closeReturnDetail();
+          } catch(e) {
+            console.error(e); toast('บันทึกไม่สำเร็จ','error');
+            btn.disabled=false; btn.innerHTML='<i data-lucide="check" class="w-4 h-4"></i> ยืนยันการคืน';
+            btn.classList.add('gd-btn-primary'); lucide.createIcons();
+          }
+        }
+      });
     }
 
     // ===== GA: HISTORY TAB =====
@@ -1498,41 +1446,28 @@
       lucide.createIcons();
     }
     // ===== MGR: RETURN ON BEHALF =====
-    let _mgrReturnRecordId = null;
     function returnByManager(recordId) {
       const r = BORROWS.find(b => (b.record_id||b.id) === recordId);
       if (!r) { toast('ไม่พบข้อมูลการยืม','error'); return; }
-      _mgrReturnRecordId = recordId;
       const overdueDays = daysUntil(r.due_date);
       const isOverdue = overdueDays < 0;
-      document.getElementById('mgrReturnInfo').innerHTML = `
-        <div class="flex justify-between"><span class="text-gray-500">อุปกรณ์</span><span class="font-semibold text-gray-900 text-right max-w-[55%]">${he(r.eq_name)}</span></div>
-        <div class="flex justify-between"><span class="text-gray-500">ผู้ยืม</span><span class="font-semibold text-gray-900">${he(r.borrower_name)}</span></div>
-        <div class="flex justify-between"><span class="text-gray-500">แผนก</span><span class="text-gray-700">${he(r.borrower_dept||'-')}</span></div>
-        <div class="flex justify-between"><span class="text-gray-500">จำนวน</span><span class="text-gray-700">${r.qty_borrowed||1} ชิ้น</span></div>
-        <div class="flex justify-between"><span class="text-gray-500">GA ที่รับผิดชอบ</span><span class="text-gray-700">${he(r.ga_staff||'-')}</span></div>
-        <div class="flex justify-between"><span class="text-gray-500">กำหนดคืน</span>
-          <span class="${isOverdue?'text-danger font-semibold':'text-gray-700'}">${fd(r.due_date)}${isOverdue?` (เกิน ${Math.abs(overdueDays)} วัน)`:''}</span>
-        </div>`;
-      showModal('mgrReturnModal');
+      const duePart = isOverdue ? `${fd(r.due_date)} (เกิน ${Math.abs(overdueDays)} วัน)` : fd(r.due_date);
+      showConfirm({
+        title: 'คืนแทน GA Staff?',
+        message: `${r.eq_name} · ผู้ยืม: ${r.borrower_name} · กำหนดคืน: ${duePart}`,
+        icon: '📦', confirmText: 'ยืนยันคืน', confirmColor: 'bg-blue-500 hover:bg-blue-600',
+        onConfirm: () => executeMgrReturn(recordId)
+      });
     }
-    function closeMgrReturnModal() { hideModal('mgrReturnModal'); _mgrReturnRecordId = null; }
-    async function executeMgrReturn() {
-      if (!_mgrReturnRecordId) return;
-      const btn = document.getElementById('mgrReturnBtn');
-      btn.disabled = true; btn.textContent = 'กำลังดำเนินการ...';
+    async function executeMgrReturn(recordId) {
       try {
-        await api('returnByManager', { record_id: _mgrReturnRecordId });
+        await api('returnByManager', { record_id: recordId });
         EQ = await api('getEquipment');
         BORROWS = await api('getBorrows', { name: CU.name, role: CU.role });
         detectOverdue();
         toast('คืนอุปกรณ์เรียบร้อยแล้ว','success');
-        closeMgrReturnModal();
         renderDashboard();
-      } catch(e) {
-        console.error(e); toast('เกิดข้อผิดพลาด','error');
-      }
-      btn.disabled = false; btn.textContent = 'ยืนยันคืน';
+      } catch(e) { console.error(e); toast('เกิดข้อผิดพลาด','error'); }
     }
 
     // ===== MGR: ALL HISTORY =====
@@ -1703,22 +1638,19 @@
     }
     function confirmDeleteEquip(eqId) {
       const eq = EQ.find(e=>e.eq_id===eqId); if(!eq) return;
-      _deleteEqId = eqId;
-      document.getElementById('deleteEquipName').textContent = eq.name;
-      showModal('deleteEquipModal');
+      showConfirm({
+        title: 'ลบอุปกรณ์นี้?', message: eq.name, icon: '🗑️',
+        confirmText: 'ลบเลย', confirmColor: 'bg-red-500 hover:bg-red-600',
+        onConfirm: () => executeDeleteEquipment(eqId)
+      });
     }
-    function closeDeleteEquipModal() { hideModal('deleteEquipModal'); _deleteEqId=null; }
-    async function executeDeleteEquipment() {
-      if(!_deleteEqId) return;
-      const btn = document.getElementById('delEquipBtn');
-      btn.disabled=true; btn.textContent='กำลังลบ...';
+    async function executeDeleteEquipment(eqId) {
       try {
-        await api('deleteEquipment', { eq_id:_deleteEqId });
+        await api('deleteEquipment', { eq_id: eqId });
         EQ = await api('getEquipment');
         toast('ลบอุปกรณ์เรียบร้อยแล้ว','warning');
-        closeDeleteEquipModal(); renderEquipmentTab();
+        renderEquipmentTab();
       } catch(e) { toast('ลบไม่สำเร็จ','error'); }
-      btn.disabled=false; btn.textContent='ลบเลย';
     }
 
     // ===== MGR: MEMBERS TAB =====
@@ -1742,7 +1674,7 @@
                   <p class="text-[10px] font-medium uppercase tracking-wider ${u.type==='mgr'?'text-purple-600':'text-gray-400'}">${u.type==='mgr'?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
                 </div>
                 <div class="flex items-center gap-1">
-                  <button data-name="${he(u.name)}" data-utype="${u.type}" onclick="openResetPinModal(this.dataset.name,this.dataset.utype)" class="p-2 rounded-lg text-gray-300 hover:text-amber-500 hover:bg-amber-50"><i data-lucide="key-round" class="w-4 h-4"></i></button>
+                  <button data-name="${he(u.name)}" data-utype="${u.type}" onclick="openResetPin(this.dataset.name,this.dataset.utype)" class="p-2 rounded-lg text-gray-300 hover:text-amber-500 hover:bg-amber-50"><i data-lucide="key-round" class="w-4 h-4"></i></button>
                   <button data-name="${he(u.name)}" data-utype="${u.type}" onclick="confirmDeleteUser(this.dataset.name,this.dataset.utype)" class="p-2 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                 </div>
               </div>`;
@@ -1791,46 +1723,34 @@
     }
     function confirmDeleteUser(name, role) {
       if(name===CU.name){ toast('ไม่สามารถลบตัวเองได้'); return; }
-      _deleteUserTarget = { name, role };
-      document.getElementById('deleteUserNameLabel').textContent = name;
-      showModal('deleteUserModal');
+      showConfirm({
+        title: 'ลบสมาชิก?', message: name, icon: '🗑️',
+        confirmText: 'ลบเลย', confirmColor: 'bg-red-500 hover:bg-red-600',
+        onConfirm: () => executeDeleteUser(name, role)
+      });
     }
-    function closeDeleteUserModal() { hideModal('deleteUserModal'); _deleteUserTarget=null; }
-    async function executeDeleteUser() {
-      if(!_deleteUserTarget) return;
-      const {name,role} = _deleteUserTarget;
-      const btn = document.getElementById('deleteUserConfirmBtn');
-      btn.disabled=true; btn.textContent='กำลังลบ...';
+    async function executeDeleteUser(name, role) {
       try {
         await api('deleteUser', { name, role });
         if(role==='ga') AU.ga=AU.ga.filter(u=>u.name!==name); else AU.mgr=AU.mgr.filter(u=>u.name!==name);
         toast('ลบสมาชิกเรียบร้อยแล้ว','warning');
-        closeDeleteUserModal(); renderMembersTab(); buildLoginScreen();
+        renderMembersTab(); buildLoginScreen();
       } catch(e){ toast('ลบไม่สำเร็จ','error'); }
-      btn.disabled=false; btn.textContent='ลบเลย';
     }
-    function openResetPinModal(name, role) {
-      _resetPinTarget = { name, role };
-      _resetPinNew = String((crypto.getRandomValues(new Uint32Array(1))[0] % 900000) + 100000);
-      document.getElementById('resetPinNameLabel').textContent = name;
-      document.getElementById('resetPinValue').textContent = _resetPinNew;
-      showModal('resetPinModal');
+    function openResetPin(name, role) {
+      const newPin = String((crypto.getRandomValues(new Uint32Array(1))[0] % 900000) + 100000);
+      showConfirm({
+        title: 'Reset PIN — ' + name,
+        message: 'PIN ใหม่: ' + newPin,
+        icon: '🔑', confirmText: 'ยืนยัน Reset', confirmColor: 'bg-amber-500 hover:bg-amber-600',
+        onConfirm: () => executeResetPin(name, role, newPin)
+      });
     }
-    function closeResetPinModal() { hideModal('resetPinModal'); _resetPinTarget=null; }
-    function regeneratePin() {
-      _resetPinNew = String((crypto.getRandomValues(new Uint32Array(1))[0] % 900000) + 100000);
-      document.getElementById('resetPinValue').textContent = _resetPinNew;
-    }
-    async function executeResetPin() {
-      if(!_resetPinTarget) return;
-      const btn = document.getElementById('resetPinConfirmBtn');
-      btn.disabled=true; btn.textContent='กำลัง Reset...';
+    async function executeResetPin(name, role, newPin) {
       try {
-        await api('changePin', { name:_resetPinTarget.name, newPin:_resetPinNew, role:_resetPinTarget.role });
+        await api('changePin', { name, newPin, role });
         toast('Reset PIN เรียบร้อยแล้ว','success');
-        closeResetPinModal();
       } catch(e){ toast('Reset ไม่สำเร็จ','error'); }
-      btn.disabled=false; btn.textContent='ยืนยัน Reset';
     }
 
     // ===== MGR: NOTIFICATION / RECIPIENTS =====
@@ -1903,22 +1823,19 @@
       } catch(e) { toast('บันทึกไม่สำเร็จ', 'error'); }
     }
     function confirmDeleteRecipient(id, label) {
-      _recipientDeleteId = id;
-      document.getElementById('deleteRecipientLabel').textContent = label;
-      showModal('deleteRecipientModal');
+      showConfirm({
+        title: 'ลบผู้รับรายงาน?', message: label, icon: '🗑️',
+        confirmText: 'ลบเลย', confirmColor: 'bg-red-500 hover:bg-red-600',
+        onConfirm: () => executeDeleteRecipient(id)
+      });
     }
-    function closeDeleteRecipientModal() { hideModal('deleteRecipientModal'); _recipientDeleteId = null; }
-    async function executeDeleteRecipient() {
-      if (!_recipientDeleteId) return;
-      const btn = document.getElementById('delRecipientBtn');
-      btn.disabled = true; btn.textContent = 'กำลังลบ...';
+    async function executeDeleteRecipient(id) {
       try {
-        await api('deleteRecipient', { id: _recipientDeleteId });
-        RECIPIENTS = RECIPIENTS.filter(r => r.id !== _recipientDeleteId);
+        await api('deleteRecipient', { id });
+        RECIPIENTS = RECIPIENTS.filter(r => r.id !== id);
         toast('ลบผู้รับเรียบร้อยแล้ว', 'warning');
-        closeDeleteRecipientModal(); renderRecipientsList();
+        renderRecipientsList();
       } catch(e) { toast('ลบไม่สำเร็จ', 'error'); }
-      btn.disabled = false; btn.textContent = 'ลบเลย';
     }
     async function sendTestReport() {
       const btn = document.getElementById('sendTestReportBtn');
