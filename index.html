@@ -1506,14 +1506,14 @@
         <input type="text" placeholder="ค้นหาชื่ออุปกรณ์ หรือผู้ยืม..." value="${he(mgrHistorySearch)}"
           oninput="mgrHistorySearch=this.value;renderMgrHistory()"
           class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mb-2 focus:outline-none focus:ring-2 focus:ring-brand/30">
-        <div class="flex gap-2 mb-3 flex-wrap">
-          <select onchange="mgrHistoryGa=this.value;renderMgrHistory()" class="${selectCls}">
+        <div class="overflow-x-auto flex gap-2 mb-3 pb-1" style="scrollbar-width:none;">
+          <select onchange="mgrHistoryGa=this.value;renderMgrHistory()" class="${selectCls} shrink-0">
             <option value="">GA ทั้งหมด</option>
             ${gaStaffs.map(g=>`<option value="${he(g)}" ${mgrHistoryGa===g?'selected':''}>${he(g)}</option>`).join('')}
           </select>
-          <input type="date" value="${mgrHistoryFrom}" onchange="mgrHistoryFrom=this.value;renderMgrHistory()" class="${selectCls}" title="ตั้งแต่วันที่">
-          <input type="date" value="${mgrHistoryTo}" onchange="mgrHistoryTo=this.value;renderMgrHistory()" class="${selectCls}" title="ถึงวันที่">
-          ${(mgrHistoryGa||mgrHistoryFrom||mgrHistoryTo)?`<button onclick="mgrHistoryGa='';mgrHistoryFrom='';mgrHistoryTo='';renderMgrHistory()" class="text-xs text-gray-400 hover:text-danger px-1">ล้าง</button>`:''}
+          <input type="date" value="${mgrHistoryFrom}" onchange="mgrHistoryFrom=this.value;renderMgrHistory()" class="${selectCls} shrink-0" title="ตั้งแต่วันที่">
+          <input type="date" value="${mgrHistoryTo}" onchange="mgrHistoryTo=this.value;renderMgrHistory()" class="${selectCls} shrink-0" title="ถึงวันที่">
+          ${(mgrHistoryGa||mgrHistoryFrom||mgrHistoryTo)?`<button onclick="mgrHistoryGa='';mgrHistoryFrom='';mgrHistoryTo='';renderMgrHistory()" class="text-xs text-gray-400 hover:text-danger px-1 shrink-0">ล้าง</button>`:''}
         </div>
         <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
           <div class="chip ${historyFilter===''?'active':''}" onclick="historyFilter='';renderMgrHistory()">ทั้งหมด</div>
