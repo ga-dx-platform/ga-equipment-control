@@ -8,7 +8,6 @@
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -548,14 +547,21 @@
 
   <script>
     // ===== CONFIG =====
+    // SECURITY NOTE: Supabase anon key is a publishable key (safe to expose in client).
+    // Real protection comes from Row Level Security (RLS) policies on the Supabase project.
+    // For production: inject via window.__SUPABASE_URL__ and window.__SUPABASE_ANON_KEY__
+    // to avoid hardcoded values in source. Ensure RLS is enforced on all tables.
     const SUPABASE_URL = window.__SUPABASE_URL__ || 'https://varwpgmppjamaxpjgxja.supabase.co';
     const SUPABASE_ANON_KEY = window.__SUPABASE_ANON_KEY__ || 'sb_publishable_KDARMx5ViP3-bTDu3sMnZg_ZGbv_ZFN';
+    if (!window.__SUPABASE_URL__ || !window.__SUPABASE_ANON_KEY__) {
+      console.warn('[Security] Using hardcoded Supabase credentials. Inject via window.__SUPABASE_URL__ and window.__SUPABASE_ANON_KEY__ in production.');
+    }
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // ===== STATE =====
     let AU = { ga: [], mgr: [] }, CU = null, SU = null, PB = '';
     let AUTH_MODE = 'demo'; // users_with_pin | demo
-    const FALLBACK_PIN = '123456';
+    const FALLBACK_PIN = ''; // intentionally empty — demo login is disabled for security
     const FALLBACK_USERS = {
       ga: [{ name: 'GA Staff Demo', role: 'ga' }],
       mgr: [{ name: 'Admin Access', role: 'mgr' }]
@@ -565,7 +571,6 @@
     const PIN_MAX_ATTEMPTS = 5, PIN_LOCK_MS = 60000;
     let _alTimer = null, _alWarnTimer = null;
     const AUTO_LOGOUT_MS = 15 * 60 * 1000;
-    let DC = null; // donut chart instance
     let drawing = false, sctx = null, hasSignatureStroke = false;
     let signatureCanvasEl = null, signatureListenersCleanup = null;
     let _editEqId = null;
@@ -728,7 +733,7 @@
         }
         if (action === 'changePin') {
           const h = await sha256(String(params.newPin).padStart(6,'0'));
-          const { error } = await sb.from('users').update({ pin_hash: h }).eq('full_name', params.name);
+          const { error } = await sb.from('users').update({ pin_hash: h }).eq('full_name', params.name).eq('role', params.role);
           if (!error) await logAction('MEMBER_RESET_PIN','users',params.name,null,{name:params.name,role:params.role});
           return { ok: !error };
         }
@@ -753,7 +758,7 @@
             qty_borrowed: params.qty, borrower_name: params.borrower_name,
             borrower_dept: params.borrower_dept, ga_staff: params.ga_staff,
             borrowed_at: new Date().toISOString(), due_date: params.due_date,
-            sign_img: params.sign_img || '', note: params.note || '', status: 'borrowed'
+            sign_img: params.sign_img || null, note: params.note || null, status: 'borrowed'
           }]);
           if (brErr) throw brErr;
           // Try new schema (id UUID) first, then legacy (eq_id text)
@@ -761,8 +766,8 @@
           if (eq) {
             await sb.from('equipment').update({ available: Math.max(0, eq.available - params.qty) }).eq('id', params.eq_id);
           } else {
-            const r = await sb.from('equipment').select('available').eq('eq_id', params.eq_id).maybeSingle();
-            if (r.data) await sb.from('equipment').update({ available: Math.max(0, r.data.available - params.qty) }).eq('eq_id', params.eq_id);
+            const { data: eqLegacy } = await sb.from('equipment').select('available').eq('eq_id', params.eq_id).maybeSingle();
+            if (eqLegacy) await sb.from('equipment').update({ available: Math.max(0, eqLegacy.available - params.qty) }).eq('eq_id', params.eq_id);
           }
           await logAction('BORROW','borrow_records',rid,null,{eq_name:params.eq_name,borrower_name:params.borrower_name,borrower_dept:params.borrower_dept,qty:params.qty,due_date:params.due_date});
           return { ok: true, record_id: rid };
@@ -770,7 +775,7 @@
         if (action === 'returnBorrow') {
           const patch = {
             status: 'returned', returned_at: new Date().toISOString(),
-            return_sign_img: params.return_sign_img || ''
+            return_sign_img: params.return_sign_img || null
           };
           if (params.condition_on_return) patch.condition_on_return = params.condition_on_return;
           if (params.condition_note) patch.condition_note = params.condition_note;
@@ -784,8 +789,8 @@
             if (eq) {
               await sb.from('equipment').update({ available: Math.min(eq.quantity, eq.available + rec.qty_borrowed) }).eq('id', rec.eq_id);
             } else {
-              const r = await sb.from('equipment').select('available, quantity').eq('eq_id', rec.eq_id).maybeSingle();
-              if (r.data) await sb.from('equipment').update({ available: Math.min(r.data.quantity, r.data.available + rec.qty_borrowed) }).eq('eq_id', rec.eq_id);
+              const { data: eqLeg1 } = await sb.from('equipment').select('available, quantity').eq('eq_id', rec.eq_id).maybeSingle();
+              if (eqLeg1) await sb.from('equipment').update({ available: Math.min(eqLeg1.quantity, eqLeg1.available + rec.qty_borrowed) }).eq('eq_id', rec.eq_id);
             }
           }
           return { ok: true };
@@ -803,8 +808,8 @@
             if (eq) {
               await sb.from('equipment').update({ available: Math.min(eq.quantity, eq.available + rec.qty_borrowed) }).eq('id', rec.eq_id);
             } else {
-              const r = await sb.from('equipment').select('available, quantity').eq('eq_id', rec.eq_id).maybeSingle();
-              if (r.data) await sb.from('equipment').update({ available: Math.min(r.data.quantity, r.data.available + rec.qty_borrowed) }).eq('eq_id', rec.eq_id);
+              const { data: eqLeg2 } = await sb.from('equipment').select('available, quantity').eq('eq_id', rec.eq_id).maybeSingle();
+              if (eqLeg2) await sb.from('equipment').update({ available: Math.min(eqLeg2.quantity, eqLeg2.available + rec.qty_borrowed) }).eq('eq_id', rec.eq_id);
             }
           }
           return { ok: true };
@@ -826,19 +831,21 @@
           if (params.available !== undefined) upd.available = Number(params.available);
           if (params.image_url !== undefined) upd.image_url = params.image_url;
           // Try new schema (id UUID) first, then legacy (eq_id text)
-          let { error } = await sb.from('equipment').update(upd).eq('id', params.eq_id);
-          if (error) {
-            const res = await sb.from('equipment').update(upd).eq('eq_id', params.eq_id);
+          // Use .select() so Supabase returns the updated rows — empty array means no match (not an error)
+          const { data: updated, error } = await sb.from('equipment').update(upd).eq('id', params.eq_id).select('id');
+          if (error || !updated?.length) {
+            const res = await sb.from('equipment').update(upd).eq('eq_id', params.eq_id).select('eq_id');
             if (res.error) throw res.error;
+            if (!res.data?.length) throw new Error(`Equipment not found: ${params.eq_id}`);
           }
           await logAction('EQUIPMENT_UPDATE','equipment',params.eq_id,null,{name:params.name,category:params.category,quantity:Number(params.quantity)});
           return { ok: true };
         }
         if (action === 'deleteEquipment') {
           // Try new schema (id UUID) first, then legacy (eq_id text)
-          let { error } = await sb.from('equipment').delete().eq('id', params.eq_id);
-          if (error) {
-            const res = await sb.from('equipment').delete().eq('eq_id', params.eq_id);
+          const { data: deleted, error } = await sb.from('equipment').delete().eq('id', params.eq_id).select('id');
+          if (error || !deleted?.length) {
+            const res = await sb.from('equipment').delete().eq('eq_id', params.eq_id).select('eq_id');
             if (res.error) throw res.error;
           }
           await logAction('EQUIPMENT_DELETE','equipment',params.eq_id,null,null);
@@ -852,7 +859,7 @@
           return { ok: true };
         }
         if (action === 'deleteUser') {
-          const { error } = await sb.from('users').delete().eq('full_name', params.name);
+          const { error } = await sb.from('users').delete().eq('full_name', params.name).eq('role', params.role);
           if (error) throw error;
           await logAction('MEMBER_DELETE','users',params.name,null,{name:params.name,role:params.role});
           return { ok: true };
@@ -1023,6 +1030,7 @@
     function closeLogoutModal() { hideModal('logoutModal'); }
     function logout() {
       closeLogoutModal(); stopAutoLogout();
+      signatureListenersCleanup?.();
       CU=null; SU=null; EQ=[]; BORROWS=[]; goScreen('login'); lucide.createIcons();
     }
     function startAutoLogout() {
@@ -1476,7 +1484,6 @@
         await api('returnByManager', { record_id: recordId });
         EQ = await api('getEquipment');
         BORROWS = await api('getBorrows', { name: CU.name, role: CU.role });
-        detectOverdue();
         toast('คืนอุปกรณ์เรียบร้อยแล้ว','success');
         renderDashboard();
       } catch(e) { console.error(e); toast('เกิดข้อผิดพลาด','error'); }
@@ -1627,20 +1634,26 @@
     function closeEquipModal() { hideModal('equipModal'); _editEqId=null; }
     function previewEquipImage(input) {
       const file = input.files[0]; if (!file) return;
-      document.getElementById('equip-image-preview-img').src = URL.createObjectURL(file);
+      const imgEl = document.getElementById('equip-image-preview-img');
+      if (imgEl._previewUrl) URL.revokeObjectURL(imgEl._previewUrl);
+      imgEl._previewUrl = URL.createObjectURL(file);
+      imgEl.src = imgEl._previewUrl;
       document.getElementById('equip-image-preview').classList.remove('hidden');
     }
     async function resizeImage(file, maxWidth = 400, quality = 0.8) {
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
+        const objectUrl = URL.createObjectURL(file);
         const img = new Image();
-        img.src = URL.createObjectURL(file);
         img.onload = () => {
+          URL.revokeObjectURL(objectUrl);
           const scale = Math.min(1, maxWidth / img.width);
           const canvas = document.createElement('canvas');
           canvas.width = img.width * scale; canvas.height = img.height * scale;
           canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-          canvas.toBlob(resolve, 'image/jpeg', quality);
+          canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('canvas.toBlob failed')), 'image/jpeg', quality);
         };
+        img.onerror = () => { URL.revokeObjectURL(objectUrl); reject(new Error('Image load failed')); };
+        img.src = objectUrl;
       });
     }
     async function uploadEquipImage(file, equipmentId) {
@@ -2018,11 +2031,11 @@
         const cached = forceRefresh ? null : cacheGet('users');
         if (cached) {
           AU = cached; buildLoginScreen(); goScreen('login'); lucide.createIcons();
-          api('getUsers').then(d=>{ AU=d; cacheSet('users',d); }).catch(()=>{});
+          api('getUsers').then(d=>{ AU=d; cacheSet('users',d); buildLoginScreen(); }).catch(()=>{});
           return;
         }
         AU = await api('getUsers');
-        if (AUTH_MODE === 'demo') toast(`โหมดเริ่มต้น: ใช้ PIN ${FALLBACK_PIN} สำหรับการเข้าใช้งาน`, 'warning');
+        if (AUTH_MODE === 'demo') toast('ไม่พบผู้ใช้ในระบบ — กรุณาติดต่อผู้ดูแลระบบ', 'warning');
         cacheSet('users', AU);
         buildLoginScreen(); goScreen('login'); lucide.createIcons();
       } catch(e) {
@@ -2033,13 +2046,7 @@
       }
     }
 
-    // ===== REFRESH DATA =====
-    async function refreshData() {
-      try {
-        EQ = await api('getEquipment');
-        BORROWS = await api('getBorrows', { name:CU.name, role:CU.role });
-      } catch(e) { console.warn('[refresh]', e); }
-    }
+
 
     // ===== RECORD DETAIL =====
     function renderTimelineItem(log) {
