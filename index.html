@@ -8,7 +8,6 @@
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -572,7 +571,6 @@
     const PIN_MAX_ATTEMPTS = 5, PIN_LOCK_MS = 60000;
     let _alTimer = null, _alWarnTimer = null;
     const AUTO_LOGOUT_MS = 15 * 60 * 1000;
-    let DC = null; // donut chart instance
     let drawing = false, sctx = null, hasSignatureStroke = false;
     let signatureCanvasEl = null, signatureListenersCleanup = null;
     let _editEqId = null;
@@ -2047,13 +2045,7 @@
       }
     }
 
-    // ===== REFRESH DATA =====
-    async function refreshData() {
-      try {
-        EQ = await api('getEquipment');
-        BORROWS = await api('getBorrows', { name:CU.name, role:CU.role });
-      } catch(e) { console.warn('[refresh]', e); }
-    }
+
 
     // ===== RECORD DETAIL =====
     function renderTimelineItem(log) {
