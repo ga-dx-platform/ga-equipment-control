@@ -758,7 +758,7 @@
             qty_borrowed: params.qty, borrower_name: params.borrower_name,
             borrower_dept: params.borrower_dept, ga_staff: params.ga_staff,
             borrowed_at: new Date().toISOString(), due_date: params.due_date,
-            sign_img: params.sign_img || '', note: params.note || '', status: 'borrowed'
+            sign_img: params.sign_img || null, note: params.note || null, status: 'borrowed'
           }]);
           if (brErr) throw brErr;
           // Try new schema (id UUID) first, then legacy (eq_id text)
@@ -766,8 +766,8 @@
           if (eq) {
             await sb.from('equipment').update({ available: Math.max(0, eq.available - params.qty) }).eq('id', params.eq_id);
           } else {
-            const r = await sb.from('equipment').select('available').eq('eq_id', params.eq_id).maybeSingle();
-            if (r.data) await sb.from('equipment').update({ available: Math.max(0, r.data.available - params.qty) }).eq('eq_id', params.eq_id);
+            const { data: eqLegacy } = await sb.from('equipment').select('available').eq('eq_id', params.eq_id).maybeSingle();
+            if (eqLegacy) await sb.from('equipment').update({ available: Math.max(0, eqLegacy.available - params.qty) }).eq('eq_id', params.eq_id);
           }
           await logAction('BORROW','borrow_records',rid,null,{eq_name:params.eq_name,borrower_name:params.borrower_name,borrower_dept:params.borrower_dept,qty:params.qty,due_date:params.due_date});
           return { ok: true, record_id: rid };
@@ -775,7 +775,7 @@
         if (action === 'returnBorrow') {
           const patch = {
             status: 'returned', returned_at: new Date().toISOString(),
-            return_sign_img: params.return_sign_img || ''
+            return_sign_img: params.return_sign_img || null
           };
           if (params.condition_on_return) patch.condition_on_return = params.condition_on_return;
           if (params.condition_note) patch.condition_note = params.condition_note;
@@ -789,8 +789,8 @@
             if (eq) {
               await sb.from('equipment').update({ available: Math.min(eq.quantity, eq.available + rec.qty_borrowed) }).eq('id', rec.eq_id);
             } else {
-              const r = await sb.from('equipment').select('available, quantity').eq('eq_id', rec.eq_id).maybeSingle();
-              if (r.data) await sb.from('equipment').update({ available: Math.min(r.data.quantity, r.data.available + rec.qty_borrowed) }).eq('eq_id', rec.eq_id);
+              const { data: eqLeg1 } = await sb.from('equipment').select('available, quantity').eq('eq_id', rec.eq_id).maybeSingle();
+              if (eqLeg1) await sb.from('equipment').update({ available: Math.min(eqLeg1.quantity, eqLeg1.available + rec.qty_borrowed) }).eq('eq_id', rec.eq_id);
             }
           }
           return { ok: true };
@@ -808,8 +808,8 @@
             if (eq) {
               await sb.from('equipment').update({ available: Math.min(eq.quantity, eq.available + rec.qty_borrowed) }).eq('id', rec.eq_id);
             } else {
-              const r = await sb.from('equipment').select('available, quantity').eq('eq_id', rec.eq_id).maybeSingle();
-              if (r.data) await sb.from('equipment').update({ available: Math.min(r.data.quantity, r.data.available + rec.qty_borrowed) }).eq('eq_id', rec.eq_id);
+              const { data: eqLeg2 } = await sb.from('equipment').select('available, quantity').eq('eq_id', rec.eq_id).maybeSingle();
+              if (eqLeg2) await sb.from('equipment').update({ available: Math.min(eqLeg2.quantity, eqLeg2.available + rec.qty_borrowed) }).eq('eq_id', rec.eq_id);
             }
           }
           return { ok: true };
@@ -1030,6 +1030,7 @@
     function closeLogoutModal() { hideModal('logoutModal'); }
     function logout() {
       closeLogoutModal(); stopAutoLogout();
+      signatureListenersCleanup?.();
       CU=null; SU=null; EQ=[]; BORROWS=[]; goScreen('login'); lucide.createIcons();
     }
     function startAutoLogout() {
@@ -2030,7 +2031,7 @@
         const cached = forceRefresh ? null : cacheGet('users');
         if (cached) {
           AU = cached; buildLoginScreen(); goScreen('login'); lucide.createIcons();
-          api('getUsers').then(d=>{ AU=d; cacheSet('users',d); }).catch(()=>{});
+          api('getUsers').then(d=>{ AU=d; cacheSet('users',d); buildLoginScreen(); }).catch(()=>{});
           return;
         }
         AU = await api('getUsers');
