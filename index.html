@@ -246,8 +246,9 @@
     .admin-card { border-color: rgba(148,163,184,0.3); background: linear-gradient(120deg, rgba(241,245,249,0.8), rgba(248,250,252,0.95)); }
 
     /* Tab bar */
-    #mainTabBar { gap: 8px; border: 0; border-radius: 16px; padding: 6px; background: #eff4fb; }
-    #mainTabBar .main-tab { letter-spacing: 0.01em; border-radius: 12px; transition: all 0.2s ease; }
+    #mainTabBar { gap: 8px; border: 0; border-radius: 16px; padding: 6px; background: #eff4fb; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    #mainTabBar::-webkit-scrollbar { display: none; }
+    #mainTabBar .main-tab { letter-spacing: 0.01em; border-radius: 12px; transition: all 0.2s ease; white-space: nowrap; }
     #mainTabBar .main-tab:hover { color: #1e3a8a; background: rgba(255,255,255,0.8); }
 
 
@@ -423,9 +424,9 @@
   </div><!-- end app-root -->
 
   <!-- Equipment Modal (Add/Edit) -->
-  <div id="equipModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
+  <div id="equipModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
     <div class="absolute inset-0 bg-black/40" onclick="closeEquipModal()"></div>
-    <div class="relative w-full gd-modal-panel" style="max-width:380px;">
+    <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:380px;">
       <h3 id="equipModalTitle" class="font-bold text-gray-900 text-lg mb-4">เพิ่มอุปกรณ์</h3>
       <div class="space-y-4">
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่ออุปกรณ์</label>
@@ -484,9 +485,9 @@
   </div>
 
   <!-- User Modal (Add) -->
-  <div id="userModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
+  <div id="userModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
     <div class="absolute inset-0 bg-black/40" onclick="closeUserModal()"></div>
-    <div class="relative w-full gd-modal-panel" style="max-width:360px;">
+    <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:360px;">
       <h3 class="font-bold text-gray-900 text-lg mb-4">เพิ่มสมาชิกใหม่</h3>
       <div class="space-y-4">
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
@@ -507,9 +508,9 @@
   </div>
 
   <!-- Add Recipient Modal -->
-  <div id="recipientModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
+  <div id="recipientModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
     <div class="absolute inset-0 bg-black/40" onclick="closeRecipientModal()"></div>
-    <div class="relative w-full gd-modal-panel" style="max-width:360px;">
+    <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:360px;">
       <h3 class="font-bold text-gray-900 text-lg mb-4">เพิ่มผู้รับรายงาน</h3>
       <div class="space-y-4">
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
@@ -525,9 +526,9 @@
   </div>
 
   <!-- Logout Modal -->
-  <div id="logoutModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 px-6" style="z-index:300;">
+  <div id="logoutModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
     <div class="absolute inset-0 bg-black/40" onclick="closeLogoutModal()"></div>
-    <div class="relative w-full gd-modal-panel" style="max-width:320px;">
+    <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:320px;">
       <div class="flex flex-col items-center text-center mb-5">
         <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-3">
           <i data-lucide="log-out" class="w-6 h-6 text-red-500"></i></div>
@@ -1047,10 +1048,10 @@
       const badge = oc > 0 ? `<span class="ml-1 inline-flex items-center justify-center min-w-[16px] h-4 px-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">${oc > 9 ? '9+' : oc}</span>` : '';
       if (isMgr) {
         bar.innerHTML = ['Dashboard','ประวัติ','อุปกรณ์','สมาชิก','Audit'].map((t,i)=>
-          `<button class="main-tab flex-1 px-2 py-2.5 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
+          `<button class="main-tab shrink-0 px-4 py-2.5 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
       } else {
         bar.innerHTML = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ'].map((t,i)=>
-          `<button class="main-tab flex-1 px-3 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
+          `<button class="main-tab flex-1 min-w-[90px] px-3 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
       }
       showOverdueBanner();
       switchTab(0);
@@ -1071,7 +1072,8 @@
     }
     function switchTab(idx) {
       const isMgr = CU.role === 'mgr';
-      document.querySelectorAll('.main-tab').forEach((b,i)=> b.className = `main-tab flex-1 px-3 py-2.5 text-center text-sm font-semibold ${i===idx?'tab-active':'tab-inactive'}`);
+      const tabBaseCls = isMgr ? 'main-tab shrink-0 px-4 py-2.5 text-center text-xs font-semibold' : 'main-tab flex-1 min-w-[90px] px-3 py-2.5 text-center text-sm font-semibold';
+      document.querySelectorAll('.main-tab').forEach((b,i)=> b.className = `${tabBaseCls} ${i===idx?'tab-active':'tab-inactive'}`);
       ['borrow','return','history','dashboard','mgr-history','equipment','members','audit-log'].forEach(t=> { const el=document.getElementById('tab-'+t); if(el) el.style.display='none'; });
       if (isMgr) {
         if(idx===0){ document.getElementById('tab-dashboard').style.display='block'; renderDashboard(); }
@@ -1384,7 +1386,7 @@
             <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)}</p>
             <div class="flex items-center justify-between text-xs text-gray-400 mt-2">
               <div><span>ยืม ${fd(r.borrowed_at)}</span><span class="mx-1">·</span><span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span></div>
-              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">ดูรายละเอียด</button>
+              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
             </div>
             ${r.condition_note?`<p class="text-xs text-gray-400 mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
@@ -1411,7 +1413,7 @@
           <p class="gd-section-title mb-2">Dashboard</p>
           <h2 class="text-xl font-bold tracking-tight text-slate-900">ภาพรวมระบบ</h2>
         </div>
-        <div class="grid grid-cols-2 gap-3 mb-4">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
           <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
             <div class="w-8 h-8 rounded-lg bg-warn-light flex items-center justify-center mb-2"><i data-lucide="clock-3" class="w-4 h-4 text-warn"></i></div>
             <p class="text-2xl font-bold text-gray-900">${totalBorrowed}</p><p class="text-xs text-gray-400 mt-0.5">กำลังยืม</p></div>
@@ -1434,7 +1436,7 @@
               <p class="text-xs text-gray-400">${he(r.borrower_name)} · เกิน ${Math.abs(daysUntil(r.due_date))} วัน</p>
             </div>
             <button data-rid="${he(r.record_id||r.id||'')}" onclick="returnByManager(this.dataset.rid)"
-              class="shrink-0 px-2.5 py-1.5 bg-brand text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition">คืนแทน</button>
+              class="shrink-0 px-2.5 py-1.5 bg-brand text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition flex items-center gap-1"><i data-lucide="corner-up-left" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">คืนแทน</span></button>
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-8 text-slate-500"><span class="text-3xl mb-2">✓</span><p class="text-sm">ไม่มีรายการเกินกำหนด</p></div>`}
         </div>
         <div class="gd-card p-4 mb-4">
@@ -1504,14 +1506,14 @@
         <input type="text" placeholder="ค้นหาชื่ออุปกรณ์ หรือผู้ยืม..." value="${he(mgrHistorySearch)}"
           oninput="mgrHistorySearch=this.value;renderMgrHistory()"
           class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mb-2 focus:outline-none focus:ring-2 focus:ring-brand/30">
-        <div class="flex gap-2 mb-3 flex-wrap">
-          <select onchange="mgrHistoryGa=this.value;renderMgrHistory()" class="${selectCls}">
+        <div class="overflow-x-auto flex gap-2 mb-3 pb-1" style="scrollbar-width:none;">
+          <select onchange="mgrHistoryGa=this.value;renderMgrHistory()" class="${selectCls} shrink-0">
             <option value="">GA ทั้งหมด</option>
             ${gaStaffs.map(g=>`<option value="${he(g)}" ${mgrHistoryGa===g?'selected':''}>${he(g)}</option>`).join('')}
           </select>
-          <input type="date" value="${mgrHistoryFrom}" onchange="mgrHistoryFrom=this.value;renderMgrHistory()" class="${selectCls}" title="ตั้งแต่วันที่">
-          <input type="date" value="${mgrHistoryTo}" onchange="mgrHistoryTo=this.value;renderMgrHistory()" class="${selectCls}" title="ถึงวันที่">
-          ${(mgrHistoryGa||mgrHistoryFrom||mgrHistoryTo)?`<button onclick="mgrHistoryGa='';mgrHistoryFrom='';mgrHistoryTo='';renderMgrHistory()" class="text-xs text-gray-400 hover:text-danger px-1">ล้าง</button>`:''}
+          <input type="date" value="${mgrHistoryFrom}" onchange="mgrHistoryFrom=this.value;renderMgrHistory()" class="${selectCls} shrink-0" title="ตั้งแต่วันที่">
+          <input type="date" value="${mgrHistoryTo}" onchange="mgrHistoryTo=this.value;renderMgrHistory()" class="${selectCls} shrink-0" title="ถึงวันที่">
+          ${(mgrHistoryGa||mgrHistoryFrom||mgrHistoryTo)?`<button onclick="mgrHistoryGa='';mgrHistoryFrom='';mgrHistoryTo='';renderMgrHistory()" class="text-xs text-gray-400 hover:text-danger px-1 shrink-0">ล้าง</button>`:''}
         </div>
         <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
           <div class="chip ${historyFilter===''?'active':''}" onclick="historyFilter='';renderMgrHistory()">ทั้งหมด</div>
@@ -1528,7 +1530,7 @@
             <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)} · GA: ${he(r.ga_staff)}</p>
             <div class="flex items-center justify-between text-xs text-gray-400 mt-2">
               <div><span>ยืม ${fd(r.borrowed_at)}</span><span class="mx-1">·</span><span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span></div>
-              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">ดูรายละเอียด</button>
+              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
             </div>
             ${r.condition_note?`<p class="text-xs text-gray-400 mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
@@ -1556,7 +1558,7 @@
           <button onclick="showAddEquipment()" class="flex items-center gap-1.5 px-3 py-1.5 bg-brand text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition shadow-sm">
             <i data-lucide="plus" class="w-3.5 h-3.5"></i> เพิ่มอุปกรณ์</button>
         </div>
-        <div class="flex gap-2 mb-4">
+        <div class="flex flex-col sm:flex-row gap-2 mb-4">
           <div class="relative flex-1">
             <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"></i>
             <input id="eqSearchInput" type="text" placeholder="ค้นหาชื่อหรือ Serial No." value="${he(eqSearch)}"
@@ -1564,7 +1566,7 @@
               class="w-full pl-9 pr-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-brand">
           </div>
           <select id="eqCatSelect" onchange="eqCatFilter=this.value;renderEquipmentTab()"
-            class="text-xs border border-gray-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-1 focus:ring-brand text-gray-700 min-w-[110px]">
+            class="text-xs border border-gray-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-1 focus:ring-brand text-gray-700 w-full sm:w-auto sm:min-w-[110px]">
             <option value="">ทุกหมวด</option>
             ${cats.map(c=>`<option value="${he(c)}"${eqCatFilter===c?' selected':''}>${he(c)}</option>`).join('')}
           </select>
