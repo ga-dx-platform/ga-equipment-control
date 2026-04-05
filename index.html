@@ -440,6 +440,17 @@
           <input type="text" id="eqSerial" placeholder="เช่น SN-12345" class="gd-input"></div>
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">จำนวนทั้งหมด</label>
           <input type="number" id="eqQty" placeholder="1" min="1" class="gd-input"></div>
+        <div>
+          <label class="text-xs font-semibold text-gray-500 mb-1.5 block">รูปอุปกรณ์ <span class="font-normal text-gray-400">(ไม่บังคับ)</span></label>
+          <div id="equip-image-preview" class="hidden mt-1 mb-2">
+            <img id="equip-image-preview-img" class="w-20 h-20 object-cover rounded-xl border border-gray-200"/>
+          </div>
+          <input type="file" id="equip-image-input" accept="image/*" capture="environment" class="hidden" onchange="previewEquipImage(this)"/>
+          <button type="button" onclick="document.getElementById('equip-image-input').click()"
+                  class="px-3 py-2 rounded-xl text-sm border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">
+            📷 เลือกรูป
+          </button>
+        </div>
       </div>
       <div class="flex gap-3 mt-6">
         <button onclick="closeEquipModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
@@ -803,7 +814,7 @@
           const base = (params.serial_no || params.name || '').toUpperCase()
             .replace(/[^A-Z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 16);
           const code = (base || 'EQ') + '-' + Date.now().toString().slice(-6);
-          const payload = { code, name: params.name, category: params.category || null, quantity: qty, available: qty };
+          const payload = { code, name: params.name, category: params.category || null, quantity: qty, available: qty, image_url: params.image_url || null };
           const { data, error } = await sb.from('equipment').insert([payload]).select('id').single();
           if (error) throw error;
           await logAction('EQUIPMENT_CREATE','equipment',data.id,null,{name:params.name,category:params.category,quantity:qty});
@@ -812,6 +823,7 @@
         if (action === 'updateEquipment') {
           const upd = { name: params.name, category: params.category || null, quantity: Number(params.quantity) || 1 };
           if (params.available !== undefined) upd.available = Number(params.available);
+          if (params.image_url !== undefined) upd.image_url = params.image_url;
           // Try new schema (id UUID) first, then legacy (eq_id text)
           let { error } = await sb.from('equipment').update(upd).eq('id', params.eq_id);
           if (error) {
@@ -1101,10 +1113,13 @@
         </div>
         <div class="space-y-3" id="eqGrid">
           ${filtered.length ? filtered.map(e=>`<div class="gd-card p-4 cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
-            <div class="flex items-start justify-between mb-2">
-              <div><p class="font-semibold text-gray-900 text-sm">${he(e.name)}</p>
-              <p class="text-xs text-gray-400">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p></div>
-              <span class="text-xs px-2.5 py-1 rounded-full font-semibold ${e.available<=2?'bg-amber-50 text-amber-700 border border-amber-200':'bg-blue-50 text-brand border border-blue-200'}">คงเหลือ ${e.available}/${e.quantity}</span>
+            <div class="flex items-start gap-3 mb-2">
+              ${e.image_url ? `<img src="${he(e.image_url)}" class="w-12 h-12 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-xl shrink-0">📦</div>`}
+              <div class="flex-1 min-w-0">
+                <p class="font-semibold text-gray-900 text-sm">${he(e.name)}</p>
+                <p class="text-xs text-gray-400">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
+              </div>
+              <span class="text-xs px-2.5 py-1 rounded-full font-semibold shrink-0 ${e.available<=2?'bg-amber-50 text-amber-700 border border-amber-200':'bg-blue-50 text-brand border border-blue-200'}">คงเหลือ ${e.available}/${e.quantity}</span>
             </div>
             <div class="flex items-center justify-end"><button class="text-xs font-semibold text-brand flex items-center gap-1"><i data-lucide="hand" class="w-3.5 h-3.5"></i> ยืม</button></div>
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
@@ -1572,9 +1587,10 @@
           </div>` :
           filtered.map(e=>`<div class="gd-card p-4">
             <div class="flex items-start justify-between mb-2">
-              <div class="flex-1 min-w-0 pr-2">
-                <p class="font-semibold text-gray-900 text-sm">${he(e.name)}</p>
-                <p class="text-xs text-gray-400">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
+              <div class="flex items-start gap-3 flex-1 min-w-0 pr-2">
+                ${e.image_url ? `<img src="${he(e.image_url)}" class="w-10 h-10 object-cover rounded-lg border border-gray-200 shrink-0"/>` : `<div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-lg shrink-0">📦</div>`}
+                <div><p class="font-semibold text-gray-900 text-sm">${he(e.name)}</p>
+                <p class="text-xs text-gray-400">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p></div>
               </div>
               <div class="flex flex-col items-end gap-1 shrink-0">
                 <span class="text-xs px-2.5 py-1 rounded-full font-semibold ${e.available===0?'bg-red-50 text-danger border border-red-200':e.available<e.quantity?'bg-amber-50 text-warn border border-amber-200':'bg-blue-50 text-brand border border-blue-200'}">
@@ -1599,6 +1615,8 @@
       document.getElementById('eqCategory').value = '';
       document.getElementById('eqSerial').value = '';
       document.getElementById('eqQty').value = '1';
+      document.getElementById('equip-image-input').value = '';
+      document.getElementById('equip-image-preview').classList.add('hidden');
       showModal('equipModal');
     }
     function showEditEquipment(eqId) {
@@ -1609,9 +1627,39 @@
       document.getElementById('eqCategory').value = eq.category||'';
       document.getElementById('eqSerial').value = eq.serial_no||'';
       document.getElementById('eqQty').value = eq.quantity;
+      document.getElementById('equip-image-input').value = '';
+      const preview = document.getElementById('equip-image-preview');
+      if (eq.image_url) { document.getElementById('equip-image-preview-img').src = eq.image_url; preview.classList.remove('hidden'); }
+      else { preview.classList.add('hidden'); }
       showModal('equipModal');
     }
     function closeEquipModal() { hideModal('equipModal'); _editEqId=null; }
+    function previewEquipImage(input) {
+      const file = input.files[0]; if (!file) return;
+      document.getElementById('equip-image-preview-img').src = URL.createObjectURL(file);
+      document.getElementById('equip-image-preview').classList.remove('hidden');
+    }
+    async function resizeImage(file, maxWidth = 400, quality = 0.8) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+        img.onload = () => {
+          const scale = Math.min(1, maxWidth / img.width);
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width * scale; canvas.height = img.height * scale;
+          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+          canvas.toBlob(resolve, 'image/jpeg', quality);
+        };
+      });
+    }
+    async function uploadEquipImage(file, equipmentId) {
+      const resized = await resizeImage(file);
+      const path = `${equipmentId}.jpg`;
+      const { error } = await sb.storage.from('equipment-images').upload(path, resized, { upsert: true, contentType: 'image/jpeg' });
+      if (error) throw error;
+      const { data } = sb.storage.from('equipment-images').getPublicUrl(path);
+      return data.publicUrl;
+    }
     async function submitEquipment() {
       const name = document.getElementById('eqName').value.trim();
       const cat = document.getElementById('eqCategory').value;
@@ -1622,13 +1670,16 @@
       const btn = document.getElementById('eqSubmitBtn');
       btn.disabled=true; btn.textContent='กำลังบันทึก...';
       try {
+        const file = document.getElementById('equip-image-input').files[0];
+        let imageUrl = _editEqId ? (EQ.find(e=>e.eq_id===_editEqId)?.image_url || null) : null;
+        if (file) imageUrl = await uploadEquipImage(file, _editEqId || `tmp-${Date.now()}`);
         if (_editEqId) {
           const old = EQ.find(e=>e.eq_id===_editEqId);
           const diff = qty - (old?.quantity||0);
           const newAvail = Math.max(0, (old?.available||0) + diff);
-          await api('updateEquipment', { eq_id:_editEqId, name, category:cat, serial_no:serial, quantity:qty, available:newAvail });
+          await api('updateEquipment', { eq_id:_editEqId, name, category:cat, serial_no:serial, quantity:qty, available:newAvail, image_url:imageUrl });
         } else {
-          await api('addEquipment', { name, category:cat, serial_no:serial, quantity:qty });
+          await api('addEquipment', { name, category:cat, serial_no:serial, quantity:qty, image_url:imageUrl });
         }
         EQ = await api('getEquipment');
         toast(_editEqId?'บันทึกการเปลี่ยนแปลงแล้ว':'เพิ่มอุปกรณ์เรียบร้อยแล้ว','success');
@@ -2026,6 +2077,11 @@
       const r = BORROWS.find(b => (b.record_id||b.id) === recordId);
       if (!r) { document.getElementById('detail-timeline').innerHTML = '<p class="text-slate-500 text-sm">ไม่พบข้อมูล</p>'; return; }
       document.getElementById('detail-equipment-name').textContent = r.eq_name || '-';
+      const eqRecord = EQ.find(e => e.eq_id === r.eq_id || e.id === r.eq_id);
+      const imgEl = document.getElementById('detail-equipment-image');
+      const phEl = document.getElementById('detail-equipment-placeholder');
+      if (eqRecord?.image_url) { imgEl.src = eqRecord.image_url; imgEl.classList.remove('hidden'); phEl.classList.add('hidden'); }
+      else { imgEl.classList.add('hidden'); phEl.classList.remove('hidden'); }
       document.getElementById('detail-borrower-name').textContent = r.borrower_name || '-';
       document.getElementById('detail-borrower-dept').textContent = r.borrower_dept || '-';
       document.getElementById('detail-qty').textContent = `${r.qty_borrowed || 1} ชิ้น`;
@@ -2074,7 +2130,13 @@
       <div class="p-6 space-y-5">
         <!-- Equipment + Status -->
         <div class="flex items-center justify-between gap-3">
-          <span id="detail-equipment-name" class="text-white font-bold text-xl leading-tight"></span>
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="shrink-0">
+              <img id="detail-equipment-image" src="" alt="" class="w-14 h-14 object-cover rounded-xl border border-white/10 hidden"/>
+              <div id="detail-equipment-placeholder" class="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center text-2xl">📦</div>
+            </div>
+            <span id="detail-equipment-name" class="text-white font-bold text-xl leading-tight"></span>
+          </div>
           <span id="detail-status-badge" class="shrink-0 px-3 py-1 rounded-full text-xs font-bold"></span>
         </div>
         <!-- Basic Info -->
