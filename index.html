@@ -1635,7 +1635,10 @@
     function closeEquipModal() { hideModal('equipModal'); _editEqId=null; }
     function previewEquipImage(input) {
       const file = input.files[0]; if (!file) return;
-      document.getElementById('equip-image-preview-img').src = URL.createObjectURL(file);
+      const imgEl = document.getElementById('equip-image-preview-img');
+      if (imgEl._previewUrl) URL.revokeObjectURL(imgEl._previewUrl);
+      imgEl._previewUrl = URL.createObjectURL(file);
+      imgEl.src = imgEl._previewUrl;
       document.getElementById('equip-image-preview').classList.remove('hidden');
     }
     async function resizeImage(file, maxWidth = 400, quality = 0.8) {
