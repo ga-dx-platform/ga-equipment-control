@@ -574,7 +574,7 @@
     let borrowSearchQ = '', borrowCatFilter = '';
     let historyFilter = '';
     let gaHistorySearch = '';
-    let mgrHistorySearch = '', mgrHistoryDept = '', mgrHistoryGa = '', mgrHistoryFrom = '', mgrHistoryTo = '';
+    let mgrHistorySearch = '', mgrHistoryGa = '', mgrHistoryFrom = '', mgrHistoryTo = '';
     let AUDIT_LOGS = [], auditFilter = '', auditSearch = '';
     let eqSearch = '', eqCatFilter = '';
 
@@ -1152,13 +1152,8 @@
             <input type="number" id="bfQty" min="1" max="${eq.available}" value="1" class="gd-input"></div>
           <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่อผู้ยืม</label>
             <input type="text" id="bfBorrower" placeholder="ชื่อ-นามสกุลผู้ยืม" class="gd-input"></div>
-          <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">แผนก</label>
-            <select id="bfDept" class="gd-input">
-              <option value="">เลือกแผนก</option>
-              <option>ฝ่ายบัญชี</option><option>ฝ่ายการเงิน</option><option>ฝ่ายจัดซื้อ</option>
-              <option>ฝ่ายบุคคล</option><option>ฝ่ายไอที</option><option>ฝ่ายการตลาด</option>
-              <option>ฝ่ายปฏิบัติการ</option><option>ฝ่ายกฎหมาย</option><option>อื่นๆ</option>
-            </select></div>
+          <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">รหัสพนักงาน</label>
+            <input type="text" id="bfDept" maxlength="6" pattern="[0-9]{6}" placeholder="เช่น 087256" class="gd-input"></div>
           <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">กำหนดคืน</label>
             <input type="date" id="bfDue" value="${dueStr}" class="gd-input"></div>
           <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">หมายเหตุ <span class="font-normal text-gray-400">(ไม่บังคับ)</span></label>
@@ -1188,7 +1183,7 @@
       const due = document.getElementById('bfDue')?.value;
       const note = document.getElementById('bfNote')?.value.trim();
       if (!borrower) { toast('กรุณากรอกชื่อผู้ยืม'); return; }
-      if (!dept) { toast('กรุณาเลือกแผนก'); return; }
+      if (!/^\d{6}$/.test(dept)) { toast('กรุณากรอกรหัสพนักงาน 6 หลัก'); return; }
       if (!due) { toast('กรุณาระบุกำหนดคืน'); return; }
       if (isCanvasBlank()) { toast('กรุณาเซ็นลายเซ็นก่อนยืนยัน'); return; }
       if (qty < 1 || qty > currentBorrowEq.available) { toast('จำนวนไม่ถูกต้อง'); return; }
@@ -1237,7 +1232,7 @@
             return `<div class="gd-card p-4 cursor-pointer ${isOD?'border-red-200 bg-red-50/30':''}" onclick="openReturnDetail('${he(r.record_id)}')">
               <div class="flex items-start justify-between mb-2">
                 <div><p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
-                <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · ${he(r.borrower_dept)}</p></div>
+                <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)}</p></div>
                 ${statusBadge(r.status)}
               </div>
               <div class="flex items-center justify-between text-xs">
@@ -1280,7 +1275,7 @@
             <div class="flex justify-between"><span class="text-gray-400">อุปกรณ์</span><span class="font-medium">${he(rec.eq_name)}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">จำนวน</span><span class="font-medium">${rec.qty_borrowed} ชิ้น</span></div>
             <div class="flex justify-between"><span class="text-gray-400">ผู้ยืม</span><span class="font-medium">${he(rec.borrower_name)}</span></div>
-            <div class="flex justify-between"><span class="text-gray-400">แผนก</span><span class="font-medium">${he(rec.borrower_dept)}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">รหัสพนักงาน</span><span class="font-medium">${he(rec.borrower_dept)}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">วันที่ยืม</span><span class="font-medium">${fdFull(rec.borrowed_at)}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">กำหนดคืน</span><span class="font-medium ${isOD?'text-red-600':''}">${fd(rec.due_date)}${isOD?' (เกินกำหนด!)':''}</span></div>
             ${rec.note?`<div class="flex justify-between"><span class="text-gray-400">หมายเหตุ</span><span class="font-medium">${he(rec.note)}</span></div>`:''}
@@ -1386,7 +1381,7 @@
               <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
               <div class="flex items-center gap-1.5">${conditionBadge(r.condition_on_return)}${statusBadge(r.status)}</div>
             </div>
-            <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · ${he(r.borrower_dept)}</p>
+            <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)}</p>
             <div class="flex items-center justify-between text-xs text-gray-400 mt-2">
               <div><span>ยืม ${fd(r.borrowed_at)}</span><span class="mx-1">·</span><span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span></div>
               <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">ดูรายละเอียด</button>
@@ -1487,13 +1482,11 @@
 
     // ===== MGR: ALL HISTORY =====
     function renderMgrHistory() {
-      const depts = [...new Set(BORROWS.map(r=>r.borrower_dept).filter(Boolean))].sort();
       const gaStaffs = [...new Set(BORROWS.map(r=>r.ga_staff).filter(Boolean))].sort();
       const sq = mgrHistorySearch.toLowerCase();
       const list = BORROWS
         .filter(r => !historyFilter || r.status === historyFilter)
         .filter(r => !sq || (r.eq_name||'').toLowerCase().includes(sq) || (r.borrower_name||'').toLowerCase().includes(sq))
-        .filter(r => !mgrHistoryDept || r.borrower_dept === mgrHistoryDept)
         .filter(r => !mgrHistoryGa || r.ga_staff === mgrHistoryGa)
         .filter(r => !mgrHistoryFrom || (r.borrowed_at||'') >= mgrHistoryFrom)
         .filter(r => !mgrHistoryTo || (r.borrowed_at||'').slice(0,10) <= mgrHistoryTo);
@@ -1512,17 +1505,13 @@
           oninput="mgrHistorySearch=this.value;renderMgrHistory()"
           class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mb-2 focus:outline-none focus:ring-2 focus:ring-brand/30">
         <div class="flex gap-2 mb-3 flex-wrap">
-          <select onchange="mgrHistoryDept=this.value;renderMgrHistory()" class="${selectCls}">
-            <option value="">แผนกทั้งหมด</option>
-            ${depts.map(d=>`<option value="${he(d)}" ${mgrHistoryDept===d?'selected':''}>${he(d)}</option>`).join('')}
-          </select>
           <select onchange="mgrHistoryGa=this.value;renderMgrHistory()" class="${selectCls}">
             <option value="">GA ทั้งหมด</option>
             ${gaStaffs.map(g=>`<option value="${he(g)}" ${mgrHistoryGa===g?'selected':''}>${he(g)}</option>`).join('')}
           </select>
           <input type="date" value="${mgrHistoryFrom}" onchange="mgrHistoryFrom=this.value;renderMgrHistory()" class="${selectCls}" title="ตั้งแต่วันที่">
           <input type="date" value="${mgrHistoryTo}" onchange="mgrHistoryTo=this.value;renderMgrHistory()" class="${selectCls}" title="ถึงวันที่">
-          ${(mgrHistoryDept||mgrHistoryGa||mgrHistoryFrom||mgrHistoryTo)?`<button onclick="mgrHistoryDept='';mgrHistoryGa='';mgrHistoryFrom='';mgrHistoryTo='';renderMgrHistory()" class="text-xs text-gray-400 hover:text-danger px-1">ล้าง</button>`:''}
+          ${(mgrHistoryGa||mgrHistoryFrom||mgrHistoryTo)?`<button onclick="mgrHistoryGa='';mgrHistoryFrom='';mgrHistoryTo='';renderMgrHistory()" class="text-xs text-gray-400 hover:text-danger px-1">ล้าง</button>`:''}
         </div>
         <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
           <div class="chip ${historyFilter===''?'active':''}" onclick="historyFilter='';renderMgrHistory()">ทั้งหมด</div>
@@ -1536,7 +1525,7 @@
               <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
               <div class="flex items-center gap-1.5">${conditionBadge(r.condition_on_return)}${statusBadge(r.status)}</div>
             </div>
-            <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · ${he(r.borrower_dept)} · GA: ${he(r.ga_staff)}</p>
+            <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)} · GA: ${he(r.ga_staff)}</p>
             <div class="flex items-center justify-between text-xs text-gray-400 mt-2">
               <div><span>ยืม ${fd(r.borrowed_at)}</span><span class="mx-1">·</span><span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span></div>
               <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">ดูรายละเอียด</button>
@@ -1922,7 +1911,7 @@
     }
     function auditDetail(r) {
       const d = r.new_data || {};
-      if (r.action_type === 'BORROW') return `${he(d.eq_name||'')} · ${he(d.borrower_name||'')} (${he(d.borrower_dept||'')}) จำนวน ${d.qty||''}`;
+      if (r.action_type === 'BORROW') return `${he(d.eq_name||'')} · ${he(d.borrower_name||'')} รหัส: ${he(d.borrower_dept||'')} จำนวน ${d.qty||''}`;
       if (r.action_type === 'RETURN') return `record: ${he(r.target_id||'')}`;
       if (r.action_type === 'RETURN_BY_MANAGER') return `record: ${he(r.target_id||'')}${d.returned_by?' · โดย '+he(d.returned_by):''}`;
       if (r.action_type?.startsWith('EQUIPMENT')) return `${he(d.name||'')}${d.category?' · '+he(d.category):''}${d.quantity?' · '+d.quantity+' ชิ้น':''}`;
@@ -1997,13 +1986,12 @@
       const rows = BORROWS
         .filter(r => !historyFilter || r.status === historyFilter)
         .filter(r => !sq || (r.eq_name||'').toLowerCase().includes(sq) || (r.borrower_name||'').toLowerCase().includes(sq))
-        .filter(r => mode === 'mgr' ? (!mgrHistoryDept || r.borrower_dept === mgrHistoryDept) : true)
         .filter(r => mode === 'mgr' ? (!mgrHistoryGa   || r.ga_staff     === mgrHistoryGa)   : true)
         .filter(r => mode === 'mgr' ? (!mgrHistoryFrom || (r.borrowed_at||'') >= mgrHistoryFrom) : true)
         .filter(r => mode === 'mgr' ? (!mgrHistoryTo   || (r.borrowed_at||'').slice(0,10) <= mgrHistoryTo) : true);
       const condLabel = { normal:'ปกติ', damaged:'ชำรุด', lost:'สูญหาย' };
       const statusLabel = { borrowed:'กำลังยืม', returned:'คืนแล้ว', overdue:'เกินกำหนด' };
-      const headers = ['วันที่ยืม','ชื่ออุปกรณ์','ชื่อผู้ยืม','แผนก','จำนวน','กำหนดคืน','วันที่คืน','สถานะ','GA ที่รับผิดชอบ','สภาพอุปกรณ์','หมายเหตุสภาพ'];
+      const headers = ['วันที่ยืม','ชื่ออุปกรณ์','ชื่อผู้ยืม','รหัสพนักงาน','จำนวน','กำหนดคืน','วันที่คืน','สถานะ','GA ที่รับผิดชอบ','สภาพอุปกรณ์','หมายเหตุสภาพ'];
       const lines = rows.map(r => [
         fdFull(r.borrowed_at), r.eq_name||'', r.borrower_name||'', r.borrower_dept||'',
         r.qty_borrowed||1, fd(r.due_date), r.returned_at ? fdFull(r.returned_at) : '',
@@ -2144,7 +2132,7 @@
           <h4 class="text-amber-400 font-semibold text-sm">ข้อมูลการยืม</h4>
           <div class="grid grid-cols-2 gap-3 text-sm">
             <div><p class="text-slate-400">ผู้ยืม</p><p id="detail-borrower-name" class="text-white font-medium"></p></div>
-            <div><p class="text-slate-400">แผนก</p><p id="detail-borrower-dept" class="text-white font-medium"></p></div>
+            <div><p class="text-slate-400">รหัสพนักงาน</p><p id="detail-borrower-dept" class="text-white font-medium"></p></div>
             <div><p class="text-slate-400">จำนวน</p><p id="detail-qty" class="text-white font-medium"></p></div>
             <div><p class="text-slate-400">GA ที่รับผิดชอบ</p><p id="detail-ga-name" class="text-white font-medium"></p></div>
             <div><p class="text-slate-400">วันที่ยืม</p><p id="detail-borrow-date" class="text-white font-medium"></p></div>
