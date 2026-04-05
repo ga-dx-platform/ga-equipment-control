@@ -1386,7 +1386,7 @@
             <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)}</p>
             <div class="flex items-center justify-between text-xs text-gray-400 mt-2">
               <div><span>ยืม ${fd(r.borrowed_at)}</span><span class="mx-1">·</span><span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span></div>
-              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">ดูรายละเอียด</button>
+              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
             </div>
             ${r.condition_note?`<p class="text-xs text-gray-400 mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
@@ -1436,7 +1436,7 @@
               <p class="text-xs text-gray-400">${he(r.borrower_name)} · เกิน ${Math.abs(daysUntil(r.due_date))} วัน</p>
             </div>
             <button data-rid="${he(r.record_id||r.id||'')}" onclick="returnByManager(this.dataset.rid)"
-              class="shrink-0 px-2.5 py-1.5 bg-brand text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition">คืนแทน</button>
+              class="shrink-0 px-2.5 py-1.5 bg-brand text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition flex items-center gap-1"><i data-lucide="corner-up-left" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">คืนแทน</span></button>
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-8 text-slate-500"><span class="text-3xl mb-2">✓</span><p class="text-sm">ไม่มีรายการเกินกำหนด</p></div>`}
         </div>
         <div class="gd-card p-4 mb-4">
@@ -1530,7 +1530,7 @@
             <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)} · GA: ${he(r.ga_staff)}</p>
             <div class="flex items-center justify-between text-xs text-gray-400 mt-2">
               <div><span>ยืม ${fd(r.borrowed_at)}</span><span class="mx-1">·</span><span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span></div>
-              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">ดูรายละเอียด</button>
+              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
             </div>
             ${r.condition_note?`<p class="text-xs text-gray-400 mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
