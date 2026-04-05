@@ -833,19 +833,21 @@
           if (params.available !== undefined) upd.available = Number(params.available);
           if (params.image_url !== undefined) upd.image_url = params.image_url;
           // Try new schema (id UUID) first, then legacy (eq_id text)
-          let { error } = await sb.from('equipment').update(upd).eq('id', params.eq_id);
-          if (error) {
-            const res = await sb.from('equipment').update(upd).eq('eq_id', params.eq_id);
+          // Use .select() so Supabase returns the updated rows — empty array means no match (not an error)
+          const { data: updated, error } = await sb.from('equipment').update(upd).eq('id', params.eq_id).select('id');
+          if (error || !updated?.length) {
+            const res = await sb.from('equipment').update(upd).eq('eq_id', params.eq_id).select('eq_id');
             if (res.error) throw res.error;
+            if (!res.data?.length) throw new Error(`Equipment not found: ${params.eq_id}`);
           }
           await logAction('EQUIPMENT_UPDATE','equipment',params.eq_id,null,{name:params.name,category:params.category,quantity:Number(params.quantity)});
           return { ok: true };
         }
         if (action === 'deleteEquipment') {
           // Try new schema (id UUID) first, then legacy (eq_id text)
-          let { error } = await sb.from('equipment').delete().eq('id', params.eq_id);
-          if (error) {
-            const res = await sb.from('equipment').delete().eq('eq_id', params.eq_id);
+          const { data: deleted, error } = await sb.from('equipment').delete().eq('id', params.eq_id).select('id');
+          if (error || !deleted?.length) {
+            const res = await sb.from('equipment').delete().eq('eq_id', params.eq_id).select('eq_id');
             if (res.error) throw res.error;
           }
           await logAction('EQUIPMENT_DELETE','equipment',params.eq_id,null,null);
