@@ -1476,7 +1476,6 @@
         await api('returnByManager', { record_id: recordId });
         EQ = await api('getEquipment');
         BORROWS = await api('getBorrows', { name: CU.name, role: CU.role });
-        detectOverdue();
         toast('คืนอุปกรณ์เรียบร้อยแล้ว','success');
         renderDashboard();
       } catch(e) { console.error(e); toast('เกิดข้อผิดพลาด','error'); }
