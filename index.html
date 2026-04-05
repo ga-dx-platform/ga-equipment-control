@@ -1142,7 +1142,7 @@
       document.getElementById('bf-body').innerHTML = `
         <div class="gd-card p-4 mb-4">
           <div class="flex items-center gap-3 mb-1">
-            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center"><i data-lucide="box" class="w-5 h-5 text-brand"></i></div>
+            ${eq.image_url ? `<img src="${he(eq.image_url)}" class="w-10 h-10 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0"><i data-lucide="box" class="w-5 h-5 text-brand"></i></div>`}
             <div><p class="font-semibold text-gray-900">${he(eq.name)}</p>
             <p class="text-xs text-gray-400">${he(eq.category||'')}${eq.serial_no?' · '+he(eq.serial_no):''} · คงเหลือ ${eq.available}</p></div>
           </div>
