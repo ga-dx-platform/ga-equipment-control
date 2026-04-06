@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GA Equipment Control</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -24,20 +25,37 @@
     }
   </script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap');
-
     :root {
-      --gd-brand: #EA580C;
-      --gd-brand-strong: #C2410C;
-      --gd-brand-vivid: #F97316;
-      --gd-cyan: #FB923C;
-      --gd-violet: #FDBA74;
-      --gd-brand-soft: #FFF2E8;
-      --gd-surface: #FFF7ED;
-      --gd-card: #FFFFFF;
-      --gd-text: #0F172A;
-      --gd-muted: #64748B;
-      --gd-border: #E2E8F0;
+      --orange-gradient: linear-gradient(145deg, #f97316, #ea580c);
+      --orange-dark: #c2410c;
+      --orange-main: #f97316;
+      --orange-light: #fff7ed;
+      --orange-border: #fed7aa;
+      --bg-page: #fafaf9;
+      --bg-card: #ffffff;
+      --bg-input: #f5f5f4;
+      --text-primary: #1c1917;
+      --text-secondary: #78716c;
+      --text-muted: #a8a29e;
+      --border: #e7e5e4;
+      --border-light: #f5f5f4;
+      --success-bg: #d1fae5;
+      --success-text: #065f46;
+      --danger-bg: #fee2e2;
+      --danger-text: #991b1b;
+      --warning-bg: #fef3c7;
+      --warning-text: #92400e;
+      --gd-brand: var(--orange-main);
+      --gd-brand-strong: var(--orange-dark);
+      --gd-brand-vivid: var(--orange-main);
+      --gd-cyan: #fb923c;
+      --gd-violet: #fdba74;
+      --gd-brand-soft: #fff2e8;
+      --gd-surface: var(--bg-page);
+      --gd-card: var(--bg-card);
+      --gd-text: var(--text-primary);
+      --gd-muted: var(--text-secondary);
+      --gd-border: var(--border);
       --gd-radius-card: 24px;
       --gd-radius-control: 10px;
       --gd-shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.05);
@@ -47,7 +65,7 @@
 
     html, body {
       height: 100%; margin: 0;
-      font-family: 'Noto Sans Thai', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Sarabun', sans-serif;
       color: var(--gd-text); background: var(--gd-surface);
     }
 
@@ -61,9 +79,10 @@
 
     .pin-dot {
       width: 14px; height: 14px; border-radius: 50%;
-      border: 2px solid #CBD5E1; transition: all 0.15s ease;
+      border: 1.5px solid #d6d3d1; transition: all 0.15s ease;
+      background: #fff;
     }
-    .pin-dot.filled { background: #EA580C; border-color: #EA580C; transform: scale(1.15); }
+    .pin-dot.filled { background: #EA580C; border-color: #EA580C; transform: scale(1.08); }
     .pin-dot.error { background: #EF4444; border-color: #EF4444; animation: shake 0.4s ease; }
 
     @keyframes shake {
@@ -73,13 +92,17 @@
     }
 
     .numpad-key {
-      width: 72px; height: 52px; border-radius: var(--gd-radius-control);
+      width: 72px; height: 72px; border-radius: 999px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 22px; font-weight: 600; color: #1E293B;
+      font-size: 30px; font-weight: 400; color: #1c1917;
       cursor: pointer; transition: background 0.15s ease, transform 0.15s ease;
-      user-select: none; -webkit-user-select: none; border: 1px solid transparent;
+      user-select: none; -webkit-user-select: none; border: 0.5px solid var(--border);
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(28,25,23,0.08);
     }
-    .numpad-key:active { background: #E2E8F0; transform: scale(0.98); }
+    .numpad-key:active { background: #f5f5f4; transform: scale(0.97); }
+    .pin-shell { background: var(--bg-page); min-height: 100%; }
+    .pin-panel { margin-top: -20px; border-radius: 20px 20px 0 0; }
 
     .tab-active {
       color: #0f172a; border: 1px solid #fed7aa;
@@ -102,8 +125,14 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: translateY(0) } }
 
     input, select, textarea {
-      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
-      border-radius: var(--gd-radius-control); border-color: var(--gd-border);
+      font-family: 'Sarabun', sans-serif;
+      background: var(--bg-input);
+      border: 0.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: var(--text-primary);
+      width: 100%;
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
     input:focus, select:focus, textarea:focus {
@@ -111,15 +140,11 @@
       box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.18); background: #fff;
     }
 
-    button { transition: all 0.2s ease; font-family: 'Noto Sans Thai', 'Inter', sans-serif; }
+    button { transition: all 0.2s ease; font-family: 'Sarabun', sans-serif; }
     button:active { transform: translateY(0.5px) scale(0.99); }
 
     .gd-shell {
-      background:
-        radial-gradient(circle at 0% 0%, rgba(251, 146, 60, 0.28), transparent 36%),
-        radial-gradient(circle at 100% 0%, rgba(249, 115, 22, 0.18), transparent 38%),
-        radial-gradient(circle at 50% 100%, rgba(234, 88, 12, 0.12), transparent 45%),
-        linear-gradient(180deg, #fff7ed 0%, #ffedd5 48%, #fed7aa 100%);
+      background: var(--bg-page);
     }
     .gd-header {
       background: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(148, 163, 184, 0.22);
@@ -178,6 +203,112 @@
       background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
     }
 
+
+    .page-header {
+      background: var(--orange-gradient);
+      padding: 20px 20px 48px;
+      position: relative;
+      color: #fff;
+    }
+    .header-wave {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 40px;
+      display: block;
+    }
+    .card {
+      background: var(--bg-card);
+      border-radius: 14px;
+      border: 0.5px solid var(--border);
+      padding: 14px 16px;
+    }
+    .btn-primary {
+      background: var(--orange-main);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      width: 100%;
+    }
+    .btn-secondary {
+      background: var(--orange-light);
+      color: var(--orange-dark);
+      border: 0.5px solid var(--orange-border);
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 13px;
+    }
+    .badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+    .badge-borrowed { background: var(--orange-light); color: var(--orange-dark); }
+    .badge-returned { background: var(--success-bg); color: var(--success-text); }
+    .badge-overdue { background: var(--danger-bg); color: var(--danger-text); }
+    .avatar {
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 500; color: #fff;
+    }
+    .avatar-sm { width: 32px; height: 32px; font-size: 11px; }
+    .avatar-md { width: 40px; height: 40px; font-size: 14px; }
+    .kpi-card {
+      background: #fff;
+      border-radius: 12px;
+      border: 0.5px solid var(--border);
+      padding: 14px;
+    }
+    .kpi-number {
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1;
+      margin: 4px 0;
+    }
+    .kpi-label { font-size: 11px; color: var(--text-muted); }
+    .kpi-card.danger { background: #fff5f5; border-color: #fecaca; }
+    .kpi-card.danger .kpi-number { color: #ef4444; }
+    .kpi-card.success .kpi-number { color: #10b981; }
+    .kpi-card.orange .kpi-number { color: var(--orange-main); }
+    .top-tabs { display: flex; border-bottom: 0.5px solid var(--border); }
+    .top-tab {
+      padding: 12px 20px;
+      font-size: 13px;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+    }
+    .top-tab.active {
+      color: var(--orange-main);
+      border-bottom-color: var(--orange-main);
+      font-weight: 500;
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: #ffffff;
+      border-top: 0.5px solid var(--border);
+      display: none;
+      padding: 10px 0 14px;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+      z-index: 100;
+    }
+    .bottom-nav:empty { display: none !important; }
+    .nav-item { flex: 1; text-align: center; }
+    .nav-indicator {
+      width: 20px; height: 2px;
+      background: var(--orange-main);
+      border-radius: 2px;
+      margin: 2px auto;
+      display: none;
+    }
+    .nav-item.active .nav-indicator { display: block; }
+    .nav-label { font-size: 10px; color: var(--text-muted); }
+    .nav-item.active .nav-label { color: var(--orange-main); font-weight: 500; }
+
     /* Status badges */
     .status-badge {
       display: inline-flex; align-items: center; gap: 6px;
@@ -219,33 +350,48 @@
 
     /* Login */
     .login-shell {
-      min-height: 100%; padding: 24px 18px 32px;
-      background:
-        radial-gradient(circle at 14% 10%, rgba(255,237,213,0.95) 0%, rgba(254,215,170,0.28) 34%, rgba(249,115,22,0) 58%),
-        radial-gradient(circle at 100% 0%, rgba(251,146,60,0.35) 0%, rgba(234,88,12,0) 48%),
-        linear-gradient(155deg, #FFF7ED 0%, #FFEDD5 45%, #FED7AA 100%);
+      min-height: 100%;
+      padding: 0;
+      background: var(--bg-page);
+    }
+    .login-brand {
+      background: var(--orange-gradient);
+      padding: 40px 24px 68px;
+      position: relative;
+      text-align: center;
+      color: #fff;
+    }
+    .login-card-wrap {
+      margin-top: -28px;
+      padding: 0 18px 24px;
+      position: relative;
+      z-index: 2;
+      background: var(--bg-page);
+      min-height: calc(100vh - 210px);
     }
     .login-card {
-      width: 100%; max-width: 432px; border-radius: 24px; padding: 32px;
-      border: 1px solid rgba(255,255,255,0.55);
-      background: linear-gradient(140deg, rgba(255,255,255,0.88), rgba(255,255,255,0.76));
-      box-shadow: 0 28px 52px rgba(234,88,12,0.16), 0 8px 20px rgba(15,23,42,0.08);
-      backdrop-filter: blur(16px);
+      width: 100%;
+      max-width: 460px;
+      border-radius: 24px;
+      padding: 26px 20px;
+      border: 0.5px solid var(--border);
+      background: #fff;
+      box-shadow: 0 18px 38px rgba(0, 0, 0, 0.12);
     }
     .user-card {
-      border: 1px solid rgba(148,163,184,0.22); border-radius: 16px;
-      background: rgba(255,255,255,0.86);
+      border: 0.5px solid var(--border); border-radius: 14px;
+      background: #fff;
       transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
       cursor: pointer;
     }
-    .user-card:hover { transform: translateY(-1px); box-shadow: 0 14px 28px rgba(15,23,42,0.08); border-color: rgba(59,130,246,0.35); }
+    .user-card:hover { transform: translateY(-1px); box-shadow: 0 10px 20px rgba(28,25,23,0.08); border-color: var(--orange-border); }
     .user-card:active { transform: scale(0.988); }
-    .user-card.selected { border-color: rgba(37,99,235,0.65); box-shadow: 0 0 0 3px rgba(59,130,246,0.12), 0 12px 24px rgba(30,64,175,0.12); }
-    .avatar-gradient { box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 6px 14px rgba(59,130,246,0.28); color: #EAF3FF; }
-    .admin-card { border-color: rgba(148,163,184,0.3); background: linear-gradient(120deg, rgba(241,245,249,0.8), rgba(248,250,252,0.95)); }
+    .user-card.selected { border-color: var(--orange-main); box-shadow: 0 0 0 3px rgba(249,115,22,0.14); }
+    .avatar-gradient { box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 4px 12px rgba(249,115,22,0.3); color: #fff; }
+    .admin-card { border-color: var(--orange-border); background: #fff7ed; }
 
     /* Tab bar */
-    #mainTabBar { gap: 8px; border: 0; border-radius: 16px; padding: 6px; background: #eff4fb; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    #mainTabBar { gap: 6px; border: 0; border-radius: 0; padding: 0; background: transparent; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
     #mainTabBar::-webkit-scrollbar { display: none; }
     #mainTabBar .main-tab { letter-spacing: 0.01em; border-radius: 12px; transition: all 0.2s ease; white-space: nowrap; }
     #mainTabBar .main-tab:hover { color: #1e3a8a; background: rgba(255,255,255,0.8); }
@@ -263,9 +409,14 @@
 
     @keyframes spin { to { transform: rotate(360deg) } }
 
+    @media (max-width: 767px) {
+      .top-tabs { display: none; }
+      .bottom-nav { display: flex; }
+    }
+
     @media (max-width: 480px) {
       .login-card { padding: 24px; border-radius: 22px; }
-      .login-shell { padding: 16px; }
+      .login-card-wrap { padding-left: 12px; padding-right: 12px; }
     }
   </style>
 </head>
@@ -295,26 +446,29 @@
 
       <!-- LOGIN -->
       <div id="screen-login" class="screen">
-        <div class="login-shell flex-1 overflow-auto flex items-center justify-center">
-          <div class="login-card fade-in">
-            <div class="text-center mb-8">
-              <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-br from-orange-400 to-orange-600 shadow-lg shadow-orange-500/30 mb-5">
-                <span class="text-white text-2xl font-extrabold tracking-tight">EC</span>
+        <div class="login-shell flex-1 overflow-auto">
+          <div class="login-brand">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-white/25 border border-white/40 mb-4">
+              <span class="text-white text-2xl font-bold tracking-tight">EC</span>
+            </div>
+            <h1 class="text-[30px] leading-tight font-bold">Equipment Control</h1>
+            <p class="text-sm text-white/90 mt-1">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
+            <svg viewBox="0 0 400 40" preserveAspectRatio="none" class="header-wave">
+              <path d="M0,20 Q100,40 200,20 Q300,0 400,20 L400,40 L0,40 Z" fill="#fafaf9"/>
+            </svg>
+          </div>
+          <div class="login-card-wrap flex justify-center">
+            <div class="login-card fade-in">
+              <div class="mb-7">
+                <p class="text-xs font-semibold uppercase tracking-wider text-stone-400 mb-3">GA Staff</p>
+                <div class="space-y-3" id="gaUserList"></div>
               </div>
-              <h1 class="text-[2rem] leading-tight font-extrabold tracking-[-0.02em] text-slate-900">Equipment Control</h1>
-              <p class="text-sm text-slate-500 mt-2">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
-            </div>
-
-            <div class="mb-8">
-              <p class="gd-section-title mb-3">Select user</p>
-              <div class="space-y-3" id="gaUserList"></div>
-            </div>
-
-            <div class="mb-4 gd-card-soft p-4">
-              <p class="gd-section-title mb-3 flex items-center gap-1.5">
-                <i data-lucide="shield" class="w-3.5 h-3.5"></i>Admin access
-              </p>
-              <div class="space-y-3" id="mgrUserList"></div>
+              <div class="card bg-orange-50/40">
+                <p class="text-xs font-semibold uppercase tracking-wider text-orange-700 mb-3 flex items-center gap-1.5">
+                  <i data-lucide="shield" class="w-3.5 h-3.5"></i>Manager
+                </p>
+                <div class="space-y-3" id="mgrUserList"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -322,58 +476,68 @@
 
       <!-- PIN -->
       <div id="screen-pin" class="screen">
-        <div class="flex-1 flex flex-col items-center justify-center px-6 pb-8">
-          <button onclick="goScreen('login')"
-            class="self-start mb-6 p-2 -ml-2 rounded-full hover:bg-gray-100 transition">
-            <i data-lucide="arrow-left" class="w-5 h-5 text-gray-500"></i>
-          </button>
-          <div id="pin-avatar"
-            class="w-16 h-16 rounded-full bg-orange-100 text-brand flex items-center justify-center font-bold text-lg mb-3"></div>
-          <p id="pin-name" class="font-semibold text-gray-900 mb-1"></p>
-          <p class="text-sm text-gray-400 mb-8">กรอก PIN 6 หลัก</p>
-          <div class="flex gap-3 mb-10" id="pin-dots">
-            <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
-            <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+        <div class="pin-shell flex-1 overflow-auto">
+          <div class="page-header">
+            <button onclick="goScreen('login')" class="p-2 -ml-2 rounded-full hover:bg-white/15 transition">
+              <i data-lucide="arrow-left" class="w-5 h-5 text-white"></i>
+            </button>
+            <div class="mt-2 flex flex-col items-center">
+              <div id="pin-avatar" class="avatar avatar-md mb-2"></div>
+              <p id="pin-name" class="font-semibold text-white text-base"></p>
+              <p class="text-xs text-white/80">กรอก PIN 6 หลัก</p>
+            </div>
+            <svg viewBox="0 0 400 40" preserveAspectRatio="none" class="header-wave">
+              <path d="M0,20 Q100,40 200,20 Q300,0 400,20 L400,40 L0,40 Z" fill="#fafaf9"/>
+            </svg>
           </div>
-          <div id="pin-error" class="text-red-500 text-sm mb-3 h-5 font-medium"></div>
-          <div class="grid grid-cols-3 gap-3">
-            <div class="numpad-key" onclick="enterPin('1')">1</div>
-            <div class="numpad-key" onclick="enterPin('2')">2</div>
-            <div class="numpad-key" onclick="enterPin('3')">3</div>
-            <div class="numpad-key" onclick="enterPin('4')">4</div>
-            <div class="numpad-key" onclick="enterPin('5')">5</div>
-            <div class="numpad-key" onclick="enterPin('6')">6</div>
-            <div class="numpad-key" onclick="enterPin('7')">7</div>
-            <div class="numpad-key" onclick="enterPin('8')">8</div>
-            <div class="numpad-key" onclick="enterPin('9')">9</div>
-            <div class="numpad-key"></div>
-            <div class="numpad-key" onclick="enterPin('0')">0</div>
-            <div class="numpad-key" onclick="deletePin()"><i data-lucide="delete" class="w-5 h-5 text-gray-400"></i></div>
+          <div class="pin-panel px-6 pb-8 flex flex-col items-center">
+            <div class="flex gap-3 mb-8 mt-2" id="pin-dots">
+              <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+              <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+            </div>
+            <div id="pin-error" class="text-red-500 text-sm mb-4 h-5 font-medium"></div>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="numpad-key" onclick="enterPin('1')">1</div>
+              <div class="numpad-key" onclick="enterPin('2')">2</div>
+              <div class="numpad-key" onclick="enterPin('3')">3</div>
+              <div class="numpad-key" onclick="enterPin('4')">4</div>
+              <div class="numpad-key" onclick="enterPin('5')">5</div>
+              <div class="numpad-key" onclick="enterPin('6')">6</div>
+              <div class="numpad-key" onclick="enterPin('7')">7</div>
+              <div class="numpad-key" onclick="enterPin('8')">8</div>
+              <div class="numpad-key" onclick="enterPin('9')">9</div>
+              <div class="numpad-key opacity-0 pointer-events-none"></div>
+              <div class="numpad-key" onclick="enterPin('0')">0</div>
+              <div class="numpad-key" onclick="deletePin()"><i data-lucide="delete" class="w-6 h-6 text-stone-500"></i></div>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- MAIN -->
       <div id="screen-main" class="screen">
-        <div class="gd-header px-4 lg:px-8 pt-6 pb-4" style="position:sticky;top:0;z-index:20;">
-          <div class="flex items-center justify-between mb-4">
+        <div class="page-header" style="position:sticky;top:0;z-index:20;">
+          <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-3">
-              <div id="main-avatar" class="w-10 h-10 rounded-full bg-orange-100 text-brand flex items-center justify-center font-bold text-sm"></div>
+              <div id="main-avatar" class="avatar avatar-md"></div>
               <div>
-                <p id="main-user-name" class="font-semibold text-gray-900 text-sm leading-tight"></p>
-                <p id="main-user-role" class="text-xs text-gray-400">GA Staff</p>
+                <p id="main-user-name" class="font-semibold text-white text-sm leading-tight"></p>
+                <p id="main-user-role" class="text-xs text-white/85">GA Staff</p>
               </div>
             </div>
             <div class="flex items-center gap-1">
-              <button onclick="openChangePinModal()" class="p-2.5 rounded-xl hover:bg-slate-100 transition" title="เปลี่ยน PIN">
-                <i data-lucide="key-round" class="w-4 h-4 text-gray-400"></i>
+              <button onclick="openChangePinModal()" class="p-2.5 rounded-xl hover:bg-white/15 transition" title="เปลี่ยน PIN">
+                <i data-lucide="key-round" class="w-4 h-4 text-white"></i>
               </button>
-              <button onclick="confirmLogout()" class="p-2.5 rounded-xl hover:bg-slate-100 transition" title="ออกจากระบบ">
-                <i data-lucide="log-out" class="w-4 h-4 text-gray-400"></i>
+              <button onclick="confirmLogout()" class="p-2.5 rounded-xl hover:bg-white/15 transition" title="ออกจากระบบ">
+                <i data-lucide="log-out" class="w-4 h-4 text-white"></i>
               </button>
             </div>
           </div>
-          <div class="flex" id="mainTabBar"></div>
+          <div class="top-tabs" id="mainTabBar"></div>
+          <svg viewBox="0 0 400 40" preserveAspectRatio="none" class="header-wave">
+            <path d="M0,20 Q100,40 200,20 Q300,0 400,20 L400,40 L0,40 Z" fill="#fafaf9"/>
+          </svg>
         </div>
         <!-- Overdue Banner -->
         <div id="overdue-banner" class="hidden mx-4 mt-1 mb-0 rounded-xl px-4 py-3 flex items-center gap-3 bg-red-50 border border-red-200">
@@ -393,6 +557,7 @@
         <div id="tab-equipment" class="flex-1 overflow-auto hidden"></div>
         <div id="tab-members" class="flex-1 overflow-auto hidden"></div>
         <div id="tab-audit-log" class="flex-1 overflow-auto hidden"></div>
+        <nav class="bottom-nav" id="bottomNavBar"></nav>
       </div>
 
       <!-- BORROW FORM (overlay) -->
@@ -1050,12 +1215,12 @@
       function row(u, i, role) {
         const isMgr = role === 'mgr';
         const icon = isMgr
-          ? `<div class="w-11 h-11 rounded-full bg-gradient-to-br from-slate-300 to-slate-500 text-slate-50 flex items-center justify-center shadow-sm shrink-0"><i data-lucide="shield" class="w-5 h-5"></i></div>`
+          ? `<div class="avatar avatar-md bg-gradient-to-br from-orange-300 to-orange-500 shrink-0"><i data-lucide="shield" class="w-4 h-4"></i></div>`
           : `<div class="avatar-gradient w-11 h-11 rounded-full bg-gradient-to-br ${grads[i%grads.length]} flex items-center justify-center text-[15px] font-bold tracking-wide shrink-0">${he(ini(u.name))}</div>`;
         return `<button type="button" class="user-card ${isMgr?'admin-card':''} w-full flex items-center gap-3.5 px-4 py-3.5 text-left" data-name="${he(u.name)}" data-role="${role}" onclick="selectUser(this.dataset.name,this.dataset.role)">
-          ${icon}<div class="flex-1 min-w-0"><p class="font-semibold ${isMgr?'text-slate-700':'text-slate-900'} text-[15px] leading-tight truncate">${he(u.name)}</p>
-          <p class="text-xs text-slate-500 mt-1">${isMgr?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 shrink-0"></i></button>`;
+          ${icon}<div class="flex-1 min-w-0"><p class="font-semibold text-stone-900 text-[15px] leading-tight truncate">${he(u.name)}</p>
+          <p class="text-xs text-stone-500 mt-1">${isMgr?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-stone-400 shrink-0"></i></button>`;
       }
       gaList.innerHTML = AU.ga.map((u,i) => row(u,i,'ga')).join('');
       mgrList.innerHTML = AU.mgr.map((u,i) => row(u,i,'mgr')).join('');
@@ -1225,14 +1390,17 @@
       document.getElementById('main-user-name').textContent = CU.name;
       document.getElementById('main-user-role').textContent = isMgr ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่ GA';
       const bar = document.getElementById('mainTabBar');
+      const bottomBar = document.getElementById('bottomNavBar');
       const oc = BORROWS.filter(r => r.status === 'overdue').length;
       const badge = oc > 0 ? `<span class="ml-1 inline-flex items-center justify-center min-w-[16px] h-4 px-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">${oc > 9 ? '9+' : oc}</span>` : '';
       if (isMgr) {
         bar.innerHTML = ['Dashboard','ประวัติ','อุปกรณ์','สมาชิก','Audit'].map((t,i)=>
-          `<button class="main-tab shrink-0 px-4 py-2.5 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
+          `<button class="main-tab top-tab ${i===0?'active':''}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
+        bottomBar.innerHTML = '';
       } else {
         bar.innerHTML = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ'].map((t,i)=>
-          `<button class="main-tab flex-1 min-w-[90px] px-3 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
+          `<button class="main-tab top-tab ${i===0?'active':''}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
+        bottomBar.innerHTML = ['ยืม','คืน','ประวัติ'].map((t,i)=>`<div class="nav-item ${i===0?'active':''}" onclick="switchTab(${i})"><span class="nav-icon text-sm">${i===0?'📦':i===1?'↩️':'🕘'}</span><div class="nav-indicator"></div><span class="nav-label">${t}</span></div>`).join('');
       }
       showOverdueBanner();
       switchTab(0);
@@ -1253,8 +1421,8 @@
     }
     function switchTab(idx) {
       const isMgr = CU.role === 'mgr';
-      const tabBaseCls = isMgr ? 'main-tab shrink-0 px-4 py-2.5 text-center text-xs font-semibold' : 'main-tab flex-1 min-w-[90px] px-3 py-2.5 text-center text-sm font-semibold';
-      document.querySelectorAll('.main-tab').forEach((b,i)=> b.className = `${tabBaseCls} ${i===idx?'tab-active':'tab-inactive'}`);
+      document.querySelectorAll('#mainTabBar .main-tab').forEach((b,i)=> b.className = `main-tab top-tab ${i===idx?'active':''}`);
+      document.querySelectorAll('#bottomNavBar .nav-item').forEach((b,i)=> b.className = `nav-item ${i===idx?'active':''}`);
       ['borrow','return','history','dashboard','mgr-history','equipment','members','audit-log'].forEach(t=> { const el=document.getElementById('tab-'+t); if(el) el.style.display='none'; });
       if (isMgr) {
         if(idx===0){ document.getElementById('tab-dashboard').style.display='block'; renderDashboard(); }
@@ -1281,11 +1449,6 @@
       });
       const el = document.getElementById('tab-borrow');
       el.innerHTML = `<div class="gd-page fade-in">
-        <div class="gd-page-header">
-          <p class="gd-section-title mb-2">Borrow</p>
-          <h2 class="text-xl font-bold tracking-tight text-slate-900">ยืมอุปกรณ์</h2>
-          <p class="text-sm text-slate-500 mt-1">เลือกอุปกรณ์ที่ต้องการยืม (คงเหลือ > 0)</p>
-        </div>
         <div class="mb-4">
           <input type="text" placeholder="ค้นหาอุปกรณ์..." class="gd-input" value="${he(borrowSearchQ)}"
             oninput="borrowSearchQ=this.value;renderBorrowTab()">
@@ -1295,16 +1458,16 @@
           ${cats.map(c=>`<div class="chip ${borrowCatFilter===c?'active':''}" onclick="borrowCatFilter='${he(c)}';renderBorrowTab()">${he(c)}</div>`).join('')}
         </div>
         <div class="space-y-3" id="eqGrid">
-          ${filtered.length ? filtered.map(e=>`<div class="gd-card p-4 cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
+          ${filtered.length ? filtered.map(e=>`<div class="card cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
             <div class="flex items-start gap-3 mb-2">
               ${e.image_url ? `<img src="${he(e.image_url)}" class="w-12 h-12 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-xl shrink-0">📦</div>`}
               <div class="flex-1 min-w-0">
                 <p class="font-semibold text-gray-900 text-sm">${he(e.name)}</p>
                 <p class="text-xs text-gray-400">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
               </div>
-              <span class="text-xs px-2.5 py-1 rounded-full font-semibold shrink-0 ${e.available<=2?'bg-amber-50 text-amber-700 border border-amber-200':'bg-blue-50 text-brand border border-blue-200'}">คงเหลือ ${e.available}/${e.quantity}</span>
+              <span class="badge ${e.available<=2?'badge-overdue':'badge-borrowed'} shrink-0">คงเหลือ ${e.available}/${e.quantity}</span>
             </div>
-            <div class="flex items-center justify-end"><button class="text-xs font-semibold text-brand flex items-center gap-1"><i data-lucide="hand" class="w-3.5 h-3.5"></i> ยืม</button></div>
+            <div class="flex items-center justify-end"><button class="btn-secondary text-xs font-semibold flex items-center gap-1 !w-auto !py-1.5 !px-3"><i data-lucide="hand" class="w-3.5 h-3.5"></i> ยืม</button></div>
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
             <span class="text-4xl mb-3">📦</span>
             <p class="text-sm">ยังไม่มีอุปกรณ์ในระบบ</p>
@@ -1405,18 +1568,15 @@
       const active = BORROWS.filter(r=> r.status==='borrowed'||r.status==='overdue');
       const el = document.getElementById('tab-return');
       el.innerHTML = `<div class="gd-page fade-in">
-        <div class="gd-page-header">
-          <p class="gd-section-title mb-2">Return</p>
-          <h2 class="text-xl font-bold tracking-tight text-slate-900">คืนอุปกรณ์</h2>
-          <p class="text-sm text-slate-500 mt-1">รายการอุปกรณ์ที่กำลังยืมอยู่</p>
-        </div>
+        <h2 class="text-lg font-semibold text-stone-900 mb-3">รายการที่กำลังยืม</h2>
         <div class="space-y-3">
           ${active.length ? active.map(r=>{
             const days = daysUntil(r.due_date);
             const isOD = r.status==='overdue';
-            return `<div class="gd-card p-4 cursor-pointer ${isOD?'border-red-200 bg-red-50/30':''}" onclick="openReturnDetail('${he(r.record_id)}')">
-              <div class="flex items-start justify-between mb-2">
-                <div><p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
+            return `<div class="card cursor-pointer ${isOD?'!border-red-200 bg-red-50/30':''}" onclick="openReturnDetail('${he(r.record_id)}')">
+              <div class="flex items-start gap-3 justify-between mb-2">
+                <div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-base">📦</div>
+                <div class="flex-1"><p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
                 <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)}</p></div>
                 ${statusBadge(r.status)}
               </div>
@@ -1425,6 +1585,7 @@
                 <span class="${isOD?'text-red-600 font-semibold':'text-gray-500'}">${isOD?'เกิน '+Math.abs(days)+' วัน':(days===0?'วันนี้':days+' วัน')}</span>
               </div>
               ${r.qty_borrowed>1?`<p class="text-xs text-gray-400 mt-1">จำนวน: ${r.qty_borrowed} ชิ้น</p>`:''}
+              <div class="flex justify-end mt-2"><button class="btn-secondary !w-auto !py-1.5 !px-3">คืน</button></div>
             </div>`;
           }).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
             <span class="text-4xl mb-3">✅</span>
@@ -1545,10 +1706,9 @@
         .filter(r => !sq || (r.eq_name||'').toLowerCase().includes(sq));
       const el = document.getElementById('tab-history');
       el.innerHTML = `<div class="gd-page fade-in">
-        <div class="gd-page-header">
+        <div class="mb-4">
           <div class="flex items-center justify-between">
-            <div><p class="gd-section-title mb-2">History</p>
-            <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการยืม-คืน</h2></div>
+            <div><h2 class="text-lg font-semibold text-stone-900">ประวัติการยืม-คืน</h2></div>
             <button onclick="exportHistoryCSV('ga')" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition shrink-0">
               <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV</button>
           </div>
@@ -1563,7 +1723,7 @@
           <div class="chip ${historyFilter==='returned'?'active':''}" onclick="historyFilter='returned';renderHistoryTab()">คืนแล้ว</div>
         </div>
         <div class="space-y-3">
-          ${list.length ? list.map(r=>`<div class="gd-card p-4">
+          ${list.length ? list.map(r=>`<div class="card">
             <div class="flex items-start justify-between mb-1">
               <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
               <div class="flex items-center gap-1.5">${conditionBadge(r.condition_on_return)}${statusBadge(r.status)}</div>
@@ -1571,7 +1731,7 @@
             <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)}</p>
             <div class="flex items-center justify-between text-xs text-gray-400 mt-2">
               <div><span>ยืม ${fd(r.borrowed_at)}</span><span class="mx-1">·</span><span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span></div>
-              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
+              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="btn-secondary shrink-0 ml-2 !w-auto !py-1 !px-2.5 text-xs flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i><span>ดูรายละเอียด</span></button>
             </div>
             ${r.condition_note?`<p class="text-xs text-gray-400 mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
@@ -1594,38 +1754,29 @@
 
       const el = document.getElementById('tab-dashboard');
       el.innerHTML = `<div class="gd-page fade-in">
-        <div class="gd-page-header">
-          <p class="gd-section-title mb-2">Dashboard</p>
-          <h2 class="text-xl font-bold tracking-tight text-slate-900">ภาพรวมระบบ</h2>
+        <div class="mb-4">
+          <h2 class="text-lg font-semibold text-stone-900">Manager Dashboard</h2>
         </div>
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-          <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
-            <div class="w-8 h-8 rounded-lg bg-warn-light flex items-center justify-center mb-2"><i data-lucide="clock-3" class="w-4 h-4 text-warn"></i></div>
-            <p class="text-2xl font-bold text-gray-900">${totalBorrowed}</p><p class="text-xs text-gray-400 mt-0.5">กำลังยืม</p></div>
-          <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
-            <div class="w-8 h-8 rounded-lg bg-danger-light flex items-center justify-center mb-2"><i data-lucide="alert-triangle" class="w-4 h-4 text-danger"></i></div>
-            <p class="text-2xl font-bold text-danger">${overdueList.length}</p><p class="text-xs text-gray-400 mt-0.5">เกินกำหนด</p></div>
-          <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
-            <div class="w-8 h-8 rounded-lg bg-success-light flex items-center justify-center mb-2"><i data-lucide="check-circle" class="w-4 h-4 text-success"></i></div>
-            <p class="text-2xl font-bold text-gray-900">${returnedToday}</p><p class="text-xs text-gray-400 mt-0.5">คืนวันนี้</p></div>
-          <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
-            <div class="w-8 h-8 rounded-lg bg-brand-light flex items-center justify-center mb-2"><i data-lucide="box" class="w-4 h-4 text-brand"></i></div>
-            <p class="text-2xl font-bold text-gray-900">${availableEq}</p><p class="text-xs text-gray-400 mt-0.5">อุปกรณ์พร้อมใช้</p></div>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div class="kpi-card orange"><p class="kpi-label">กำลังยืม</p><p class="kpi-number">${totalBorrowed}</p></div>
+          <div class="kpi-card danger"><p class="kpi-label">เกินกำหนด</p><p class="kpi-number">${overdueList.length}</p></div>
+          <div class="kpi-card success"><p class="kpi-label">คืนวันนี้</p><p class="kpi-number">${returnedToday}</p></div>
+          <div class="kpi-card"><p class="kpi-label">อุปกรณ์พร้อมใช้</p><p class="kpi-number text-stone-900">${availableEq}</p></div>
         </div>
-        <div class="gd-card p-4 mb-4">
-          <h4 class="font-semibold text-gray-900 text-sm mb-3">รายการเกินกำหนด</h4>
-          ${overdueList.length ? overdueList.map(r=>`<div class="flex items-center gap-3 py-2.5 border-b border-gray-100 last:border-0">
+        <div class="card mb-4">
+          <h4 class="font-semibold text-gray-900 text-sm mb-3">Overdue</h4>
+          ${overdueList.length ? overdueList.map(r=>`<div class="flex items-center gap-3 py-2.5 border-b border-gray-100 last:border-0 text-sm">
             <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0"><i data-lucide="alert-triangle" class="w-4 h-4 text-red-500"></i></div>
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium text-gray-900 truncate">${he(r.eq_name)}</p>
               <p class="text-xs text-gray-400">${he(r.borrower_name)} · เกิน ${Math.abs(daysUntil(r.due_date))} วัน</p>
             </div>
             <button data-rid="${he(r.record_id||r.id||'')}" onclick="returnByManager(this.dataset.rid)"
-              class="shrink-0 px-2.5 py-1.5 bg-brand text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition flex items-center gap-1"><i data-lucide="corner-up-left" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">คืนแทน</span></button>
+              class="btn-secondary shrink-0 !w-auto !py-1.5 !px-2.5 text-xs flex items-center gap-1"><i data-lucide="corner-up-left" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">คืนแทน</span></button>
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-8 text-slate-500"><span class="text-3xl mb-2">✓</span><p class="text-sm">ไม่มีรายการเกินกำหนด</p></div>`}
         </div>
-        <div class="gd-card p-4 mb-4">
-          <h4 class="font-semibold text-gray-900 text-sm mb-3">กิจกรรมล่าสุด</h4>
+        <div class="card mb-4">
+          <h4 class="font-semibold text-gray-900 text-sm mb-3">Activity feed</h4>
           ${recent.length ? recent.map(r=>{
             const isRet = r.status==='returned';
             return `<div class="flex items-center gap-3 py-2 border-b border-gray-100 last:border-0">
@@ -1679,10 +1830,9 @@
       const selectCls = 'border border-gray-200 rounded-lg px-2 py-1.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-brand/30';
       const el = document.getElementById('tab-mgr-history');
       el.innerHTML = `<div class="gd-page fade-in">
-        <div class="gd-page-header">
+        <div class="mb-4">
           <div class="flex items-center justify-between">
-            <div><p class="gd-section-title mb-2">All Records</p>
-            <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติทั้งหมด</h2></div>
+            <div><h2 class="text-lg font-semibold text-stone-900">ประวัติทั้งหมด</h2></div>
             <button onclick="exportHistoryCSV('mgr')" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition shrink-0">
               <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV</button>
           </div>
@@ -1706,7 +1856,7 @@
           <div class="chip ${historyFilter==='returned'?'active':''}" onclick="historyFilter='returned';renderMgrHistory()">คืนแล้ว</div>
         </div>
         <div class="space-y-3">
-          ${list.length ? list.map(r=>`<div class="gd-card p-4">
+          ${list.length ? list.map(r=>`<div class="card">
             <div class="flex items-start justify-between mb-1">
               <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
               <div class="flex items-center gap-1.5">${conditionBadge(r.condition_on_return)}${statusBadge(r.status)}</div>
@@ -1714,7 +1864,7 @@
             <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)} · GA: ${he(r.ga_staff)}</p>
             <div class="flex items-center justify-between text-xs text-gray-400 mt-2">
               <div><span>ยืม ${fd(r.borrowed_at)}</span><span class="mx-1">·</span><span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span></div>
-              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
+              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="btn-secondary shrink-0 ml-2 !w-auto !py-1 !px-2.5 text-xs flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i><span>ดูรายละเอียด</span></button>
             </div>
             ${r.condition_note?`<p class="text-xs text-gray-400 mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
@@ -1739,7 +1889,7 @@
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="flex items-center justify-between mb-3">
           <h4 class="font-semibold text-gray-900 text-sm">รายการอุปกรณ์ <span class="text-gray-400 font-normal">(${filtered.length}/${EQ.length})</span></h4>
-          <button onclick="showAddEquipment()" class="flex items-center gap-1.5 px-3 py-1.5 bg-brand text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition shadow-sm">
+          <button onclick="showAddEquipment()" class="btn-primary !w-auto !py-1.5 !px-3 text-xs flex items-center gap-1.5">
             <i data-lucide="plus" class="w-3.5 h-3.5"></i> เพิ่มอุปกรณ์</button>
         </div>
         <div class="flex flex-col sm:flex-row gap-2 mb-4">
@@ -1760,7 +1910,7 @@
             <span class="text-4xl mb-3">${EQ.length === 0 ? '📦' : '🔍'}</span>
             <p class="text-sm">${EQ.length === 0 ? "ยังไม่มีอุปกรณ์ กด '+ เพิ่มอุปกรณ์' เพื่อเริ่มต้น" : 'ไม่พบอุปกรณ์ที่ตรงกับการค้นหา'}</p>
           </div>` :
-          filtered.map(e=>`<div class="gd-card p-4">
+          filtered.map(e=>`<div class="card">
             <div class="flex items-start justify-between mb-2">
               <div class="flex items-start gap-3 flex-1 min-w-0 pr-2">
                 ${e.image_url ? `<img src="${he(e.image_url)}" class="w-10 h-10 object-cover rounded-lg border border-gray-200 shrink-0"/>` : `<div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-lg shrink-0">📦</div>`}
@@ -1782,7 +1932,7 @@
         </div>
 
         <!-- ===== CATEGORY MANAGEMENT ===== -->
-        <div class="gd-card p-4">
+        <div class="card">
           <div class="flex items-center justify-between mb-3">
             <h4 class="font-semibold text-gray-900 text-sm">หมวดหมู่</h4>
             ${_addCatMode ? '' : `<button onclick="showAddCatInput()" class="flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-brand border border-brand/30 rounded-lg hover:bg-blue-50 transition">
