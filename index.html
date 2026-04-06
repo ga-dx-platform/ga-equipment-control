@@ -325,15 +325,20 @@
 
       <!-- PIN -->
       <div id="screen-pin" class="screen">
-        <div class="flex-1 flex flex-col items-center justify-center px-6 pb-8">
-          <button onclick="goScreen('login')"
-            class="self-start mb-6 p-2 -ml-2 rounded-full hover:bg-gray-100 transition">
-            <i data-lucide="arrow-left" class="w-5 h-5 text-gray-500"></i>
+        <!-- Gradient header with wave -->
+        <div class="gd-header px-4 flex flex-col items-center text-center relative" style="padding-top:40px;padding-bottom:52px;">
+          <button onclick="goScreen('login')" class="absolute top-4 left-4 p-2 rounded-full hover:bg-white/20 transition">
+            <i data-lucide="arrow-left" class="w-5 h-5 text-white"></i>
           </button>
-          <div id="pin-avatar"
-            class="w-16 h-16 rounded-full bg-orange-100 text-brand flex items-center justify-center font-bold text-lg mb-3"></div>
-          <p id="pin-name" class="font-semibold text-gray-900 mb-1"></p>
-          <p class="text-sm text-gray-400 mb-8">กรอก PIN 6 หลัก</p>
+          <div id="pin-avatar" class="w-16 h-16 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-lg mb-3"></div>
+          <p id="pin-name" class="font-semibold text-white mb-1"></p>
+          <p class="text-sm text-white/70">กรอก PIN 6 หลัก</p>
+          <svg viewBox="0 0 390 50" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="absolute bottom-0 left-0 w-full" style="height:48px;">
+            <path d="M0,25 C80,50 310,0 390,25 L390,50 L0,50 Z" fill="#fafaf9"/>
+          </svg>
+        </div>
+        <!-- PIN content -->
+        <div class="flex-1 flex flex-col items-center justify-center px-6 pb-8">
           <div class="flex gap-3 mb-10" id="pin-dots">
             <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
             <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
@@ -1070,7 +1075,7 @@
       const a = avc(role==='ga'?idx:idx+4);
       SU = { name, role, av: a }; PIN_ATTEMPTS = 0; PB = '';
       const av = document.getElementById('pin-avatar');
-      av.className = `w-16 h-16 rounded-full ${a.bg} ${a.tc} flex items-center justify-center font-bold text-lg mb-3`;
+      av.className = `w-16 h-16 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-lg`;
       av.textContent = ini(name);
       document.getElementById('pin-name').textContent = name;
       updatePinDots(); document.getElementById('pin-error').textContent = '';
