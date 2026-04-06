@@ -777,9 +777,11 @@
         }
         if (action === 'changePin') {
           const h = await sha256(String(params.newPin).padStart(6,'0'));
-          const { error } = await sb.from('users').update({ pin_hash: h }).eq('full_name', params.name).eq('role', params.role);
-          if (!error) await logAction('MEMBER_RESET_PIN','users',params.name,null,{name:params.name,role:params.role});
-          return { ok: !error };
+          const { data: updated, error } = await sb.from('users').update({ pin_hash: h }).eq('full_name', params.name).eq('role', params.role).select('full_name');
+          if (error) throw error;
+          if (!updated?.length) throw new Error('PIN update matched 0 rows — check Supabase RLS UPDATE policy on users table');
+          await logAction('MEMBER_RESET_PIN','users',params.name,null,{name:params.name,role:params.role});
+          return { ok: true };
         }
         if (action === 'selfChangePin') {
           // Fetch user's id + pin_hash by name (always fresh — no pin_hash cached in memory)
@@ -1190,9 +1192,11 @@
         }
       } catch(e) {
         console.error('[submitChangePin]', e);
-        document.getElementById('cp-error').textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่';
+        const isRls = e?.message?.includes('matched 0 rows');
+        document.getElementById('cp-error').textContent = isRls
+          ? 'ระบบยังไม่รองรับการเปลี่ยน PIN — แจ้ง Admin เปิด RLS UPDATE policy ใน Supabase'
+          : 'เกิดข้อผิดพลาด กรุณาลองใหม่';
         document.querySelectorAll('#cp-pin-dots .pin-dot').forEach(d=>d.classList.add('error'));
-        // Reset to step 1 (new PIN) so user can retry without re-entering old PIN
         _cpStep=1; _cpNew=''; _cpConf=''; setTimeout(cpUpdateUI, 600);
       }
     }
