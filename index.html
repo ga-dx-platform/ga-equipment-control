@@ -2242,13 +2242,19 @@
       const m = AUDIT_TYPE_META[t] || { label: t, cls: 'bg-gray-100 text-gray-500' };
       return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${m.cls}">${he(m.label)}</span>`;
     }
+    function resolveCatName(catIdOrName) {
+      if (!catIdOrName) return '';
+      const found = CATS.find(c => c.id === catIdOrName);
+      return found ? found.name : catIdOrName;
+    }
     function auditDetail(r) {
       const d = r.new_data || {};
       if (r.action_type === 'BORROW') return `${he(d.eq_name||'')} · ${he(d.borrower_name||'')} รหัส: ${he(d.borrower_dept||'')} จำนวน ${d.qty||''}`;
       if (r.action_type === 'RETURN') return `record: ${he(r.target_id||'')}`;
       if (r.action_type === 'RETURN_BY_MANAGER') return `record: ${he(r.target_id||'')}${d.returned_by?' · โดย '+he(d.returned_by):''}`;
-      if (r.action_type?.startsWith('EQUIPMENT')) return `${he(d.name||'')}${d.category?' · '+he(d.category):''}${d.quantity?' · '+d.quantity+' ชิ้น':''}`;
+      if (r.action_type?.startsWith('EQUIPMENT')) return `${he(d.name||'')}${d.category?' · '+he(resolveCatName(d.category)):''}${d.quantity?' · '+d.quantity+' ชิ้น':''}`;
       if (r.action_type?.startsWith('MEMBER')) return `${he(d.name||'')}${d.role?' ('+he(d.role)+')':''}`;
+      if (r.action_type === 'CATEGORY_CREATE' || r.action_type === 'CATEGORY_DELETE') return he(d.name || resolveCatName(r.target_id) || r.target_id || '');
       return r.target_id ? he(r.target_id) : '';
     }
     async function renderAuditLogTab() {
