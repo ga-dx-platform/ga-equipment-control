@@ -777,9 +777,11 @@
         }
         if (action === 'changePin') {
           const h = await sha256(String(params.newPin).padStart(6,'0'));
-          const { error } = await sb.from('users').update({ pin_hash: h }).eq('full_name', params.name).eq('role', params.role);
-          if (!error) await logAction('MEMBER_RESET_PIN','users',params.name,null,{name:params.name,role:params.role});
-          return { ok: !error };
+          const { data: updated, error } = await sb.from('users').update({ pin_hash: h }).eq('full_name', params.name).eq('role', params.role).select('full_name');
+          if (error) throw error;
+          if (!updated?.length) throw new Error('PIN update matched 0 rows — check Supabase RLS UPDATE policy on users table');
+          await logAction('MEMBER_RESET_PIN','users',params.name,null,{name:params.name,role:params.role});
+          return { ok: true };
         }
         if (action === 'selfChangePin') {
           // Fetch user's id + pin_hash by name (always fresh — no pin_hash cached in memory)
@@ -1190,9 +1192,11 @@
         }
       } catch(e) {
         console.error('[submitChangePin]', e);
-        document.getElementById('cp-error').textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่';
+        const isRls = e?.message?.includes('matched 0 rows');
+        document.getElementById('cp-error').textContent = isRls
+          ? 'ระบบยังไม่รองรับการเปลี่ยน PIN — แจ้ง Admin เปิด RLS UPDATE policy ใน Supabase'
+          : 'เกิดข้อผิดพลาด กรุณาลองใหม่';
         document.querySelectorAll('#cp-pin-dots .pin-dot').forEach(d=>d.classList.add('error'));
-        // Reset to step 1 (new PIN) so user can retry without re-entering old PIN
         _cpStep=1; _cpNew=''; _cpConf=''; setTimeout(cpUpdateUI, 600);
       }
     }
@@ -1346,6 +1350,8 @@
           <div class="signature-pad__frame">
             <canvas id="bfSignCanvas" class="sig-canvas" style="width:100%;height:140px;"></canvas>
           </div>
+          <p class="text-sm text-gray-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้รับอุปกรณ์ตามรายการข้างต้นในสภาพสมบูรณ์</p>
+          <p class="text-xs text-gray-300 text-center mt-1">🔒 ลายเซ็นนี้ใช้เพื่อยืนยันการรับอุปกรณ์ และถูกจัดเก็บอย่างปลอดภัยในระบบ</p>
         </div>
         <button onclick="submitBorrow()" id="bfSubmitBtn" class="w-full py-3 gd-btn-primary text-sm font-semibold flex items-center justify-center gap-2">
           <i data-lucide="check" class="w-4 h-4"></i> ยืนยันการยืม
@@ -2397,6 +2403,7 @@
         <div id="detail-signature-section" class="bg-white/5 rounded-xl p-4">
           <h4 class="text-amber-400 font-semibold text-sm mb-3">ลายเซ็นผู้ยืม</h4>
           <img id="detail-signature" src="" alt="ลายเซ็น" class="bg-white rounded-lg max-h-24 object-contain"/>
+          <p class="text-xs text-slate-400 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้รับอุปกรณ์ตามรายการข้างต้นในสภาพสมบูรณ์</p>
         </div>
         <!-- Timeline -->
         <div class="bg-white/5 rounded-xl p-4">
