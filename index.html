@@ -364,9 +364,14 @@
                 <p id="main-user-role" class="text-xs text-gray-400">GA Staff</p>
               </div>
             </div>
-            <button onclick="confirmLogout()" class="p-2.5 rounded-xl hover:bg-slate-100 transition">
-              <i data-lucide="log-out" class="w-4 h-4 text-gray-400"></i>
-            </button>
+            <div class="flex items-center gap-1">
+              <button onclick="openChangePinModal()" class="p-2.5 rounded-xl hover:bg-slate-100 transition" title="เปลี่ยน PIN">
+                <i data-lucide="key-round" class="w-4 h-4 text-gray-400"></i>
+              </button>
+              <button onclick="confirmLogout()" class="p-2.5 rounded-xl hover:bg-slate-100 transition" title="ออกจากระบบ">
+                <i data-lucide="log-out" class="w-4 h-4 text-gray-400"></i>
+              </button>
+            </div>
           </div>
           <div class="flex" id="mainTabBar"></div>
         </div>
@@ -540,6 +545,45 @@
     </div>
   </div>
 
+  <!-- Change PIN Modal -->
+  <div id="changePinModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
+    <div class="absolute inset-0 bg-black/40" onclick="closeChangePinModal()"></div>
+    <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:340px;">
+      <div class="flex flex-col items-center text-center mb-4">
+        <div class="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center mb-3">
+          <i data-lucide="key-round" class="w-6 h-6 text-brand"></i>
+        </div>
+        <p class="font-semibold text-gray-900 text-base">เปลี่ยน PIN</p>
+        <p id="cp-step-label" class="text-sm text-gray-500 mt-1">กรอก PIN เดิม</p>
+      </div>
+      <div class="flex justify-center gap-2 mb-5">
+        <div id="cp-si-0" class="w-2 h-2 rounded-full bg-brand"></div>
+        <div id="cp-si-1" class="w-2 h-2 rounded-full bg-slate-200"></div>
+        <div id="cp-si-2" class="w-2 h-2 rounded-full bg-slate-200"></div>
+      </div>
+      <div class="flex justify-center gap-3 mb-3" id="cp-pin-dots">
+        <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+        <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+      </div>
+      <div id="cp-error" class="text-red-500 text-sm text-center mb-3 h-5 font-medium"></div>
+      <div class="grid grid-cols-3 gap-3 mb-4">
+        <div class="numpad-key" onclick="cpEnterPin('1')">1</div>
+        <div class="numpad-key" onclick="cpEnterPin('2')">2</div>
+        <div class="numpad-key" onclick="cpEnterPin('3')">3</div>
+        <div class="numpad-key" onclick="cpEnterPin('4')">4</div>
+        <div class="numpad-key" onclick="cpEnterPin('5')">5</div>
+        <div class="numpad-key" onclick="cpEnterPin('6')">6</div>
+        <div class="numpad-key" onclick="cpEnterPin('7')">7</div>
+        <div class="numpad-key" onclick="cpEnterPin('8')">8</div>
+        <div class="numpad-key" onclick="cpEnterPin('9')">9</div>
+        <div class="numpad-key"></div>
+        <div class="numpad-key" onclick="cpEnterPin('0')">0</div>
+        <div class="numpad-key" onclick="cpDeletePin()"><i data-lucide="delete" class="w-5 h-5 text-gray-400"></i></div>
+      </div>
+      <button onclick="closeChangePinModal()" class="w-full py-2.5 gd-btn-secondary">ยกเลิก</button>
+    </div>
+  </div>
+
   <!-- Toast container -->
   <div id="toast-container"
     class="fixed bottom-6 right-6 z-[200] flex flex-col gap-2 items-end pointer-events-none">
@@ -560,6 +604,7 @@
 
     // ===== STATE =====
     let AU = { ga: [], mgr: [] }, CU = null, SU = null, PB = '';
+    let _cpStep = 0, _cpOld = '', _cpNew = '', _cpConf = ''; // change-PIN modal state
     let AUTH_MODE = 'demo'; // users_with_pin | demo
     const FALLBACK_PIN = ''; // intentionally empty — demo login is disabled for security
     const FALLBACK_USERS = {
@@ -736,6 +781,23 @@
           const { error } = await sb.from('users').update({ pin_hash: h }).eq('full_name', params.name).eq('role', params.role);
           if (!error) await logAction('MEMBER_RESET_PIN','users',params.name,null,{name:params.name,role:params.role});
           return { ok: !error };
+        }
+        if (action === 'selfChangePin') {
+          // Verify old PIN against DB
+          const { data: u } = await sb.from('users').select('pin_hash').eq('full_name', params.name).eq('is_active', true).single();
+          if (!u) return { ok: false, error: 'user_not_found' };
+          const stored = String(u.pin_hash);
+          const oldInput = String(params.oldPin).padStart(6,'0');
+          const hOld = await sha256(oldInput);
+          if (stored !== hOld && stored !== oldInput) return { ok: false, error: 'wrong_old_pin' };
+          // Hash new PIN and prevent reuse
+          const hNew = await sha256(String(params.newPin).padStart(6,'0'));
+          if (hNew === hOld || hNew === stored) return { ok: false, error: 'same_pin' };
+          // Update DB
+          const { error } = await sb.from('users').update({ pin_hash: hNew }).eq('full_name', params.name).eq('role', params.role);
+          if (error) throw error;
+          await logAction('CHANGE_PIN','users',params.name,null,{name:params.name,role:params.role});
+          return { ok: true };
         }
         if (action === 'getEquipment') {
           const { data } = await sb.from('equipment').select('*').order('name');
@@ -1028,6 +1090,83 @@
     // ===== LOGOUT & AUTO-LOGOUT =====
     function confirmLogout() { showModal('logoutModal'); }
     function closeLogoutModal() { hideModal('logoutModal'); }
+
+    // ===== CHANGE PIN =====
+    function openChangePinModal() {
+      _cpStep = 0; _cpOld = ''; _cpNew = ''; _cpConf = '';
+      cpUpdateUI();
+      showModal('changePinModal');
+    }
+    function closeChangePinModal() {
+      hideModal('changePinModal');
+      _cpStep = 0; _cpOld = ''; _cpNew = ''; _cpConf = '';
+    }
+    function cpEnterPin(d) {
+      const gets = [()=>_cpOld, ()=>_cpNew, ()=>_cpConf];
+      const sets = [v=>_cpOld=v, v=>_cpNew=v, v=>_cpConf=v];
+      const cur = gets[_cpStep]();
+      if (cur.length >= 6) return;
+      if (navigator.vibrate) navigator.vibrate(8);
+      sets[_cpStep](cur + d);
+      cpUpdateDots();
+      if (gets[_cpStep]().length === 6) setTimeout(cpAdvanceStep, 150);
+    }
+    function cpDeletePin() {
+      const gets = [()=>_cpOld, ()=>_cpNew, ()=>_cpConf];
+      const sets = [v=>_cpOld=v, v=>_cpNew=v, v=>_cpConf=v];
+      sets[_cpStep](gets[_cpStep]().slice(0,-1));
+      cpUpdateDots();
+      document.getElementById('cp-error').textContent = '';
+    }
+    function cpUpdateDots() {
+      const cur = [_cpOld,_cpNew,_cpConf][_cpStep];
+      document.querySelectorAll('#cp-pin-dots .pin-dot').forEach((dot,i)=>{
+        dot.classList.toggle('filled', i < cur.length);
+        dot.classList.remove('error');
+      });
+    }
+    function cpUpdateUI() {
+      const labels = ['กรอก PIN เดิม','กรอก PIN ใหม่','ยืนยัน PIN ใหม่อีกครั้ง'];
+      document.getElementById('cp-step-label').textContent = labels[_cpStep];
+      [0,1,2].forEach(i=>{
+        document.getElementById(`cp-si-${i}`).className =
+          `w-2 h-2 rounded-full ${i===_cpStep?'bg-brand':i<_cpStep?'bg-orange-300':'bg-slate-200'}`;
+      });
+      document.getElementById('cp-error').textContent = '';
+      cpUpdateDots();
+    }
+    async function cpAdvanceStep() {
+      if (_cpStep < 2) { _cpStep++; cpUpdateUI(); return; }
+      // Step 2 complete — validate & submit
+      if (_cpNew !== _cpConf) {
+        document.getElementById('cp-error').textContent = 'PIN ใหม่ไม่ตรงกัน';
+        document.querySelectorAll('#cp-pin-dots .pin-dot').forEach(d=>d.classList.add('error'));
+        _cpConf = ''; cpUpdateDots();
+        return;
+      }
+      await submitChangePin();
+    }
+    async function submitChangePin() {
+      try {
+        const res = await api('selfChangePin',{name:CU.name,role:CU.role,oldPin:_cpOld,newPin:_cpNew});
+        if (res.ok) {
+          closeChangePinModal();
+          toast('เปลี่ยน PIN เรียบร้อยแล้ว','success');
+        } else {
+          const msgs = {wrong_old_pin:'PIN เดิมไม่ถูกต้อง',same_pin:'PIN ใหม่ต้องไม่เหมือนเดิม',user_not_found:'ไม่พบผู้ใช้งาน'};
+          document.getElementById('cp-error').textContent = msgs[res.error] || 'เกิดข้อผิดพลาด กรุณาลองใหม่';
+          document.querySelectorAll('#cp-pin-dots .pin-dot').forEach(d=>d.classList.add('error'));
+          if (res.error === 'wrong_old_pin') {
+            _cpStep=0; _cpOld=''; _cpNew=''; _cpConf=''; setTimeout(cpUpdateUI,600);
+          } else {
+            _cpStep=1; _cpNew=''; _cpConf=''; setTimeout(cpUpdateUI,600);
+          }
+        }
+      } catch(e) {
+        document.getElementById('cp-error').textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่';
+      }
+    }
+
     function logout() {
       closeLogoutModal(); stopAutoLogout();
       signatureListenersCleanup?.();
