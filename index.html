@@ -122,8 +122,8 @@
         linear-gradient(180deg, #fff7ed 0%, #ffedd5 48%, #fed7aa 100%);
     }
     .gd-header {
-      background: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(148, 163, 184, 0.22);
-      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(10px);
+      background: linear-gradient(135deg, #EA580C 0%, #F97316 60%, #FDBA74 100%);
+      border-bottom: 1px solid rgba(194, 65, 12, 0.3);
     }
     .gd-card {
       background: var(--gd-card); border: 0.5px solid #e7e5e4;
@@ -245,10 +245,11 @@
     .admin-card { border-color: rgba(148,163,184,0.3); background: linear-gradient(120deg, rgba(241,245,249,0.8), rgba(248,250,252,0.95)); }
 
     /* Tab bar */
-    #mainTabBar { gap: 8px; border: 0; border-radius: 16px; padding: 6px; background: #eff4fb; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    #mainTabBar { gap: 8px; border: 0; border-radius: 16px; padding: 6px; background: rgba(255,255,255,0.18); flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
     #mainTabBar::-webkit-scrollbar { display: none; }
-    #mainTabBar .main-tab { letter-spacing: 0.01em; border-radius: 12px; transition: all 0.2s ease; white-space: nowrap; }
-    #mainTabBar .main-tab:hover { color: #1e3a8a; background: rgba(255,255,255,0.8); }
+    #mainTabBar .main-tab { letter-spacing: 0.01em; border-radius: 12px; transition: all 0.15s ease; white-space: nowrap; }
+    #mainTabBar .main-tab:hover { color: #0f172a; background: rgba(255,255,255,0.7); }
+    .tab-inactive { color: rgba(255,255,255,0.82) !important; border: 1px solid transparent; background: transparent; }
 
 
 
@@ -358,18 +359,18 @@
         <div class="gd-header px-4 lg:px-8 pt-6 pb-4" style="position:sticky;top:0;z-index:20;">
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-3">
-              <div id="main-avatar" class="w-10 h-10 rounded-full bg-orange-100 text-brand flex items-center justify-center font-bold text-sm"></div>
+              <div id="main-avatar" class="w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-sm"></div>
               <div>
-                <p id="main-user-name" class="font-semibold text-gray-900 text-sm leading-tight"></p>
-                <p id="main-user-role" class="text-xs text-gray-400">GA Staff</p>
+                <p id="main-user-name" class="font-semibold text-white text-sm leading-tight"></p>
+                <p id="main-user-role" class="text-xs text-white/70">GA Staff</p>
               </div>
             </div>
             <div class="flex items-center gap-1">
-              <button onclick="openChangePinModal()" class="p-2.5 rounded-xl hover:bg-slate-100 transition" title="เปลี่ยน PIN">
-                <i data-lucide="key-round" class="w-4 h-4 text-gray-400"></i>
+              <button onclick="openChangePinModal()" class="p-2.5 rounded-xl hover:bg-white/20 transition" title="เปลี่ยน PIN">
+                <i data-lucide="key-round" class="w-4 h-4 text-white/80"></i>
               </button>
-              <button onclick="confirmLogout()" class="p-2.5 rounded-xl hover:bg-slate-100 transition" title="ออกจากระบบ">
-                <i data-lucide="log-out" class="w-4 h-4 text-gray-400"></i>
+              <button onclick="confirmLogout()" class="p-2.5 rounded-xl hover:bg-white/20 transition" title="ออกจากระบบ">
+                <i data-lucide="log-out" class="w-4 h-4 text-white/80"></i>
               </button>
             </div>
           </div>
@@ -398,12 +399,12 @@
       <!-- BORROW FORM (overlay) -->
       <div id="screen-borrow-form" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--gd-surface);">
         <div class="gd-header px-4 py-3 flex items-center gap-3" style="position:sticky;top:0;z-index:10;">
-          <button onclick="closeBorrowForm()" class="p-1.5 rounded-full hover:bg-gray-100 transition">
-            <i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i>
+          <button onclick="closeBorrowForm()" class="p-1.5 rounded-full hover:bg-white/20 transition">
+            <i data-lucide="arrow-left" class="w-5 h-5 text-white"></i>
           </button>
           <div class="flex-1">
-            <p class="font-semibold text-gray-900 text-sm">ยืมอุปกรณ์</p>
-            <p id="bf-eq-name" class="text-xs text-gray-400"></p>
+            <p class="font-semibold text-white text-sm">ยืมอุปกรณ์</p>
+            <p id="bf-eq-name" class="text-xs text-white/70"></p>
           </div>
         </div>
         <div class="flex-1 overflow-auto px-4 pt-4 pb-6" id="bf-body"></div>
@@ -412,12 +413,12 @@
       <!-- RETURN DETAIL (overlay) -->
       <div id="screen-return-detail" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--gd-surface);">
         <div class="gd-header px-4 py-3 flex items-center gap-3" style="position:sticky;top:0;z-index:10;">
-          <button onclick="closeReturnDetail()" class="p-1.5 rounded-full hover:bg-gray-100 transition">
-            <i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i>
+          <button onclick="closeReturnDetail()" class="p-1.5 rounded-full hover:bg-white/20 transition">
+            <i data-lucide="arrow-left" class="w-5 h-5 text-white"></i>
           </button>
           <div class="flex-1">
-            <p class="font-semibold text-gray-900 text-sm">คืนอุปกรณ์</p>
-            <p id="rd-eq-name" class="text-xs text-gray-400"></p>
+            <p class="font-semibold text-white text-sm">คืนอุปกรณ์</p>
+            <p id="rd-eq-name" class="text-xs text-white/70"></p>
           </div>
           <span id="rd-badge" class="text-xs px-2.5 py-1 rounded-full font-medium"></span>
         </div>
