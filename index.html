@@ -338,49 +338,11 @@
     /* Login */
     .login-shell {
       min-height: 100%;
-      padding: 0;
-
-      background: var(--orange-gradient);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      background: linear-gradient(145deg, #f97316 0%, #ea580c 55%, #c2410c 100%);
     }
-    .login-brand {
-      width: 100%;
-      background: var(--bg-page);
-    }
-    .login-brand {
-      background: var(--orange-gradient);
-
-      background: var(--orange-gradient);
-    }
-    .login-brand {
-      padding: 40px 24px 68px;
-      position: relative;
-      text-align: center;
-      color: #fff;
-    }
-    .login-card-wrap {
-      margin-top: -28px;
-      padding: 0 18px 24px;
-      position: relative;
-      z-index: 2;
-
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      background: var(--bg-page);
-      min-height: calc(100vh - 210px);
-    }
-    .login-card {
-      width: 100%;
-      max-width: 460px;
-      border-radius: 24px;
-      padding: 26px 20px;
-      border: 0.5px solid var(--border);
-      background: #fff;
-      box-shadow: 0 18px 38px rgba(0, 0, 0, 0.12);
+    .login-wave-card {
+      background: var(--gd-surface);
+      margin-top: -2px;
     }
     .user-card {
       border: 0.5px solid var(--border); border-radius: 14px;
@@ -394,12 +356,46 @@
     .avatar-gradient { box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 4px 12px rgba(249,115,22,0.3); color: #fff; }
     .admin-card { border-color: var(--orange-border); background: #fff7ed; }
 
-    /* Tab bar */
-    #mainTabBar { gap: 8px; border: 0; border-radius: 16px; padding: 6px; background: rgba(255,255,255,0.18); flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    /* Tab bar — inside header on mobile, shown below header on desktop */
+    #mainTabBar { gap: 0; border: 0; padding: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
     #mainTabBar::-webkit-scrollbar { display: none; }
+    /* Mobile: pill-style tabs in header */
     #mainTabBar .main-tab { letter-spacing: 0.01em; border-radius: 12px; transition: all 0.15s ease; white-space: nowrap; }
-    #mainTabBar .main-tab:hover { color: #0f172a; background: rgba(255,255,255,0.7); }
+    #mainTabBar .main-tab:hover { background: rgba(255,255,255,0.7); color: #0f172a; }
     .tab-inactive { color: rgba(255,255,255,0.82) !important; border: 1px solid transparent; background: transparent; }
+    /* Desktop: underline-style outside header */
+    @media (min-width: 768px) {
+      #mainTabBar { background: transparent; gap: 0; padding: 0; }
+      #mainTabBar .main-tab { border-radius: 0; padding: 10px 20px; border-bottom: 2px solid transparent; }
+      #mainTabBar .main-tab:hover { background: rgba(249,115,22,0.06); color: #ea580c; }
+      .tab-active { color: #f97316 !important; border-bottom: 2px solid #f97316 !important; background: transparent !important; box-shadow: none !important; font-weight: 700; border: none; }
+      .tab-inactive { color: #64748b !important; border-bottom: 2px solid transparent !important; background: transparent !important; border: none; }
+    }
+
+    /* Bottom nav (mobile only) */
+    #bottom-nav { display: none; }
+    @media (max-width: 767px) {
+      #bottom-nav {
+        display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
+        background: #fff; border-top: 1px solid #e7e5e4;
+        box-shadow: 0 -4px 20px rgba(15,23,42,0.08);
+        padding-bottom: env(safe-area-inset-bottom, 0);
+      }
+      .bn-item {
+        flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 3px; padding: 10px 4px 8px; cursor: pointer; position: relative;
+        transition: all 150ms ease; -webkit-tap-highlight-color: transparent;
+      }
+      .bn-item.active { color: #f97316; }
+      .bn-item:not(.active) { color: #94a3b8; }
+      .bn-item.active::before {
+        content: ''; position: absolute; top: 0; left: 25%; right: 25%; height: 2px;
+        background: #f97316; border-radius: 0 0 4px 4px;
+      }
+      .bn-label { font-size: 10px; font-weight: 600; line-height: 1; }
+      /* Push main content above bottom nav on mobile */
+      #screen-main { padding-bottom: 60px; }
+    }
 
 
 
@@ -451,28 +447,32 @@
 
       <!-- LOGIN -->
       <div id="screen-login" class="screen">
-        <div class="login-shell flex-1 overflow-auto">
-          <div class="login-brand">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-white/25 border border-white/40 mb-4">
-              <span class="text-white text-2xl font-bold tracking-tight">EC</span>
+        <div class="login-shell flex-1 overflow-auto flex flex-col">
+          <!-- Brand header on gradient -->
+          <div class="flex flex-col items-center justify-center pt-14 pb-20 px-6 text-center">
+            <div class="w-16 h-16 rounded-3xl bg-white/20 flex items-center justify-center shadow-xl mb-5">
+              <span class="text-white text-2xl font-extrabold tracking-tight">EC</span>
             </div>
-            <h1 class="text-[30px] leading-tight font-bold">Equipment Control</h1>
-            <p class="text-sm text-white/90 mt-1">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
-            <svg viewBox="0 0 400 40" preserveAspectRatio="none" class="header-wave">
-              <path d="M0,20 Q100,40 200,20 Q300,0 400,20 L400,40 L0,40 Z" fill="#fafaf9"/>
-            </svg>
+            <h1 class="text-2xl font-extrabold text-white tracking-tight">Equipment Control</h1>
+            <p class="text-sm text-white/75 mt-2">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
           </div>
-          <div class="login-card-wrap flex justify-center">
-            <div class="login-card fade-in">
-              <div class="mb-7">
-                <p class="text-xs font-semibold uppercase tracking-wider text-stone-400 mb-3">GA Staff</p>
-                <div class="space-y-3" id="gaUserList"></div>
-              </div>
-              <div class="card bg-orange-50/40">
-                <p class="text-xs font-semibold uppercase tracking-wider text-orange-700 mb-3 flex items-center gap-1.5">
-                  <i data-lucide="shield" class="w-3.5 h-3.5"></i>Manager
-                </p>
-                <div class="space-y-3" id="mgrUserList"></div>
+          <!-- Wave + white card -->
+          <div style="margin-top:-48px;">
+            <svg viewBox="0 0 390 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:56px;display:block;">
+              <path d="M0,30 C80,58 310,2 390,30 L390,60 L0,60 Z" fill="#fafaf9"/>
+            </svg>
+            <div class="login-wave-card px-5 pb-12 fade-in">
+              <div class="max-w-md mx-auto space-y-6">
+                <div>
+                  <p class="gd-section-title mb-3">เลือกผู้ใช้งาน</p>
+                  <div class="space-y-3" id="gaUserList"></div>
+                </div>
+                <div class="gd-card-soft p-4">
+                  <p class="gd-section-title mb-3 flex items-center gap-1.5">
+                    <i data-lucide="shield" class="w-3.5 h-3.5"></i>Admin access
+                  </p>
+                  <div class="space-y-3" id="mgrUserList"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -481,19 +481,23 @@
 
       <!-- PIN -->
       <div id="screen-pin" class="screen">
-        <div class="pin-shell flex-1 overflow-auto">
-          <div class="page-header">
-            <button onclick="goScreen('login')" class="p-2 -ml-2 rounded-full hover:bg-white/15 transition">
-              <i data-lucide="arrow-left" class="w-5 h-5 text-white"></i>
-            </button>
-            <div class="mt-2 flex flex-col items-center">
-              <div id="pin-avatar" class="avatar avatar-md mb-2"></div>
-              <p id="pin-name" class="font-semibold text-white text-base"></p>
-              <p class="text-xs text-white/80">กรอก PIN 6 หลัก</p>
-            </div>
-            <svg viewBox="0 0 400 40" preserveAspectRatio="none" class="header-wave">
-              <path d="M0,20 Q100,40 200,20 Q300,0 400,20 L400,40 L0,40 Z" fill="#fafaf9"/>
-            </svg>
+        <!-- Gradient header with wave -->
+        <div class="gd-header px-4 flex flex-col items-center text-center relative" style="padding-top:40px;padding-bottom:52px;">
+          <button onclick="goScreen('login')" class="absolute top-4 left-4 p-2 rounded-full hover:bg-white/20 transition">
+            <i data-lucide="arrow-left" class="w-5 h-5 text-white"></i>
+          </button>
+          <div id="pin-avatar" class="w-16 h-16 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-lg mb-3"></div>
+          <p id="pin-name" class="font-semibold text-white mb-1"></p>
+          <p class="text-sm text-white/70">กรอก PIN 6 หลัก</p>
+          <svg viewBox="0 0 390 50" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="absolute bottom-0 left-0 w-full" style="height:48px;">
+            <path d="M0,25 C80,50 310,0 390,25 L390,50 L0,50 Z" fill="#fafaf9"/>
+          </svg>
+        </div>
+        <!-- PIN content -->
+        <div class="flex-1 flex flex-col items-center justify-center px-6 pb-8">
+          <div class="flex gap-3 mb-10" id="pin-dots">
+            <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+            <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
           </div>
           <div class="pin-panel px-6 pb-8 flex flex-col items-center">
             <div class="flex gap-3 mb-8 mt-2" id="pin-dots">
@@ -521,7 +525,8 @@
 
       <!-- MAIN -->
       <div id="screen-main" class="screen">
-        <div class="page-header" style="position:sticky;top:0;z-index:20;">
+        <!-- Orange gradient header (avatar + buttons + mobile tab bar) -->
+        <div class="gd-header px-4 lg:px-8 pt-5 relative" style="position:sticky;top:0;z-index:20;">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-3">
               <div id="main-avatar" class="w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-sm"></div>
@@ -539,10 +544,14 @@
               </button>
             </div>
           </div>
-          <div class="top-tabs" id="mainTabBar"></div>
-          <svg viewBox="0 0 400 40" preserveAspectRatio="none" class="header-wave">
-            <path d="M0,20 Q100,40 200,20 Q300,0 400,20 L400,40 L0,40 Z" fill="#fafaf9"/>
+          <!-- Tab bar: pill-style on mobile (inside header), underline-style on desktop (below wave) -->
+          <div class="flex md:hidden gap-2 pb-3 px-1" id="mainTabBar" style="background:rgba(255,255,255,0.14);border-radius:14px;padding:6px;"></div>
+          <div class="hidden md:flex" id="mainTabBar-desktop" style="border-top:1px solid rgba(255,255,255,0.18);margin:0 -32px;padding:0 32px;"></div>
+          <!-- Wave below header (mobile only) -->
+          <svg class="md:hidden absolute bottom-0 left-0 w-full pointer-events-none" viewBox="0 0 390 32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:32px;margin-bottom:-1px;">
+            <path d="M0,16 C80,32 310,0 390,16 L390,32 L0,32 Z" fill="#fafaf9"/>
           </svg>
+          <!-- No wave on desktop — tabs create natural separation -->
         </div>
         <!-- Overdue Banner -->
         <div id="overdue-banner" class="hidden mx-4 mt-1 mb-0 rounded-xl px-4 py-3 flex items-center gap-3 bg-red-50 border border-red-200">
@@ -564,6 +573,8 @@
         <div id="tab-audit-log" class="flex-1 overflow-auto hidden"></div>
         <nav class="bottom-nav" id="bottomNavBar"></nav>
       </div>
+      <!-- Mobile bottom nav (populated by JS) -->
+      <div id="bottom-nav"></div>
 
       <!-- BORROW FORM (overlay) -->
       <div id="screen-borrow-form" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--gd-surface);">
@@ -635,17 +646,17 @@
   <!-- Confirm Dialog -->
   <div id="confirm-dialog" class="hidden fixed inset-0 z-[300] flex items-center justify-center">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-    <div class="relative bg-slate-800 border border-white/10 rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-4">
+    <div class="relative bg-white border border-gray-200 rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-4">
       <div class="flex items-start gap-4 mb-6">
         <span id="confirm-icon" class="text-3xl"></span>
         <div>
-          <h3 id="confirm-title" class="font-bold text-white text-lg mb-1"></h3>
-          <p id="confirm-message" class="text-slate-400 text-sm"></p>
+          <h3 id="confirm-title" class="font-bold text-gray-900 text-lg mb-1"></h3>
+          <p id="confirm-message" class="text-gray-500 text-sm"></p>
         </div>
       </div>
       <div class="flex gap-3 justify-end">
         <button id="confirm-cancel"
-                class="px-4 py-2 rounded-xl text-sm font-medium bg-white/5 hover:bg-white/10 text-slate-300 transition-colors">
+                class="px-4 py-2 rounded-xl text-sm font-medium bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors">
           ยกเลิก
         </button>
         <button id="confirm-ok"
@@ -1237,7 +1248,7 @@
       const a = avc(role==='ga'?idx:idx+4);
       SU = { name, role, av: a }; PIN_ATTEMPTS = 0; PB = '';
       const av = document.getElementById('pin-avatar');
-      av.className = `w-16 h-16 rounded-full ${a.bg} ${a.tc} flex items-center justify-center font-bold text-lg mb-3`;
+      av.className = `w-16 h-16 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-lg`;
       av.textContent = ini(name);
       document.getElementById('pin-name').textContent = name;
       updatePinDots(); document.getElementById('pin-error').textContent = '';
@@ -1388,24 +1399,35 @@
     // ===== MAIN SCREEN =====
     function buildMain() {
       const isMgr = CU.role === 'mgr';
-      const a = CU.av;
       const av = document.getElementById('main-avatar');
-      av.className = `w-8 h-8 rounded-full ${a.bg} ${a.tc} flex items-center justify-center font-bold text-xs`;
+      av.className = `w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-sm`;
       av.textContent = ini(CU.name);
       document.getElementById('main-user-name').textContent = CU.name;
       document.getElementById('main-user-role').textContent = isMgr ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่ GA';
       const bar = document.getElementById('mainTabBar');
-      const bottomBar = document.getElementById('bottomNavBar');
+      const barDesktop = document.getElementById('mainTabBar-desktop');
       const oc = BORROWS.filter(r => r.status === 'overdue').length;
       const badge = oc > 0 ? `<span class="ml-1 inline-flex items-center justify-center min-w-[16px] h-4 px-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">${oc > 9 ? '9+' : oc}</span>` : '';
       if (isMgr) {
-        bar.innerHTML = ['Dashboard','ประวัติ','อุปกรณ์','สมาชิก','Audit'].map((t,i)=>
-          `<button class="main-tab top-tab ${i===0?'active':''}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
-        bottomBar.innerHTML = '';
+        const tabs = ['ภาพรวม','ประวัติ','อุปกรณ์','สมาชิก','Audit'];
+        const icons = ['layout-dashboard','history','box','users','clipboard-list'];
+        bar.innerHTML = tabs.map((t,i)=>
+          `<button class="main-tab shrink-0 px-3 py-2 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
+        barDesktop.innerHTML = tabs.map((t,i)=>
+          `<button class="main-tab shrink-0 px-5 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
+        const bn = document.getElementById('bottom-nav');
+        if (bn) bn.innerHTML = tabs.map((t,i)=>
+          `<div class="bn-item ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${icons[i]}" style="width:20px;height:20px;"></i><span class="bn-label">${t}${i===0?badge:''}</span></div>`).join('');
       } else {
-        bar.innerHTML = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ'].map((t,i)=>
-          `<button class="main-tab top-tab ${i===0?'active':''}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
-        bottomBar.innerHTML = ['ยืม','คืน','ประวัติ'].map((t,i)=>`<div class="nav-item ${i===0?'active':''}" onclick="switchTab(${i})"><span class="nav-icon text-sm">${i===0?'📦':i===1?'↩️':'🕘'}</span><div class="nav-indicator"></div><span class="nav-label">${t}</span></div>`).join('');
+        const tabs = ['ยืม','คืน','ประวัติ'];
+        const icons = ['package-plus','package-check','history'];
+        bar.innerHTML = tabs.map((t,i)=>
+          `<button class="main-tab flex-1 px-3 py-2 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
+        barDesktop.innerHTML = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ'].map((t,i)=>
+          `<button class="main-tab px-5 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
+        const bn = document.getElementById('bottom-nav');
+        if (bn) bn.innerHTML = tabs.map((t,i)=>
+          `<div class="bn-item ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${icons[i]}" style="width:20px;height:20px;"></i><span class="bn-label">${t}${i===1?badge:''}</span></div>`).join('');
       }
       showOverdueBanner();
       switchTab(0);
@@ -1426,8 +1448,13 @@
     }
     function switchTab(idx) {
       const isMgr = CU.role === 'mgr';
-      document.querySelectorAll('#mainTabBar .main-tab').forEach((b,i)=> b.className = `main-tab top-tab ${i===idx?'active':''}`);
-      document.querySelectorAll('#bottomNavBar .nav-item').forEach((b,i)=> b.className = `nav-item ${i===idx?'active':''}`);
+      const mgrMobileCls = 'main-tab shrink-0 px-3 py-2 text-center text-xs font-semibold';
+      const mgrDesktopCls = 'main-tab shrink-0 px-5 py-2.5 text-center text-sm font-semibold';
+      const gaMobileCls = 'main-tab flex-1 px-3 py-2 text-center text-xs font-semibold';
+      const gaDesktopCls = 'main-tab px-5 py-2.5 text-center text-sm font-semibold';
+      document.querySelectorAll('#mainTabBar .main-tab').forEach((b,i)=> b.className = `${isMgr?mgrMobileCls:gaMobileCls} ${i===idx?'tab-active':'tab-inactive'}`);
+      document.querySelectorAll('#mainTabBar-desktop .main-tab').forEach((b,i)=> b.className = `${isMgr?mgrDesktopCls:gaDesktopCls} ${i===idx?'tab-active':'tab-inactive'}`);
+      document.querySelectorAll('#bottom-nav .bn-item').forEach((b,i)=> { b.classList.toggle('active', i===idx); b.classList.toggle('', i!==idx); });
       ['borrow','return','history','dashboard','mgr-history','equipment','members','audit-log'].forEach(t=> { const el=document.getElementById('tab-'+t); if(el) el.style.display='none'; });
       if (isMgr) {
         if(idx===0){ document.getElementById('tab-dashboard').style.display='block'; renderDashboard(); }
@@ -1454,6 +1481,11 @@
       });
       const el = document.getElementById('tab-borrow');
       el.innerHTML = `<div class="gd-page fade-in">
+        <div class="gd-page-header">
+          <p class="gd-section-title mb-2">ยืมอุปกรณ์</p>
+          <h2 class="text-xl font-bold tracking-tight text-slate-900">ยืมอุปกรณ์</h2>
+          <p class="text-sm text-slate-500 mt-1">เลือกอุปกรณ์ที่ต้องการยืม (คงเหลือ > 0)</p>
+        </div>
         <div class="mb-4">
           <input type="text" placeholder="ค้นหาอุปกรณ์..." class="gd-input" value="${he(borrowSearchQ)}"
             oninput="borrowSearchQ=this.value;renderBorrowTab()">
@@ -1573,7 +1605,11 @@
       const active = BORROWS.filter(r=> r.status==='borrowed'||r.status==='overdue');
       const el = document.getElementById('tab-return');
       el.innerHTML = `<div class="gd-page fade-in">
-        <h2 class="text-lg font-semibold text-stone-900 mb-3">รายการที่กำลังยืม</h2>
+        <div class="gd-page-header">
+          <p class="gd-section-title mb-2">คืนอุปกรณ์</p>
+          <h2 class="text-xl font-bold tracking-tight text-slate-900">คืนอุปกรณ์</h2>
+          <p class="text-sm text-slate-500 mt-1">รายการอุปกรณ์ที่กำลังยืมอยู่</p>
+        </div>
         <div class="space-y-3">
           ${active.length ? active.map(r=>{
             const days = daysUntil(r.due_date);
@@ -1713,7 +1749,8 @@
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="mb-4">
           <div class="flex items-center justify-between">
-            <div><h2 class="text-lg font-semibold text-stone-900">ประวัติการยืม-คืน</h2></div>
+            <div><p class="gd-section-title mb-2">ประวัติการยืม</p>
+            <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการยืม-คืน</h2></div>
             <button onclick="exportHistoryCSV('ga')" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition shrink-0">
               <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV</button>
           </div>
@@ -1759,8 +1796,9 @@
 
       const el = document.getElementById('tab-dashboard');
       el.innerHTML = `<div class="gd-page fade-in">
-        <div class="mb-4">
-          <h2 class="text-lg font-semibold text-stone-900">Manager Dashboard</h2>
+        <div class="gd-page-header">
+          <p class="gd-section-title mb-2">ภาพรวมระบบ</p>
+          <h2 class="text-xl font-bold tracking-tight text-slate-900">ภาพรวมระบบ</h2>
         </div>
         <div class="grid grid-cols-2 gap-3 mb-4">
           <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
@@ -1845,7 +1883,8 @@
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="mb-4">
           <div class="flex items-center justify-between">
-            <div><h2 class="text-lg font-semibold text-stone-900">ประวัติทั้งหมด</h2></div>
+            <div><p class="gd-section-title mb-2">บันทึกทั้งหมด</p>
+            <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติทั้งหมด</h2></div>
             <button onclick="exportHistoryCSV('mgr')" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition shrink-0">
               <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV</button>
           </div>
@@ -2334,18 +2373,24 @@
       const m = AUDIT_TYPE_META[t] || { label: t, cls: 'bg-gray-100 text-gray-500' };
       return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${m.cls}">${he(m.label)}</span>`;
     }
+    function resolveCatName(catIdOrName) {
+      if (!catIdOrName) return '';
+      const found = CATS.find(c => c.id === catIdOrName);
+      return found ? found.name : catIdOrName;
+    }
     function auditDetail(r) {
       const d = r.new_data || {};
       if (r.action_type === 'BORROW') return `${he(d.eq_name||'')} · ${he(d.borrower_name||'')} รหัส: ${he(d.borrower_dept||'')} จำนวน ${d.qty||''}`;
       if (r.action_type === 'RETURN') return `record: ${he(r.target_id||'')}`;
       if (r.action_type === 'RETURN_BY_MANAGER') return `record: ${he(r.target_id||'')}${d.returned_by?' · โดย '+he(d.returned_by):''}`;
-      if (r.action_type?.startsWith('EQUIPMENT')) return `${he(d.name||'')}${d.category?' · '+he(d.category):''}${d.quantity?' · '+d.quantity+' ชิ้น':''}`;
+      if (r.action_type?.startsWith('EQUIPMENT')) return `${he(d.name||'')}${d.category?' · '+he(resolveCatName(d.category)):''}${d.quantity?' · '+d.quantity+' ชิ้น':''}`;
       if (r.action_type?.startsWith('MEMBER')) return `${he(d.name||'')}${d.role?' ('+he(d.role)+')':''}`;
+      if (r.action_type === 'CATEGORY_CREATE' || r.action_type === 'CATEGORY_DELETE') return he(d.name || resolveCatName(r.target_id) || r.target_id || '');
       return r.target_id ? he(r.target_id) : '';
     }
     async function renderAuditLogTab() {
       const el = document.getElementById('tab-audit-log');
-      el.innerHTML = `<div class="gd-page fade-in"><div class="gd-page-header"><p class="gd-section-title mb-2">Audit Log</p><h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการดำเนินการ</h2></div>${skeletonCards(5)}</div>`;
+      el.innerHTML = `<div class="gd-page fade-in"><div class="gd-page-header"><p class="gd-section-title mb-2">ตรวจสอบระบบ</p><h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการดำเนินการ</h2></div>${skeletonCards(5)}</div>`;
       const { data, error } = await sb.from('app_audit_logs').select('*').order('created_at', { ascending: false }).limit(300);
       if (error) { el.innerHTML = `<div class="gd-page fade-in"><p class="text-sm text-danger text-center py-10">โหลดข้อมูลไม่สำเร็จ</p></div>`; return; }
       AUDIT_LOGS = data || [];
@@ -2360,7 +2405,7 @@
         .filter(r => !auditSearch || (r.actor_name||'').toLowerCase().includes(auditSearch.toLowerCase()));
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="gd-page-header">
-          <p class="gd-section-title mb-2">Audit Log</p>
+          <p class="gd-section-title mb-2">ตรวจสอบระบบ</p>
           <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการดำเนินการ</h2>
         </div>
         <div class="flex gap-2 mb-3">
@@ -2461,28 +2506,28 @@
     // ===== RECORD DETAIL =====
     function renderTimelineItem(log) {
       const actionLabels = {
-        BORROW:            { label: 'ยืมอุปกรณ์',      icon: '📋', color: 'text-amber-400' },
-        RETURN:            { label: 'คืนอุปกรณ์',       icon: '✅', color: 'text-emerald-400' },
-        RETURN_BY_MANAGER: { label: 'Manager คืนแทน',  icon: '👔', color: 'text-blue-400' },
-        OVERDUE_FLAGGED:   { label: 'เกินกำหนดคืน',    icon: '⏰', color: 'text-red-400' },
+        BORROW:            { label: 'ยืมอุปกรณ์',      icon: '📋', color: 'text-orange-600' },
+        RETURN:            { label: 'คืนอุปกรณ์',       icon: '✅', color: 'text-emerald-600' },
+        RETURN_BY_MANAGER: { label: 'Manager คืนแทน',  icon: '👔', color: 'text-blue-600' },
+        OVERDUE_FLAGGED:   { label: 'เกินกำหนดคืน',    icon: '⏰', color: 'text-red-600' },
       };
-      const a = actionLabels[log.action_type] || { label: log.action_type, icon: '📝', color: 'text-slate-400' };
+      const a = actionLabels[log.action_type] || { label: log.action_type, icon: '📝', color: 'text-gray-500' };
       return `<div class="flex gap-3">
         <div class="flex flex-col items-center">
           <span class="text-lg">${a.icon}</span>
-          <div class="w-px flex-1 bg-white/10 mt-1"></div>
+          <div class="w-px flex-1 bg-gray-200 mt-1"></div>
         </div>
         <div class="pb-3">
           <p class="${a.color} font-medium text-sm">${a.label}</p>
-          <p class="text-slate-400 text-xs mt-0.5">โดย ${he(log.actor_name||'-')}</p>
-          <p class="text-slate-500 text-xs">${fdFull(log.created_at)}</p>
+          <p class="text-gray-400 text-xs mt-0.5">โดย ${he(log.actor_name||'-')}</p>
+          <p class="text-gray-400 text-xs">${fdFull(log.created_at)}</p>
         </div>
       </div>`;
     }
     async function openRecordDetail(recordId) {
       document.getElementById('record-detail-modal').classList.remove('hidden');
       const r = BORROWS.find(b => (b.record_id||b.id) === recordId);
-      if (!r) { document.getElementById('detail-timeline').innerHTML = '<p class="text-slate-500 text-sm">ไม่พบข้อมูล</p>'; return; }
+      if (!r) { document.getElementById('detail-timeline').innerHTML = '<p class="text-gray-400 text-sm">ไม่พบข้อมูล</p>'; return; }
       document.getElementById('detail-equipment-name').textContent = r.eq_name || '-';
       const eqRecord = EQ.find(e => e.eq_id === r.eq_id || e.id === r.eq_id);
       const imgEl = document.getElementById('detail-equipment-image');
@@ -2496,11 +2541,11 @@
       document.getElementById('detail-borrow-date').textContent = fd(r.borrowed_at);
       document.getElementById('detail-due-date').textContent = fd(r.due_date);
       const statusMap = {
-        borrowed: { label: 'กำลังยืม',  cls: 'bg-amber-500/20 text-amber-400' },
-        overdue:  { label: 'เกินกำหนด', cls: 'bg-red-500/20 text-red-400' },
-        returned: { label: 'คืนแล้ว',   cls: 'bg-emerald-500/20 text-emerald-400' },
+        borrowed: { label: 'กำลังยืม',  cls: 'bg-amber-100 text-amber-700' },
+        overdue:  { label: 'เกินกำหนด', cls: 'bg-red-100 text-red-700' },
+        returned: { label: 'คืนแล้ว',   cls: 'bg-emerald-100 text-emerald-700' },
       };
-      const s = statusMap[r.status] || { label: r.status, cls: 'bg-white/10 text-white' };
+      const s = statusMap[r.status] || { label: r.status, cls: 'bg-gray-100 text-gray-700' };
       const badge = document.getElementById('detail-status-badge');
       badge.textContent = s.label; badge.className = `shrink-0 px-3 py-1 rounded-full text-xs font-bold ${s.cls}`;
       // Borrow note
@@ -2541,68 +2586,68 @@
 
   <!-- Record Detail Modal -->
   <div id="record-detail-modal" class="hidden fixed inset-0 z-[300] flex items-center justify-center">
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeRecordDetail()"></div>
-    <div class="relative bg-slate-800 border border-white/10 rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeRecordDetail()"></div>
+    <div class="relative bg-white border border-gray-200 rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
       <!-- Header -->
-      <div class="sticky top-0 bg-slate-800 border-b border-white/10 px-6 py-4 flex items-center justify-between">
-        <h3 class="font-bold text-white text-lg">รายละเอียดการยืม</h3>
-        <button onclick="closeRecordDetail()" class="text-slate-400 hover:text-white text-xl leading-none">✕</button>
+      <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+        <h3 class="font-bold text-gray-900 text-lg">รายละเอียดการยืม</h3>
+        <button onclick="closeRecordDetail()" class="text-gray-400 hover:text-gray-700 text-xl leading-none w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition">✕</button>
       </div>
-      <div class="p-6 space-y-5">
+      <div class="p-6 space-y-4">
         <!-- Equipment + Status -->
         <div class="flex items-center justify-between gap-3">
           <div class="flex items-center gap-3 min-w-0">
             <div class="shrink-0">
-              <img id="detail-equipment-image" src="" alt="" class="w-14 h-14 object-cover rounded-xl border border-white/10 hidden"/>
-              <div id="detail-equipment-placeholder" class="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center text-2xl">📦</div>
+              <img id="detail-equipment-image" src="" alt="" class="w-14 h-14 object-cover rounded-xl border border-gray-200 hidden"/>
+              <div id="detail-equipment-placeholder" class="w-14 h-14 rounded-xl bg-orange-50 flex items-center justify-center text-2xl">📦</div>
             </div>
-            <span id="detail-equipment-name" class="text-white font-bold text-xl leading-tight"></span>
+            <span id="detail-equipment-name" class="text-gray-900 font-bold text-xl leading-tight"></span>
           </div>
           <span id="detail-status-badge" class="shrink-0 px-3 py-1 rounded-full text-xs font-bold"></span>
         </div>
         <!-- Basic Info -->
-        <div class="bg-white/5 rounded-xl p-4 space-y-3">
-          <h4 class="text-amber-400 font-semibold text-sm">ข้อมูลการยืม</h4>
+        <div class="bg-orange-50 rounded-xl p-4 space-y-3">
+          <h4 class="text-orange-600 font-semibold text-sm">ข้อมูลการยืม</h4>
           <div class="grid grid-cols-2 gap-3 text-sm">
-            <div><p class="text-slate-400">ผู้ยืม</p><p id="detail-borrower-name" class="text-white font-medium"></p></div>
-            <div><p class="text-slate-400">รหัสพนักงาน</p><p id="detail-borrower-dept" class="text-white font-medium"></p></div>
-            <div><p class="text-slate-400">จำนวน</p><p id="detail-qty" class="text-white font-medium"></p></div>
-            <div><p class="text-slate-400">GA ที่รับผิดชอบ</p><p id="detail-ga-name" class="text-white font-medium"></p></div>
-            <div><p class="text-slate-400">วันที่ยืม</p><p id="detail-borrow-date" class="text-white font-medium"></p></div>
-            <div><p class="text-slate-400">กำหนดคืน</p><p id="detail-due-date" class="text-white font-medium"></p></div>
+            <div><p class="text-gray-500 text-xs">ผู้ยืม</p><p id="detail-borrower-name" class="text-gray-900 font-medium"></p></div>
+            <div><p class="text-gray-500 text-xs">รหัสพนักงาน</p><p id="detail-borrower-dept" class="text-gray-900 font-medium"></p></div>
+            <div><p class="text-gray-500 text-xs">จำนวน</p><p id="detail-qty" class="text-gray-900 font-medium"></p></div>
+            <div><p class="text-gray-500 text-xs">GA ที่รับผิดชอบ</p><p id="detail-ga-name" class="text-gray-900 font-medium"></p></div>
+            <div><p class="text-gray-500 text-xs">วันที่ยืม</p><p id="detail-borrow-date" class="text-gray-900 font-medium"></p></div>
+            <div><p class="text-gray-500 text-xs">กำหนดคืน</p><p id="detail-due-date" class="text-gray-900 font-medium"></p></div>
           </div>
-          <div id="detail-note-section" class="hidden pt-1 border-t border-white/10">
-            <p class="text-slate-400 text-sm">หมายเหตุ</p>
-            <p id="detail-note" class="text-white text-sm mt-1"></p>
+          <div id="detail-note-section" class="hidden pt-2 border-t border-orange-100">
+            <p class="text-gray-500 text-xs">หมายเหตุ</p>
+            <p id="detail-note" class="text-gray-800 text-sm mt-1"></p>
           </div>
         </div>
         <!-- Borrow Signature -->
-        <div id="detail-signature-section" class="bg-white/5 rounded-xl p-4">
-          <h4 class="text-amber-400 font-semibold text-sm mb-3">ลายเซ็นผู้ยืม</h4>
-          <img id="detail-signature" src="" alt="ลายเซ็น" class="bg-white rounded-lg max-h-24 object-contain w-full"/>
-          <p class="text-xs text-slate-400 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้รับอุปกรณ์ตามรายการข้างต้นในสภาพสมบูรณ์</p>
+        <div id="detail-signature-section" class="bg-gray-50 border border-gray-100 rounded-xl p-4">
+          <h4 class="text-orange-600 font-semibold text-sm mb-3">ลายเซ็นผู้ยืม</h4>
+          <img id="detail-signature" src="" alt="ลายเซ็น" class="bg-white rounded-lg border border-gray-200 max-h-24 object-contain w-full"/>
+          <p class="text-xs text-gray-400 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้รับอุปกรณ์ตามรายการข้างต้นในสภาพสมบูรณ์</p>
         </div>
         <!-- Return Info -->
-        <div id="detail-return-section" class="hidden bg-white/5 rounded-xl p-4 space-y-3">
-          <h4 class="text-emerald-400 font-semibold text-sm">ข้อมูลการคืน</h4>
+        <div id="detail-return-section" class="hidden bg-emerald-50 rounded-xl p-4 space-y-3">
+          <h4 class="text-emerald-700 font-semibold text-sm">ข้อมูลการคืน</h4>
           <div class="grid grid-cols-2 gap-3 text-sm">
-            <div><p class="text-slate-400">วันที่คืน</p><p id="detail-return-date" class="text-white font-medium"></p></div>
-            <div><p class="text-slate-400">สภาพตอนคืน</p><p id="detail-condition" class="text-white font-medium"></p></div>
+            <div><p class="text-gray-500 text-xs">วันที่คืน</p><p id="detail-return-date" class="text-gray-900 font-medium"></p></div>
+            <div><p class="text-gray-500 text-xs">สภาพตอนคืน</p><p id="detail-condition" class="text-gray-900 font-medium"></p></div>
           </div>
-          <div id="detail-condition-note-section" class="hidden pt-1 border-t border-white/10">
-            <p class="text-slate-400 text-sm">หมายเหตุสภาพ</p>
-            <p id="detail-condition-note" class="text-white text-sm mt-1"></p>
+          <div id="detail-condition-note-section" class="hidden pt-2 border-t border-emerald-100">
+            <p class="text-gray-500 text-xs">หมายเหตุสภาพ</p>
+            <p id="detail-condition-note" class="text-gray-800 text-sm mt-1"></p>
           </div>
         </div>
         <!-- Return Signature -->
-        <div id="detail-return-sign-section" class="hidden bg-white/5 rounded-xl p-4">
-          <h4 class="text-emerald-400 font-semibold text-sm mb-3">ลายเซ็นยืนยันคืน</h4>
-          <img id="detail-return-signature" src="" alt="ลายเซ็นคืน" class="bg-white rounded-lg max-h-24 object-contain w-full"/>
-          <p class="text-xs text-slate-400 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้คืนอุปกรณ์ตามรายการข้างต้นเรียบร้อยแล้ว</p>
+        <div id="detail-return-sign-section" class="hidden bg-gray-50 border border-gray-100 rounded-xl p-4">
+          <h4 class="text-emerald-700 font-semibold text-sm mb-3">ลายเซ็นยืนยันคืน</h4>
+          <img id="detail-return-signature" src="" alt="ลายเซ็นคืน" class="bg-white rounded-lg border border-gray-200 max-h-24 object-contain w-full"/>
+          <p class="text-xs text-gray-400 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้คืนอุปกรณ์ตามรายการข้างต้นเรียบร้อยแล้ว</p>
         </div>
         <!-- Timeline -->
-        <div class="bg-white/5 rounded-xl p-4">
-          <h4 class="text-amber-400 font-semibold text-sm mb-4">ประวัติการดำเนินการ</h4>
+        <div class="bg-gray-50 border border-gray-100 rounded-xl p-4">
+          <h4 class="text-orange-600 font-semibold text-sm mb-4">ประวัติการดำเนินการ</h4>
           <div id="detail-timeline" class="space-y-3"></div>
         </div>
       </div>
