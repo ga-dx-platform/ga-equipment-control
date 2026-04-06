@@ -239,12 +239,46 @@
     .avatar-gradient { box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 6px 14px rgba(59,130,246,0.28); color: #EAF3FF; }
     .admin-card { border-color: rgba(148,163,184,0.3); background: linear-gradient(120deg, rgba(241,245,249,0.8), rgba(248,250,252,0.95)); }
 
-    /* Tab bar */
-    #mainTabBar { gap: 8px; border: 0; border-radius: 16px; padding: 6px; background: rgba(255,255,255,0.18); flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    /* Tab bar — inside header on mobile, shown below header on desktop */
+    #mainTabBar { gap: 0; border: 0; padding: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
     #mainTabBar::-webkit-scrollbar { display: none; }
+    /* Mobile: pill-style tabs in header */
     #mainTabBar .main-tab { letter-spacing: 0.01em; border-radius: 12px; transition: all 0.15s ease; white-space: nowrap; }
-    #mainTabBar .main-tab:hover { color: #0f172a; background: rgba(255,255,255,0.7); }
+    #mainTabBar .main-tab:hover { background: rgba(255,255,255,0.7); color: #0f172a; }
     .tab-inactive { color: rgba(255,255,255,0.82) !important; border: 1px solid transparent; background: transparent; }
+    /* Desktop: underline-style outside header */
+    @media (min-width: 768px) {
+      #mainTabBar { background: transparent; gap: 0; padding: 0; }
+      #mainTabBar .main-tab { border-radius: 0; padding: 10px 20px; border-bottom: 2px solid transparent; }
+      #mainTabBar .main-tab:hover { background: rgba(249,115,22,0.06); color: #ea580c; }
+      .tab-active { color: #f97316 !important; border-bottom: 2px solid #f97316 !important; background: transparent !important; box-shadow: none !important; font-weight: 700; border: none; }
+      .tab-inactive { color: #64748b !important; border-bottom: 2px solid transparent !important; background: transparent !important; border: none; }
+    }
+
+    /* Bottom nav (mobile only) */
+    #bottom-nav { display: none; }
+    @media (max-width: 767px) {
+      #bottom-nav {
+        display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
+        background: #fff; border-top: 1px solid #e7e5e4;
+        box-shadow: 0 -4px 20px rgba(15,23,42,0.08);
+        padding-bottom: env(safe-area-inset-bottom, 0);
+      }
+      .bn-item {
+        flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 3px; padding: 10px 4px 8px; cursor: pointer; position: relative;
+        transition: all 150ms ease; -webkit-tap-highlight-color: transparent;
+      }
+      .bn-item.active { color: #f97316; }
+      .bn-item:not(.active) { color: #94a3b8; }
+      .bn-item.active::before {
+        content: ''; position: absolute; top: 0; left: 25%; right: 25%; height: 2px;
+        background: #f97316; border-radius: 0 0 4px 4px;
+      }
+      .bn-label { font-size: 10px; font-weight: 600; line-height: 1; }
+      /* Push main content above bottom nav on mobile */
+      #screen-main { padding-bottom: 60px; }
+    }
 
 
 
@@ -363,8 +397,9 @@
 
       <!-- MAIN -->
       <div id="screen-main" class="screen">
-        <div class="gd-header px-4 lg:px-8 pt-6 pb-4" style="position:sticky;top:0;z-index:20;">
-          <div class="flex items-center justify-between mb-4">
+        <!-- Orange gradient header (avatar + buttons + mobile tab bar) -->
+        <div class="gd-header px-4 lg:px-8 pt-5 relative" style="position:sticky;top:0;z-index:20;">
+          <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-3">
               <div id="main-avatar" class="w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-sm"></div>
               <div>
@@ -381,7 +416,14 @@
               </button>
             </div>
           </div>
-          <div class="flex" id="mainTabBar"></div>
+          <!-- Tab bar: pill-style on mobile (inside header), underline-style on desktop (below wave) -->
+          <div class="flex md:hidden gap-2 pb-3 px-1" id="mainTabBar" style="background:rgba(255,255,255,0.14);border-radius:14px;padding:6px;"></div>
+          <div class="hidden md:flex" id="mainTabBar-desktop" style="border-top:1px solid rgba(255,255,255,0.18);margin:0 -32px;padding:0 32px;"></div>
+          <!-- Wave below header (mobile only) -->
+          <svg class="md:hidden absolute bottom-0 left-0 w-full pointer-events-none" viewBox="0 0 390 32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:32px;margin-bottom:-1px;">
+            <path d="M0,16 C80,32 310,0 390,16 L390,32 L0,32 Z" fill="#fafaf9"/>
+          </svg>
+          <!-- No wave on desktop — tabs create natural separation -->
         </div>
         <!-- Overdue Banner -->
         <div id="overdue-banner" class="hidden mx-4 mt-1 mb-0 rounded-xl px-4 py-3 flex items-center gap-3 bg-red-50 border border-red-200">
@@ -402,6 +444,8 @@
         <div id="tab-members" class="flex-1 overflow-auto hidden"></div>
         <div id="tab-audit-log" class="flex-1 overflow-auto hidden"></div>
       </div>
+      <!-- Mobile bottom nav (populated by JS) -->
+      <div id="bottom-nav"></div>
 
       <!-- BORROW FORM (overlay) -->
       <div id="screen-borrow-form" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--gd-surface);">
@@ -1226,21 +1270,35 @@
     // ===== MAIN SCREEN =====
     function buildMain() {
       const isMgr = CU.role === 'mgr';
-      const a = CU.av;
       const av = document.getElementById('main-avatar');
-      av.className = `w-8 h-8 rounded-full ${a.bg} ${a.tc} flex items-center justify-center font-bold text-xs`;
+      av.className = `w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-sm`;
       av.textContent = ini(CU.name);
       document.getElementById('main-user-name').textContent = CU.name;
       document.getElementById('main-user-role').textContent = isMgr ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่ GA';
       const bar = document.getElementById('mainTabBar');
+      const barDesktop = document.getElementById('mainTabBar-desktop');
       const oc = BORROWS.filter(r => r.status === 'overdue').length;
       const badge = oc > 0 ? `<span class="ml-1 inline-flex items-center justify-center min-w-[16px] h-4 px-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">${oc > 9 ? '9+' : oc}</span>` : '';
       if (isMgr) {
-        bar.innerHTML = ['Dashboard','ประวัติ','อุปกรณ์','สมาชิก','Audit'].map((t,i)=>
-          `<button class="main-tab shrink-0 px-4 py-2.5 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
+        const tabs = ['ภาพรวม','ประวัติ','อุปกรณ์','สมาชิก','Audit'];
+        const icons = ['layout-dashboard','history','box','users','clipboard-list'];
+        bar.innerHTML = tabs.map((t,i)=>
+          `<button class="main-tab shrink-0 px-3 py-2 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
+        barDesktop.innerHTML = tabs.map((t,i)=>
+          `<button class="main-tab shrink-0 px-5 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
+        const bn = document.getElementById('bottom-nav');
+        if (bn) bn.innerHTML = tabs.map((t,i)=>
+          `<div class="bn-item ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${icons[i]}" style="width:20px;height:20px;"></i><span class="bn-label">${t}${i===0?badge:''}</span></div>`).join('');
       } else {
-        bar.innerHTML = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ'].map((t,i)=>
-          `<button class="main-tab flex-1 min-w-[90px] px-3 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
+        const tabs = ['ยืม','คืน','ประวัติ'];
+        const icons = ['package-plus','package-check','history'];
+        bar.innerHTML = tabs.map((t,i)=>
+          `<button class="main-tab flex-1 px-3 py-2 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
+        barDesktop.innerHTML = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ'].map((t,i)=>
+          `<button class="main-tab px-5 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
+        const bn = document.getElementById('bottom-nav');
+        if (bn) bn.innerHTML = tabs.map((t,i)=>
+          `<div class="bn-item ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${icons[i]}" style="width:20px;height:20px;"></i><span class="bn-label">${t}${i===1?badge:''}</span></div>`).join('');
       }
       showOverdueBanner();
       switchTab(0);
@@ -1261,8 +1319,13 @@
     }
     function switchTab(idx) {
       const isMgr = CU.role === 'mgr';
-      const tabBaseCls = isMgr ? 'main-tab shrink-0 px-4 py-2.5 text-center text-xs font-semibold' : 'main-tab flex-1 min-w-[90px] px-3 py-2.5 text-center text-sm font-semibold';
-      document.querySelectorAll('.main-tab').forEach((b,i)=> b.className = `${tabBaseCls} ${i===idx?'tab-active':'tab-inactive'}`);
+      const mgrMobileCls = 'main-tab shrink-0 px-3 py-2 text-center text-xs font-semibold';
+      const mgrDesktopCls = 'main-tab shrink-0 px-5 py-2.5 text-center text-sm font-semibold';
+      const gaMobileCls = 'main-tab flex-1 px-3 py-2 text-center text-xs font-semibold';
+      const gaDesktopCls = 'main-tab px-5 py-2.5 text-center text-sm font-semibold';
+      document.querySelectorAll('#mainTabBar .main-tab').forEach((b,i)=> b.className = `${isMgr?mgrMobileCls:gaMobileCls} ${i===idx?'tab-active':'tab-inactive'}`);
+      document.querySelectorAll('#mainTabBar-desktop .main-tab').forEach((b,i)=> b.className = `${isMgr?mgrDesktopCls:gaDesktopCls} ${i===idx?'tab-active':'tab-inactive'}`);
+      document.querySelectorAll('#bottom-nav .bn-item').forEach((b,i)=> { b.classList.toggle('active', i===idx); b.classList.toggle('', i!==idx); });
       ['borrow','return','history','dashboard','mgr-history','equipment','members','audit-log'].forEach(t=> { const el=document.getElementById('tab-'+t); if(el) el.style.display='none'; });
       if (isMgr) {
         if(idx===0){ document.getElementById('tab-dashboard').style.display='block'; renderDashboard(); }
