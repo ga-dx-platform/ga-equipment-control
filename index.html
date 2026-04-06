@@ -782,9 +782,13 @@
           return { ok: !error };
         }
         if (action === 'selfChangePin') {
-          // Verify old PIN against DB (always fresh — no pin_hash cached in memory)
-          const { data: u } = await sb.from('users').select('pin_hash').eq('full_name', params.name).eq('is_active', true).single();
-          if (!u) return { ok: false, error: 'user_not_found' };
+          // Fetch user's id + pin_hash by name (always fresh — no pin_hash cached in memory)
+          const { data: u, error: selErr } = await sb.from('users')
+            .select('id, pin_hash')
+            .eq('full_name', params.name)
+            .eq('is_active', true)
+            .single();
+          if (selErr || !u) return { ok: false, error: 'user_not_found' };
           const stored = String(u.pin_hash);
           const oldInput = String(params.oldPin).padStart(6,'0');
           const hOld = await sha256(oldInput);
@@ -792,16 +796,14 @@
           // Hash new PIN and prevent reuse
           const hNew = await sha256(String(params.newPin).padStart(6,'0'));
           if (hNew === hOld || hNew === stored) return { ok: false, error: 'same_pin' };
-          // Update DB — use .select() so we can verify the row was actually updated
-          // Supabase does NOT throw an error when 0 rows match; without .select() a silent
-          // failure would return { ok: true } even though the PIN never changed in the DB.
+          // UPDATE by primary key (id) — most precise, avoids full_name/role mismatch
+          // .select() lets us verify the row was actually updated (Supabase returns no error on 0-row matches)
           const { data: updated, error } = await sb.from('users')
             .update({ pin_hash: hNew })
-            .eq('full_name', params.name)
-            .eq('role', params.role)
-            .select('full_name');
+            .eq('id', u.id)
+            .select('id');
           if (error) throw error;
-          if (!updated?.length) throw new Error('PIN update matched 0 rows — check RLS or user record');
+          if (!updated?.length) throw new Error('PIN update matched 0 rows — check Supabase RLS UPDATE policy on users table');
           await logAction('CHANGE_PIN','users',params.name,null,{name:params.name,role:params.role});
           return { ok: true };
         }
@@ -1187,7 +1189,11 @@
           }
         }
       } catch(e) {
+        console.error('[submitChangePin]', e);
         document.getElementById('cp-error').textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่';
+        document.querySelectorAll('#cp-pin-dots .pin-dot').forEach(d=>d.classList.add('error'));
+        // Reset to step 1 (new PIN) so user can retry without re-entering old PIN
+        _cpStep=1; _cpNew=''; _cpConf=''; setTimeout(cpUpdateUI, 600);
       }
     }
 
