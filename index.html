@@ -1353,7 +1353,7 @@
       const el = document.getElementById('tab-borrow');
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="gd-page-header">
-          <p class="gd-section-title mb-2">Borrow</p>
+          <p class="gd-section-title mb-2">ยืมอุปกรณ์</p>
           <h2 class="text-xl font-bold tracking-tight text-slate-900">ยืมอุปกรณ์</h2>
           <p class="text-sm text-slate-500 mt-1">เลือกอุปกรณ์ที่ต้องการยืม (คงเหลือ > 0)</p>
         </div>
@@ -1477,7 +1477,7 @@
       const el = document.getElementById('tab-return');
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="gd-page-header">
-          <p class="gd-section-title mb-2">Return</p>
+          <p class="gd-section-title mb-2">คืนอุปกรณ์</p>
           <h2 class="text-xl font-bold tracking-tight text-slate-900">คืนอุปกรณ์</h2>
           <p class="text-sm text-slate-500 mt-1">รายการอุปกรณ์ที่กำลังยืมอยู่</p>
         </div>
@@ -1618,7 +1618,7 @@
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="gd-page-header">
           <div class="flex items-center justify-between">
-            <div><p class="gd-section-title mb-2">History</p>
+            <div><p class="gd-section-title mb-2">ประวัติการยืม</p>
             <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการยืม-คืน</h2></div>
             <button onclick="exportHistoryCSV('ga')" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition shrink-0">
               <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV</button>
@@ -1666,7 +1666,7 @@
       const el = document.getElementById('tab-dashboard');
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="gd-page-header">
-          <p class="gd-section-title mb-2">Dashboard</p>
+          <p class="gd-section-title mb-2">ภาพรวมระบบ</p>
           <h2 class="text-xl font-bold tracking-tight text-slate-900">ภาพรวมระบบ</h2>
         </div>
         <div class="grid grid-cols-2 gap-3 mb-4">
@@ -1752,7 +1752,7 @@
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="gd-page-header">
           <div class="flex items-center justify-between">
-            <div><p class="gd-section-title mb-2">All Records</p>
+            <div><p class="gd-section-title mb-2">บันทึกทั้งหมด</p>
             <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติทั้งหมด</h2></div>
             <button onclick="exportHistoryCSV('mgr')" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition shrink-0">
               <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV</button>
@@ -2253,7 +2253,7 @@
     }
     async function renderAuditLogTab() {
       const el = document.getElementById('tab-audit-log');
-      el.innerHTML = `<div class="gd-page fade-in"><div class="gd-page-header"><p class="gd-section-title mb-2">Audit Log</p><h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการดำเนินการ</h2></div>${skeletonCards(5)}</div>`;
+      el.innerHTML = `<div class="gd-page fade-in"><div class="gd-page-header"><p class="gd-section-title mb-2">ตรวจสอบระบบ</p><h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการดำเนินการ</h2></div>${skeletonCards(5)}</div>`;
       const { data, error } = await sb.from('app_audit_logs').select('*').order('created_at', { ascending: false }).limit(300);
       if (error) { el.innerHTML = `<div class="gd-page fade-in"><p class="text-sm text-danger text-center py-10">โหลดข้อมูลไม่สำเร็จ</p></div>`; return; }
       AUDIT_LOGS = data || [];
@@ -2268,7 +2268,7 @@
         .filter(r => !auditSearch || (r.actor_name||'').toLowerCase().includes(auditSearch.toLowerCase()));
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="gd-page-header">
-          <p class="gd-section-title mb-2">Audit Log</p>
+          <p class="gd-section-title mb-2">ตรวจสอบระบบ</p>
           <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการดำเนินการ</h2>
         </div>
         <div class="flex gap-2 mb-3">
