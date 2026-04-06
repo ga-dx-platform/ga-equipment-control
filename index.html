@@ -220,18 +220,12 @@
 
     /* Login */
     .login-shell {
-      min-height: 100%; padding: 24px 18px 32px;
-      background:
-        radial-gradient(circle at 14% 10%, rgba(255,237,213,0.95) 0%, rgba(254,215,170,0.28) 34%, rgba(249,115,22,0) 58%),
-        radial-gradient(circle at 100% 0%, rgba(251,146,60,0.35) 0%, rgba(234,88,12,0) 48%),
-        linear-gradient(155deg, #FFF7ED 0%, #FFEDD5 45%, #FED7AA 100%);
+      min-height: 100%;
+      background: linear-gradient(145deg, #f97316 0%, #ea580c 55%, #c2410c 100%);
     }
-    .login-card {
-      width: 100%; max-width: 432px; border-radius: 24px; padding: 32px;
-      border: 1px solid rgba(255,255,255,0.55);
-      background: linear-gradient(140deg, rgba(255,255,255,0.88), rgba(255,255,255,0.76));
-      box-shadow: 0 28px 52px rgba(234,88,12,0.16), 0 8px 20px rgba(15,23,42,0.08);
-      backdrop-filter: blur(16px);
+    .login-wave-card {
+      background: var(--gd-surface);
+      margin-top: -2px;
     }
     .user-card {
       border: 1px solid rgba(148,163,184,0.22); border-radius: 16px;
@@ -297,26 +291,33 @@
 
       <!-- LOGIN -->
       <div id="screen-login" class="screen">
-        <div class="login-shell flex-1 overflow-auto flex items-center justify-center">
-          <div class="login-card fade-in">
-            <div class="text-center mb-8">
-              <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-br from-orange-400 to-orange-600 shadow-lg shadow-orange-500/30 mb-5">
-                <span class="text-white text-2xl font-extrabold tracking-tight">EC</span>
+        <div class="login-shell flex-1 overflow-auto flex flex-col">
+          <!-- Brand header on gradient -->
+          <div class="flex flex-col items-center justify-center pt-14 pb-20 px-6 text-center">
+            <div class="w-16 h-16 rounded-3xl bg-white/20 flex items-center justify-center shadow-xl mb-5">
+              <span class="text-white text-2xl font-extrabold tracking-tight">EC</span>
+            </div>
+            <h1 class="text-2xl font-extrabold text-white tracking-tight">Equipment Control</h1>
+            <p class="text-sm text-white/75 mt-2">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
+          </div>
+          <!-- Wave + white card -->
+          <div style="margin-top:-48px;">
+            <svg viewBox="0 0 390 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:56px;display:block;">
+              <path d="M0,30 C80,58 310,2 390,30 L390,60 L0,60 Z" fill="#fafaf9"/>
+            </svg>
+            <div class="login-wave-card px-5 pb-12 fade-in">
+              <div class="max-w-md mx-auto space-y-6">
+                <div>
+                  <p class="gd-section-title mb-3">เลือกผู้ใช้งาน</p>
+                  <div class="space-y-3" id="gaUserList"></div>
+                </div>
+                <div class="gd-card-soft p-4">
+                  <p class="gd-section-title mb-3 flex items-center gap-1.5">
+                    <i data-lucide="shield" class="w-3.5 h-3.5"></i>Admin access
+                  </p>
+                  <div class="space-y-3" id="mgrUserList"></div>
+                </div>
               </div>
-              <h1 class="text-[2rem] leading-tight font-extrabold tracking-[-0.02em] text-slate-900">Equipment Control</h1>
-              <p class="text-sm text-slate-500 mt-2">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
-            </div>
-
-            <div class="mb-8">
-              <p class="gd-section-title mb-3">Select user</p>
-              <div class="space-y-3" id="gaUserList"></div>
-            </div>
-
-            <div class="mb-4 gd-card-soft p-4">
-              <p class="gd-section-title mb-3 flex items-center gap-1.5">
-                <i data-lucide="shield" class="w-3.5 h-3.5"></i>Admin access
-              </p>
-              <div class="space-y-3" id="mgrUserList"></div>
             </div>
           </div>
         </div>
