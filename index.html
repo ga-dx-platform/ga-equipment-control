@@ -2332,9 +2332,6 @@
       document.getElementById('detail-ga-name').textContent = r.ga_staff || '-';
       document.getElementById('detail-borrow-date').textContent = fd(r.borrowed_at);
       document.getElementById('detail-due-date').textContent = fd(r.due_date);
-      document.getElementById('detail-return-date').textContent = fd(r.returned_at);
-      const condMap = { normal: 'ปกติ ✓', damaged: '🟡 ชำรุด', lost: '🔴 สูญหาย' };
-      document.getElementById('detail-condition').textContent = condMap[r.condition_on_return] || '-';
       const statusMap = {
         borrowed: { label: 'กำลังยืม',  cls: 'bg-amber-500/20 text-amber-400' },
         overdue:  { label: 'เกินกำหนด', cls: 'bg-red-500/20 text-red-400' },
@@ -2343,12 +2340,29 @@
       const s = statusMap[r.status] || { label: r.status, cls: 'bg-white/10 text-white' };
       const badge = document.getElementById('detail-status-badge');
       badge.textContent = s.label; badge.className = `shrink-0 px-3 py-1 rounded-full text-xs font-bold ${s.cls}`;
+      // Borrow note
       const noteSection = document.getElementById('detail-note-section');
       if (r.note) { noteSection.classList.remove('hidden'); document.getElementById('detail-note').textContent = r.note; }
       else { noteSection.classList.add('hidden'); }
+      // Borrow signature
       const sigSection = document.getElementById('detail-signature-section');
       if (r.sign_img) { document.getElementById('detail-signature').src = r.sign_img; sigSection.classList.remove('hidden'); }
       else { sigSection.classList.add('hidden'); }
+      // Return info section
+      const condMap = { normal: 'ปกติ ✓', damaged: '🟡 ชำรุด', lost: '🔴 สูญหาย' };
+      const returnSection = document.getElementById('detail-return-section');
+      if (r.status === 'returned' || r.returned_at) {
+        document.getElementById('detail-return-date').textContent = fd(r.returned_at);
+        document.getElementById('detail-condition').textContent = condMap[r.condition_on_return] || '-';
+        const condNoteSection = document.getElementById('detail-condition-note-section');
+        if (r.condition_note) { condNoteSection.classList.remove('hidden'); document.getElementById('detail-condition-note').textContent = r.condition_note; }
+        else { condNoteSection.classList.add('hidden'); }
+        returnSection.classList.remove('hidden');
+      } else { returnSection.classList.add('hidden'); }
+      // Return signature
+      const retSignSection = document.getElementById('detail-return-sign-section');
+      if (r.return_sign_img) { document.getElementById('detail-return-signature').src = r.return_sign_img; retSignSection.classList.remove('hidden'); }
+      else { retSignSection.classList.add('hidden'); }
       const timeline = document.getElementById('detail-timeline');
       timeline.innerHTML = '<p class="text-slate-500 text-xs">กำลังโหลดประวัติ...</p>';
       try {
@@ -2393,19 +2407,35 @@
             <div><p class="text-slate-400">GA ที่รับผิดชอบ</p><p id="detail-ga-name" class="text-white font-medium"></p></div>
             <div><p class="text-slate-400">วันที่ยืม</p><p id="detail-borrow-date" class="text-white font-medium"></p></div>
             <div><p class="text-slate-400">กำหนดคืน</p><p id="detail-due-date" class="text-white font-medium"></p></div>
-            <div><p class="text-slate-400">วันที่คืน</p><p id="detail-return-date" class="text-white font-medium"></p></div>
-            <div><p class="text-slate-400">สภาพตอนคืน</p><p id="detail-condition" class="text-white font-medium"></p></div>
           </div>
           <div id="detail-note-section" class="hidden pt-1 border-t border-white/10">
             <p class="text-slate-400 text-sm">หมายเหตุ</p>
             <p id="detail-note" class="text-white text-sm mt-1"></p>
           </div>
         </div>
-        <!-- Signature -->
+        <!-- Borrow Signature -->
         <div id="detail-signature-section" class="bg-white/5 rounded-xl p-4">
           <h4 class="text-amber-400 font-semibold text-sm mb-3">ลายเซ็นผู้ยืม</h4>
-          <img id="detail-signature" src="" alt="ลายเซ็น" class="bg-white rounded-lg max-h-24 object-contain"/>
+          <img id="detail-signature" src="" alt="ลายเซ็น" class="bg-white rounded-lg max-h-24 object-contain w-full"/>
           <p class="text-xs text-slate-400 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้รับอุปกรณ์ตามรายการข้างต้นในสภาพสมบูรณ์</p>
+        </div>
+        <!-- Return Info -->
+        <div id="detail-return-section" class="hidden bg-white/5 rounded-xl p-4 space-y-3">
+          <h4 class="text-emerald-400 font-semibold text-sm">ข้อมูลการคืน</h4>
+          <div class="grid grid-cols-2 gap-3 text-sm">
+            <div><p class="text-slate-400">วันที่คืน</p><p id="detail-return-date" class="text-white font-medium"></p></div>
+            <div><p class="text-slate-400">สภาพตอนคืน</p><p id="detail-condition" class="text-white font-medium"></p></div>
+          </div>
+          <div id="detail-condition-note-section" class="hidden pt-1 border-t border-white/10">
+            <p class="text-slate-400 text-sm">หมายเหตุสภาพ</p>
+            <p id="detail-condition-note" class="text-white text-sm mt-1"></p>
+          </div>
+        </div>
+        <!-- Return Signature -->
+        <div id="detail-return-sign-section" class="hidden bg-white/5 rounded-xl p-4">
+          <h4 class="text-emerald-400 font-semibold text-sm mb-3">ลายเซ็นยืนยันคืน</h4>
+          <img id="detail-return-signature" src="" alt="ลายเซ็นคืน" class="bg-white rounded-lg max-h-24 object-contain w-full"/>
+          <p class="text-xs text-slate-400 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้คืนอุปกรณ์ตามรายการข้างต้นเรียบร้อยแล้ว</p>
         </div>
         <!-- Timeline -->
         <div class="bg-white/5 rounded-xl p-4">
