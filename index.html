@@ -25,38 +25,21 @@
     }
   </script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap');
+
     :root {
-      --orange-gradient: linear-gradient(145deg, #f97316, #ea580c);
-      --orange-dark: #c2410c;
-      --orange-main: #f97316;
-      --orange-light: #fff7ed;
-      --orange-border: #fed7aa;
-      --bg-page: #fafaf9;
-      --bg-card: #ffffff;
-      --bg-input: #f5f5f4;
-      --text-primary: #1c1917;
-      --text-secondary: #78716c;
-      --text-muted: #a8a29e;
-      --border: #e7e5e4;
-      --border-light: #f5f5f4;
-      --success-bg: #d1fae5;
-      --success-text: #065f46;
-      --danger-bg: #fee2e2;
-      --danger-text: #991b1b;
-      --warning-bg: #fef3c7;
-      --warning-text: #92400e;
-      --gd-brand: var(--orange-main);
-      --gd-brand-strong: var(--orange-dark);
-      --gd-brand-vivid: var(--orange-main);
-      --gd-cyan: #fb923c;
-      --gd-violet: #fdba74;
-      --gd-brand-soft: #fff2e8;
-      --gd-surface: var(--bg-page);
-      --gd-card: var(--bg-card);
-      --gd-text: var(--text-primary);
-      --gd-muted: var(--text-secondary);
-      --gd-border: var(--border);
-      --gd-radius-card: 24px;
+      --gd-brand: #EA580C;
+      --gd-brand-strong: #C2410C;
+      --gd-brand-vivid: #F97316;
+      --gd-cyan: #FB923C;
+      --gd-violet: #FDBA74;
+      --gd-brand-soft: #FFF2E8;
+      --gd-surface: #fafaf9;
+      --gd-card: #FFFFFF;
+      --gd-text: #0F172A;
+      --gd-muted: #64748B;
+      --gd-border: #E2E8F0;
+      --gd-radius-card: 14px;
       --gd-radius-control: 10px;
       --gd-shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.05);
       --gd-shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
@@ -65,7 +48,7 @@
 
     html, body {
       height: 100%; margin: 0;
-      font-family: 'Sarabun', sans-serif;
+      font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
       color: var(--gd-text); background: var(--gd-surface);
     }
 
@@ -113,7 +96,7 @@
 
     .chip {
       padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 500;
-      white-space: nowrap; cursor: pointer; transition: all 0.2s ease;
+      white-space: nowrap; cursor: pointer; transition: all 150ms ease;
       border: 1.5px solid var(--gd-border); background: rgba(255,255,255,0.88); color: var(--gd-muted);
     }
     .chip.active {
@@ -126,6 +109,8 @@
 
     input, select, textarea {
       font-family: 'Sarabun', sans-serif;
+      border-radius: var(--gd-radius-control); border-color: var(--gd-border);
+      transition: border-color 150ms ease, box-shadow 150ms ease;
       background: var(--bg-input);
       border: 0.5px solid var(--border);
       border-radius: 10px;
@@ -140,6 +125,7 @@
       box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.18); background: #fff;
     }
 
+    button { transition: all 150ms ease; font-family: 'Sarabun', sans-serif; }
     button { transition: all 0.2s ease; font-family: 'Sarabun', sans-serif; }
     button:active { transform: translateY(0.5px) scale(0.99); }
 
@@ -147,13 +133,13 @@
       background: var(--bg-page);
     }
     .gd-header {
-      background: rgba(255, 255, 255, 0.9); border-bottom: 1px solid rgba(148, 163, 184, 0.22);
-      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(10px);
+      background: linear-gradient(135deg, #EA580C 0%, #F97316 60%, #FDBA74 100%);
+      border-bottom: 1px solid rgba(194, 65, 12, 0.3);
     }
     .gd-card {
-      background: var(--gd-card); border: 1px solid rgba(148, 163, 184, 0.24);
+      background: var(--gd-card); border: 0.5px solid #e7e5e4;
       border-radius: var(--gd-radius-card); box-shadow: var(--gd-shadow-sm);
-      transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+      transition: box-shadow 150ms ease, transform 150ms ease, border-color 150ms ease;
     }
     .gd-card:hover {
       box-shadow: 0 20px 36px rgba(234, 88, 12, 0.16), 0 4px 14px rgba(251, 146, 60, 0.12);
@@ -162,7 +148,7 @@
     .gd-card-soft { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; }
     .gd-input {
       width: 100%; height: 44px; padding: 0 14px; border: 1px solid var(--gd-border);
-      border-radius: 10px; background: #f8fafc; font-size: 14px; color: #0F172A;
+      border-radius: 10px; background: #f5f5f4; font-size: 14px; color: #0F172A;
     }
     .gd-btn-primary {
       background: linear-gradient(135deg, var(--gd-brand) 0%, #f97316 48%, var(--gd-violet) 100%);
@@ -176,9 +162,10 @@
       opacity: 0.72; box-shadow: none; cursor: not-allowed; pointer-events: none;
     }
     .gd-btn-secondary {
-      border: 1px solid #CBD5E1; background: #fff; color: #475569;
+      border: 1px solid #fed7aa; background: #fff7ed; color: #c2410c;
       border-radius: 12px; font-size: 14px; font-weight: 600; min-height: 44px;
     }
+    .gd-btn-secondary:hover { background: #ffedd5; }
     .gd-btn-danger {
       border: 1px solid #fecaca; background: #fef2f2; color: #dc2626;
       border-radius: 12px; font-size: 14px; font-weight: 600; min-height: 44px;
@@ -352,7 +339,7 @@
     .login-shell {
       min-height: 100%;
       padding: 0;
-<<<<<<< codex/redesign-ui-based-on-provided-specs-2k7mbm
+
       background: var(--orange-gradient);
       display: flex;
       flex-direction: column;
@@ -361,7 +348,6 @@
     }
     .login-brand {
       width: 100%;
-=======
       background: var(--bg-page);
     }
     .login-brand {
@@ -370,7 +356,6 @@
       background: var(--orange-gradient);
     }
     .login-brand {
->>>>>>> main
       padding: 40px 24px 68px;
       position: relative;
       text-align: center;
@@ -381,14 +366,12 @@
       padding: 0 18px 24px;
       position: relative;
       z-index: 2;
-<<<<<<< codex/redesign-ui-based-on-provided-specs-2k7mbm
+
       width: 100%;
       display: flex;
       justify-content: center;
-=======
       background: var(--bg-page);
       min-height: calc(100vh - 210px);
->>>>>>> main
     }
     .login-card {
       width: 100%;
@@ -412,10 +395,11 @@
     .admin-card { border-color: var(--orange-border); background: #fff7ed; }
 
     /* Tab bar */
-    #mainTabBar { gap: 6px; border: 0; border-radius: 0; padding: 0; background: transparent; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    #mainTabBar { gap: 8px; border: 0; border-radius: 16px; padding: 6px; background: rgba(255,255,255,0.18); flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
     #mainTabBar::-webkit-scrollbar { display: none; }
-    #mainTabBar .main-tab { letter-spacing: 0.01em; border-radius: 12px; transition: all 0.2s ease; white-space: nowrap; }
-    #mainTabBar .main-tab:hover { color: #1e3a8a; background: rgba(255,255,255,0.8); }
+    #mainTabBar .main-tab { letter-spacing: 0.01em; border-radius: 12px; transition: all 0.15s ease; white-space: nowrap; }
+    #mainTabBar .main-tab:hover { color: #0f172a; background: rgba(255,255,255,0.7); }
+    .tab-inactive { color: rgba(255,255,255,0.82) !important; border: 1px solid transparent; background: transparent; }
 
 
 
@@ -437,11 +421,7 @@
 
     @media (max-width: 480px) {
       .login-card { padding: 24px; border-radius: 22px; }
-<<<<<<< codex/redesign-ui-based-on-provided-specs-2k7mbm
       .login-card-wrap { padding-left: 12px; padding-right: 12px; padding-bottom: 18px; }
-=======
-      .login-card-wrap { padding-left: 12px; padding-right: 12px; }
->>>>>>> main
     }
   </style>
 </head>
@@ -544,18 +524,18 @@
         <div class="page-header" style="position:sticky;top:0;z-index:20;">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-3">
-              <div id="main-avatar" class="avatar avatar-md"></div>
+              <div id="main-avatar" class="w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-sm"></div>
               <div>
                 <p id="main-user-name" class="font-semibold text-white text-sm leading-tight"></p>
-                <p id="main-user-role" class="text-xs text-white/85">GA Staff</p>
+                <p id="main-user-role" class="text-xs text-white/70">GA Staff</p>
               </div>
             </div>
             <div class="flex items-center gap-1">
-              <button onclick="openChangePinModal()" class="p-2.5 rounded-xl hover:bg-white/15 transition" title="เปลี่ยน PIN">
-                <i data-lucide="key-round" class="w-4 h-4 text-white"></i>
+              <button onclick="openChangePinModal()" class="p-2.5 rounded-xl hover:bg-white/20 transition" title="เปลี่ยน PIN">
+                <i data-lucide="key-round" class="w-4 h-4 text-white/80"></i>
               </button>
-              <button onclick="confirmLogout()" class="p-2.5 rounded-xl hover:bg-white/15 transition" title="ออกจากระบบ">
-                <i data-lucide="log-out" class="w-4 h-4 text-white"></i>
+              <button onclick="confirmLogout()" class="p-2.5 rounded-xl hover:bg-white/20 transition" title="ออกจากระบบ">
+                <i data-lucide="log-out" class="w-4 h-4 text-white/80"></i>
               </button>
             </div>
           </div>
@@ -588,12 +568,12 @@
       <!-- BORROW FORM (overlay) -->
       <div id="screen-borrow-form" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--gd-surface);">
         <div class="gd-header px-4 py-3 flex items-center gap-3" style="position:sticky;top:0;z-index:10;">
-          <button onclick="closeBorrowForm()" class="p-1.5 rounded-full hover:bg-gray-100 transition">
-            <i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i>
+          <button onclick="closeBorrowForm()" class="p-1.5 rounded-full hover:bg-white/20 transition">
+            <i data-lucide="arrow-left" class="w-5 h-5 text-white"></i>
           </button>
           <div class="flex-1">
-            <p class="font-semibold text-gray-900 text-sm">ยืมอุปกรณ์</p>
-            <p id="bf-eq-name" class="text-xs text-gray-400"></p>
+            <p class="font-semibold text-white text-sm">ยืมอุปกรณ์</p>
+            <p id="bf-eq-name" class="text-xs text-white/70"></p>
           </div>
         </div>
         <div class="flex-1 overflow-auto px-4 pt-4 pb-6" id="bf-body"></div>
@@ -602,12 +582,12 @@
       <!-- RETURN DETAIL (overlay) -->
       <div id="screen-return-detail" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--gd-surface);">
         <div class="gd-header px-4 py-3 flex items-center gap-3" style="position:sticky;top:0;z-index:10;">
-          <button onclick="closeReturnDetail()" class="p-1.5 rounded-full hover:bg-gray-100 transition">
-            <i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i>
+          <button onclick="closeReturnDetail()" class="p-1.5 rounded-full hover:bg-white/20 transition">
+            <i data-lucide="arrow-left" class="w-5 h-5 text-white"></i>
           </button>
           <div class="flex-1">
-            <p class="font-semibold text-gray-900 text-sm">คืนอุปกรณ์</p>
-            <p id="rd-eq-name" class="text-xs text-gray-400"></p>
+            <p class="font-semibold text-white text-sm">คืนอุปกรณ์</p>
+            <p id="rd-eq-name" class="text-xs text-white/70"></p>
           </div>
           <span id="rd-badge" class="text-xs px-2.5 py-1 rounded-full font-medium"></span>
         </div>
@@ -1783,10 +1763,18 @@
           <h2 class="text-lg font-semibold text-stone-900">Manager Dashboard</h2>
         </div>
         <div class="grid grid-cols-2 gap-3 mb-4">
-          <div class="kpi-card orange"><p class="kpi-label">กำลังยืม</p><p class="kpi-number">${totalBorrowed}</p></div>
-          <div class="kpi-card danger"><p class="kpi-label">เกินกำหนด</p><p class="kpi-number">${overdueList.length}</p></div>
-          <div class="kpi-card success"><p class="kpi-label">คืนวันนี้</p><p class="kpi-number">${returnedToday}</p></div>
-          <div class="kpi-card"><p class="kpi-label">อุปกรณ์พร้อมใช้</p><p class="kpi-number text-stone-900">${availableEq}</p></div>
+          <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
+            <div class="w-8 h-8 rounded-lg bg-warn-light flex items-center justify-center mb-2"><i data-lucide="clock-3" class="w-4 h-4 text-warn"></i></div>
+            <p class="text-2xl font-bold text-gray-900">${totalBorrowed}</p><p class="text-xs text-gray-400 mt-0.5">กำลังยืม</p></div>
+          <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
+            <div class="w-8 h-8 rounded-lg bg-danger-light flex items-center justify-center mb-2"><i data-lucide="alert-triangle" class="w-4 h-4 text-danger"></i></div>
+            <p class="text-2xl font-bold text-danger">${overdueList.length}</p><p class="text-xs text-gray-400 mt-0.5">เกินกำหนด</p></div>
+          <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
+            <div class="w-8 h-8 rounded-lg bg-success-light flex items-center justify-center mb-2"><i data-lucide="check-circle" class="w-4 h-4 text-success"></i></div>
+            <p class="text-2xl font-bold text-gray-900">${returnedToday}</p><p class="text-xs text-gray-400 mt-0.5">คืนวันนี้</p></div>
+          <div class="stat-card bg-white rounded-xl card-shadow p-3.5">
+            <div class="w-8 h-8 rounded-lg bg-brand-light flex items-center justify-center mb-2"><i data-lucide="box" class="w-4 h-4 text-brand"></i></div>
+            <p class="text-2xl font-bold text-gray-900">${availableEq}</p><p class="text-xs text-gray-400 mt-0.5">อุปกรณ์พร้อมใช้</p></div>
         </div>
         <div class="card mb-4">
           <h4 class="font-semibold text-gray-900 text-sm mb-3">Overdue</h4>
