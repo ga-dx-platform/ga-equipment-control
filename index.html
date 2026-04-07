@@ -472,32 +472,40 @@
       </div>
 
       <!-- PIN -->
-      <div id="screen-pin" class="screen">
-        <!-- Gradient header with wave -->
-        <div class="gd-header px-4 flex flex-col items-center text-center relative" style="padding-top:40px;padding-bottom:52px;">
-          <button onclick="goScreen('login')" class="absolute top-4 left-4 p-2 rounded-full hover:bg-white/20 transition">
-            <i data-lucide="arrow-left" class="w-5 h-5 text-white"></i>
+      <div id="screen-pin" class="screen" style="background:var(--orange-gradient);">
+        <!-- Gradient area: back button + avatar + name -->
+        <div style="padding:48px 24px 64px;text-align:center;position:relative;">
+          <button onclick="goScreen('login')"
+                  style="position:absolute;top:16px;left:16px;width:36px;height:36px;border-radius:50%;
+                         background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);
+                         display:flex;align-items:center;justify-content:center;">
+            <i data-lucide="arrow-left" style="width:18px;height:18px;color:#fff;"></i>
           </button>
-          <div id="pin-avatar" class="w-16 h-16 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-lg mb-3"></div>
-          <p id="pin-name" class="font-semibold text-white mb-1"></p>
-          <p class="text-sm text-white/70">กรอก PIN 6 หลัก</p>
-          <svg viewBox="0 0 390 50" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="absolute bottom-0 left-0 w-full" style="height:48px;">
-            <path d="M0,25 C80,50 310,0 390,25 L390,50 L0,50 Z" fill="#fafaf9"/>
-          </svg>
+          <div id="pin-avatar"
+               style="width:72px;height:72px;border-radius:50%;margin:0 auto 12px;
+                      background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);
+                      display:flex;align-items:center;justify-content:center;
+                      font-size:22px;font-weight:600;color:#fff;font-family:'Sarabun',sans-serif;"></div>
+          <p id="pin-name"
+             style="font-size:17px;font-weight:600;color:#fff;margin:0 0 4px;font-family:'Sarabun',sans-serif;"></p>
+          <p style="font-size:13px;color:rgba(255,255,255,0.75);margin:0;font-family:'Sarabun',sans-serif;">กรอก PIN 6 หลัก</p>
         </div>
-        <!-- PIN content -->
-        <div class="flex-1 flex flex-col items-center justify-center px-6 pb-8">
-          <div class="flex gap-3 mb-10" id="pin-dots">
-            <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
-            <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
-          </div>
-          <div class="pin-panel px-6 pb-8 flex flex-col items-center">
-            <div class="flex gap-3 mb-8 mt-2" id="pin-dots">
+
+        <!-- Glass numpad panel -->
+        <div class="flex-1 flex flex-col items-center justify-start px-6"
+             style="margin-top:-32px;">
+          <div style="width:100%;max-width:320px;
+                      background:rgba(255,255,255,0.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+                      border:1px solid rgba(255,255,255,0.5);border-radius:24px;padding:28px 24px 24px;">
+            <!-- PIN dots -->
+            <div id="pin-dots" style="display:flex;justify-content:center;gap:14px;margin-bottom:12px;">
               <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
               <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
             </div>
-            <div id="pin-error" class="text-red-500 text-sm mb-4 h-5 font-medium"></div>
-            <div class="grid grid-cols-3 gap-4">
+            <div id="pin-error"
+                 style="height:20px;text-align:center;font-size:13px;color:#ef4444;margin-bottom:20px;font-family:'Sarabun',sans-serif;"></div>
+            <!-- Numpad -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
               <div class="numpad-key" onclick="enterPin('1')">1</div>
               <div class="numpad-key" onclick="enterPin('2')">2</div>
               <div class="numpad-key" onclick="enterPin('3')">3</div>
@@ -507,9 +515,14 @@
               <div class="numpad-key" onclick="enterPin('7')">7</div>
               <div class="numpad-key" onclick="enterPin('8')">8</div>
               <div class="numpad-key" onclick="enterPin('9')">9</div>
-              <div class="numpad-key opacity-0 pointer-events-none"></div>
+              <div class="numpad-key" style="opacity:0;pointer-events:none;"></div>
               <div class="numpad-key" onclick="enterPin('0')">0</div>
-              <div class="numpad-key" onclick="deletePin()"><i data-lucide="delete" class="w-6 h-6 text-stone-500"></i></div>
+              <div class="numpad-key" onclick="deletePin()">
+                <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
+                  <path d="M8 1H21V15H8L1 8L8 1Z" stroke="#78716c" stroke-width="1.5" stroke-linejoin="round"/>
+                  <path d="M13 5.5L18 10.5M18 5.5L13 10.5" stroke="#78716c" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
             </div>
           </div>
         </div>
