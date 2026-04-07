@@ -122,8 +122,8 @@
       transition: box-shadow 150ms ease, transform 150ms ease, border-color 150ms ease;
     }
     .gd-card:hover {
-      box-shadow: var(--gd-shadow-hover);
-      border-color: rgba(249, 115, 22, 0.34);
+      box-shadow: 0 20px 36px rgba(194, 65, 12, 0.14), 0 4px 14px rgba(249, 115, 22, 0.1);
+      border-color: rgba(249, 115, 22, 0.38);
       transform: translateY(-2px);
     }
     .gd-card-soft {
@@ -138,8 +138,8 @@
     .gd-page { padding: 24px 16px 32px; }
     .gd-page-header {
       margin-bottom: 16px; padding: 18px 20px; border-radius: 20px;
-      border: 1px solid rgba(251, 146, 60, 0.26);
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 247, 237, 0.95) 56%, rgba(255, 250, 245, 0.92) 100%);
+      border: 1px solid rgba(96, 165, 250, 0.28);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(236, 246, 255, 0.95) 56%, rgba(240, 249, 255, 0.92) 100%);
       box-shadow: var(--gd-shadow-sm);
     }
     .gd-empty {
@@ -187,8 +187,11 @@
     .gd-btn-secondary:hover, .btn-secondary:hover { background: #f8fafc; }
     .gd-btn-danger {
       background: #fef2f2; color: #dc2626;
-      border: 1px solid #fecaca; border-radius: var(--gd-radius-control);
-      padding: 10px 16px; min-height: 40px;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      min-height: 44px;
     }
 
     /* ── Inputs ───────────────────────────────────────── */
