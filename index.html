@@ -421,17 +421,38 @@
     /* ── Top tabs (desktop) ───────────────────────────── */
     .top-tabs {
       display: none;
-      background: #fff; border-bottom: 1px solid var(--border);
-      padding: 0 20px;
+      width: 100%;
+      margin-top: 14px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      align-items: flex-end;
+      gap: 24px;
+      justify-content: flex-start;
     }
     .top-tab {
-      padding: 8px 12px; font-size: 13px; font-weight: 600;
-      color: var(--text-muted); border: 1px solid transparent;
-      border-radius: 999px;
-      cursor: pointer; transition: all 150ms ease;
+      padding: 14px 2px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border: 0;
+      border-radius: 0;
+      cursor: pointer;
+      transition: color 150ms ease;
       font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      position: relative;
     }
-    .top-tab.active { color: #0f172a; border-color: #ffedd5; background: linear-gradient(160deg, #ffffff 0%, #fff8f1 100%); box-shadow: 0 8px 18px rgba(249, 115, 22, 0.14); }
+    .top-tab.active { color: #0f172a; background: transparent; box-shadow: none; }
+    .top-tab.active::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      border-radius: 999px;
+      background: var(--orange);
+    }
 
     /* ── In-header tab bar (compat) ───────────────────── */
     #mainTabBar, #mainTabBar-desktop {
@@ -458,12 +479,10 @@
     }
     .tab-inactive { color: #64748b; border: 1px solid transparent; background: transparent; border-radius: 12px; }
     /* Desktop underline */
-    @media (min-width: 768px) {
+    @media (min-width: 1024px) {
       .top-tabs { display: flex; }
       #mainTabBar { display: none !important; }
-      #mainTabBar-desktop { display: flex !important; }
-      .tab-active   { color: #0f172a !important; background: linear-gradient(160deg, #ffffff 0%, #fff8f1 100%) !important; border-radius: 12px !important; font-weight: 700; }
-      .tab-inactive { color: #64748b !important; background: transparent !important; border-radius: 12px !important; border-bottom: none !important; }
+      #mainTabBar-desktop { display: none !important; }
     }
 
     /* ── Bottom nav (mobile) ──────────────────────────── */
