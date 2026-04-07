@@ -118,7 +118,8 @@
       background: var(--bg-card);
       border-radius: var(--gd-radius-card);
       border: 1px solid #E2E8F0;
-      padding: 24px !important;
+      /* Increased vertical — Tailwind p-5/p-4 on same element overrides this */
+      padding: 28px 24px;
       box-shadow: var(--gd-shadow-sm);
       transition: box-shadow 150ms ease, transform 150ms ease, border-color 150ms ease;
     }
@@ -283,15 +284,17 @@
     .kpi-card {
       background: #fff; border-radius: var(--gd-radius-card);
       border: 1px solid var(--border);
-      padding: 24px;
+      padding: 20px 20px 24px;
+      min-height: 152px;
+      display: flex; flex-direction: column;
       box-shadow: var(--gd-shadow-sm);
     }
     .kpi-number {
-      font-size: 32px; font-weight: 600; line-height: 1;
-      margin: 6px 0 4px; font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      font-size: 34px; font-weight: 600; line-height: 1;
+      margin: 8px 0 0; font-family: 'Noto Sans Thai', 'Inter', sans-serif;
       color: var(--text-primary);
     }
-    .kpi-label { font-size: 12px; color: var(--text-muted); }
+    .kpi-label { font-size: 12px; color: var(--text-muted); margin-top: auto; padding-top: 6px; }
     .kpi-card.orange .kpi-number { color: var(--orange); }
     .kpi-card.danger  { background: #fff5f5; border-color: #fecaca; }
     .kpi-card.danger  .kpi-number { color: #ef4444; }
@@ -1665,15 +1668,17 @@
         </div>
         <div class="space-y-4" id="eqGrid">
           ${filtered.length ? filtered.map(e=>`<div class="gd-card p-5 cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
-            <div class="flex items-start gap-3 mb-2">
+            <div class="flex items-center gap-3">
               ${e.image_url ? `<img src="${he(e.image_url)}" class="w-12 h-12 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-xl shrink-0">📦</div>`}
               <div class="flex-1 min-w-0">
                 <p class="font-semibold text-gray-900 text-sm">${he(e.name)}</p>
-                <p class="text-xs text-gray-400">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
+                <p class="text-xs text-gray-400 mt-0.5">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
               </div>
-              <span class="text-xs px-2.5 py-1 rounded-full font-semibold shrink-0 ${e.available<=2?'bg-amber-50 text-amber-700 border border-amber-200':'bg-blue-50 text-brand border border-blue-200'}">คงเหลือ ${e.available}/${e.quantity}</span>
+              <div class="flex flex-col items-end gap-1.5 shrink-0">
+                <span class="text-xs px-2.5 py-1 rounded-full font-semibold ${e.available<=2?'bg-amber-50 text-amber-700 border border-amber-200':'bg-blue-50 text-brand border border-blue-200'}">คงเหลือ ${e.available}/${e.quantity}</span>
+                <button class="text-xs font-semibold text-brand flex items-center gap-1"><i data-lucide="hand" class="w-3.5 h-3.5"></i> ยืม</button>
+              </div>
             </div>
-            <div class="flex items-center justify-end"><button class="text-xs font-semibold text-brand flex items-center gap-1"><i data-lucide="hand" class="w-3.5 h-3.5"></i> ยืม</button></div>
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
             <span class="text-4xl mb-3">📦</span>
             <p class="text-sm">ยังไม่มีอุปกรณ์ในระบบ</p>
@@ -1784,16 +1789,23 @@
             const days = daysUntil(r.due_date);
             const isOD = r.status==='overdue';
             return `<div class="gd-card p-5 cursor-pointer ${isOD?'border-red-200 bg-red-50/30':''}" onclick="openReturnDetail('${he(r.record_id)}')">
-              <div class="flex items-start justify-between mb-2">
-                <div><p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
-                <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)}</p></div>
-                ${statusBadge(r.status)}
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style="background:${isOD?'#fee2e2':'#fff7ed'};">
+                  <span style="font-size:18px;">📦</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-2 mb-0.5">
+                    <p class="font-semibold text-gray-900 text-sm truncate">${he(r.eq_name)}</p>
+                    ${statusBadge(r.status)}
+                  </div>
+                  <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)}</p>
+                  <div class="flex items-center justify-between text-xs mt-1.5">
+                    <span class="text-gray-400">กำหนดคืน ${fd(r.due_date)}</span>
+                    <span class="${isOD?'text-red-600 font-semibold':'text-gray-500'}">${isOD?'เกิน '+Math.abs(days)+' วัน':(days===0?'วันนี้':days+' วัน')}</span>
+                  </div>
+                </div>
               </div>
-              <div class="flex items-center justify-between text-xs">
-                <span class="text-gray-400">ยืม ${fd(r.borrowed_at)} · กำหนดคืน ${fd(r.due_date)}</span>
-                <span class="${isOD?'text-red-600 font-semibold':'text-gray-500'}">${isOD?'เกิน '+Math.abs(days)+' วัน':(days===0?'วันนี้':days+' วัน')}</span>
-              </div>
-              ${r.qty_borrowed>1?`<p class="text-xs text-gray-400 mt-1">จำนวน: ${r.qty_borrowed} ชิ้น</p>`:''}
+              ${r.qty_borrowed>1?`<p class="text-xs text-gray-400 mt-2 pl-13">จำนวน: ${r.qty_borrowed} ชิ้น</p>`:''}
             </div>`;
           }).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
             <span class="text-4xl mb-3">✅</span>
@@ -2130,22 +2142,21 @@
             <p class="text-sm">${EQ.length === 0 ? "ยังไม่มีอุปกรณ์ กด '+ เพิ่มอุปกรณ์' เพื่อเริ่มต้น" : 'ไม่พบอุปกรณ์ที่ตรงกับการค้นหา'}</p>
           </div>` :
           filtered.map(e=>`<div class="gd-card p-5">
-            <div class="flex items-start justify-between mb-2">
-              <div class="flex items-start gap-3 flex-1 min-w-0 pr-2">
-                ${e.image_url ? `<img src="${he(e.image_url)}" class="w-10 h-10 object-cover rounded-lg border border-gray-200 shrink-0"/>` : `<div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-lg shrink-0">📦</div>`}
-                <div><p class="font-semibold text-gray-900 text-sm">${he(e.name)}</p>
-                <p class="text-xs text-gray-400">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p></div>
+            <div class="flex items-center gap-3">
+              ${e.image_url ? `<img src="${he(e.image_url)}" class="w-11 h-11 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-lg shrink-0">📦</div>`}
+              <div class="flex-1 min-w-0">
+                <p class="font-semibold text-gray-900 text-sm">${he(e.name)}</p>
+                <p class="text-xs text-gray-400 mt-0.5">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
               </div>
               <div class="flex flex-col items-end gap-1 shrink-0">
                 <span class="text-xs px-2.5 py-1 rounded-full font-semibold" style="background:${e.available===0?'var(--danger-bg)':e.available<e.quantity?'#fef3c7':'var(--orange-light)'};color:${e.available===0?'var(--danger-text)':e.available<e.quantity?'#d97706':'var(--orange-dark)'};border:0.5px solid ${e.available===0?'#fecaca':e.available<e.quantity?'#fde68a':'var(--orange-border)'};">
                   ${e.available}/${e.quantity}
                 </span>
-                <span class="text-[10px] text-gray-400">${e.available===0?'หมด':e.available===e.quantity?'พร้อมใช้':'มีบางส่วน'}</span>
+                <div class="flex gap-0.5 mt-1">
+                  <button data-id="${he(e.eq_id)}" onclick="showEditEquipment(this.dataset.id)" class="p-1.5 rounded-lg text-gray-300 hover:bg-orange-50" style="transition:all 150ms;" onmouseover="this.querySelector('i').style.color='var(--orange)'" onmouseout="this.querySelector('i').style.color=''"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+                  <button data-id="${he(e.eq_id)}" onclick="confirmDeleteEquip(this.dataset.id)" class="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                </div>
               </div>
-            </div>
-            <div class="flex justify-end gap-1">
-              <button data-id="${he(e.eq_id)}" onclick="showEditEquipment(this.dataset.id)" class="p-2 rounded-lg text-gray-300 hover:bg-orange-50" style="transition:all 150ms;" onmouseover="this.querySelector('i').style.color='var(--orange)'" onmouseout="this.querySelector('i').style.color=''"><i data-lucide="pencil" class="w-4 h-4"></i></button>
-              <button data-id="${he(e.eq_id)}" onclick="confirmDeleteEquip(this.dataset.id)" class="p-2 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>`).join('')}
         </div>
@@ -2335,7 +2346,7 @@
             if(!all.length) return `<div class="flex flex-col items-center justify-center py-16 text-slate-500"><span class="text-4xl mb-3">👥</span><p class="text-sm">ยังไม่มีสมาชิก</p></div>`;
             return all.map((u,i)=>{
               const a = avc(u.type==='ga'?i:i+4);
-              return `<div class="gd-card p-4 flex items-center justify-between fade-in">
+              return `<div class="gd-card p-5 flex items-center justify-between fade-in">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-full ${a.bg} ${a.tc} flex items-center justify-center font-bold text-sm">${he(ini(u.name))}</div>
                   <div><p class="font-medium text-gray-900 text-sm">${he(u.name)}</p>
