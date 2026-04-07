@@ -13,7 +13,7 @@
       theme: {
         extend: {
           colors: {
-            brand: '#185FA5', 'brand-light': '#E8F0FA',
+            brand: '#f97316', 'brand-light': '#fff7ed',
             success: '#0F6E56', 'success-light': '#E6F5F0',
             warn: '#D97706', 'warn-light': '#FEF3C7',
             danger: '#DC2626', 'danger-light': '#FEF2F2',
@@ -405,7 +405,7 @@
     @media (max-width: 767px) {
       #bottom-nav { display: flex; }
       .top-tabs   { display: none !important; }
-      #screen-main { padding-bottom: 64px; }
+      #screen-main { padding-bottom: 88px; }
     }
   </style>
 </head>
@@ -464,20 +464,6 @@
                 </p>
                 <div id="mgrUserList" class="space-y-2"></div>
               </div>
-              <h1 class="text-[2rem] leading-tight font-extrabold tracking-[-0.02em] text-slate-900">Equipment Control</h1>
-              <p class="text-sm text-slate-500 mt-2">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
-            </div>
-
-            <div class="mb-8">
-              <p class="gd-section-title mb-3">Select user</p>
-              <div class="space-y-3" id="gaUserList"></div>
-            </div>
-
-            <div class="mb-4 gd-card-soft p-4">
-              <p class="gd-section-title mb-3 flex items-center gap-1.5">
-                <i data-lucide="shield" class="w-3.5 h-3.5"></i>Admin access
-              </p>
-              <div class="space-y-3" id="mgrUserList"></div>
             </div>
           </div>
         </div>
@@ -1870,7 +1856,7 @@
               <p class="text-xs text-gray-400">${he(r.borrower_name)} · เกิน ${Math.abs(daysUntil(r.due_date))} วัน</p>
             </div>
             <button data-rid="${he(r.record_id||r.id||'')}" onclick="returnByManager(this.dataset.rid)"
-              class="shrink-0 px-2.5 py-1.5 bg-brand text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition flex items-center gap-1"><i data-lucide="corner-up-left" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">คืนแทน</span></button>
+              class="shrink-0 px-2.5 py-1.5 text-white text-xs font-semibold rounded-lg transition flex items-center gap-1" style="background:#f97316;color:white;"><i data-lucide="corner-up-left" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">คืนแทน</span></button>
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-8 text-slate-500"><span class="text-3xl mb-2">✓</span><p class="text-sm">ไม่มีรายการเกินกำหนด</p></div>`}
         </div>
         <div class="card mb-4">
@@ -1901,7 +1887,7 @@
       showConfirm({
         title: 'คืนแทน GA Staff?',
         message: `${r.eq_name} · ผู้ยืม: ${r.borrower_name} · กำหนดคืน: ${duePart}`,
-        icon: '📦', confirmText: 'ยืนยันคืน', confirmColor: 'bg-blue-500 hover:bg-blue-600',
+        icon: '📦', confirmText: 'ยืนยันคืน', confirmColor: 'bg-orange-500 hover:bg-orange-600',
         onConfirm: () => executeMgrReturn(recordId)
       });
     }
@@ -1988,7 +1974,7 @@
       el.innerHTML = `<div class="gd-page fade-in">
         <div class="flex items-center justify-between mb-3">
           <h4 class="font-semibold text-gray-900 text-sm">รายการอุปกรณ์ <span class="text-gray-400 font-normal">(${filtered.length}/${EQ.length})</span></h4>
-          <button onclick="showAddEquipment()" class="flex items-center gap-1.5 px-3 py-1.5 bg-brand text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition shadow-sm">
+          <button onclick="showAddEquipment()" class="flex items-center gap-1.5 px-3 py-1.5 text-white text-xs font-semibold rounded-lg transition shadow-sm" style="background:#f97316;color:white;">
             <i data-lucide="plus" class="w-3.5 h-3.5"></i> เพิ่มอุปกรณ์</button>
         </div>
         <div class="flex flex-col sm:flex-row gap-2 mb-4">
@@ -2582,11 +2568,11 @@
       document.getElementById('detail-borrow-date').textContent = fd(r.borrowed_at);
       document.getElementById('detail-due-date').textContent = fd(r.due_date);
       const statusMap = {
-        borrowed: { label: 'กำลังยืม',  cls: 'bg-amber-500/20 text-amber-400' },
-        overdue:  { label: 'เกินกำหนด', cls: 'bg-red-500/20 text-red-400' },
-        returned: { label: 'คืนแล้ว',   cls: 'bg-emerald-500/20 text-emerald-400' },
+        borrowed: { label: 'กำลังยืม',  cls: 'bg-amber-100 text-amber-700' },
+        overdue:  { label: 'เกินกำหนด', cls: 'bg-red-100 text-red-700' },
+        returned: { label: 'คืนแล้ว',   cls: 'bg-emerald-100 text-emerald-700' },
       };
-      const s = statusMap[r.status] || { label: r.status, cls: 'bg-white/10 text-white' };
+      const s = statusMap[r.status] || { label: r.status, cls: 'bg-stone-100 text-stone-700' };
       const badge = document.getElementById('detail-status-badge');
       badge.textContent = s.label; badge.className = `shrink-0 px-3 py-1 rounded-full text-xs font-bold ${s.cls}`;
       // Borrow note
@@ -2628,67 +2614,70 @@
   <!-- Record Detail Modal -->
   <div id="record-detail-modal" class="hidden fixed inset-0 z-[300] flex items-center justify-center">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeRecordDetail()"></div>
-    <div class="relative bg-slate-800 border border-white/10 rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+    <div class="relative bg-white border border-stone-200 rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto text-[#1c1917]">
       <!-- Header -->
-      <div class="sticky top-0 bg-slate-800 border-b border-white/10 px-6 py-4 flex items-center justify-between">
-        <h3 class="font-bold text-white text-lg">รายละเอียดการยืม</h3>
-        <button onclick="closeRecordDetail()" class="text-slate-400 hover:text-white text-xl leading-none">✕</button>
+      <div class="sticky top-0 border-b border-orange-200 px-6 py-4 flex items-center justify-between overflow-hidden" style="background:linear-gradient(145deg, #f97316, #ea580c);">
+        <svg viewBox="0 0 400 24" preserveAspectRatio="none" class="absolute bottom-0 left-0 w-full h-6 pointer-events-none">
+          <path d="M0,12 Q100,24 200,12 Q300,0 400,12 L400,24 L0,24 Z" fill="rgba(255,255,255,0.25)"></path>
+        </svg>
+        <h3 class="font-bold text-white text-lg relative z-10">รายละเอียดการยืม</h3>
+        <button onclick="closeRecordDetail()" class="text-white/80 hover:text-white text-xl leading-none relative z-10">✕</button>
       </div>
       <div class="p-6 space-y-5">
         <!-- Equipment + Status -->
         <div class="flex items-center justify-between gap-3">
           <div class="flex items-center gap-3 min-w-0">
             <div class="shrink-0">
-              <img id="detail-equipment-image" src="" alt="" class="w-14 h-14 object-cover rounded-xl border border-white/10 hidden"/>
-              <div id="detail-equipment-placeholder" class="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center text-2xl">📦</div>
+              <img id="detail-equipment-image" src="" alt="" class="w-14 h-14 object-cover rounded-xl border border-stone-200 hidden"/>
+              <div id="detail-equipment-placeholder" class="w-14 h-14 rounded-xl bg-stone-100 flex items-center justify-center text-2xl">📦</div>
             </div>
-            <span id="detail-equipment-name" class="text-white font-bold text-xl leading-tight"></span>
+            <span id="detail-equipment-name" class="font-bold text-xl leading-tight text-[#1c1917]"></span>
           </div>
           <span id="detail-status-badge" class="shrink-0 px-3 py-1 rounded-full text-xs font-bold"></span>
         </div>
         <!-- Basic Info -->
-        <div class="bg-white/5 rounded-xl p-4 space-y-3">
-          <h4 class="text-amber-400 font-semibold text-sm">ข้อมูลการยืม</h4>
+        <div class="rounded-xl p-4 space-y-3" style="background:#f9f8f7;">
+          <h4 class="text-[#f97316] font-semibold text-sm">ข้อมูลการยืม</h4>
           <div class="grid grid-cols-2 gap-3 text-sm">
-            <div><p class="text-slate-400">ผู้ยืม</p><p id="detail-borrower-name" class="text-white font-medium"></p></div>
-            <div><p class="text-slate-400">รหัสพนักงาน</p><p id="detail-borrower-dept" class="text-white font-medium"></p></div>
-            <div><p class="text-slate-400">จำนวน</p><p id="detail-qty" class="text-white font-medium"></p></div>
-            <div><p class="text-slate-400">GA ที่รับผิดชอบ</p><p id="detail-ga-name" class="text-white font-medium"></p></div>
-            <div><p class="text-slate-400">วันที่ยืม</p><p id="detail-borrow-date" class="text-white font-medium"></p></div>
-            <div><p class="text-slate-400">กำหนดคืน</p><p id="detail-due-date" class="text-white font-medium"></p></div>
+            <div><p class="text-stone-500">ผู้ยืม</p><p id="detail-borrower-name" class="font-medium text-[#1c1917]"></p></div>
+            <div><p class="text-stone-500">รหัสพนักงาน</p><p id="detail-borrower-dept" class="font-medium text-[#1c1917]"></p></div>
+            <div><p class="text-stone-500">จำนวน</p><p id="detail-qty" class="font-medium text-[#1c1917]"></p></div>
+            <div><p class="text-stone-500">GA ที่รับผิดชอบ</p><p id="detail-ga-name" class="font-medium text-[#1c1917]"></p></div>
+            <div><p class="text-stone-500">วันที่ยืม</p><p id="detail-borrow-date" class="font-medium text-[#1c1917]"></p></div>
+            <div><p class="text-stone-500">กำหนดคืน</p><p id="detail-due-date" class="font-medium text-[#1c1917]"></p></div>
           </div>
-          <div id="detail-note-section" class="hidden pt-1 border-t border-white/10">
-            <p class="text-slate-400 text-sm">หมายเหตุ</p>
-            <p id="detail-note" class="text-white text-sm mt-1"></p>
+          <div id="detail-note-section" class="hidden pt-1 border-t border-stone-200">
+            <p class="text-stone-500 text-sm">หมายเหตุ</p>
+            <p id="detail-note" class="text-[#1c1917] text-sm mt-1"></p>
           </div>
         </div>
         <!-- Borrow Signature -->
-        <div id="detail-signature-section" class="bg-white/5 rounded-xl p-4">
-          <h4 class="text-amber-400 font-semibold text-sm mb-3">ลายเซ็นผู้ยืม</h4>
+        <div id="detail-signature-section" class="rounded-xl p-4" style="background:#f9f8f7;">
+          <h4 class="text-[#f97316] font-semibold text-sm mb-3">ลายเซ็นผู้ยืม</h4>
           <img id="detail-signature" src="" alt="ลายเซ็น" class="bg-white rounded-lg max-h-24 object-contain w-full"/>
-          <p class="text-xs text-slate-400 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้รับอุปกรณ์ตามรายการข้างต้นในสภาพสมบูรณ์</p>
+          <p class="text-xs text-stone-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้รับอุปกรณ์ตามรายการข้างต้นในสภาพสมบูรณ์</p>
         </div>
         <!-- Return Info -->
-        <div id="detail-return-section" class="hidden bg-white/5 rounded-xl p-4 space-y-3">
-          <h4 class="text-emerald-400 font-semibold text-sm">ข้อมูลการคืน</h4>
+        <div id="detail-return-section" class="hidden rounded-xl p-4 space-y-3" style="background:#f9f8f7;">
+          <h4 class="text-[#f97316] font-semibold text-sm">ข้อมูลการคืน</h4>
           <div class="grid grid-cols-2 gap-3 text-sm">
-            <div><p class="text-slate-400">วันที่คืน</p><p id="detail-return-date" class="text-white font-medium"></p></div>
-            <div><p class="text-slate-400">สภาพตอนคืน</p><p id="detail-condition" class="text-white font-medium"></p></div>
+            <div><p class="text-stone-500">วันที่คืน</p><p id="detail-return-date" class="text-[#1c1917] font-medium"></p></div>
+            <div><p class="text-stone-500">สภาพตอนคืน</p><p id="detail-condition" class="text-[#1c1917] font-medium"></p></div>
           </div>
-          <div id="detail-condition-note-section" class="hidden pt-1 border-t border-white/10">
-            <p class="text-slate-400 text-sm">หมายเหตุสภาพ</p>
-            <p id="detail-condition-note" class="text-white text-sm mt-1"></p>
+          <div id="detail-condition-note-section" class="hidden pt-1 border-t border-stone-200">
+            <p class="text-stone-500 text-sm">หมายเหตุสภาพ</p>
+            <p id="detail-condition-note" class="text-[#1c1917] text-sm mt-1"></p>
           </div>
         </div>
         <!-- Return Signature -->
-        <div id="detail-return-sign-section" class="hidden bg-white/5 rounded-xl p-4">
-          <h4 class="text-emerald-400 font-semibold text-sm mb-3">ลายเซ็นยืนยันคืน</h4>
+        <div id="detail-return-sign-section" class="hidden rounded-xl p-4" style="background:#f9f8f7;">
+          <h4 class="text-[#f97316] font-semibold text-sm mb-3">ลายเซ็นยืนยันคืน</h4>
           <img id="detail-return-signature" src="" alt="ลายเซ็นคืน" class="bg-white rounded-lg max-h-24 object-contain w-full"/>
-          <p class="text-xs text-slate-400 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้คืนอุปกรณ์ตามรายการข้างต้นเรียบร้อยแล้ว</p>
+          <p class="text-xs text-stone-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้คืนอุปกรณ์ตามรายการข้างต้นเรียบร้อยแล้ว</p>
         </div>
         <!-- Timeline -->
-        <div class="bg-white/5 rounded-xl p-4">
-          <h4 class="text-amber-400 font-semibold text-sm mb-4">ประวัติการดำเนินการ</h4>
+        <div class="rounded-xl p-4" style="background:#f9f8f7;">
+          <h4 class="text-[#f97316] font-semibold text-sm mb-4">ประวัติการดำเนินการ</h4>
           <div id="detail-timeline" class="space-y-3"></div>
         </div>
       </div>
