@@ -37,7 +37,7 @@
       /* Page */
       --bg-page:   #F4F7FC;
       --bg-card:   #ffffff;
-      --bg-input:  #ffffff;
+      --bg-input:  #f8fafc;
       /* Text */
       --text-primary:   #0F172A;
       --text-secondary: #64748B;
@@ -355,20 +355,17 @@
     }
 
     /* ── Login ────────────────────────────────────────── */
-    .login-shell {
-      min-height: 100%;
-      background: linear-gradient(180deg, #fff7ed 0%, var(--bg-page) 52%);
-    }
+    .login-shell { min-height: 100%; background: linear-gradient(180deg, #f8fbff 0%, var(--bg-page) 56%); }
     .login-wave-card { background: var(--bg-page); }
     .user-card {
       border: 1px solid var(--border); border-radius: 16px;
       background: #fff; cursor: pointer;
       transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
     }
-    .user-card:hover  { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(28,25,23,0.08); border-color: var(--orange-border); }
+    .user-card:hover  { transform: translateY(-1px); box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08); border-color: rgba(249, 115, 22, 0.32); background: rgba(255,255,255,0.96); }
     .user-card:active { transform: scale(0.98); }
-    .user-card.selected { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(249,115,22,0.14); }
-    .admin-card { border-color: var(--orange-border); background: var(--orange-light); }
+    .user-card.selected { border-color: rgba(249, 115, 22, 0.62); box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.12), 0 12px 24px rgba(194, 65, 12, 0.1); }
+    .admin-card { border-color: rgba(148, 163, 184, 0.3); background: linear-gradient(120deg, rgba(241, 245, 249, 0.8), rgba(248, 250, 252, 0.95)); }
 
     /* ── Top tabs (desktop) ───────────────────────────── */
     .top-tabs {
@@ -383,7 +380,7 @@
       cursor: pointer; transition: all 150ms ease;
       font-family: 'Noto Sans Thai', 'Inter', sans-serif;
     }
-    .top-tab.active { color: var(--orange-dark); border-color: var(--orange-border); background: var(--orange-light); }
+    .top-tab.active { color: #0f172a; border-color: #ffedd5; background: linear-gradient(160deg, #ffffff 0%, #fff8f1 100%); box-shadow: 0 8px 18px rgba(249, 115, 22, 0.14); }
 
     /* ── In-header tab bar (compat) ───────────────────── */
     #mainTabBar, #mainTabBar-desktop {
@@ -397,6 +394,8 @@
     #mainTabBar-desktop::-webkit-scrollbar { display: none; }
 
     .main-tab { white-space: nowrap; cursor: pointer; font-family: 'Noto Sans Thai', 'Inter', sans-serif; }
+    #mainTabBar .main-tab { letter-spacing: .01em; border-radius: 12px; transition: all .2s ease; }
+    #mainTabBar .main-tab:hover { color: #9a3412; background: rgba(255, 255, 255, .8); }
     /* Mobile pill inside header */
     .tab-active {
       color: #0f172a;
@@ -444,6 +443,8 @@
       .top-tabs   { display: none !important; }
       #screen-main { padding-bottom: 84px; }
     }
+
+    #screen-main .gd-header > svg { display: none; }
   </style>
 </head>
 
@@ -495,7 +496,7 @@
                 <div id="gaUserList" class="space-y-2"></div>
               </div>
               <!-- Manager list -->
-              <div style="background:var(--orange-light);border:1px solid var(--orange-border);border-radius:12px;padding:14px;">
+              <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;">
                 <p class="gd-section-title mb-3 flex items-center gap-1.5">
                   <i data-lucide="shield" style="width:12px;height:12px;"></i>Admin access
                 </p>
@@ -566,7 +567,7 @@
       <!-- MAIN -->
       <div id="screen-main" class="screen">
         <!-- App header: orange gradient + wave -->
-        <div class="gd-header" style="position:sticky;top:0;z-index:20;padding:20px 20px 52px;">
+        <div class="gd-header" style="position:sticky;top:0;z-index:20;padding:24px 16px 16px;">
           <!-- Avatar + name + role + buttons -->
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
             <div style="display:flex;align-items:center;gap:12px;">
@@ -609,7 +610,7 @@
             </div>
           </div>
           <!-- Mobile tab bar inside header -->
-          <div id="mainTabBar" style="display:flex;overflow-x:auto;gap:4px;margin-top:12px;scrollbar-width:none;"></div>
+          <div id="mainTabBar" style="display:flex;overflow-x:auto;gap:8px;margin-top:12px;scrollbar-width:none;"></div>
           <!-- Desktop tab bar (underline style, shown below header) -->
           <div id="mainTabBar-desktop" style="display:none;"></div>
           <!-- Wave -->
@@ -958,7 +959,7 @@
       document.getElementById('confirm-cancel').onclick = close;
     }
     function skeletonCards(n) {
-      return Array(n).fill(0).map(()=>`<div class="gd-card p-4 mb-3"><div class="flex justify-between mb-2"><div><div class="h-3.5 skeleton rounded w-36 mb-1.5"></div><div class="h-3 skeleton rounded w-24"></div></div><div class="h-5 skeleton rounded-full w-14"></div></div></div>`).join('');
+      return Array(n).fill(0).map(()=>`<div class="gd-card p-5 mb-3"><div class="flex justify-between mb-2"><div><div class="h-3.5 skeleton rounded w-36 mb-1.5"></div><div class="h-3 skeleton rounded w-24"></div></div><div class="h-5 skeleton rounded-full w-14"></div></div></div>`).join('');
     }
 
     // ===== CACHE =====
@@ -1567,7 +1568,7 @@
           ${cats.map(c=>`<div class="chip ${borrowCatFilter===c?'active':''}" onclick="borrowCatFilter='${he(c)}';renderBorrowTab()">${he(c)}</div>`).join('')}
         </div>
         <div class="space-y-3" id="eqGrid">
-          ${filtered.length ? filtered.map(e=>`<div class="gd-card p-4 cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
+          ${filtered.length ? filtered.map(e=>`<div class="gd-card p-5 cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
             <div class="flex items-start gap-3 mb-2">
               ${e.image_url ? `<img src="${he(e.image_url)}" class="w-12 h-12 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-xl shrink-0">📦</div>`}
               <div class="flex-1 min-w-0">
@@ -1595,7 +1596,7 @@
       const defaultDue = new Date(); defaultDue.setDate(defaultDue.getDate()+7);
       const dueStr = defaultDue.toISOString().slice(0,10);
       document.getElementById('bf-body').innerHTML = `
-        <div class="gd-card p-4 mb-4">
+        <div class="gd-card p-5 mb-4">
           <div class="flex items-center gap-3 mb-1">
             ${eq.image_url ? `<img src="${he(eq.image_url)}" class="w-10 h-10 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style="background:var(--orange-light);"><i data-lucide="box" style="width:20px;height:20px;color:var(--orange);"></i></div>`}
             <div><p class="font-semibold text-gray-900">${he(eq.name)}</p>
@@ -1686,7 +1687,7 @@
           ${active.length ? active.map(r=>{
             const days = daysUntil(r.due_date);
             const isOD = r.status==='overdue';
-            return `<div class="gd-card p-4 cursor-pointer ${isOD?'border-red-200 bg-red-50/30':''}" onclick="openReturnDetail('${he(r.record_id)}')">
+            return `<div class="gd-card p-5 cursor-pointer ${isOD?'border-red-200 bg-red-50/30':''}" onclick="openReturnDetail('${he(r.record_id)}')">
               <div class="flex items-start justify-between mb-2">
                 <div><p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
                 <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)}</p></div>
@@ -1726,7 +1727,7 @@
       const isOD = rec.status === 'overdue';
       document.getElementById('rd-badge').innerHTML = statusBadge(rec.status);
       document.getElementById('rd-body').innerHTML = `
-        <div class="gd-card p-4 mb-4">
+        <div class="gd-card p-5 mb-4">
           <h4 class="font-semibold text-gray-900 text-sm mb-3 flex items-center gap-2"><i data-lucide="clipboard-list" style="width:16px;height:16px;color:var(--orange);"></i> รายละเอียด</h4>
           <div class="space-y-2 text-sm">
             <div class="flex justify-between"><span class="text-gray-400">อุปกรณ์</span><span class="font-medium">${he(rec.eq_name)}</span></div>
@@ -1739,7 +1740,7 @@
           </div>
           ${rec.sign_img?`<div class="mt-3 pt-3 border-t border-gray-100"><p class="text-xs text-gray-400 mb-2">ลายเซ็นตอนยืม</p><img src="${rec.sign_img}" class="w-full h-20 object-contain bg-white rounded-lg border border-gray-200 p-1"></div>`:''}
         </div>
-        <div class="gd-card p-4 mb-4">
+        <div class="gd-card p-5 mb-4">
           <h4 class="font-semibold text-gray-900 text-sm mb-3 flex items-center gap-2"><i data-lucide="clipboard-check" style="width:16px;height:16px;color:var(--orange);"></i> สภาพอุปกรณ์เมื่อคืน</h4>
           <div class="flex gap-2 mb-3">
             <button id="rc-normal" onclick="setReturnCondition('normal')"
@@ -1835,7 +1836,7 @@
           <div class="chip ${historyFilter==='returned'?'active':''}" onclick="historyFilter='returned';renderHistoryTab()">คืนแล้ว</div>
         </div>
         <div class="space-y-3">
-          ${list.length ? list.map(r=>`<div class="gd-card p-4">
+          ${list.length ? list.map(r=>`<div class="gd-card p-5">
             <div class="flex items-start justify-between mb-1">
               <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
               <div class="flex items-center gap-1.5">${conditionBadge(r.condition_on_return)}${statusBadge(r.status)}</div>
@@ -1978,7 +1979,7 @@
           <div class="chip ${historyFilter==='returned'?'active':''}" onclick="historyFilter='returned';renderMgrHistory()">คืนแล้ว</div>
         </div>
         <div class="space-y-3">
-          ${list.length ? list.map(r=>`<div class="gd-card p-4">
+          ${list.length ? list.map(r=>`<div class="gd-card p-5">
             <div class="flex items-start justify-between mb-1">
               <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
               <div class="flex items-center gap-1.5">${conditionBadge(r.condition_on_return)}${statusBadge(r.status)}</div>
@@ -2032,7 +2033,7 @@
             <span class="text-4xl mb-3">${EQ.length === 0 ? '📦' : '🔍'}</span>
             <p class="text-sm">${EQ.length === 0 ? "ยังไม่มีอุปกรณ์ กด '+ เพิ่มอุปกรณ์' เพื่อเริ่มต้น" : 'ไม่พบอุปกรณ์ที่ตรงกับการค้นหา'}</p>
           </div>` :
-          filtered.map(e=>`<div class="gd-card p-4">
+          filtered.map(e=>`<div class="gd-card p-5">
             <div class="flex items-start justify-between mb-2">
               <div class="flex items-start gap-3 flex-1 min-w-0 pr-2">
                 ${e.image_url ? `<img src="${he(e.image_url)}" class="w-10 h-10 object-cover rounded-lg border border-gray-200 shrink-0"/>` : `<div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-lg shrink-0">📦</div>`}
@@ -2054,7 +2055,7 @@
         </div>
 
         <!-- ===== CATEGORY MANAGEMENT ===== -->
-        <div class="gd-card p-4">
+        <div class="gd-card p-5">
           <div class="flex items-center justify-between mb-3">
             <h4 class="font-semibold text-gray-900 text-sm">หมวดหมู่</h4>
             ${_addCatMode ? '' : `<button onclick="showAddCatInput()" class="gd-btn-secondary flex items-center gap-1 !w-auto !py-1.5 !px-2.5 text-xs font-semibold">
@@ -2238,7 +2239,7 @@
             if(!all.length) return `<div class="flex flex-col items-center justify-center py-16 text-slate-500"><span class="text-4xl mb-3">👥</span><p class="text-sm">ยังไม่มีสมาชิก</p></div>`;
             return all.map((u,i)=>{
               const a = avc(u.type==='ga'?i:i+4);
-              return `<div class="gd-card p-3 flex items-center justify-between fade-in">
+              return `<div class="gd-card p-4 flex items-center justify-between fade-in">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-full ${a.bg} ${a.tc} flex items-center justify-center font-bold text-sm">${he(ini(u.name))}</div>
                   <div><p class="font-medium text-gray-900 text-sm">${he(u.name)}</p>
@@ -2343,7 +2344,7 @@
         el.innerHTML = `<p class="text-xs text-gray-400 text-center py-3">ยังไม่มีผู้รับรายงาน</p>`;
         return;
       }
-      el.innerHTML = RECIPIENTS.map(r => `<div class="gd-card p-3 flex items-center justify-between">
+      el.innerHTML = RECIPIENTS.map(r => `<div class="gd-card p-4 flex items-center justify-between">
         <div class="flex items-center gap-2.5 min-w-0 flex-1 pr-2">
           <span class="text-base shrink-0">${r.is_active ? '✅' : '⬜'}</span>
           <div class="min-w-0">
@@ -2484,7 +2485,7 @@
           ${filterTypes.map(t=>`<div class="chip ${auditFilter===t?'active':''}" onclick="auditFilter='${t}';_renderAuditList()">${AUDIT_TYPE_META[t]?.label||t}</div>`).join('')}
         </div>
         <div class="space-y-2">
-          ${filtered.length ? filtered.map(r=>`<div class="gd-card p-3.5">
+          ${filtered.length ? filtered.map(r=>`<div class="gd-card p-5">
             <div class="flex items-start justify-between gap-2 mb-1">
               ${auditTypeBadge(r.action_type)}
               <span class="text-[11px] text-gray-400 shrink-0">${fdFull(r.created_at)}</span>
