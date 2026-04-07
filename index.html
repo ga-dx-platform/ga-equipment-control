@@ -764,22 +764,22 @@
     <div class="absolute inset-0 bg-black/40" onclick="closeChangePinModal()"></div>
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:340px;">
       <div class="flex flex-col items-center text-center mb-4">
-        <div class="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center mb-3">
-          <i data-lucide="key-round" class="w-6 h-6 text-brand"></i>
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--orange-light);border:1px solid var(--orange-border);display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
+          <i data-lucide="key-round" style="width:20px;height:20px;color:var(--orange);"></i>
         </div>
-        <p class="font-semibold text-gray-900 text-base">เปลี่ยน PIN</p>
-        <p id="cp-step-label" class="text-sm text-gray-500 mt-1">กรอก PIN เดิม</p>
+        <p style="font-size:16px;font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Sarabun',sans-serif;">เปลี่ยน PIN</p>
+        <p id="cp-step-label" style="font-size:13px;color:var(--text-secondary);margin:0;font-family:'Sarabun',sans-serif;">กรอก PIN เดิม</p>
       </div>
-      <div class="flex justify-center gap-2 mb-5">
-        <div id="cp-si-0" class="w-2 h-2 rounded-full bg-brand"></div>
-        <div id="cp-si-1" class="w-2 h-2 rounded-full bg-slate-200"></div>
-        <div id="cp-si-2" class="w-2 h-2 rounded-full bg-slate-200"></div>
+      <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px;">
+        <div id="cp-si-0" style="width:8px;height:8px;border-radius:50%;background:var(--orange);"></div>
+        <div id="cp-si-1" style="width:8px;height:8px;border-radius:50%;background:var(--border);"></div>
+        <div id="cp-si-2" style="width:8px;height:8px;border-radius:50%;background:var(--border);"></div>
       </div>
-      <div class="flex justify-center gap-3 mb-3" id="cp-pin-dots">
+      <div class="pin-dots-dark" style="display:flex;justify-content:center;gap:12px;margin-bottom:10px;" id="cp-pin-dots">
         <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
         <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
       </div>
-      <div id="cp-error" class="text-red-500 text-sm text-center mb-3 h-5 font-medium"></div>
+      <div id="cp-error" style="height:20px;text-align:center;font-size:13px;color:#ef4444;margin-bottom:12px;font-family:'Sarabun',sans-serif;"></div>
       <div class="grid grid-cols-3 gap-3 mb-4">
         <div class="numpad-key" onclick="cpEnterPin('1')">1</div>
         <div class="numpad-key" onclick="cpEnterPin('2')">2</div>
