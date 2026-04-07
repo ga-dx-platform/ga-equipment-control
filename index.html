@@ -530,34 +530,61 @@
 
       <!-- MAIN -->
       <div id="screen-main" class="screen">
-        <!-- Orange gradient header (avatar + buttons + mobile tab bar) -->
-        <div class="gd-header px-4 lg:px-8 pt-5 relative" style="position:sticky;top:0;z-index:20;">
-          <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center gap-3">
-              <div id="main-avatar" class="w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-sm"></div>
+        <!-- App header: orange gradient + wave -->
+        <div class="gd-header" style="position:sticky;top:0;z-index:20;padding:20px 20px 52px;">
+          <!-- Avatar + name + role + buttons -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <!-- Glass avatar -->
+              <div id="main-avatar"
+                   style="width:40px;height:40px;border-radius:50%;flex-shrink:0;
+                          background:rgba(255,255,255,0.25);backdrop-filter:blur(8px);
+                          border:1.5px solid rgba(255,255,255,0.4);
+                          display:flex;align-items:center;justify-content:center;
+                          font-size:14px;font-weight:600;color:#fff;font-family:'Sarabun',sans-serif;"></div>
               <div>
-                <p id="main-user-name" class="font-semibold text-white text-sm leading-tight"></p>
-                <p id="main-user-role" class="text-xs text-white/70">GA Staff</p>
+                <p id="main-user-name"
+                   style="font-size:15px;font-weight:600;color:#fff;margin:0 0 2px;font-family:'Sarabun',sans-serif;line-height:1.2;"></p>
+                <span id="main-user-role"
+                      style="display:inline-block;font-size:11px;color:#fff;
+                             background:rgba(255,255,255,0.2);backdrop-filter:blur(8px);
+                             border:1px solid rgba(255,255,255,0.3);
+                             border-radius:20px;padding:2px 10px;
+                             font-family:'Sarabun',sans-serif;">GA Staff</span>
               </div>
             </div>
-            <div class="flex items-center gap-1">
-              <button onclick="openChangePinModal()" class="p-2.5 rounded-xl hover:bg-white/20 transition" title="เปลี่ยน PIN">
-                <i data-lucide="key-round" class="w-4 h-4 text-white/80"></i>
+            <!-- Glass action buttons -->
+            <div style="display:flex;align-items:center;gap:6px;">
+              <button onclick="openChangePinModal()" title="เปลี่ยน PIN"
+                      style="display:flex;align-items:center;gap:6px;
+                             background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);
+                             border:1px solid rgba(255,255,255,0.3);color:#fff;
+                             border-radius:8px;padding:6px 12px;font-size:13px;
+                             font-family:'Sarabun',sans-serif;">
+                <i data-lucide="key-round" style="width:14px;height:14px;"></i>
               </button>
-              <button onclick="confirmLogout()" class="p-2.5 rounded-xl hover:bg-white/20 transition" title="ออกจากระบบ">
-                <i data-lucide="log-out" class="w-4 h-4 text-white/80"></i>
+              <button onclick="confirmLogout()" title="ออกจากระบบ"
+                      style="display:flex;align-items:center;gap:6px;
+                             background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);
+                             border:1px solid rgba(255,255,255,0.3);color:#fff;
+                             border-radius:8px;padding:6px 12px;font-size:13px;
+                             font-family:'Sarabun',sans-serif;">
+                <i data-lucide="log-out" style="width:14px;height:14px;"></i>
               </button>
             </div>
           </div>
-          <!-- Tab bar: pill-style on mobile (inside header), underline-style on desktop (below wave) -->
-          <div class="flex md:hidden gap-2 pb-3 px-1" id="mainTabBar" style="background:rgba(255,255,255,0.14);border-radius:14px;padding:6px;"></div>
-          <div class="hidden md:flex" id="mainTabBar-desktop" style="border-top:1px solid rgba(255,255,255,0.18);margin:0 -32px;padding:0 32px;"></div>
-          <!-- Wave below header (mobile only) -->
-          <svg class="md:hidden absolute bottom-0 left-0 w-full pointer-events-none" viewBox="0 0 390 32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:32px;margin-bottom:-1px;">
-            <path d="M0,16 C80,32 310,0 390,16 L390,32 L0,32 Z" fill="#fafaf9"/>
+          <!-- Mobile tab bar inside header -->
+          <div id="mainTabBar" style="display:flex;overflow-x:auto;gap:4px;margin-top:12px;scrollbar-width:none;"></div>
+          <!-- Desktop tab bar (underline style, shown below header) -->
+          <div id="mainTabBar-desktop" style="display:none;"></div>
+          <!-- Wave -->
+          <svg viewBox="0 0 400 48" preserveAspectRatio="none"
+               style="position:absolute;bottom:-1px;left:0;width:100%;height:48px;pointer-events:none;">
+            <path d="M0,24 Q100,48 200,24 Q300,0 400,24 L400,48 L0,48 Z" fill="#fafaf9"/>
           </svg>
-          <!-- No wave on desktop — tabs create natural separation -->
         </div>
+        <!-- Desktop top tabs (outside gradient, below wave) -->
+        <div class="top-tabs" id="top-tabs-bar"></div>
         <!-- Overdue Banner -->
         <div id="overdue-banner" class="hidden mx-4 mt-1 mb-0 rounded-xl px-4 py-3 flex items-center gap-3 bg-red-50 border border-red-200">
           <i data-lucide="alert-triangle" class="w-4 h-4 text-red-500 shrink-0"></i>
@@ -576,36 +603,39 @@
         <div id="tab-equipment" class="flex-1 overflow-auto hidden"></div>
         <div id="tab-members" class="flex-1 overflow-auto hidden"></div>
         <div id="tab-audit-log" class="flex-1 overflow-auto hidden"></div>
-        <nav class="bottom-nav" id="bottomNavBar"></nav>
       </div>
-      <!-- Mobile bottom nav (populated by JS) -->
+      <!-- Mobile bottom nav -->
       <div id="bottom-nav"></div>
 
       <!-- BORROW FORM (overlay) -->
-      <div id="screen-borrow-form" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--gd-surface);">
-        <div class="gd-header px-4 py-3 flex items-center gap-3" style="position:sticky;top:0;z-index:10;">
-          <button onclick="closeBorrowForm()" class="p-1.5 rounded-full hover:bg-white/20 transition">
-            <i data-lucide="arrow-left" class="w-5 h-5 text-white"></i>
+      <div id="screen-borrow-form" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--bg-page);">
+        <div class="gd-header" style="position:sticky;top:0;z-index:10;padding:14px 16px 16px;display:flex;align-items:center;gap:12px;">
+          <button onclick="closeBorrowForm()"
+                  style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.2);
+                         border:1px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;">
+            <i data-lucide="arrow-left" style="width:16px;height:16px;color:#fff;"></i>
           </button>
-          <div class="flex-1">
-            <p class="font-semibold text-white text-sm">ยืมอุปกรณ์</p>
-            <p id="bf-eq-name" class="text-xs text-white/70"></p>
+          <div style="flex:1;">
+            <p style="font-size:15px;font-weight:600;color:#fff;margin:0;font-family:'Sarabun',sans-serif;">ยืมอุปกรณ์</p>
+            <p id="bf-eq-name" style="font-size:12px;color:rgba(255,255,255,0.75);margin:0;font-family:'Sarabun',sans-serif;"></p>
           </div>
         </div>
         <div class="flex-1 overflow-auto px-4 pt-4 pb-6" id="bf-body"></div>
       </div>
 
       <!-- RETURN DETAIL (overlay) -->
-      <div id="screen-return-detail" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--gd-surface);">
-        <div class="gd-header px-4 py-3 flex items-center gap-3" style="position:sticky;top:0;z-index:10;">
-          <button onclick="closeReturnDetail()" class="p-1.5 rounded-full hover:bg-white/20 transition">
-            <i data-lucide="arrow-left" class="w-5 h-5 text-white"></i>
+      <div id="screen-return-detail" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--bg-page);">
+        <div class="gd-header" style="position:sticky;top:0;z-index:10;padding:14px 16px 16px;display:flex;align-items:center;gap:12px;">
+          <button onclick="closeReturnDetail()"
+                  style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.2);
+                         border:1px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;">
+            <i data-lucide="arrow-left" style="width:16px;height:16px;color:#fff;"></i>
           </button>
-          <div class="flex-1">
-            <p class="font-semibold text-white text-sm">คืนอุปกรณ์</p>
-            <p id="rd-eq-name" class="text-xs text-white/70"></p>
+          <div style="flex:1;">
+            <p style="font-size:15px;font-weight:600;color:#fff;margin:0;font-family:'Sarabun',sans-serif;">คืนอุปกรณ์</p>
+            <p id="rd-eq-name" style="font-size:12px;color:rgba(255,255,255,0.75);margin:0;font-family:'Sarabun',sans-serif;"></p>
           </div>
-          <span id="rd-badge" class="text-xs px-2.5 py-1 rounded-full font-medium"></span>
+          <span id="rd-badge" style="font-size:11px;padding:3px 10px;border-radius:20px;font-family:'Sarabun',sans-serif;"></span>
         </div>
         <div class="flex-1 overflow-auto px-4 pt-4 pb-6" id="rd-body"></div>
       </div>
@@ -1405,7 +1435,7 @@
     function buildMain() {
       const isMgr = CU.role === 'mgr';
       const av = document.getElementById('main-avatar');
-      av.className = `w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-sm`;
+      av.style.cssText = 'width:40px;height:40px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,0.25);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#fff;font-family:\'Sarabun\',sans-serif;';
       av.textContent = ini(CU.name);
       document.getElementById('main-user-name').textContent = CU.name;
       document.getElementById('main-user-role').textContent = isMgr ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่ GA';
@@ -1413,23 +1443,25 @@
       const barDesktop = document.getElementById('mainTabBar-desktop');
       const oc = BORROWS.filter(r => r.status === 'overdue').length;
       const badge = oc > 0 ? `<span class="ml-1 inline-flex items-center justify-center min-w-[16px] h-4 px-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">${oc > 9 ? '9+' : oc}</span>` : '';
+      const topBar = document.getElementById('top-tabs-bar');
       if (isMgr) {
         const tabs = ['ภาพรวม','ประวัติ','อุปกรณ์','สมาชิก','Audit'];
         const icons = ['layout-dashboard','history','box','users','clipboard-list'];
         bar.innerHTML = tabs.map((t,i)=>
-          `<button class="main-tab shrink-0 px-3 py-2 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
-        barDesktop.innerHTML = tabs.map((t,i)=>
-          `<button class="main-tab shrink-0 px-5 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
+          `<button class="main-tab ${i===0?'tab-active':'tab-inactive'}" style="flex:1;padding:7px 4px;font-size:11px;font-weight:600;text-align:center;border-radius:9px;" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
+        if (topBar) topBar.innerHTML = tabs.map((t,i)=>
+          `<button class="top-tab ${i===0?'active':''}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
         const bn = document.getElementById('bottom-nav');
         if (bn) bn.innerHTML = tabs.map((t,i)=>
           `<div class="bn-item ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${icons[i]}" style="width:20px;height:20px;"></i><span class="bn-label">${t}${i===0?badge:''}</span></div>`).join('');
       } else {
         const tabs = ['ยืม','คืน','ประวัติ'];
+        const fullTabs = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ'];
         const icons = ['package-plus','package-check','history'];
         bar.innerHTML = tabs.map((t,i)=>
-          `<button class="main-tab flex-1 px-3 py-2 text-center text-xs font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
-        barDesktop.innerHTML = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ'].map((t,i)=>
-          `<button class="main-tab px-5 py-2.5 text-center text-sm font-semibold ${i===0?'tab-active':'tab-inactive'}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
+          `<button class="main-tab ${i===0?'tab-active':'tab-inactive'}" style="flex:1;padding:7px 4px;font-size:11px;font-weight:600;text-align:center;border-radius:9px;" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
+        if (topBar) topBar.innerHTML = fullTabs.map((t,i)=>
+          `<button class="top-tab ${i===0?'active':''}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
         const bn = document.getElementById('bottom-nav');
         if (bn) bn.innerHTML = tabs.map((t,i)=>
           `<div class="bn-item ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${icons[i]}" style="width:20px;height:20px;"></i><span class="bn-label">${t}${i===1?badge:''}</span></div>`).join('');
@@ -1457,9 +1489,9 @@
       const mgrDesktopCls = 'main-tab shrink-0 px-5 py-2.5 text-center text-sm font-semibold';
       const gaMobileCls = 'main-tab flex-1 px-3 py-2 text-center text-xs font-semibold';
       const gaDesktopCls = 'main-tab px-5 py-2.5 text-center text-sm font-semibold';
-      document.querySelectorAll('#mainTabBar .main-tab').forEach((b,i)=> b.className = `${isMgr?mgrMobileCls:gaMobileCls} ${i===idx?'tab-active':'tab-inactive'}`);
-      document.querySelectorAll('#mainTabBar-desktop .main-tab').forEach((b,i)=> b.className = `${isMgr?mgrDesktopCls:gaDesktopCls} ${i===idx?'tab-active':'tab-inactive'}`);
-      document.querySelectorAll('#bottom-nav .bn-item').forEach((b,i)=> { b.classList.toggle('active', i===idx); b.classList.toggle('', i!==idx); });
+      document.querySelectorAll('#mainTabBar .main-tab').forEach((b,i)=> { b.classList.toggle('tab-active',i===idx); b.classList.toggle('tab-inactive',i!==idx); });
+      document.querySelectorAll('#top-tabs-bar .top-tab').forEach((b,i)=> b.classList.toggle('active',i===idx));
+      document.querySelectorAll('#bottom-nav .bn-item').forEach((b,i)=> b.classList.toggle('active',i===idx));
       ['borrow','return','history','dashboard','mgr-history','equipment','members','audit-log'].forEach(t=> { const el=document.getElementById('tab-'+t); if(el) el.style.display='none'; });
       if (isMgr) {
         if(idx===0){ document.getElementById('tab-dashboard').style.display='block'; renderDashboard(); }
