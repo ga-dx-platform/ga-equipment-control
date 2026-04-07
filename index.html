@@ -61,9 +61,9 @@
       --gd-border:       #E2E8F0;
       --gd-radius-card:  24px;
       --gd-radius-control: 10px;
-      --gd-shadow-sm: 0 4px 12px rgba(15,23,42,0.05);
-      --gd-shadow-md: 0 10px 30px rgba(15,23,42,0.08);
-      --gd-shadow-hover: 0 15px 40px rgba(15,23,42,0.12);
+      --gd-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 20px rgba(15, 23, 42, 0.05);
+      --gd-shadow-md: 0 6px 18px rgba(15, 23, 42, 0.07), 0 14px 34px rgba(15, 23, 42, 0.08);
+      --gd-shadow-hover: 0 10px 26px rgba(15, 23, 42, 0.09), 0 22px 44px rgba(15, 23, 42, 0.08);
     }
 
     /* ── Base ─────────────────────────────────────────── */
@@ -121,11 +121,14 @@
       box-shadow: var(--gd-shadow-sm);
       transition: box-shadow 150ms ease, transform 150ms ease, border-color 150ms ease;
     }
+    .gd-card > :first-child { margin-top: 2px; }
     .gd-card:hover {
-      box-shadow: 0 20px 36px rgba(194, 65, 12, 0.14), 0 4px 14px rgba(249, 115, 22, 0.1);
+      box-shadow: 0 10px 26px rgba(194, 65, 12, 0.12), 0 20px 42px rgba(15, 23, 42, 0.08);
       border-color: rgba(249, 115, 22, 0.38);
       transform: translateY(-2px);
     }
+    .gd-card .text-gray-400,
+    .gd-card .text-slate-400 { color: #9CA3AF !important; }
     .gd-card-soft {
       background: #F8FAFC;
       border: 1px solid #E2E8F0;
