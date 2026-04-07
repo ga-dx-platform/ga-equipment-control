@@ -200,7 +200,7 @@
       background: var(--bg-input);
       border: 1px solid var(--border);
       border-radius: var(--gd-radius-control);
-      padding: 11px 14px;
+      padding: 0 14px;
       font-size: 14px; color: var(--text-primary);
       width: 100%;
       height: 44px;
@@ -215,7 +215,7 @@
     /* compat alias */
     .gd-input {
       background: var(--bg-input); border: 1px solid var(--border);
-      border-radius: var(--gd-radius-control); padding: 11px 14px; font-size: 14px;
+      border-radius: var(--gd-radius-control); padding: 0 14px; font-size: 14px;
       color: var(--text-primary); width: 100%; height: 44px;
       font-family: 'Noto Sans Thai', 'Inter', sans-serif;
     }
@@ -230,8 +230,11 @@
 
     /* ── Section title ────────────────────────────────── */
     .gd-section-title {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
-      text-transform: uppercase; color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
     }
 
     /* ── Status badges ────────────────────────────────── */
@@ -595,18 +598,18 @@
             <!-- Glass action buttons -->
             <div style="display:flex;align-items:center;gap:6px;">
               <button onclick="openChangePinModal()" title="เปลี่ยน PIN"
-                      style="display:flex;align-items:center;gap:6px;
+                      style="display:flex;align-items:center;justify-content:center;
                              background:#fff;
                              border:1px solid #e2e8f0;color:#475569;
-                             border-radius:8px;padding:6px 12px;font-size:13px;
+                             border-radius:12px;width:36px;height:36px;padding:0;font-size:13px;
                              font-family:'Noto Sans Thai','Inter',sans-serif;">
                 <i data-lucide="key-round" style="width:14px;height:14px;"></i>
               </button>
               <button onclick="confirmLogout()" title="ออกจากระบบ"
-                      style="display:flex;align-items:center;gap:6px;
+                      style="display:flex;align-items:center;justify-content:center;
                              background:#fff;
                              border:1px solid #e2e8f0;color:#475569;
-                             border-radius:8px;padding:6px 12px;font-size:13px;
+                             border-radius:12px;width:36px;height:36px;padding:0;font-size:13px;
                              font-family:'Noto Sans Thai','Inter',sans-serif;">
                 <i data-lucide="log-out" style="width:14px;height:14px;"></i>
               </button>
@@ -1487,7 +1490,7 @@
         const tabs = ['ภาพรวม','ประวัติ','อุปกรณ์','สมาชิก','Audit'];
         const icons = ['layout-dashboard','history','box','users','clipboard-list'];
         bar.innerHTML = tabs.map((t,i)=>
-          `<button class="main-tab ${i===0?'tab-active':'tab-inactive'}" style="flex:1;padding:7px 4px;font-size:11px;font-weight:600;text-align:center;border-radius:9px;" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
+          `<button class="main-tab ${i===0?'tab-active':'tab-inactive'}" style="flex:1;padding:10px 12px;font-size:14px;font-weight:600;text-align:center;" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
         if (topBar) topBar.innerHTML = tabs.map((t,i)=>
           `<button class="top-tab ${i===0?'active':''}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
         const bn = document.getElementById('bottom-nav');
@@ -1498,7 +1501,7 @@
         const fullTabs = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ'];
         const icons = ['package-plus','package-check','history'];
         bar.innerHTML = tabs.map((t,i)=>
-          `<button class="main-tab ${i===0?'tab-active':'tab-inactive'}" style="flex:1;padding:7px 4px;font-size:11px;font-weight:600;text-align:center;border-radius:9px;" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
+          `<button class="main-tab ${i===0?'tab-active':'tab-inactive'}" style="flex:1;padding:10px 12px;font-size:14px;font-weight:600;text-align:center;" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
         if (topBar) topBar.innerHTML = fullTabs.map((t,i)=>
           `<button class="top-tab ${i===0?'active':''}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
         const bn = document.getElementById('bottom-nav');
