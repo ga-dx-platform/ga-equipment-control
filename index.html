@@ -5,6 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GA Equipment Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -65,7 +68,7 @@
     /* ── Base ─────────────────────────────────────────── */
     html, body {
       height: 100%; margin: 0;
-      font-family: 'Sarabun', sans-serif;
+      font-family: 'Mitr', sans-serif;
       font-size: 14px; color: var(--text-primary);
       background: var(--bg-page);
     }
@@ -136,7 +139,7 @@
 
     /* ── Buttons ──────────────────────────────────────── */
     button {
-      font-family: 'Sarabun', sans-serif;
+      font-family: 'Mitr', sans-serif;
       transition: all 150ms ease;
       cursor: pointer;
     }
@@ -146,7 +149,7 @@
       background: var(--orange-gradient);
       color: #fff; border: none;
       border-radius: 12px; padding: 13px;
-      font: 500 15px/1 'Sarabun', sans-serif;
+      font: 500 15px/1 'Mitr', sans-serif;
       width: 100%; min-height: 44px;
     }
     .gd-btn-primary:hover, .btn-primary:hover { filter: brightness(1.06); }
@@ -158,7 +161,7 @@
       background: var(--orange-light); color: var(--orange-dark);
       border: 1px solid var(--orange-border);
       border-radius: 10px; padding: 10px 16px;
-      font-family: 'Sarabun', sans-serif;
+      font-family: 'Mitr', sans-serif;
       min-height: 40px;
     }
     .gd-btn-secondary:hover, .btn-secondary:hover { background: #ffedd5; }
@@ -170,7 +173,7 @@
 
     /* ── Inputs ───────────────────────────────────────── */
     input, select, textarea {
-      font-family: 'Sarabun', sans-serif;
+      font-family: 'Mitr', sans-serif;
       background: var(--bg-input);
       border: 0.5px solid var(--border);
       border-radius: 10px;
@@ -190,7 +193,7 @@
       background: var(--bg-input); border: 0.5px solid var(--border);
       border-radius: 10px; padding: 11px 14px; font-size: 14px;
       color: var(--text-primary); width: 100%; height: 44px;
-      font-family: 'Sarabun', sans-serif;
+      font-family: 'Mitr', sans-serif;
     }
 
     /* ── Modal panel ──────────────────────────────────── */
@@ -220,7 +223,7 @@
     .status-overdue  { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
 
     /* simple badges */
-    .badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; font-family: 'Sarabun', sans-serif; }
+    .badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; font-family: 'Mitr', sans-serif; }
     .badge-borrowed { background: var(--orange-light); color: var(--orange-dark); }
     .badge-returned { background: var(--success-bg);   color: var(--success-text); }
     .badge-overdue  { background: var(--danger-bg);    color: var(--danger-text); }
@@ -234,7 +237,7 @@
     }
     .kpi-number {
       font-size: 32px; font-weight: 600; line-height: 1;
-      margin: 6px 0 4px; font-family: 'Sarabun', sans-serif;
+      margin: 6px 0 4px; font-family: 'Mitr', sans-serif;
       color: var(--text-primary);
     }
     .kpi-label { font-size: 12px; color: var(--text-muted); }
@@ -285,7 +288,7 @@
     .numpad-key {
       width: 64px; height: 64px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 24px; font-weight: 400; font-family: 'Sarabun', sans-serif;
+      font-size: 24px; font-weight: 400; font-family: 'Mitr', sans-serif;
       color: var(--text-primary); cursor: pointer;
       background: #fff; border: 1px solid var(--border);
       box-shadow: 0 2px 6px rgba(0,0,0,0.07);
@@ -355,7 +358,7 @@
       padding: 12px 20px; font-size: 13px; font-weight: 500;
       color: var(--text-muted); border-bottom: 2px solid transparent;
       cursor: pointer; transition: color 150ms, border-color 150ms;
-      font-family: 'Sarabun', sans-serif;
+      font-family: 'Mitr', sans-serif;
     }
     .top-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
 
@@ -366,7 +369,7 @@
     #mainTabBar::-webkit-scrollbar,
     #mainTabBar-desktop::-webkit-scrollbar { display: none; }
 
-    .main-tab { white-space: nowrap; cursor: pointer; font-family: 'Sarabun', sans-serif; }
+    .main-tab { white-space: nowrap; cursor: pointer; font-family: 'Mitr', sans-serif; }
     /* Mobile pill inside header */
     .tab-active   { color: #1c1917; background: rgba(255,255,255,0.92); border-radius: 10px; font-weight: 600; }
     .tab-inactive { color: rgba(255,255,255,0.80); background: transparent; border-radius: 10px; }
@@ -447,10 +450,10 @@
               <div class="text-center mb-8">
                 <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4"
                      style="background:var(--orange-gradient);box-shadow:0 6px 20px rgba(249,115,22,0.4);">
-                  <span style="color:#fff;font-size:20px;font-weight:700;font-family:'Sarabun',sans-serif;">EC</span>
+                  <span style="color:#fff;font-size:20px;font-weight:700;font-family:'Mitr',sans-serif;">EC</span>
                 </div>
-                <h1 style="font-size:20px;font-weight:700;color:#1c1917;margin:0 0 4px;font-family:'Sarabun',sans-serif;">Equipment Control</h1>
-                <p style="font-size:13px;color:#78716c;margin:0;font-family:'Sarabun',sans-serif;">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
+                <h1 style="font-size:20px;font-weight:700;color:#1c1917;margin:0 0 4px;font-family:'Mitr',sans-serif;">Equipment Control</h1>
+                <p style="font-size:13px;color:#78716c;margin:0;font-family:'Mitr',sans-serif;">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
               </div>
               <!-- GA user list -->
               <div class="mb-5">
@@ -483,10 +486,10 @@
                style="width:72px;height:72px;border-radius:50%;margin:0 auto 12px;
                       background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.4);
                       display:flex;align-items:center;justify-content:center;
-                      font-size:22px;font-weight:600;color:#fff;font-family:'Sarabun',sans-serif;"></div>
+                      font-size:22px;font-weight:600;color:#fff;font-family:'Mitr',sans-serif;"></div>
           <p id="pin-name"
-             style="font-size:17px;font-weight:600;color:#fff;margin:0 0 4px;font-family:'Sarabun',sans-serif;"></p>
-          <p style="font-size:13px;color:rgba(255,255,255,0.75);margin:0;font-family:'Sarabun',sans-serif;">กรอก PIN 6 หลัก</p>
+             style="font-size:17px;font-weight:600;color:#fff;margin:0 0 4px;font-family:'Mitr',sans-serif;"></p>
+          <p style="font-size:13px;color:rgba(255,255,255,0.75);margin:0;font-family:'Mitr',sans-serif;">กรอก PIN 6 หลัก</p>
         </div>
 
         <!-- Glass numpad panel -->
@@ -501,7 +504,7 @@
               <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
             </div>
             <div id="pin-error"
-                 style="height:20px;text-align:center;font-size:13px;color:#ef4444;margin-bottom:20px;font-family:'Sarabun',sans-serif;"></div>
+                 style="height:20px;text-align:center;font-size:13px;color:#ef4444;margin-bottom:20px;font-family:'Mitr',sans-serif;"></div>
             <!-- Numpad -->
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
               <div class="numpad-key" onclick="enterPin('1')">1</div>
@@ -539,16 +542,16 @@
                           background:rgba(255,255,255,0.25);backdrop-filter:blur(8px);
                           border:1.5px solid rgba(255,255,255,0.4);
                           display:flex;align-items:center;justify-content:center;
-                          font-size:14px;font-weight:600;color:#fff;font-family:'Sarabun',sans-serif;"></div>
+                          font-size:14px;font-weight:600;color:#fff;font-family:'Mitr',sans-serif;"></div>
               <div>
                 <p id="main-user-name"
-                   style="font-size:15px;font-weight:600;color:#fff;margin:0 0 2px;font-family:'Sarabun',sans-serif;line-height:1.2;"></p>
+                   style="font-size:15px;font-weight:600;color:#fff;margin:0 0 2px;font-family:'Mitr',sans-serif;line-height:1.2;"></p>
                 <span id="main-user-role"
                       style="display:inline-block;font-size:11px;color:#fff;
                              background:rgba(255,255,255,0.2);backdrop-filter:blur(8px);
                              border:1px solid rgba(255,255,255,0.3);
                              border-radius:20px;padding:2px 10px;
-                             font-family:'Sarabun',sans-serif;">GA Staff</span>
+                             font-family:'Mitr',sans-serif;">GA Staff</span>
               </div>
             </div>
             <!-- Glass action buttons -->
@@ -558,7 +561,7 @@
                              background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);
                              border:1px solid rgba(255,255,255,0.3);color:#fff;
                              border-radius:8px;padding:6px 12px;font-size:13px;
-                             font-family:'Sarabun',sans-serif;">
+                             font-family:'Mitr',sans-serif;">
                 <i data-lucide="key-round" style="width:14px;height:14px;"></i>
               </button>
               <button onclick="confirmLogout()" title="ออกจากระบบ"
@@ -566,7 +569,7 @@
                              background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);
                              border:1px solid rgba(255,255,255,0.3);color:#fff;
                              border-radius:8px;padding:6px 12px;font-size:13px;
-                             font-family:'Sarabun',sans-serif;">
+                             font-family:'Mitr',sans-serif;">
                 <i data-lucide="log-out" style="width:14px;height:14px;"></i>
               </button>
             </div>
@@ -614,8 +617,8 @@
             <i data-lucide="arrow-left" style="width:16px;height:16px;color:#fff;"></i>
           </button>
           <div style="flex:1;">
-            <p style="font-size:15px;font-weight:600;color:#fff;margin:0;font-family:'Sarabun',sans-serif;">ยืมอุปกรณ์</p>
-            <p id="bf-eq-name" style="font-size:12px;color:rgba(255,255,255,0.75);margin:0;font-family:'Sarabun',sans-serif;"></p>
+            <p style="font-size:15px;font-weight:600;color:#fff;margin:0;font-family:'Mitr',sans-serif;">ยืมอุปกรณ์</p>
+            <p id="bf-eq-name" style="font-size:12px;color:rgba(255,255,255,0.75);margin:0;font-family:'Mitr',sans-serif;"></p>
           </div>
         </div>
         <div class="flex-1 overflow-auto px-4 pt-4 pb-6" id="bf-body"></div>
@@ -630,10 +633,10 @@
             <i data-lucide="arrow-left" style="width:16px;height:16px;color:#fff;"></i>
           </button>
           <div style="flex:1;">
-            <p style="font-size:15px;font-weight:600;color:#fff;margin:0;font-family:'Sarabun',sans-serif;">คืนอุปกรณ์</p>
-            <p id="rd-eq-name" style="font-size:12px;color:rgba(255,255,255,0.75);margin:0;font-family:'Sarabun',sans-serif;"></p>
+            <p style="font-size:15px;font-weight:600;color:#fff;margin:0;font-family:'Mitr',sans-serif;">คืนอุปกรณ์</p>
+            <p id="rd-eq-name" style="font-size:12px;color:rgba(255,255,255,0.75);margin:0;font-family:'Mitr',sans-serif;"></p>
           </div>
-          <span id="rd-badge" style="font-size:11px;padding:3px 10px;border-radius:20px;font-family:'Sarabun',sans-serif;"></span>
+          <span id="rd-badge" style="font-size:11px;padding:3px 10px;border-radius:20px;font-family:'Mitr',sans-serif;"></span>
         </div>
         <div class="flex-1 overflow-auto px-4 pt-4 pb-6" id="rd-body"></div>
       </div>
@@ -765,8 +768,8 @@
         <div style="width:48px;height:48px;border-radius:50%;background:var(--orange-light);border:1px solid var(--orange-border);display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
           <i data-lucide="key-round" style="width:20px;height:20px;color:var(--orange);"></i>
         </div>
-        <p style="font-size:16px;font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Sarabun',sans-serif;">เปลี่ยน PIN</p>
-        <p id="cp-step-label" style="font-size:13px;color:var(--text-secondary);margin:0;font-family:'Sarabun',sans-serif;">กรอก PIN เดิม</p>
+        <p style="font-size:16px;font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Mitr',sans-serif;">เปลี่ยน PIN</p>
+        <p id="cp-step-label" style="font-size:13px;color:var(--text-secondary);margin:0;font-family:'Mitr',sans-serif;">กรอก PIN เดิม</p>
       </div>
       <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px;">
         <div id="cp-si-0" style="width:8px;height:8px;border-radius:50%;background:var(--orange);"></div>
@@ -777,7 +780,7 @@
         <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
         <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
       </div>
-      <div id="cp-error" style="height:20px;text-align:center;font-size:13px;color:#ef4444;margin-bottom:12px;font-family:'Sarabun',sans-serif;"></div>
+      <div id="cp-error" style="height:20px;text-align:center;font-size:13px;color:#ef4444;margin-bottom:12px;font-family:'Mitr',sans-serif;"></div>
       <div class="grid grid-cols-3 gap-3 mb-4">
         <div class="numpad-key" onclick="cpEnterPin('1')">1</div>
         <div class="numpad-key" onclick="cpEnterPin('2')">2</div>
@@ -1434,7 +1437,7 @@
       const isMgr = CU.role === 'mgr';
       const a = CU.av;
       const av = document.getElementById('main-avatar');
-      av.style.cssText = 'width:40px;height:40px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,0.25);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#fff;font-family:\'Sarabun\',sans-serif;';
+      av.style.cssText = 'width:40px;height:40px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,0.25);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#fff;font-family:\'Mitr\',sans-serif;';
       av.textContent = ini(CU.name);
       document.getElementById('main-user-name').textContent = CU.name;
       document.getElementById('main-user-role').textContent = isMgr ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่ GA';
