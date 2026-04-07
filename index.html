@@ -146,7 +146,13 @@
     .gd-page {
       max-width: 1180px;
       margin: 0 auto;
-      padding: 24px 32px 40px;
+      padding: 32px 40px 48px;
+      width: 100%;
+    }
+    /* Centered inner column — matches gd-page width, used in header/tabs/banner */
+    .gd-inner {
+      max-width: 1180px;
+      margin: 0 auto;
       width: 100%;
     }
     .gd-page-header {
@@ -425,10 +431,20 @@
       margin-top: 14px;
       background: #fff;
       border-bottom: 1px solid var(--border);
-      padding: 0 32px;
+      padding: 0;
+      align-items: flex-end;
+      gap: 0;
+      justify-content: flex-start;
+    }
+    /* Inner row inside top-tabs — aligns with gd-page */
+    .top-tabs-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 0 40px;
+      display: flex;
       align-items: flex-end;
       gap: 24px;
-      justify-content: flex-start;
     }
     .top-tab {
       padding: 14px 2px 12px;
@@ -511,8 +527,8 @@
     @media (max-width: 767px) {
       #bottom-nav { display: flex; }
       .top-tabs   { display: none !important; }
-      #screen-main { padding-bottom: 84px; }
-      .gd-page { padding: 24px 16px 40px; }
+      #screen-main { padding-bottom: 88px; }
+      .gd-page { padding: 24px 16px 48px; }
     }
 
     #screen-main .gd-header > svg { display: none; }
@@ -521,7 +537,7 @@
 
 <body class="h-full gd-shell">
   <div id="app-root" class="h-full w-full flex justify-center overflow-auto">
-    <div class="w-full xl:px-8" style="max-width:1200px;height:100%;position:relative;">
+    <div class="w-full" style="max-width:1180px;height:100%;position:relative;">
 
       <!-- LOADING -->
       <div id="screen-loading" class="screen active">
@@ -632,52 +648,54 @@
       <!-- MAIN -->
       <div id="screen-main" class="screen">
         <!-- App header: orange gradient + wave -->
-        <div class="gd-header" style="position:sticky;top:0;z-index:20;padding:24px 16px 16px;">
-          <!-- Avatar + name + role + buttons -->
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <!-- Glass avatar -->
-              <div id="main-avatar"
-                   style="width:40px;height:40px;border-radius:50%;flex-shrink:0;
-                          background:#fff;
-                          border:1.5px solid rgba(148,163,184,0.28);
-                          display:flex;align-items:center;justify-content:center;
-                          font-size:14px;font-weight:600;color:#334155;font-family:'Noto Sans Thai','Inter',sans-serif;box-shadow:0 6px 14px rgba(15,23,42,0.08);"></div>
-              <div>
-                <p id="main-user-name"
-                   style="font-size:15px;font-weight:600;color:#0f172a;margin:0 0 2px;font-family:'Noto Sans Thai','Inter',sans-serif;line-height:1.2;"></p>
-                <span id="main-user-role"
-                      style="display:inline-block;font-size:11px;color:#c2410c;
-                             background:#fff7ed;
-                             border:1px solid #fed7aa;
-                             border-radius:20px;padding:2px 10px;
-                             font-family:'Noto Sans Thai','Inter',sans-serif;">GA Staff</span>
+        <div class="gd-header" style="position:sticky;top:0;z-index:20;padding:16px 16px 14px;">
+          <div class="gd-inner" style="padding:0 24px;">
+            <!-- Avatar + name + role + buttons -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <!-- Glass avatar -->
+                <div id="main-avatar"
+                     style="width:40px;height:40px;border-radius:50%;flex-shrink:0;
+                            background:#fff;
+                            border:1.5px solid rgba(148,163,184,0.28);
+                            display:flex;align-items:center;justify-content:center;
+                            font-size:14px;font-weight:600;color:#334155;font-family:'Noto Sans Thai','Inter',sans-serif;box-shadow:0 6px 14px rgba(15,23,42,0.08);"></div>
+                <div>
+                  <p id="main-user-name"
+                     style="font-size:15px;font-weight:600;color:#0f172a;margin:0 0 2px;font-family:'Noto Sans Thai','Inter',sans-serif;line-height:1.2;"></p>
+                  <span id="main-user-role"
+                        style="display:inline-block;font-size:11px;color:#c2410c;
+                               background:#fff7ed;
+                               border:1px solid #fed7aa;
+                               border-radius:20px;padding:2px 10px;
+                               font-family:'Noto Sans Thai','Inter',sans-serif;">GA Staff</span>
+                </div>
+              </div>
+              <!-- Glass action buttons -->
+              <div style="display:flex;align-items:center;gap:6px;">
+                <button onclick="openChangePinModal()" title="เปลี่ยน PIN"
+                        style="display:flex;align-items:center;justify-content:center;
+                               background:#fff;
+                               border:1px solid #e2e8f0;color:#475569;
+                               border-radius:12px;width:36px;height:36px;padding:0;font-size:13px;
+                               font-family:'Noto Sans Thai','Inter',sans-serif;">
+                  <i data-lucide="key-round" style="width:14px;height:14px;"></i>
+                </button>
+                <button onclick="confirmLogout()" title="ออกจากระบบ"
+                        style="display:flex;align-items:center;justify-content:center;
+                               background:#fff;
+                               border:1px solid #e2e8f0;color:#475569;
+                               border-radius:12px;width:36px;height:36px;padding:0;font-size:13px;
+                               font-family:'Noto Sans Thai','Inter',sans-serif;">
+                  <i data-lucide="log-out" style="width:14px;height:14px;"></i>
+                </button>
               </div>
             </div>
-            <!-- Glass action buttons -->
-            <div style="display:flex;align-items:center;gap:6px;">
-              <button onclick="openChangePinModal()" title="เปลี่ยน PIN"
-                      style="display:flex;align-items:center;justify-content:center;
-                             background:#fff;
-                             border:1px solid #e2e8f0;color:#475569;
-                             border-radius:12px;width:36px;height:36px;padding:0;font-size:13px;
-                             font-family:'Noto Sans Thai','Inter',sans-serif;">
-                <i data-lucide="key-round" style="width:14px;height:14px;"></i>
-              </button>
-              <button onclick="confirmLogout()" title="ออกจากระบบ"
-                      style="display:flex;align-items:center;justify-content:center;
-                             background:#fff;
-                             border:1px solid #e2e8f0;color:#475569;
-                             border-radius:12px;width:36px;height:36px;padding:0;font-size:13px;
-                             font-family:'Noto Sans Thai','Inter',sans-serif;">
-                <i data-lucide="log-out" style="width:14px;height:14px;"></i>
-              </button>
-            </div>
+            <!-- Mobile tab bar inside header -->
+            <div id="mainTabBar" style="display:flex;overflow-x:auto;gap:8px;margin-top:12px;scrollbar-width:none;"></div>
+            <!-- Desktop tab bar (underline style, shown below header) -->
+            <div id="mainTabBar-desktop" style="display:none;"></div>
           </div>
-          <!-- Mobile tab bar inside header -->
-          <div id="mainTabBar" style="display:flex;overflow-x:auto;gap:8px;margin-top:12px;scrollbar-width:none;"></div>
-          <!-- Desktop tab bar (underline style, shown below header) -->
-          <div id="mainTabBar-desktop" style="display:none;"></div>
           <!-- Wave -->
           <svg viewBox="0 0 400 48" preserveAspectRatio="none"
                style="position:absolute;bottom:-1px;left:0;width:100%;height:48px;pointer-events:none;">
@@ -685,14 +703,18 @@
           </svg>
         </div>
         <!-- Desktop top tabs (outside gradient, below wave) -->
-        <div class="top-tabs" id="top-tabs-bar"></div>
+        <div class="top-tabs" id="top-tabs-bar">
+          <div class="top-tabs-inner" id="top-tabs-inner"></div>
+        </div>
         <!-- Overdue Banner -->
-        <div id="overdue-banner" class="hidden mx-4 mt-1 mb-0 rounded-xl px-4 py-3 flex items-center gap-3 bg-red-50 border border-red-200">
-          <i data-lucide="alert-triangle" class="w-4 h-4 text-red-500 shrink-0"></i>
-          <p id="overdue-banner-text" class="text-sm font-medium text-red-700 flex-1"></p>
-          <button onclick="document.getElementById('overdue-banner').classList.add('hidden')" class="p-1 rounded-lg hover:bg-red-100 transition">
-            <i data-lucide="x" class="w-3.5 h-3.5 text-red-400"></i>
-          </button>
+        <div class="gd-inner" style="padding:0 40px;">
+          <div id="overdue-banner" class="hidden mt-3 rounded-xl px-4 py-3 flex items-center gap-3 bg-red-50 border border-red-200">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-red-500 shrink-0"></i>
+            <p id="overdue-banner-text" class="text-sm font-medium text-red-700 flex-1"></p>
+            <button onclick="document.getElementById('overdue-banner').classList.add('hidden')" class="p-1 rounded-lg hover:bg-red-100 transition">
+              <i data-lucide="x" class="w-3.5 h-3.5 text-red-400"></i>
+            </button>
+          </div>
         </div>
         <!-- GA Tabs -->
         <div id="tab-borrow" class="flex-1 overflow-auto hidden"></div>
@@ -721,7 +743,7 @@
             <p id="bf-eq-name" style="font-size:12px;color:#64748b;margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
           </div>
         </div>
-        <div class="flex-1 overflow-auto px-4 pt-4 pb-6" id="bf-body"></div>
+        <div class="flex-1 overflow-auto" id="bf-body" style="padding:24px 16px 32px;max-width:680px;margin:0 auto;width:100%;"></div>
       </div>
 
       <!-- RETURN DETAIL (overlay) -->
@@ -738,7 +760,7 @@
           </div>
           <span id="rd-badge" style="font-size:11px;padding:3px 10px;border-radius:20px;font-family:'Noto Sans Thai','Inter',sans-serif;"></span>
         </div>
-        <div class="flex-1 overflow-auto px-4 pt-4 pb-6" id="rd-body"></div>
+        <div class="flex-1 overflow-auto" id="rd-body" style="padding:24px 16px 32px;max-width:680px;margin:0 auto;width:100%;"></div>
       </div>
 
     </div><!-- end max-width wrapper -->
@@ -1553,13 +1575,13 @@
       const bar = document.getElementById('mainTabBar');
       const oc = BORROWS.filter(r => r.status === 'overdue').length;
       const badge = oc > 0 ? `<span class="ml-1 inline-flex items-center justify-center min-w-[16px] h-4 px-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">${oc > 9 ? '9+' : oc}</span>` : '';
-      const topBar = document.getElementById('top-tabs-bar');
+      const topInner = document.getElementById('top-tabs-inner');
       if (isMgr) {
         const tabs = ['ภาพรวม','ประวัติ','อุปกรณ์','สมาชิก','Audit'];
         const icons = ['layout-dashboard','history','box','users','clipboard-list'];
         bar.innerHTML = tabs.map((t,i)=>
           `<button class="main-tab ${i===0?'tab-active':'tab-inactive'}" style="flex:1;padding:10px 12px;font-size:14px;font-weight:600;text-align:center;" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
-        if (topBar) topBar.innerHTML = tabs.map((t,i)=>
+        if (topInner) topInner.innerHTML = tabs.map((t,i)=>
           `<button class="top-tab ${i===0?'active':''}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
         const bn = document.getElementById('bottom-nav');
         if (bn) bn.innerHTML = tabs.map((t,i)=>
@@ -1570,7 +1592,7 @@
         const icons = ['package-plus','package-check','history'];
         bar.innerHTML = tabs.map((t,i)=>
           `<button class="main-tab ${i===0?'tab-active':'tab-inactive'}" style="flex:1;padding:10px 12px;font-size:14px;font-weight:600;text-align:center;" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
-        if (topBar) topBar.innerHTML = fullTabs.map((t,i)=>
+        if (topInner) topInner.innerHTML = fullTabs.map((t,i)=>
           `<button class="top-tab ${i===0?'active':''}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
         const bn = document.getElementById('bottom-nav');
         if (bn) bn.innerHTML = tabs.map((t,i)=>
@@ -1600,7 +1622,7 @@
       const gaMobileCls = 'main-tab flex-1 px-3 py-2 text-center text-xs font-semibold';
       const gaDesktopCls = 'main-tab px-5 py-2.5 text-center text-sm font-semibold';
       document.querySelectorAll('#mainTabBar .main-tab').forEach((b,i)=> { b.classList.toggle('tab-active',i===idx); b.classList.toggle('tab-inactive',i!==idx); });
-      document.querySelectorAll('#top-tabs-bar .top-tab').forEach((b,i)=> b.classList.toggle('active',i===idx));
+      document.querySelectorAll('#top-tabs-inner .top-tab').forEach((b,i)=> b.classList.toggle('active',i===idx));
       document.querySelectorAll('#bottom-nav .bn-item').forEach((b,i)=> b.classList.toggle('active',i===idx));
       ['borrow','return','history','dashboard','mgr-history','equipment','members','audit-log'].forEach(t=> { const el=document.getElementById('tab-'+t); if(el) el.style.display='none'; });
       if (isMgr) {
@@ -1641,7 +1663,7 @@
           <div class="chip ${borrowCatFilter===''?'active':''}" onclick="borrowCatFilter='';renderBorrowTab()">ทั้งหมด</div>
           ${cats.map(c=>`<div class="chip ${borrowCatFilter===c?'active':''}" onclick="borrowCatFilter='${he(c)}';renderBorrowTab()">${he(c)}</div>`).join('')}
         </div>
-        <div class="space-y-3" id="eqGrid">
+        <div class="space-y-4" id="eqGrid">
           ${filtered.length ? filtered.map(e=>`<div class="gd-card p-5 cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
             <div class="flex items-start gap-3 mb-2">
               ${e.image_url ? `<img src="${he(e.image_url)}" class="w-12 h-12 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-xl shrink-0">📦</div>`}
@@ -1757,7 +1779,7 @@
           <h2 class="text-xl font-bold tracking-tight text-slate-900">คืนอุปกรณ์</h2>
           <p class="text-sm text-slate-500 mt-1">รายการอุปกรณ์ที่กำลังยืมอยู่</p>
         </div>
-        <div class="space-y-3">
+        <div class="space-y-4">
           ${active.length ? active.map(r=>{
             const days = daysUntil(r.due_date);
             const isOD = r.status==='overdue';
@@ -1909,7 +1931,7 @@
           <div class="chip ${historyFilter==='overdue'?'active':''}" onclick="historyFilter='overdue';renderHistoryTab()">เกินกำหนด</div>
           <div class="chip ${historyFilter==='returned'?'active':''}" onclick="historyFilter='returned';renderHistoryTab()">คืนแล้ว</div>
         </div>
-        <div class="space-y-3">
+        <div class="space-y-4">
           ${list.length ? list.map(r=>`<div class="gd-card p-5">
             <div class="flex items-start justify-between mb-1">
               <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
@@ -1945,7 +1967,7 @@
           <p class="gd-section-title mb-2">Dashboard</p>
           <h2 class="text-xl font-bold tracking-tight text-slate-900">ภาพรวมระบบ</h2>
         </div>
-        <div class="grid grid-cols-2 gap-3 mb-4">
+        <div class="grid grid-cols-2 gap-4 mb-6">
           <div class="kpi-card orange">
             <div style="width:32px;height:32px;border-radius:8px;background:var(--orange-light);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="clock-3" style="width:16px;height:16px;color:var(--orange);"></i></div>
             <p class="kpi-number">${totalBorrowed}</p><p class="kpi-label">กำลังยืม</p></div>
@@ -1959,8 +1981,8 @@
             <div style="width:32px;height:32px;border-radius:8px;background:var(--orange-light);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="box" style="width:16px;height:16px;color:var(--orange);"></i></div>
             <p class="kpi-number">${availableEq}</p><p class="kpi-label">อุปกรณ์พร้อมใช้</p></div>
         </div>
-        <div class="card mb-4">
-          <h4 class="font-semibold text-gray-900 text-sm mb-3">รายการเกินกำหนด</h4>
+        <div class="card mb-5">
+          <h4 class="font-semibold text-gray-900 text-sm mb-4">รายการเกินกำหนด</h4>
           ${overdueList.length ? overdueList.map(r=>`<div class="flex items-center gap-3 py-2.5 border-b border-gray-100 last:border-0 text-sm">
             <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0"><i data-lucide="alert-triangle" class="w-4 h-4 text-red-500"></i></div>
             <div class="flex-1 min-w-0">
@@ -1971,8 +1993,8 @@
               class="shrink-0 px-2.5 py-1.5 text-white text-xs font-semibold rounded-lg transition flex items-center gap-1" style="background:#f97316;color:white;"><i data-lucide="corner-up-left" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">คืนแทน</span></button>
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-8 text-slate-500"><span class="text-3xl mb-2">✓</span><p class="text-sm">ไม่มีรายการเกินกำหนด</p></div>`}
         </div>
-        <div class="card mb-4">
-          <h4 class="font-semibold text-gray-900 text-sm mb-3">กิจกรรมล่าสุด</h4>
+        <div class="card mb-5">
+          <h4 class="font-semibold text-gray-900 text-sm mb-4">กิจกรรมล่าสุด</h4>
           ${recent.length ? recent.map(r=>{
             const isRet = r.status==='returned';
             return `<div class="flex items-center gap-3 py-2 border-b border-gray-100 last:border-0">
@@ -2052,7 +2074,7 @@
           <div class="chip ${historyFilter==='overdue'?'active':''}" onclick="historyFilter='overdue';renderMgrHistory()">เกินกำหนด</div>
           <div class="chip ${historyFilter==='returned'?'active':''}" onclick="historyFilter='returned';renderMgrHistory()">คืนแล้ว</div>
         </div>
-        <div class="space-y-3">
+        <div class="space-y-4">
           ${list.length ? list.map(r=>`<div class="gd-card p-5">
             <div class="flex items-start justify-between mb-1">
               <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
@@ -2102,7 +2124,7 @@
             ${cats.map(c=>`<option value="${he(c)}"${eqCatFilter===c?' selected':''}>${he(c)}</option>`).join('')}
           </select>
         </div>
-        <div class="space-y-3 mb-6">
+        <div class="space-y-4 mb-6">
           ${filtered.length === 0 ? `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
             <span class="text-4xl mb-3">${EQ.length === 0 ? '📦' : '🔍'}</span>
             <p class="text-sm">${EQ.length === 0 ? "ยังไม่มีอุปกรณ์ กด '+ เพิ่มอุปกรณ์' เพื่อเริ่มต้น" : 'ไม่พบอุปกรณ์ที่ตรงกับการค้นหา'}</p>
@@ -2308,7 +2330,7 @@
           <button onclick="openUserModal()" class="gd-btn-primary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-xs">
             <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> เพิ่มสมาชิก</button>
         </div>
-        <div class="space-y-3">
+        <div class="space-y-4">
           ${(()=>{ const all=[...AU.ga.map(u=>({...u,type:'ga'})),...AU.mgr.map(u=>({...u,type:'mgr'}))];
             if(!all.length) return `<div class="flex flex-col items-center justify-center py-16 text-slate-500"><span class="text-4xl mb-3">👥</span><p class="text-sm">ยังไม่มีสมาชิก</p></div>`;
             return all.map((u,i)=>{
