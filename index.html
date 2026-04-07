@@ -436,32 +436,35 @@
 
       <!-- LOGIN -->
       <div id="screen-login" class="screen">
-        <div class="login-shell flex-1 overflow-auto flex flex-col">
-          <!-- Brand header on gradient -->
-          <div class="flex flex-col items-center justify-center pt-14 pb-20 px-6 text-center">
-            <div class="w-16 h-16 rounded-3xl bg-white/20 flex items-center justify-center shadow-xl mb-5">
-              <span class="text-white text-2xl font-extrabold tracking-tight">EC</span>
-            </div>
-            <h1 class="text-2xl font-extrabold text-white tracking-tight">Equipment Control</h1>
-            <p class="text-sm text-white/75 mt-2">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
-          </div>
-          <!-- Wave + white card -->
-          <div style="margin-top:-48px;">
-            <svg viewBox="0 0 390 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:56px;display:block;">
-              <path d="M0,30 C80,58 310,2 390,30 L390,60 L0,60 Z" fill="#fafaf9"/>
+        <div class="login-shell flex-1 overflow-auto flex flex-col items-center justify-start pt-10 pb-10 px-4">
+          <!-- Glass card -->
+          <div class="fade-in" style="width:100%;max-width:400px;">
+            <!-- Wave at top of card (gradient → glass) -->
+            <svg viewBox="0 0 400 28" preserveAspectRatio="none" style="width:100%;height:24px;display:block;">
+              <path d="M0,14 Q100,28 200,14 Q300,0 400,14 L400,28 L0,28 Z" fill="rgba(255,255,255,0.82)"/>
             </svg>
-            <div class="login-wave-card px-5 pb-12 fade-in">
-              <div class="max-w-md mx-auto space-y-6">
-                <div>
-                  <p class="gd-section-title mb-3">เลือกผู้ใช้งาน</p>
-                  <div class="space-y-3" id="gaUserList"></div>
+            <!-- Card body -->
+            <div style="background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.6);border-top:none;border-radius:0 0 24px 24px;padding:20px 24px 32px;">
+              <!-- Logo + title -->
+              <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4"
+                     style="background:var(--orange-gradient);box-shadow:0 6px 20px rgba(249,115,22,0.4);">
+                  <span style="color:#fff;font-size:20px;font-weight:700;font-family:'Sarabun',sans-serif;">EC</span>
                 </div>
-                <div class="gd-card-soft p-4">
-                  <p class="gd-section-title mb-3 flex items-center gap-1.5">
-                    <i data-lucide="shield" class="w-3.5 h-3.5"></i>Admin access
-                  </p>
-                  <div class="space-y-3" id="mgrUserList"></div>
-                </div>
+                <h1 style="font-size:20px;font-weight:700;color:#1c1917;margin:0 0 4px;font-family:'Sarabun',sans-serif;">Equipment Control</h1>
+                <p style="font-size:13px;color:#78716c;margin:0;font-family:'Sarabun',sans-serif;">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
+              </div>
+              <!-- GA user list -->
+              <div class="mb-5">
+                <p class="gd-section-title mb-3">เลือกผู้ใช้งาน</p>
+                <div id="gaUserList" class="space-y-2"></div>
+              </div>
+              <!-- Manager list -->
+              <div style="background:var(--orange-light);border:0.5px solid var(--orange-border);border-radius:12px;padding:14px;">
+                <p class="gd-section-title mb-3 flex items-center gap-1.5">
+                  <i data-lucide="shield" style="width:12px;height:12px;"></i>Admin access
+                </p>
+                <div id="mgrUserList" class="space-y-2"></div>
               </div>
             </div>
           </div>
