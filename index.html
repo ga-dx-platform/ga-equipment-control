@@ -29,7 +29,7 @@
   <style>
     :root {
       /* Brand */
-      --orange-gradient: linear-gradient(135deg, #f97316, #ea580c);
+      --orange-gradient: linear-gradient(135deg, #f97316 0%, #ea580c 52%, #c2410c 100%);
       --orange:          #f97316;
       --orange-dark:     #c2410c;
       --orange-light:    #fff7ed;
@@ -63,6 +63,7 @@
       --gd-radius-control: 10px;
       --gd-shadow-sm: 0 4px 12px rgba(15,23,42,0.05);
       --gd-shadow-md: 0 10px 30px rgba(15,23,42,0.08);
+      --gd-shadow-hover: 0 15px 40px rgba(15,23,42,0.12);
     }
 
     /* ── Base ─────────────────────────────────────────── */
@@ -92,9 +93,18 @@
     @keyframes spin { to { transform: rotate(360deg) } }
 
     /* ── Shell / Header ───────────────────────────────── */
-    .gd-shell { background: var(--bg-page); }
+    .gd-shell {
+      background:
+        radial-gradient(circle at 0% 0%, rgba(249, 115, 22, 0.12), transparent 36%),
+        radial-gradient(circle at 100% 0%, rgba(251, 146, 60, 0.08), transparent 38%),
+        radial-gradient(circle at 50% 100%, rgba(194, 65, 12, 0.06), transparent 45%),
+        linear-gradient(180deg, #f6f9fd 0%, #edf3fb 48%, #e9f0fa 100%);
+    }
     .gd-header {
-      background: linear-gradient(135deg, #F97316, #EA580C);
+      background: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(10px);
       position: relative;
     }
     /* Wave below header */
@@ -107,29 +117,29 @@
     .gd-card, .card {
       background: var(--bg-card);
       border-radius: var(--gd-radius-card);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(148, 163, 184, 0.24);
       box-shadow: var(--gd-shadow-sm);
       transition: box-shadow 150ms ease, transform 150ms ease, border-color 150ms ease;
     }
     .gd-card:hover {
-      box-shadow: var(--gd-shadow-md);
-      border-color: #cbd5e1;
+      box-shadow: var(--gd-shadow-hover);
+      border-color: rgba(249, 115, 22, 0.34);
       transform: translateY(-2px);
     }
     .gd-card-soft {
-      background: var(--orange-light);
-      border: 1px solid var(--orange-border);
-      border-radius: var(--gd-radius-card);
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
     }
     .card-shadow   { box-shadow: var(--gd-shadow-sm); }
     .card-shadow-md{ box-shadow: var(--gd-shadow-md); }
 
     /* ── Page layout ──────────────────────────────────── */
-    .gd-page { padding: 24px 16px 88px; }
+    .gd-page { padding: 24px 16px 32px; }
     .gd-page-header {
-      margin-bottom: 16px; padding: 16px 18px; border-radius: var(--gd-radius-card);
-      border: 1px solid var(--orange-border);
-      background: linear-gradient(135deg, #fff 0%, #fff7ed 100%);
+      margin-bottom: 16px; padding: 18px 20px; border-radius: 20px;
+      border: 1px solid rgba(251, 146, 60, 0.26);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 247, 237, 0.95) 56%, rgba(255, 250, 245, 0.92) 100%);
       box-shadow: var(--gd-shadow-sm);
     }
     .gd-empty {
@@ -148,23 +158,33 @@
     .gd-btn-primary, .btn-primary {
       background: var(--orange-gradient);
       color: #fff; border: none;
-      border-radius: 12px; padding: 13px;
-      font: 500 15px/1 'Noto Sans Thai', 'Inter', sans-serif;
-      width: 100%; min-height: 44px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      min-height: 44px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 14px 30px rgba(249, 115, 22, 0.30), 0 6px 14px rgba(194, 65, 12, 0.2);
+      width: 100%;
     }
-    .gd-btn-primary:hover, .btn-primary:hover { filter: brightness(1.06); }
+    .gd-btn-primary:hover, .btn-primary:hover {
+      transform: translateY(-1px);
+      filter: saturate(1.08);
+      box-shadow: 0 18px 34px rgba(249, 115, 22, 0.34), 0 8px 16px rgba(194, 65, 12, 0.18);
+    }
     .gd-btn-primary:disabled, .gd-btn-primary.is-disabled {
       background: #d4d0cd; color: #a8a29e;
       pointer-events: none; box-shadow: none;
     }
     .gd-btn-secondary, .btn-secondary {
-      background: var(--orange-light); color: var(--orange-dark);
-      border: 1px solid var(--orange-border);
-      border-radius: var(--gd-radius-control); padding: 10px 16px;
-      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
-      min-height: 40px;
+      border: 1px solid #CBD5E1;
+      background: #fff;
+      color: #475569;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      min-height: 44px;
     }
-    .gd-btn-secondary:hover, .btn-secondary:hover { background: #ffedd5; }
+    .gd-btn-secondary:hover, .btn-secondary:hover { background: #f8fafc; }
     .gd-btn-danger {
       background: #fef2f2; color: #dc2626;
       border: 1px solid #fecaca; border-radius: var(--gd-radius-control);
@@ -185,8 +205,8 @@
     }
     input:focus, select:focus, textarea:focus {
       outline: none;
-      border-color: var(--orange) !important;
-      box-shadow: 0 0 0 3px rgba(249,115,22,0.15);
+      border-color: #fdba74 !important;
+      box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.14);
       background: #fff;
     }
     /* compat alias */
@@ -252,13 +272,14 @@
 
     /* ── Chip filters ─────────────────────────────────── */
     .chip {
-      padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 500;
+      padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 500;
       white-space: nowrap; cursor: pointer; transition: all 150ms ease;
-      border: 1px solid var(--border); background: #fff; color: var(--text-muted);
+      border: 1.5px solid var(--border); background: rgba(255,255,255,0.88); color: var(--text-muted);
     }
     .chip.active {
       background: var(--orange-gradient); color: #fff;
       border-color: var(--orange-dark);
+      box-shadow: 0 10px 20px rgba(249, 115, 22, 0.25);
     }
 
     /* ── Avatar ───────────────────────────────────────── */
@@ -366,22 +387,33 @@
 
     /* ── In-header tab bar (compat) ───────────────────── */
     #mainTabBar, #mainTabBar-desktop {
-      overflow-x: auto; scrollbar-width: none; gap: 0;
+      overflow-x: auto; scrollbar-width: none; gap: 8px;
+      border: 0;
+      border-radius: 16px;
+      padding: 6px;
+      background: #eff4fb;
     }
     #mainTabBar::-webkit-scrollbar,
     #mainTabBar-desktop::-webkit-scrollbar { display: none; }
 
     .main-tab { white-space: nowrap; cursor: pointer; font-family: 'Noto Sans Thai', 'Inter', sans-serif; }
     /* Mobile pill inside header */
-    .tab-active   { color: #1c1917; background: rgba(255,255,255,0.92); border-radius: var(--gd-radius-control); font-weight: 600; }
-    .tab-inactive { color: rgba(255,255,255,0.80); background: transparent; border-radius: var(--gd-radius-control); }
+    .tab-active {
+      color: #0f172a;
+      border: 1px solid #ffedd5;
+      background: linear-gradient(160deg, #ffffff 0%, #fff8f1 100%);
+      box-shadow: 0 8px 18px rgba(249, 115, 22, 0.14);
+      border-radius: 12px;
+      font-weight: 700;
+    }
+    .tab-inactive { color: #64748b; border: 1px solid transparent; background: transparent; border-radius: 12px; }
     /* Desktop underline */
     @media (min-width: 768px) {
       .top-tabs { display: flex; }
       #mainTabBar { display: none !important; }
       #mainTabBar-desktop { display: flex !important; }
-      .tab-active   { color: #1c1917 !important; background: rgba(255,255,255,0.92) !important; border-radius: var(--gd-radius-control) !important; font-weight: 600; }
-      .tab-inactive { color: rgba(255,255,255,0.80) !important; background: transparent !important; border-radius: var(--gd-radius-control) !important; border-bottom: none !important; }
+      .tab-active   { color: #0f172a !important; background: linear-gradient(160deg, #ffffff 0%, #fff8f1 100%) !important; border-radius: 12px !important; font-weight: 700; }
+      .tab-inactive { color: #64748b !important; background: transparent !important; border-radius: 12px !important; border-bottom: none !important; }
     }
 
     /* ── Bottom nav (mobile) ──────────────────────────── */
@@ -410,7 +442,7 @@
     @media (max-width: 767px) {
       #bottom-nav { display: flex; }
       .top-tabs   { display: none !important; }
-      #screen-main { padding-bottom: 88px; }
+      #screen-main { padding-bottom: 84px; }
     }
   </style>
 </head>
@@ -541,17 +573,17 @@
               <!-- Glass avatar -->
               <div id="main-avatar"
                    style="width:40px;height:40px;border-radius:50%;flex-shrink:0;
-                          background:rgba(255,255,255,0.25);backdrop-filter:blur(8px);
-                          border:1.5px solid rgba(255,255,255,0.4);
+                          background:#fff;
+                          border:1.5px solid rgba(148,163,184,0.28);
                           display:flex;align-items:center;justify-content:center;
-                          font-size:14px;font-weight:600;color:#fff;font-family:'Noto Sans Thai','Inter',sans-serif;"></div>
+                          font-size:14px;font-weight:600;color:#334155;font-family:'Noto Sans Thai','Inter',sans-serif;box-shadow:0 6px 14px rgba(15,23,42,0.08);"></div>
               <div>
                 <p id="main-user-name"
-                   style="font-size:15px;font-weight:600;color:#fff;margin:0 0 2px;font-family:'Noto Sans Thai','Inter',sans-serif;line-height:1.2;"></p>
+                   style="font-size:15px;font-weight:600;color:#0f172a;margin:0 0 2px;font-family:'Noto Sans Thai','Inter',sans-serif;line-height:1.2;"></p>
                 <span id="main-user-role"
-                      style="display:inline-block;font-size:11px;color:#fff;
-                             background:rgba(255,255,255,0.2);backdrop-filter:blur(8px);
-                             border:1px solid rgba(255,255,255,0.3);
+                      style="display:inline-block;font-size:11px;color:#c2410c;
+                             background:#fff7ed;
+                             border:1px solid #fed7aa;
                              border-radius:20px;padding:2px 10px;
                              font-family:'Noto Sans Thai','Inter',sans-serif;">GA Staff</span>
               </div>
@@ -560,16 +592,16 @@
             <div style="display:flex;align-items:center;gap:6px;">
               <button onclick="openChangePinModal()" title="เปลี่ยน PIN"
                       style="display:flex;align-items:center;gap:6px;
-                             background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);
-                             border:1px solid rgba(255,255,255,0.3);color:#fff;
+                             background:#fff;
+                             border:1px solid #e2e8f0;color:#475569;
                              border-radius:8px;padding:6px 12px;font-size:13px;
                              font-family:'Noto Sans Thai','Inter',sans-serif;">
                 <i data-lucide="key-round" style="width:14px;height:14px;"></i>
               </button>
               <button onclick="confirmLogout()" title="ออกจากระบบ"
                       style="display:flex;align-items:center;gap:6px;
-                             background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);
-                             border:1px solid rgba(255,255,255,0.3);color:#fff;
+                             background:#fff;
+                             border:1px solid #e2e8f0;color:#475569;
                              border-radius:8px;padding:6px 12px;font-size:13px;
                              font-family:'Noto Sans Thai','Inter',sans-serif;">
                 <i data-lucide="log-out" style="width:14px;height:14px;"></i>
@@ -614,13 +646,13 @@
       <div id="screen-borrow-form" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--bg-page);">
         <div class="gd-header" style="position:sticky;top:0;z-index:10;padding:14px 16px 16px;display:flex;align-items:center;gap:12px;">
           <button onclick="closeBorrowForm()"
-                  style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.2);
-                         border:1px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;">
-            <i data-lucide="arrow-left" style="width:16px;height:16px;color:#fff;"></i>
+                  style="width:32px;height:32px;border-radius:50%;background:#fff;
+                         border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;">
+            <i data-lucide="arrow-left" style="width:16px;height:16px;color:#334155;"></i>
           </button>
           <div style="flex:1;">
-            <p style="font-size:15px;font-weight:600;color:#fff;margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">ยืมอุปกรณ์</p>
-            <p id="bf-eq-name" style="font-size:12px;color:rgba(255,255,255,0.75);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
+            <p style="font-size:15px;font-weight:600;color:#0f172a;margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">ยืมอุปกรณ์</p>
+            <p id="bf-eq-name" style="font-size:12px;color:#64748b;margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
           </div>
         </div>
         <div class="flex-1 overflow-auto px-4 pt-4 pb-6" id="bf-body"></div>
@@ -630,13 +662,13 @@
       <div id="screen-return-detail" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--bg-page);">
         <div class="gd-header" style="position:sticky;top:0;z-index:10;padding:14px 16px 16px;display:flex;align-items:center;gap:12px;">
           <button onclick="closeReturnDetail()"
-                  style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.2);
-                         border:1px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;">
-            <i data-lucide="arrow-left" style="width:16px;height:16px;color:#fff;"></i>
+                  style="width:32px;height:32px;border-radius:50%;background:#fff;
+                         border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;">
+            <i data-lucide="arrow-left" style="width:16px;height:16px;color:#334155;"></i>
           </button>
           <div style="flex:1;">
-            <p style="font-size:15px;font-weight:600;color:#fff;margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">คืนอุปกรณ์</p>
-            <p id="rd-eq-name" style="font-size:12px;color:rgba(255,255,255,0.75);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
+            <p style="font-size:15px;font-weight:600;color:#0f172a;margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">คืนอุปกรณ์</p>
+            <p id="rd-eq-name" style="font-size:12px;color:#64748b;margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
           </div>
           <span id="rd-badge" style="font-size:11px;padding:3px 10px;border-radius:20px;font-family:'Noto Sans Thai','Inter',sans-serif;"></span>
         </div>
@@ -1439,7 +1471,7 @@
       const isMgr = CU.role === 'mgr';
       const a = CU.av;
       const av = document.getElementById('main-avatar');
-      av.style.cssText = 'width:40px;height:40px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,0.25);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#fff;font-family:\'Noto Sans Thai\',\'Inter\',sans-serif;';
+      av.style.cssText = 'width:40px;height:40px;border-radius:50%;flex-shrink:0;background:#fff;border:1.5px solid rgba(148,163,184,0.28);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#334155;box-shadow:0 6px 14px rgba(15,23,42,0.08);font-family:\'Noto Sans Thai\',\'Inter\',sans-serif;';
       av.textContent = ini(CU.name);
       document.getElementById('main-user-name').textContent = CU.name;
       document.getElementById('main-user-role').textContent = isMgr ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่ GA';
