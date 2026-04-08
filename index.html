@@ -396,22 +396,29 @@
     .login-shell { min-height: 100%; background: linear-gradient(180deg, #f8fbff 0%, var(--bg-page) 56%); }
     .auth-shell {
       min-height: 100vh;
-      padding: 24px 16px 32px;
+      padding: 14px 16px 24px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+    }
+    .auth-block {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .auth-brand {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 8px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
+      width: 100%;
     }
     .auth-card {
       width: 100%;
-      max-width: 420px;
       border-radius: 24px;
       padding: 32px;
       border: 1px solid rgba(148, 163, 184, 0.2);
@@ -566,6 +573,7 @@
       <div id="screen-login" class="screen">
         <div class="login-shell flex-1 overflow-auto">
           <div class="auth-shell">
+            <div class="auth-block">
             <div class="auth-brand">
               <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:var(--orange-gradient);box-shadow:0 6px 16px rgba(249,115,22,0.28);">
                 <span style="color:#fff;font-size:15px;font-weight:700;font-family:'Noto Sans Thai','Inter',sans-serif;">EC</span>
@@ -588,6 +596,7 @@
                 <div id="mgrUserList" class="space-y-2.5"></div>
               </div>
             </div>
+            </div>
           </div>
         </div>
       </div>
@@ -596,6 +605,7 @@
       <div id="screen-pin" class="screen">
         <div class="login-shell flex-1 overflow-auto">
           <div class="auth-shell">
+            <div class="auth-block">
             <div class="auth-brand">
               <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:var(--orange-gradient);box-shadow:0 6px 16px rgba(249,115,22,0.28);">
                 <span style="color:#fff;font-size:15px;font-weight:700;font-family:'Noto Sans Thai','Inter',sans-serif;">EC</span>
@@ -644,6 +654,7 @@
                   <path d="M13 5.5L18 10.5M18 5.5L13 10.5" stroke="#78716c" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
               </div>
+            </div>
             </div>
             </div>
           </div>
