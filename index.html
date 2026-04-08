@@ -1910,9 +1910,9 @@
               </div>
               ${r.qty_borrowed>1?`<p class="text-xs text-gray-400 mt-2 pl-13">จำนวน: ${r.qty_borrowed} ชิ้น</p>`:''}
             </div>`;
-          }).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
-            <span class="text-4xl mb-3">✅</span>
-            <p class="text-sm">ไม่มีรายการที่ต้องคืน</p>
+          }).join('') : `<div class="flex flex-col items-center justify-center" style="margin-top:40px;">
+            <i data-lucide="package" class="mb-3" style="width:32px;height:32px;color:#CBD5F5;"></i>
+            <p style="font-size:13px;color:#64748B;">ยังไม่มีรายการยืมอุปกรณ์</p>
           </div>`}
         </div>
       </div>`;
