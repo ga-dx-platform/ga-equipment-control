@@ -114,6 +114,14 @@
       --fs-secondary:  var(--ga-text-secondary);
       --fs-helper:     var(--ga-text-small);
       --fs-caption:    var(--ga-text-caption);
+
+      /* ══ GA Avatar Design Tokens ════════════════════════ */
+      --ga-avatar-lg:   44px;
+      --ga-avatar-md:   32px;
+      --ga-avatar-sm:   28px;
+      --ga-avatar-radius: 12px;
+      --ga-avatar-font: 14px;
+      --ga-avatar-fw:   600;
     }
 
     /* ── Base ─────────────────────────────────────────── */
@@ -397,6 +405,45 @@
     .avatar-sm  { width: 32px; height: 32px; font-size: var(--ga-text-caption); }
     .avatar-md  { width: 40px; height: 40px; font-size: var(--ga-text-body); }
     .avatar-gradient { box-shadow: 0 4px 12px rgba(249,115,22,0.3); }
+
+    /* ══ GA Avatar Component System ════════════════════════ */
+    .ga-avatar {
+      width: var(--ga-avatar-lg);
+      height: var(--ga-avatar-lg);
+      border-radius: var(--ga-avatar-radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--ga-avatar-font);
+      font-weight: var(--ga-avatar-fw);
+      color: white;
+      box-shadow:
+        0 2px 6px rgba(15,23,42,0.12),
+        inset 0 0 0 1px rgba(255,255,255,0.2);
+    }
+    .ga-avatar-md {
+      width: var(--ga-avatar-md);
+      height: var(--ga-avatar-md);
+      font-size: 13px;
+    }
+    .ga-avatar-sm {
+      width: var(--ga-avatar-sm);
+      height: var(--ga-avatar-sm);
+      font-size: 12px;
+    }
+    /* Role color classes */
+    .ga-avatar-staff {
+      background: #F97316;
+    }
+    .ga-avatar-manager {
+      background: #2563EB;
+    }
+    .ga-avatar-admin {
+      background: #7C3AED;
+    }
+    .ga-avatar-default {
+      background: #64748B;
+    }
 
     /* ── PIN dots ─────────────────────────────────────── */
     .pin-dot {
@@ -702,7 +749,8 @@
               </div>
               <div class="text-center mb-6">
                 <div id="pin-avatar"
-                  style="width:64px;height:64px;border-radius:50%;margin:0 auto 12px;background:#fff7ed;border:1px solid #fed7aa;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:#c2410c;font-family:'Noto Sans Thai','Inter',sans-serif;"></div>
+                  class="ga-avatar"
+                  style="width:64px;height:64px;margin:0 auto 12px;"></div>
                 <p id="pin-name"
                   style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
                 <p style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">กรอก PIN 6 หลัก</p>
@@ -750,11 +798,8 @@
               <div style="display:flex;align-items:center;gap:12px;">
                 <!-- Glass avatar -->
                 <div id="main-avatar"
-                     style="width:40px;height:40px;border-radius:50%;flex-shrink:0;
-                            background:#fff;
-                            border:1.5px solid rgba(148,163,184,0.28);
-                            display:flex;align-items:center;justify-content:center;
-                            font-size:14px;font-weight:600;color:#334155;font-family:'Noto Sans Thai','Inter',sans-serif;box-shadow:0 6px 14px rgba(15,23,42,0.08);"></div>
+                     class="ga-avatar ga-avatar-md"
+                     style="flex-shrink:0;"></div>
                 <div>
                   <p id="main-user-name"
                      style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 2px;font-family:'Noto Sans Thai','Inter',sans-serif;line-height:1.2;"></p>
@@ -1491,12 +1536,13 @@
     // ===== LOGIN =====
     function buildLoginScreen() {
       const gaList = document.getElementById('gaUserList'), mgrList = document.getElementById('mgrUserList');
-      const grads = ['from-orange-400 to-orange-600','from-amber-300 to-orange-500','from-rose-400 to-red-600','from-yellow-300 to-amber-500','from-red-400 to-rose-600','from-orange-300 to-amber-500'];
+      // grads array removed - using role-based avatar colors instead
       function row(u, i, role) {
         const isMgr = role === 'mgr';
+        const avatarClass = isMgr ? 'ga-avatar ga-avatar-manager' : 'ga-avatar ga-avatar-staff';
         const icon = isMgr
-          ? `<div class="w-11 h-11 rounded-full bg-gradient-to-br from-slate-300 to-slate-500 text-slate-50 flex items-center justify-center shadow-sm shrink-0"><i data-lucide="shield" class="w-5 h-5"></i></div>`
-          : `<div class="avatar-gradient w-11 h-11 rounded-full bg-gradient-to-br ${grads[i%grads.length]} flex items-center justify-center text-[15px] font-bold tracking-wide shrink-0">${he(ini(u.name))}</div>`;
+          ? `<div class="${avatarClass} shrink-0"><i data-lucide="shield" class="w-5 h-5"></i></div>`
+          : `<div class="${avatarClass} shrink-0">${he(ini(u.name))}</div>`;
         return `<button type="button" class="user-card ${isMgr?'admin-card':''} w-full flex items-center gap-3.5 px-4 py-3.5 text-left" data-name="${he(u.name)}" data-role="${role}" onclick="selectUser(this.dataset.name,this.dataset.role)">
           ${icon}<div class="flex-1 min-w-0"><p class="font-semibold ${isMgr?'text-slate-700':'text-slate-900'} text-[15px] leading-tight truncate">${he(u.name)}</p>
           <p class="text-xs text-slate-500 mt-1">${isMgr?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
@@ -1509,10 +1555,12 @@
     function selectUser(name, role) {
       const list = role==='ga'?AU.ga:AU.mgr;
       const idx = list.findIndex(u=>u.name===name);
-      const a = avc(role==='ga'?idx:idx+4);
       SU = { name, role, av: a }; PIN_ATTEMPTS = 0; PB = '';
       const av = document.getElementById('pin-avatar');
-      av.className = `w-16 h-16 rounded-full ${a.bg} ${a.tc} flex items-center justify-center font-bold text-lg mb-3`;
+      // Apply GA avatar class with role-based color
+      const roleClass = role === 'mgr' ? 'ga-avatar-manager' : 'ga-avatar-staff';
+      av.className = `ga-avatar ${roleClass}`;
+      av.style.cssText = 'width:64px;height:64px;margin:0 auto 12px;';
       av.textContent = ini(name);
       document.getElementById('pin-name').textContent = name;
       updatePinDots(); document.getElementById('pin-error').textContent = '';
@@ -1663,9 +1711,10 @@
     // ===== MAIN SCREEN =====
     function buildMain() {
       const isMgr = CU.role === 'mgr';
-      const a = CU.av;
       const av = document.getElementById('main-avatar');
-      av.style.cssText = 'width:40px;height:40px;border-radius:50%;flex-shrink:0;background:#fff;border:1.5px solid rgba(148,163,184,0.28);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#334155;box-shadow:0 6px 14px rgba(15,23,42,0.08);font-family:\'Noto Sans Thai\',\'Inter\',sans-serif;';
+      // Apply GA avatar class with role-based color
+      const roleClass = isMgr ? 'ga-avatar-manager' : 'ga-avatar-staff';
+      av.className = `ga-avatar ga-avatar-md ${roleClass}`;
       av.textContent = ini(CU.name);
       document.getElementById('main-user-name').textContent = CU.name;
       document.getElementById('main-user-role').textContent = isMgr ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่ GA';
