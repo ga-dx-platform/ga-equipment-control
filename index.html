@@ -389,23 +389,21 @@
     }
 
     /* ── Avatar ───────────────────────────────────────── */
-    /* Base — flat enterprise style, role color set via JS or modifier class */
-    .avatar {
-      border-radius: var(--ga-radius-sm);  /* 10px — compact header/list */
-      display: flex; align-items: center; justify-content: center;
-      font-size: var(--ga-text-body); font-weight: var(--ga-fw-semibold);
-      color: #fff;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
+    .ga-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+      box-shadow:
+        0 2px 6px rgba(15,23,42,0.12),
+        inset 0 0 0 1px rgba(255,255,255,0.15);
       flex-shrink: 0;
     }
-    .avatar-sm  { width: 32px; height: 32px; font-size: var(--ga-text-caption); }
-    .avatar-md  { width: 40px; height: 40px; font-size: var(--ga-text-body); }
-    .avatar-lg  { width: 44px; height: 44px; border-radius: 12px; }  /* login cards */
-    /* Role colors — flat solid, enterprise SaaS */
-    .avatar-ga      { background: #F97316; }
-    .avatar-mgr     { background: #2563EB; }
-    .avatar-admin   { background: #7C3AED; }
-    .avatar-default { background: #64748B; }
 
     /* ── PIN dots ─────────────────────────────────────── */
     .pin-dot {
@@ -710,7 +708,7 @@
                 <p style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">กรุณากรอก PIN เพื่อเข้าใช้งาน</p>
               </div>
               <div class="text-center mb-6">
-                <div id="pin-avatar" style="margin:0 auto 12px;"></div>
+                <div id="pin-avatar" class="ga-avatar mx-auto mb-3"></div>
                 <p id="pin-name"
                   style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
                 <p style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">กรอก PIN 6 หลัก</p>
@@ -757,12 +755,7 @@
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
               <div style="display:flex;align-items:center;gap:12px;">
                 <!-- Glass avatar -->
-                <div id="main-avatar"
-                     style="width:40px;height:40px;border-radius:50%;flex-shrink:0;
-                            background:#fff;
-                            border:1.5px solid rgba(148,163,184,0.28);
-                            display:flex;align-items:center;justify-content:center;
-                            font-size:14px;font-weight:600;color:#334155;font-family:'Noto Sans Thai','Inter',sans-serif;box-shadow:0 6px 14px rgba(15,23,42,0.08);"></div>
+                <div id="main-avatar" class="ga-avatar"></div>
                 <div>
                   <p id="main-user-name"
                      style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 2px;font-family:'Noto Sans Thai','Inter',sans-serif;line-height:1.2;"></p>
@@ -1085,17 +1078,25 @@
     }
 
     // ===== AVATAR COLORS =====
-    const AV_COLORS = {
-      ga:      { bg: '#F97316', color: '#fff' },
-      mgr:     { bg: '#2563EB', color: '#fff' },
-      admin:   { bg: '#7C3AED', color: '#fff' },
-      default: { bg: '#64748B', color: '#fff' },
-    };
-    function avc(role) { return AV_COLORS[role] || AV_COLORS.default; }
-    /** Render a flat enterprise avatar div. size in px, radius in px. */
-    function avEl(name, role, size = 44, radius = 12) {
-      const c = AV_COLORS[role] || AV_COLORS.default;
-      return `<div style="width:${size}px;height:${size}px;border-radius:${radius}px;background:${c.bg};color:${c.color};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.2);font-family:'Noto Sans Thai','Inter',sans-serif;">${he(ini(name))}</div>`;
+    function getAvatarColor(name) {
+      let hash = 0;
+      if (!name) return 'hsl(215, 14%, 47%)';
+      for(let i=0; i<name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash<<5) - hash);
+      }
+      const hue = Math.abs(hash) % 360;
+      return `hsl(${hue}, 65%, 55%)`;
+    }
+
+    function avc(name, role) {
+      if (role === 'manager' || role === 'mgr') return '#2563EB';
+      if (role === 'admin') return '#7C3AED';
+      return getAvatarColor(name);
+    }
+    
+    /** Render a unified GA avatar component */
+    function avEl(name, role) {
+      return `<div class="ga-avatar" style="background:${avc(name, role)};">${he(ini(name))}</div>`;
     }
     function ini(n) { const p = (n || '').trim().split(' '); return p.length >= 2 ? p[0][0] + p[1][0] : (n || '').slice(0, 2); }
 
@@ -1508,7 +1509,7 @@
       function row(u, i, role) {
         const isMgr = role === 'mgr';
         return `<button type="button" class="user-card ${isMgr?'admin-card':''} w-full flex items-center gap-3.5 px-4 py-3.5 text-left" data-name="${he(u.name)}" data-role="${role}" onclick="selectUser(this.dataset.name,this.dataset.role)">
-          ${avEl(u.name, role, 44, 12)}<div class="flex-1 min-w-0"><p class="font-semibold ${isMgr?'text-slate-700':'text-slate-900'} text-[15px] leading-tight truncate">${he(u.name)}</p>
+          ${avEl(u.name, role)}<div class="flex-1 min-w-0"><p class="font-semibold ${isMgr?'text-slate-700':'text-slate-900'} text-[15px] leading-tight truncate">${he(u.name)}</p>
           <p class="text-xs text-slate-500 mt-1">${isMgr?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
           <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 shrink-0"></i></button>`;
       }
@@ -1517,11 +1518,10 @@
       lucide.createIcons();
     }
     function selectUser(name, role) {
-      const c = avc(role);
       SU = { name, role }; PIN_ATTEMPTS = 0; PB = '';
       const av = document.getElementById('pin-avatar');
-      av.className = '';
-      av.style.cssText = `width:56px;height:56px;border-radius:14px;background:${c.bg};color:${c.color};display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;flex-shrink:0;margin:0 auto 12px;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.2);font-family:'Noto Sans Thai','Inter',sans-serif;`;
+      av.className = 'ga-avatar mx-auto mb-3';
+      av.style.cssText = `background: ${avc(name, role)};`;
       av.textContent = ini(name);
       document.getElementById('pin-name').textContent = name;
       updatePinDots(); document.getElementById('pin-error').textContent = '';
@@ -1672,9 +1672,9 @@
     // ===== MAIN SCREEN =====
     function buildMain() {
       const isMgr = CU.role === 'mgr';
-      const c = avc(CU.role);
       const av = document.getElementById('main-avatar');
-      av.style.cssText = `width:40px;height:40px;border-radius:10px;background:${c.bg};color:${c.color};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.2);font-family:'Noto Sans Thai','Inter',sans-serif;`;
+      av.className = 'ga-avatar';
+      av.style.cssText = `background: ${avc(CU.name, CU.role)};`;
       av.textContent = ini(CU.name);
       document.getElementById('main-user-name').textContent = CU.name;
       document.getElementById('main-user-role').textContent = isMgr ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่ GA';
@@ -2450,7 +2450,7 @@
             return all.map((u,i)=>{
               return `<div class="gd-card p-5 flex items-center justify-between fade-in">
                 <div class="flex items-center gap-3">
-                  ${avEl(u.name, u.type, 40, 10)}
+                  ${avEl(u.name, u.type)}
                   <div><p class="font-medium text-gray-900 text-sm">${he(u.name)}</p>
                   <p class="text-[10px] font-medium uppercase tracking-wider ${u.type==='mgr'?'text-purple-600':'text-gray-400'}">${u.type==='mgr'?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
                 </div>
