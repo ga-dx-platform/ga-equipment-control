@@ -28,49 +28,92 @@
   </script>
   <style>
     :root {
-      /* Brand */
+      /* ── Brand ──────────────────────────────────────────── */
       --orange-gradient: linear-gradient(135deg, #f97316 0%, #ea580c 52%, #c2410c 100%);
       --orange:          #f97316;
       --orange-dark:     #c2410c;
       --orange-light:    #fff7ed;
       --orange-border:   #fed7aa;
-      /* Page */
+
+      /* ── Surface ────────────────────────────────────────── */
       --bg-page:   #F4F7FC;
       --bg-card:   #ffffff;
       --bg-input:  #f8fafc;
-      /* Text */
+
+      /* ── Text ───────────────────────────────────────────── */
       --text-primary:   #0F172A;
       --text-secondary: #64748B;
       --text-muted:     #94A3B8;
-      /* Border */
+
+      /* ── Border ─────────────────────────────────────────── */
       --border:       #E2E8F0;
       --border-light: #EEF2FF;
-      /* Status */
+
+      /* ── Status ─────────────────────────────────────────── */
       --success-bg:   #d1fae5;
       --success-text: #065f46;
       --danger-bg:    #fee2e2;
       --danger-text:  #991b1b;
-      /* Legacy aliases — keep so old classes still work */
-      --gd-brand:        #EA580C;
-      --gd-brand-strong: #C2410C;
-      --gd-brand-vivid:  #F97316;
-      --gd-surface:      #F4F7FC;
-      --gd-card:         #FFFFFF;
-      --gd-text:         #0F172A;
-      --gd-muted:        #64748B;
-      --gd-border:       #E2E8F0;
-      --gd-radius-card:  24px;
-      --gd-radius-control: 10px;
-      --gd-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 20px rgba(15, 23, 42, 0.05);
-      --gd-shadow-md: 0 6px 18px rgba(15, 23, 42, 0.07), 0 14px 34px rgba(15, 23, 42, 0.08);
-      --gd-shadow-hover: 0 10px 26px rgba(15, 23, 42, 0.09), 0 22px 44px rgba(15, 23, 42, 0.08);
+
+      /* ══ GA Platform Design Tokens ═════════════════════════
+         These are the authoritative values. All legacy aliases
+         below are computed from these — do not set raw px here.
+      ═══════════════════════════════════════════════════════ */
+
       /* Typography scale */
-      --fs-page-title: 20px;   /* Page / modal headings — 600 */
-      --fs-section:    16px;   /* Section headings, panel titles — 600 */
-      --fs-body:       14px;   /* Primary content — 500 */
-      --fs-secondary:  13px;   /* Secondary / meta text — 400 */
-      --fs-helper:     12px;   /* Helper text, subtitles — 400 */
-      --fs-caption:    11px;   /* Uppercase labels, badges — 600 */
+      --ga-text-display:   20px;   /* page/modal headings */
+      --ga-text-title:     18px;   /* card / sub-page titles */
+      --ga-text-section:   16px;   /* section headings, panel titles */
+      --ga-text-body:      14px;   /* primary content */
+      --ga-text-secondary: 13px;   /* meta / description */
+      --ga-text-small:     12px;   /* helper text, subtitles */
+      --ga-text-caption:   11px;   /* uppercase labels, badges */
+
+      /* Font weight */
+      --ga-fw-semibold: 600;
+      --ga-fw-medium:   500;
+      --ga-fw-normal:   400;
+
+      /* Spacing (8px grid) */
+      --ga-space-xs:  4px;
+      --ga-space-sm:  8px;
+      --ga-space-md:  12px;
+      --ga-space-lg:  16px;
+      --ga-space-xl:  24px;
+      --ga-space-2xl: 32px;
+
+      /* Border radius */
+      --ga-radius-sm: 10px;
+      --ga-radius-md: 16px;
+      --ga-radius-lg: 24px;
+
+      /* Elevation */
+      --ga-shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.05);
+      --ga-shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --ga-shadow-lg: 0 20px 60px rgba(15, 23, 42, 0.12);
+
+      /* ── Legacy aliases (resolve to GA tokens) ──────────── */
+      --gd-brand:          #EA580C;
+      --gd-brand-strong:   #C2410C;
+      --gd-brand-vivid:    #F97316;
+      --gd-surface:        #F4F7FC;
+      --gd-card:           #FFFFFF;
+      --gd-text:           #0F172A;
+      --gd-muted:          #64748B;
+      --gd-border:         #E2E8F0;
+      --gd-radius-card:    var(--ga-radius-lg);
+      --gd-radius-control: var(--ga-radius-sm);
+      --gd-shadow-sm:      var(--ga-shadow-sm);
+      --gd-shadow-md:      var(--ga-shadow-md);
+      --gd-shadow-hover:   0 10px 26px rgba(15, 23, 42, 0.09), 0 22px 44px rgba(15, 23, 42, 0.08);
+
+      /* Typography aliases (resolve to GA tokens) */
+      --fs-page-title: var(--ga-text-display);
+      --fs-section:    var(--ga-text-section);
+      --fs-body:       var(--ga-text-body);
+      --fs-secondary:  var(--ga-text-secondary);
+      --fs-helper:     var(--ga-text-small);
+      --fs-caption:    var(--ga-text-caption);
     }
 
     /* ── Base ─────────────────────────────────────────── */
@@ -124,30 +167,29 @@
     /* ── Cards ────────────────────────────────────────── */
     .gd-card, .card {
       background: var(--bg-card);
-      border-radius: var(--gd-radius-card);
-      border: 1px solid #E2E8F0;
-      /* Increased vertical — Tailwind p-5/p-4 on same element overrides this */
-      padding: 28px 24px;
-      box-shadow: var(--gd-shadow-sm);
+      border-radius: var(--ga-radius-lg);
+      border: 1px solid var(--border);
+      padding: var(--ga-space-xl) var(--ga-space-xl);
+      box-shadow: var(--ga-shadow-sm);
       transition: box-shadow 150ms ease, transform 150ms ease, border-color 150ms ease;
     }
     .gd-card > :first-child { margin-top: 2px; }
     .gd-card:hover {
-      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+      box-shadow: var(--ga-shadow-md);
       border-color: #D8E1EC;
       transform: translateY(-1px);
     }
     .gd-card .text-gray-400,
     .gd-card .text-slate-400 {
-      color: #64748B !important;
+      color: var(--text-secondary) !important;
     }
     .gd-card-soft {
       background: #F8FAFC;
-      border: 1px solid #E2E8F0;
-      border-radius: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--ga-radius-md);
     }
-    .card-shadow   { box-shadow: var(--gd-shadow-sm); }
-    .card-shadow-md{ box-shadow: var(--gd-shadow-md); }
+    .card-shadow   { box-shadow: var(--ga-shadow-sm); }
+    .card-shadow-md{ box-shadow: var(--ga-shadow-md); }
 
     /* ── Page layout ──────────────────────────────────── */
     .gd-page {
@@ -163,22 +205,24 @@
       width: 100%;
     }
     .gd-page-header {
-      margin-bottom: 28px; padding: 20px 24px; border-radius: 20px;
+      margin-bottom: var(--ga-space-2xl);
+      padding: var(--ga-space-lg) var(--ga-space-xl);
+      border-radius: var(--ga-radius-lg);
       border: 1px solid rgba(96, 165, 250, 0.28);
       background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(236, 246, 255, 0.95) 56%, rgba(240, 249, 255, 0.92) 100%);
-      box-shadow: var(--gd-shadow-sm);
+      box-shadow: var(--ga-shadow-sm);
     }
     .gd-page-header h2 {
-      font-size: var(--fs-page-title) !important;
-      font-weight: 600 !important;
+      font-size: var(--ga-text-display) !important;
+      font-weight: var(--ga-fw-semibold) !important;
     }
-    .gd-page-header .gd-section-title { margin-bottom: 6px; }
-    .gd-page section + section { margin-top: 32px; }
+    .gd-page-header .gd-section-title { margin-bottom: var(--ga-space-xs); }
+    .gd-page section + section { margin-top: var(--ga-space-2xl); }
     .gd-page .gd-card + .gd-card,
-    .gd-page .card + .card { margin-top: 20px; }
+    .gd-page .card + .card { margin-top: var(--ga-space-xl); }
     .gd-empty {
-      border: 1px dashed var(--border); border-radius: var(--gd-radius-card);
-      background: var(--bg-card); padding: 32px; text-align: center;
+      border: 1px dashed var(--border); border-radius: var(--ga-radius-lg);
+      background: var(--bg-card); padding: var(--ga-space-2xl); text-align: center;
     }
 
     /* ── Buttons ──────────────────────────────────────── */
@@ -192,9 +236,9 @@
     .gd-btn-primary, .btn-primary {
       background: var(--orange-gradient);
       color: #fff; border: none;
-      border-radius: 12px;
-      font-size: var(--fs-body);
-      font-weight: 600;
+      border-radius: var(--ga-radius-sm);
+      font-size: var(--ga-text-body);
+      font-weight: var(--ga-fw-semibold);
       min-height: 44px;
       border: 1px solid rgba(255, 255, 255, 0.18);
       box-shadow: 0 4px 12px rgba(249, 115, 22, 0.22), 0 2px 4px rgba(194, 65, 12, 0.12);
@@ -213,18 +257,18 @@
       border: 1px solid #CBD5E1;
       background: #fff;
       color: #475569;
-      border-radius: 12px;
-      font-size: var(--fs-body);
-      font-weight: 600;
+      border-radius: var(--ga-radius-sm);
+      font-size: var(--ga-text-body);
+      font-weight: var(--ga-fw-semibold);
       min-height: 44px;
     }
     .gd-btn-secondary:hover, .btn-secondary:hover { background: #f8fafc; }
     .gd-btn-danger {
       background: #fef2f2; color: #dc2626;
       border: 1px solid #fecaca;
-      border-radius: 12px;
-      font-size: var(--fs-body);
-      font-weight: 600;
+      border-radius: var(--ga-radius-sm);
+      font-size: var(--ga-text-body);
+      font-weight: var(--ga-fw-semibold);
       min-height: 44px;
     }
 
@@ -233,9 +277,9 @@
       font-family: 'Noto Sans Thai', 'Inter', sans-serif;
       background: var(--bg-input);
       border: 1px solid var(--border);
-      border-radius: var(--gd-radius-control);
-      padding: 0 14px;
-      font-size: var(--fs-body); color: var(--text-primary);
+      border-radius: var(--ga-radius-sm);
+      padding: 0 var(--ga-space-lg);
+      font-size: var(--ga-text-body); color: var(--text-primary);
       width: 100%;
       height: 44px;
       transition: border-color 150ms ease, box-shadow 150ms ease;
@@ -249,8 +293,9 @@
     /* compat alias */
     .gd-input {
       background: var(--bg-input); border: 1px solid var(--border);
-      border-radius: var(--gd-radius-control); padding: 0 14px; font-size: var(--fs-body);
-      color: var(--text-primary); width: 100%; height: 44px;
+      border-radius: var(--ga-radius-sm); padding: 0 var(--ga-space-lg);
+      font-size: var(--ga-text-body); color: var(--text-primary);
+      width: 100%; height: 44px;
       font-family: 'Noto Sans Thai', 'Inter', sans-serif;
     }
 
@@ -260,16 +305,17 @@
 
     /* ── Modal panel ──────────────────────────────────── */
     .gd-modal-panel {
-      background: #fff; border-radius: var(--gd-radius-card);
+      background: var(--bg-card);
+      border-radius: var(--ga-radius-lg);
       border: 1px solid var(--border);
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08), 0 24px 48px rgba(15, 23, 42, 0.12);
-      padding: 28px 24px;
+      box-shadow: var(--ga-shadow-md);
+      padding: var(--ga-space-2xl) var(--ga-space-xl);
     }
 
     /* ── Section title ────────────────────────────────── */
     .gd-section-title {
-      font-size: var(--fs-caption);
-      font-weight: 600;
+      font-size: var(--ga-text-caption);
+      font-weight: var(--ga-fw-semibold);
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--text-muted);
@@ -278,8 +324,11 @@
     /* ── Status badges ────────────────────────────────── */
     .status-badge {
       display: inline-flex; align-items: center; gap: 5px;
-      padding: 4px 10px; border-radius: 999px;
-      font-size: var(--fs-caption); font-weight: 600; white-space: nowrap;
+      padding: var(--ga-space-xs) var(--ga-space-sm);
+      border-radius: 999px;
+      font-size: var(--ga-text-secondary);
+      font-weight: var(--ga-fw-medium);
+      white-space: nowrap;
       border: 0.5px solid transparent;
     }
     .status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
@@ -288,37 +337,48 @@
     .status-overdue  { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
 
     /* simple badges */
-    .badge { padding: 3px 10px; border-radius: 20px; font-size: var(--fs-caption); font-weight: 500; font-family: 'Noto Sans Thai', 'Inter', sans-serif; }
+    .badge {
+      padding: var(--ga-space-xs) var(--ga-space-sm);
+      border-radius: 999px;
+      font-size: var(--ga-text-secondary);
+      font-weight: var(--ga-fw-medium);
+      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+    }
     .badge-borrowed { background: var(--orange-light); color: var(--orange-dark); }
     .badge-returned { background: var(--success-bg);   color: var(--success-text); }
     .badge-overdue  { background: var(--danger-bg);    color: var(--danger-text); }
 
     /* ── KPI cards ────────────────────────────────────── */
     .kpi-card {
-      background: #fff; border-radius: var(--gd-radius-card);
+      background: var(--bg-card);
+      border-radius: var(--ga-radius-lg);
       border: 1px solid var(--border);
-      padding: 20px 20px 24px;
+      padding: var(--ga-space-xl) var(--ga-space-xl) var(--ga-space-xl);
       min-height: 152px;
       display: flex; flex-direction: column;
-      box-shadow: var(--gd-shadow-sm);
+      box-shadow: var(--ga-shadow-sm);
     }
     .kpi-number {
-      font-size: 34px; font-weight: 600; line-height: 1;
-      margin: 8px 0 0; font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      font-size: 34px; font-weight: var(--ga-fw-semibold); line-height: 1;
+      margin: var(--ga-space-sm) 0 0;
+      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
       color: var(--text-primary);
     }
-    .kpi-label { font-size: var(--fs-helper); color: var(--text-muted); margin-top: auto; padding-top: 6px; }
+    .kpi-label { font-size: var(--ga-text-small); color: var(--text-muted); margin-top: auto; padding-top: var(--ga-space-xs); }
     .kpi-card.orange .kpi-number { color: var(--orange); }
     .kpi-card.danger  { background: #fff5f5; border-color: #fecaca; }
     .kpi-card.danger  .kpi-number { color: #ef4444; }
     .kpi-card.success .kpi-number { color: #10b981; }
     /* compat */
-    .stat-card { transition: transform 150ms; border-radius: var(--gd-radius-card); }
+    .stat-card { transition: transform 150ms; border-radius: var(--ga-radius-lg); }
     .stat-card:active { transform: scale(0.97); }
 
     /* ── Chip filters ─────────────────────────────────── */
     .chip {
-      padding: 8px 16px; border-radius: 999px; font-size: var(--fs-secondary); font-weight: 500;
+      padding: var(--ga-space-sm) var(--ga-space-lg);
+      border-radius: 999px;
+      font-size: var(--ga-text-secondary);
+      font-weight: var(--ga-fw-medium);
       white-space: nowrap; cursor: pointer; transition: all 150ms ease;
       border: 1.5px solid var(--border); background: rgba(255,255,255,0.88); color: var(--text-muted);
     }
@@ -331,11 +391,11 @@
     /* ── Avatar ───────────────────────────────────────── */
     .avatar {
       border-radius: 50%; display: flex; align-items: center;
-      justify-content: center; font-weight: 500; color: #fff;
+      justify-content: center; font-weight: var(--ga-fw-medium); color: #fff;
       background: rgba(255,255,255,0.25);
     }
-    .avatar-sm  { width: 32px; height: 32px; font-size: var(--fs-caption); }
-    .avatar-md  { width: 40px; height: 40px; font-size: var(--fs-body); }
+    .avatar-sm  { width: 32px; height: 32px; font-size: var(--ga-text-caption); }
+    .avatar-md  { width: 40px; height: 40px; font-size: var(--ga-text-body); }
     .avatar-gradient { box-shadow: 0 4px 12px rgba(249,115,22,0.3); }
 
     /* ── PIN dots ─────────────────────────────────────── */
@@ -357,11 +417,12 @@
       width: 100%;
       max-width: 72px;
       height: 52px;
-      border-radius: 10px;
+      border-radius: var(--ga-radius-sm);
       display: flex; align-items: center; justify-content: center;
-      font-size: 22px; font-weight: 500; font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      font-size: 22px; font-weight: var(--ga-fw-medium);
+      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
       color: var(--text-primary); cursor: pointer;
-      background: #fff; border: 1px solid var(--border);
+      background: var(--bg-card); border: 1px solid var(--border);
       box-shadow: 0 2px 6px rgba(0,0,0,0.07);
       transition: background 150ms ease, transform 150ms ease;
       user-select: none; -webkit-user-select: none;
@@ -370,30 +431,36 @@
 
     /* ── Signature pad ────────────────────────────────── */
     .signature-pad {
-      border: 1px solid var(--border); border-radius: var(--gd-radius-card);
-      background: var(--bg-input); padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--ga-radius-lg);
+      background: var(--bg-input);
+      padding: var(--ga-space-md);
     }
     .signature-pad__header {
       display: flex; align-items: center; justify-content: space-between;
-      gap: 12px; margin-bottom: 10px;
+      gap: var(--ga-space-md); margin-bottom: var(--ga-space-sm);
     }
     .signature-pad__title {
-      font-size: var(--fs-caption); font-weight: 600; letter-spacing: 0.05em;
-      text-transform: uppercase; color: var(--text-muted);
+      font-size: var(--ga-text-caption); font-weight: var(--ga-fw-semibold);
+      letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-muted);
     }
     .signature-pad__clear {
       display: inline-flex; align-items: center; gap: 5px;
-      padding: 7px 12px; border: 1px solid var(--border);
-      border-radius: 8px; background: #fff;
-      color: var(--text-secondary); font-size: var(--fs-helper); font-weight: 500;
+      padding: var(--ga-space-sm) var(--ga-space-md);
+      border: 1px solid var(--border);
+      border-radius: var(--ga-radius-sm);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: var(--ga-text-small);
+      font-weight: var(--ga-fw-medium);
     }
     .signature-pad__frame {
-      border: 1px dashed var(--border); border-radius: var(--gd-radius-control);
-      background: #fff; overflow: hidden;
+      border: 1px dashed var(--border); border-radius: var(--ga-radius-sm);
+      background: var(--bg-card); overflow: hidden;
     }
     canvas.sig-canvas {
-      touch-action: none; pointer-events: auto; background: #fff;
-      border-radius: var(--gd-radius-control); display: block; user-select: none;
+      touch-action: none; pointer-events: auto; background: var(--bg-card);
+      border-radius: var(--ga-radius-sm); display: block; user-select: none;
     }
 
     /* ── Skeleton ─────────────────────────────────────── */
@@ -424,25 +491,26 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: var(--ga-space-sm);
+      margin-bottom: var(--ga-space-xl);
       width: 100%;
     }
     .auth-card {
       width: 100%;
-      border-radius: 24px;
-      padding: 32px;
+      border-radius: var(--ga-radius-lg);
+      padding: var(--ga-space-2xl);
       border: 1px solid rgba(148, 163, 184, 0.2);
-      background: #fff;
-      box-shadow: var(--gd-shadow-md);
+      background: var(--bg-card);
+      box-shadow: var(--ga-shadow-md);
     }
     .login-wave-card { background: var(--bg-page); }
     .user-card {
-      border: 1px solid var(--border); border-radius: 16px;
-      background: #fff; cursor: pointer;
+      border: 1px solid var(--border);
+      border-radius: var(--ga-radius-md);
+      background: var(--bg-card); cursor: pointer;
       transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
     }
-    .user-card:hover  { transform: translateY(-1px); box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08); border-color: rgba(249, 115, 22, 0.32); background: rgba(255,255,255,0.96); }
+    .user-card:hover  { transform: translateY(-1px); box-shadow: var(--ga-shadow-md); border-color: rgba(249, 115, 22, 0.32); background: rgba(255,255,255,0.96); }
     .user-card:active { transform: scale(0.98); }
     .user-card.selected { border-color: rgba(249, 115, 22, 0.62); box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.12), 0 12px 24px rgba(194, 65, 12, 0.1); }
     .admin-card { border-color: rgba(148, 163, 184, 0.3); background: linear-gradient(120deg, rgba(241, 245, 249, 0.8), rgba(248, 250, 252, 0.95)); }
@@ -467,12 +535,12 @@
       padding: 0 40px;
       display: flex;
       align-items: flex-end;
-      gap: 24px;
+      gap: var(--ga-space-xl);
     }
     .top-tab {
       padding: 14px 2px 12px;
-      font-size: var(--fs-body);
-      font-weight: 600;
+      font-size: var(--ga-text-body);
+      font-weight: var(--ga-fw-semibold);
       color: var(--text-muted);
       border: 0;
       border-radius: 0;
@@ -495,28 +563,28 @@
 
     /* ── In-header tab bar (compat) ───────────────────── */
     #mainTabBar, #mainTabBar-desktop {
-      overflow-x: auto; scrollbar-width: none; gap: 8px;
+      overflow-x: auto; scrollbar-width: none; gap: var(--ga-space-sm);
       border: 0;
-      border-radius: 16px;
-      padding: 5px;
+      border-radius: var(--ga-radius-md);
+      padding: var(--ga-space-xs);
       background: rgba(15, 23, 42, 0.06);
     }
     #mainTabBar::-webkit-scrollbar,
     #mainTabBar-desktop::-webkit-scrollbar { display: none; }
 
     .main-tab { white-space: nowrap; cursor: pointer; font-family: 'Noto Sans Thai', 'Inter', sans-serif; }
-    #mainTabBar .main-tab { letter-spacing: .01em; border-radius: 12px; transition: all .2s ease; }
+    #mainTabBar .main-tab { letter-spacing: .01em; border-radius: var(--ga-radius-sm); transition: all .2s ease; }
     #mainTabBar .main-tab:hover { color: #9a3412; background: rgba(255, 255, 255, .8); }
     /* Mobile pill inside header */
     .tab-active {
-      color: #0f172a;
+      color: var(--text-primary);
       border: 1px solid rgba(249, 115, 22, 0.18);
-      background: #ffffff;
+      background: var(--bg-card);
       box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
-      border-radius: 12px;
-      font-weight: 700;
+      border-radius: var(--ga-radius-sm);
+      font-weight: var(--ga-fw-semibold);
     }
-    .tab-inactive { color: #64748b; border: 1px solid transparent; background: transparent; border-radius: 12px; }
+    .tab-inactive { color: var(--text-secondary); border: 1px solid transparent; background: transparent; border-radius: var(--ga-radius-sm); }
     /* Desktop underline */
     @media (min-width: 1024px) {
       .top-tabs { display: flex; }
@@ -545,7 +613,7 @@
       content: ''; position: absolute; top: 0; left: 25%; right: 25%;
       height: 2px; background: var(--orange); border-radius: 0 0 3px 3px;
     }
-    .bn-label { font-size: var(--fs-caption); font-weight: 600; line-height: 1; }
+    .bn-label { font-size: var(--ga-text-caption); font-weight: var(--ga-fw-semibold); line-height: 1; }
 
     @media (max-width: 767px) {
       #bottom-nav { display: flex; }
