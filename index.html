@@ -871,7 +871,53 @@
     /* Global Nuke for old duplicate bars */
     #mainTabBar { display: none !important; }
   </style>
+
+  <style>
+    /* Strict SaaS Vertical Rhythm */
+    
+    /* Pull the bottom margin off the tab container so we can control spacing block-by-block on the container itself */
+    .top-tabs-inner { margin-bottom: 0px !important; }
+    
+    /* Main page bounds: start explicitly 24px beneath the floating navigation */
+    .gd-container {
+      margin-top: 24px !important;
+      padding-bottom: 40px !important; /* give it breathing room at the bottom of the page */
+    }
+    
+    /* Section Titles */
+    .page-title {
+      margin-top: 8px !important;
+      margin-bottom: 12px !important;
+    }
+    
+    /* Any subtitle directly below titles */
+    .gd-container-header p {
+      margin-top: 0 !important;
+      margin-bottom: 24px !important;
+    }
+    
+    /* Search container: the generic .mb-4 wrapper sitting exactly above filter chips or lists */
+    .gd-container > div.mb-4, 
+    .gd-container > input.gd-input[type="text"] {
+      margin-top: 12px !important;
+      margin-bottom: 16px !important;
+    }
+    
+    /* Filter Chips wrapper */
+    .gd-container > .overflow-x-auto.mb-5 {
+      margin-top: 12px !important;
+      margin-bottom: 24px !important;
+    }
+    
+    /* Dashboard specific overrides */
+    #tab-dashboard .grid-cols-2 {
+      margin-top: 24px !important;
+      margin-bottom: 24px !important;
+    }
+    
+  </style>
 </head>
+
 
 
 
