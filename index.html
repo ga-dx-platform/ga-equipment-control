@@ -163,68 +163,37 @@
       position: absolute; bottom: -1px; left: 0;
       width: 100%; height: 40px; display: block; pointer-events: none;
     }
-
     /* ── Cards ────────────────────────────────────────── */
     .gd-card, .card {
-      background: var(--bg-card);
-      border-radius: var(--ga-radius-lg);
-      border: 1px solid var(--border);
-      padding: var(--ga-space-xl) var(--ga-space-xl);
-      box-shadow: var(--ga-shadow-sm);
-      transition: box-shadow 150ms ease, transform 150ms ease, border-color 150ms ease;
+      background: white;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(15,23,42,0.04);
+      transition: all .15s ease;
     }
     .gd-card > :first-child { margin-top: 2px; }
     .gd-card:hover {
-      box-shadow: var(--ga-shadow-md);
-      border-color: #D8E1EC;
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06), 0 16px 32px rgba(15,23,42,0.08);
     }
-    .gd-card .text-gray-400,
-    .gd-card .text-slate-400 {
-      color: var(--text-secondary) !important;
-    }
-    .gd-card-soft {
-      background: #F8FAFC;
-      border: 1px solid var(--border);
-      border-radius: var(--ga-radius-md);
-    }
-    .card-shadow   { box-shadow: var(--ga-shadow-sm); }
-    .card-shadow-md{ box-shadow: var(--ga-shadow-md); }
 
     /* ── Page layout ──────────────────────────────────── */
-    .gd-page {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 32px 40px 48px;
-      width: 100%;
-    }
-    /* Centered inner column — matches gd-page width, used in header/tabs/banner */
-    .gd-inner {
-      max-width: 1180px;
-      margin: 0 auto;
-      width: 100%;
-    }
-    .gd-page-header {
-      margin-bottom: var(--ga-space-2xl);
-      padding: var(--ga-space-lg) var(--ga-space-xl);
-      border-radius: var(--ga-radius-lg);
-      border: 1px solid rgba(96, 165, 250, 0.28);
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(236, 246, 255, 0.95) 56%, rgba(240, 249, 255, 0.92) 100%);
-      box-shadow: var(--ga-shadow-sm);
-    }
-    .gd-page-header h2 {
-      font-size: var(--ga-text-display) !important;
-      font-weight: var(--ga-fw-semibold) !important;
-    }
-    .gd-page-header .gd-section-title { margin-bottom: var(--ga-space-xs); }
-    .gd-page section + section { margin-top: var(--ga-space-2xl); }
-    .gd-page .gd-card + .gd-card,
-    .gd-page .card + .card { margin-top: var(--ga-space-xl); }
-    .gd-empty {
-      border: 1px dashed var(--border); border-radius: var(--ga-radius-lg);
-      background: var(--bg-card); padding: var(--ga-space-2xl); text-align: center;
+    .ga-page { max-width: 1280px; margin: 0 auto; padding: 24px; }
+    .ga-content { max-width: 1100px; margin: 0 auto; }
+    .ga-reading { max-width: 920px; margin: 0 auto; }
+    .gd-section {
+      background: white;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 18px 22px;
     }
 
+
+    
+    .eq-title { font-size: 15px; font-weight: 600; color: #0F172A; }
+    .eq-meta { font-size: 13px; color: #64748B; }
+    .section-title-new { font-size: 18px; font-weight: 600; color: #0F172A; }
     /* ── Buttons ──────────────────────────────────────── */
     button {
       font-family: 'Noto Sans Thai', 'Inter', sans-serif;
@@ -234,50 +203,41 @@
     button:active { transform: scale(0.98); }
 
     .gd-btn-primary, .btn-primary {
-      background: var(--orange-gradient);
-      color: #fff; border: none;
-      border-radius: var(--ga-radius-sm);
-      font-size: var(--ga-text-body);
-      font-weight: var(--ga-fw-semibold);
+      background: #F97316;
+      color: white; border: none;
+      border-radius: 10px;
+      padding: 6px 14px;
+      font-size: 14px;
+      font-weight: 600;
       min-height: 44px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.22), 0 2px 4px rgba(194, 65, 12, 0.12);
       width: 100%;
     }
     .gd-btn-primary:hover, .btn-primary:hover {
-      transform: translateY(-1px);
-      filter: saturate(1.06);
-      box-shadow: 0 6px 18px rgba(249, 115, 22, 0.26), 0 2px 6px rgba(194, 65, 12, 0.14);
+      filter: brightness(1.05);
     }
     .gd-btn-primary:disabled, .gd-btn-primary.is-disabled {
       background: #d4d0cd; color: #a8a29e;
       pointer-events: none; box-shadow: none;
     }
     .gd-btn-secondary, .btn-secondary {
-      border: 1px solid #CBD5E1;
-      background: #fff;
+      border: 1px solid #E2E8F0;
+      background: #F8FAFC;
       color: #475569;
-      border-radius: var(--ga-radius-sm);
-      font-size: var(--ga-text-body);
-      font-weight: var(--ga-fw-semibold);
+      border-radius: 10px;
+      padding: 6px 14px;
+      font-size: 14px;
+      font-weight: 600;
       min-height: 44px;
     }
-    .gd-btn-secondary:hover, .btn-secondary:hover { background: #f8fafc; }
-    .gd-btn-danger {
-      background: #fef2f2; color: #dc2626;
-      border: 1px solid #fecaca;
-      border-radius: var(--ga-radius-sm);
-      font-size: var(--ga-text-body);
-      font-weight: var(--ga-fw-semibold);
-      min-height: 44px;
-    }
+    .gd-btn-secondary:hover, .btn-secondary:hover { background: #e2e8f0; }
+
 
     /* ── Inputs ───────────────────────────────────────── */
     input, select, textarea {
       font-family: 'Noto Sans Thai', 'Inter', sans-serif;
       background: var(--bg-input);
       border: 1px solid var(--border);
-      border-radius: var(--ga-radius-sm);
+      border-radius: 10px;
       padding: 0 var(--ga-space-lg);
       font-size: var(--ga-text-body); color: var(--text-primary);
       width: 100%;
@@ -293,7 +253,7 @@
     /* compat alias */
     .gd-input {
       background: var(--bg-input); border: 1px solid var(--border);
-      border-radius: var(--ga-radius-sm); padding: 0 var(--ga-space-lg);
+      border-radius: 10px; padding: 0 var(--ga-space-lg);
       font-size: var(--ga-text-body); color: var(--text-primary);
       width: 100%; height: 44px;
       font-family: 'Noto Sans Thai', 'Inter', sans-serif;
@@ -320,33 +280,23 @@
       text-transform: uppercase;
       color: var(--text-muted);
     }
-
     /* ── Status badges ────────────────────────────────── */
-    .status-badge {
+    .status-badge{
+      font-size:12px;
+      font-weight:500;
+      padding:4px 10px;
+      border-radius:999px;
+      background:#F1F5F9;
+      color:#475569;
+      border:1px solid #E2E8F0;
       display: inline-flex; align-items: center; gap: 5px;
-      padding: var(--ga-space-xs) var(--ga-space-sm);
-      border-radius: 999px;
-      font-size: var(--ga-text-secondary);
-      font-weight: var(--ga-fw-medium);
       white-space: nowrap;
-      border: 0.5px solid transparent;
     }
     .status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-    .status-borrowed { background: #fff7ed; color: #c2410c; border-color: #fed7aa; }
-    .status-returned { background: #d1fae5; color: #065f46; border-color: #a7f3d0; }
+    .status-borrowed { background:#FFF7ED; color:#C2410C; border:1px solid #FED7AA; } /* using as low stock mapped from legacy */
+    .status-returned { background:#EFF6FF; color:#1D4ED8; border:1px solid #BFDBFE; } /* good stock */
     .status-overdue  { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
 
-    /* simple badges */
-    .badge {
-      padding: var(--ga-space-xs) var(--ga-space-sm);
-      border-radius: 999px;
-      font-size: var(--ga-text-secondary);
-      font-weight: var(--ga-fw-medium);
-      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
-    }
-    .badge-borrowed { background: var(--orange-light); color: var(--orange-dark); }
-    .badge-returned { background: var(--success-bg);   color: var(--success-text); }
-    .badge-overdue  { background: var(--danger-bg);    color: var(--danger-text); }
 
     /* ── KPI cards ────────────────────────────────────── */
     .kpi-card {
@@ -424,7 +374,7 @@
       width: 100%;
       max-width: 72px;
       height: 52px;
-      border-radius: var(--ga-radius-sm);
+      border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
       font-size: 22px; font-weight: var(--ga-fw-medium);
       font-family: 'Noto Sans Thai', 'Inter', sans-serif;
@@ -455,19 +405,19 @@
       display: inline-flex; align-items: center; gap: 5px;
       padding: var(--ga-space-sm) var(--ga-space-md);
       border: 1px solid var(--border);
-      border-radius: var(--ga-radius-sm);
+      border-radius: 10px;
       background: var(--bg-card);
       color: var(--text-secondary);
       font-size: var(--ga-text-small);
       font-weight: var(--ga-fw-medium);
     }
     .signature-pad__frame {
-      border: 1px dashed var(--border); border-radius: var(--ga-radius-sm);
+      border: 1px dashed var(--border); border-radius: 10px;
       background: var(--bg-card); overflow: hidden;
     }
     canvas.sig-canvas {
       touch-action: none; pointer-events: auto; background: var(--bg-card);
-      border-radius: var(--ga-radius-sm); display: block; user-select: none;
+      border-radius: 10px; display: block; user-select: none;
     }
 
     /* ── Skeleton ─────────────────────────────────────── */
@@ -580,7 +530,7 @@
     #mainTabBar-desktop::-webkit-scrollbar { display: none; }
 
     .main-tab { white-space: nowrap; cursor: pointer; font-family: 'Noto Sans Thai', 'Inter', sans-serif; }
-    #mainTabBar .main-tab { letter-spacing: .01em; border-radius: var(--ga-radius-sm); transition: all .2s ease; }
+    #mainTabBar .main-tab { letter-spacing: .01em; border-radius: 10px; transition: all .2s ease; }
     #mainTabBar .main-tab:hover { color: #9a3412; background: rgba(255, 255, 255, .8); }
     /* Mobile pill inside header */
     .tab-active {
@@ -588,10 +538,10 @@
       border: 1px solid rgba(249, 115, 22, 0.18);
       background: var(--bg-card);
       box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
-      border-radius: var(--ga-radius-sm);
+      border-radius: 10px;
       font-weight: var(--ga-fw-semibold);
     }
-    .tab-inactive { color: var(--text-secondary); border: 1px solid transparent; background: transparent; border-radius: var(--ga-radius-sm); }
+    .tab-inactive { color: var(--text-secondary); border: 1px solid transparent; background: transparent; border-radius: 10px; }
     /* Desktop underline */
     @media (min-width: 1024px) {
       .top-tabs { display: flex; }
@@ -805,10 +755,10 @@
         <!-- Overdue Banner -->
         <div class="gd-inner" style="padding:0 40px;">
           <div id="overdue-banner" class="hidden mt-3 rounded-xl px-4 py-3 flex items-center gap-3 bg-red-50 border border-red-200">
-            <i data-lucide="alert-triangle" class="w-4 h-4 text-red-500 shrink-0"></i>
+            <i data-lucide="alert-triangle" class="w-[18px] h-[18px] text-[#64748B]"></i>
             <p id="overdue-banner-text" class="text-sm font-medium text-red-700 flex-1"></p>
             <button onclick="document.getElementById('overdue-banner').classList.add('hidden')" class="p-1 rounded-lg hover:bg-red-100 transition">
-              <i data-lucide="x" class="w-3.5 h-3.5 text-red-400"></i>
+              <i data-lucide="x" class="w-[18px] h-[18px] text-[#64748B]"></i>
             </button>
           </div>
         </div>
@@ -867,7 +817,7 @@
     <div class="absolute inset-0 bg-black/40" onclick="closeEquipModal()"></div>
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:380px;">
       <h3 id="equipModalTitle" class="font-bold text-gray-900 text-lg mb-4">เพิ่มอุปกรณ์</h3>
-      <div class="space-y-4">
+      <div class="space-y-4 ga-reading">
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่ออุปกรณ์</label>
           <input type="text" id="eqName" placeholder="เช่น โน๊ตบุ๊ค Dell" class="gd-input"></div>
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">หมวดหมู่</label>
@@ -926,7 +876,7 @@
     <div class="absolute inset-0 bg-black/40" onclick="closeUserModal()"></div>
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:360px;">
       <h3 class="font-bold text-gray-900 text-lg mb-4">เพิ่มสมาชิกใหม่</h3>
-      <div class="space-y-4">
+      <div class="space-y-4 ga-reading">
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
           <input type="text" id="newUserName" placeholder="เช่น สมชาย ใจดี" class="gd-input"></div>
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ตำแหน่ง/สิทธิ์</label>
@@ -949,7 +899,7 @@
     <div class="absolute inset-0 bg-black/40" onclick="closeRecipientModal()"></div>
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:360px;">
       <h3 class="font-bold text-gray-900 text-lg mb-4">เพิ่มผู้รับรายงาน</h3>
-      <div class="space-y-4">
+      <div class="space-y-4 ga-reading">
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
           <input type="text" id="recipientName" placeholder="เช่น สมชาย จิตรดี" class="gd-input"></div>
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">อีเมล</label>
@@ -968,7 +918,7 @@
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:320px;">
       <div class="flex flex-col items-center text-center mb-5">
         <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-3">
-          <i data-lucide="log-out" class="w-6 h-6 text-red-500"></i></div>
+          <i data-lucide="log-out" class="w-[18px] h-[18px] text-[#64748B]"></i></div>
         <p class="font-semibold text-gray-900 text-base">ออกจากระบบ?</p>
       </div>
       <div class="flex gap-3">
@@ -1011,7 +961,7 @@
         <div class="numpad-key" onclick="cpEnterPin('9')">9</div>
         <div class="numpad-key"></div>
         <div class="numpad-key" onclick="cpEnterPin('0')">0</div>
-        <div class="numpad-key" onclick="cpDeletePin()"><i data-lucide="delete" class="w-5 h-5 text-gray-400"></i></div>
+        <div class="numpad-key" onclick="cpDeletePin()"><i data-lucide="delete" class="w-[18px] h-[18px] text-[#64748B]"></i></div>
       </div>
       <button onclick="closeChangePinModal()" class="w-full py-2.5 gd-btn-secondary">ยกเลิก</button>
     </div>
@@ -1135,7 +1085,7 @@
       t.classList.add('active'); t.style.display = 'flex';
       syncBottomNavVisibility(name);
     }
-    function showModal(id) { const m = document.getElementById(id); if(m) { m.classList.remove('pointer-events-none','opacity-0'); m.classList.add('pointer-events-auto','opacity-100'); lucide.createIcons(); } }
+    function showModal(id) { const m = document.getElementById(id); if(m) { m.classList.remove('pointer-events-none','opacity-0'); m.classList.add('pointer-events-auto','opacity-100'); lucide.createIcons({'stroke-width': 1.5}); } }
     function hideModal(id) { const m = document.getElementById(id); if(m) { m.classList.add('pointer-events-none','opacity-0'); m.classList.remove('pointer-events-auto','opacity-100'); } }
     function showToast(msg, type='info') {
       const container = document.getElementById('toast-container');
@@ -1144,9 +1094,9 @@
       const bg = { success:'bg-emerald-700', error:'bg-red-700', warning:'bg-amber-700', info:'bg-slate-800' };
       const el = document.createElement('div');
       el.className = `flex items-center gap-2.5 px-4 py-3 text-white text-sm font-medium rounded-xl shadow-lg ${bg[type]||bg.info} translate-x-full opacity-0 transition-all duration-300 pointer-events-auto`;
-      el.innerHTML = `<i data-lucide="${icons[type]||'info'}" class="w-4 h-4 shrink-0"></i><p class="leading-tight">${msg}</p>`;
+      el.innerHTML = `<i data-lucide="${icons[type]||'info'}" class="w-[18px] h-[18px] text-[#64748B]"></i><p class="leading-tight">${msg}</p>`;
       container.appendChild(el);
-      lucide.createIcons();
+      lucide.createIcons({'stroke-width': 1.5});
       requestAnimationFrame(() => { el.classList.remove('translate-x-full','opacity-0'); });
       setTimeout(() => { el.classList.add('translate-x-full','opacity-0'); setTimeout(() => el.remove(), 300); }, 2600);
     }
@@ -1511,11 +1461,11 @@
         return `<button type="button" class="user-card ${isMgr?'admin-card':''} w-full flex items-center gap-3.5 px-4 py-3.5 text-left" data-name="${he(u.name)}" data-role="${role}" onclick="selectUser(this.dataset.name,this.dataset.role)">
           ${avEl(u.name, role)}<div class="flex-1 min-w-0"><p class="font-semibold ${isMgr?'text-slate-700':'text-slate-900'} text-[15px] leading-tight truncate">${he(u.name)}</p>
           <p class="text-xs text-slate-500 mt-1">${isMgr?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 shrink-0"></i></button>`;
+          <i data-lucide="chevron-right" class="w-[18px] h-[18px] text-[#64748B]"></i></button>`;
       }
       gaList.innerHTML = AU.ga.map((u,i) => row(u,i,'ga')).join('');
       mgrList.innerHTML = AU.mgr.map((u,i) => row(u,i,'mgr')).join('');
-      lucide.createIcons();
+      lucide.createIcons({'stroke-width': 1.5});
     }
     function selectUser(name, role) {
       SU = { name, role }; PIN_ATTEMPTS = 0; PB = '';
@@ -1525,7 +1475,7 @@
       av.textContent = ini(name);
       document.getElementById('pin-name').textContent = name;
       updatePinDots(); document.getElementById('pin-error').textContent = '';
-      goScreen('pin'); lucide.createIcons();
+      goScreen('pin'); lucide.createIcons({'stroke-width': 1.5});
     }
 
     // ===== PIN =====
@@ -1553,7 +1503,7 @@
         if (res.ok) {
           PIN_ATTEMPTS = 0; CU = { ...SU }; EQ = eqData; BORROWS = brData; CATS = catData;
           toast('ยินดีต้อนรับ ' + CU.name.split(' ')[0]);
-          buildMain(); goScreen('main'); lucide.createIcons(); startAutoLogout();
+          buildMain(); goScreen('main'); lucide.createIcons({'stroke-width': 1.5}); startAutoLogout();
         } else {
           PIN_ATTEMPTS++;
           const rem = PIN_MAX_ATTEMPTS - PIN_ATTEMPTS;
@@ -1658,7 +1608,7 @@
     function logout() {
       closeLogoutModal(); stopAutoLogout();
       signatureListenersCleanup?.();
-      CU=null; SU=null; EQ=[]; BORROWS=[]; goScreen('login'); lucide.createIcons();
+      CU=null; SU=null; EQ=[]; BORROWS=[]; goScreen('login'); lucide.createIcons({'stroke-width': 1.5});
     }
     function startAutoLogout() {
       stopAutoLogout();
@@ -1742,7 +1692,7 @@
         if(idx===1){ document.getElementById('tab-return').style.display='block'; renderReturnTab(); }
         if(idx===2){ document.getElementById('tab-history').style.display='block'; renderHistoryTab(); }
       }
-      lucide.createIcons();
+      lucide.createIcons({'stroke-width': 1.5});
     }
 
     // ===== GA: BORROW TAB =====
@@ -1755,10 +1705,10 @@
         return true;
       });
       const el = document.getElementById('tab-borrow');
-      el.innerHTML = `<div class="gd-page fade-in">
-        <div class="gd-page-header">
-          <p class="gd-section-title mb-2">Borrow</p>
-          <h2 class="text-xl font-bold tracking-tight text-slate-900">ยืมอุปกรณ์</h2>
+      el.innerHTML = `<div class="ga-page ga-content fade-in">
+        <div class="ga-page ga-content-header">
+          
+          <h2 class="section-title-new">ยืมอุปกรณ์</h2>
           <p class="text-sm text-slate-500 mt-1">เลือกอุปกรณ์ที่ต้องการยืม (คงเหลือ > 0)</p>
         </div>
         <div class="mb-4">
@@ -1769,26 +1719,26 @@
           <div class="chip ${borrowCatFilter===''?'active':''}" onclick="borrowCatFilter='';renderBorrowTab()">ทั้งหมด</div>
           ${cats.map(c=>`<div class="chip ${borrowCatFilter===c?'active':''}" onclick="borrowCatFilter='${he(c)}';renderBorrowTab()">${he(c)}</div>`).join('')}
         </div>
-        <div class="space-y-4" id="eqGrid">
+        <div class="space-y-4 ga-reading" id="eqGrid">
           ${filtered.length ? filtered.map(e=>`<div class="gd-card p-5 cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
             <div class="flex items-center gap-3">
               ${e.image_url ? `<img src="${he(e.image_url)}" class="w-12 h-12 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-xl shrink-0">📦</div>`}
               <div class="flex-1 min-w-0">
-                <p class="font-semibold text-gray-900 text-sm">${he(e.name)}</p>
-                <p class="text-xs text-gray-400 mt-0.5">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
+                <p class="eq-title">${he(e.name)}</p>
+                <p class="eq-meta mt-1">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
               </div>
               <div class="flex flex-col items-end gap-1.5 shrink-0">
                 <span class="text-xs px-2.5 py-1 rounded-full font-semibold ${e.available<=2?'bg-amber-50 text-amber-700 border border-amber-200':'bg-blue-50 text-brand border border-blue-200'}">คงเหลือ ${e.available}/${e.quantity}</span>
-                <button class="text-xs font-semibold text-brand flex items-center gap-1"><i data-lucide="hand" class="w-3.5 h-3.5"></i> ยืม</button>
+                <button class="text-xs font-semibold text-brand flex items-center gap-1"><i data-lucide="hand" class="w-[18px] h-[18px] text-[#64748B]"></i> ยืม</button>
               </div>
             </div>
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
-            <span class="text-4xl mb-3">📦</span>
-            <p class="text-sm">ยังไม่มีอุปกรณ์ในระบบ</p>
+            <i data-lucide="archive" style="width:32px;height:32px;color:#CBD5E1;margin-bottom:12px;"></i>
+            <p style="font-size:13px;color:#64748B;">คุณยังไม่มีรายการยืมอุปกรณ์</p>
           </div>`}
         </div>
       </div>`;
-      lucide.createIcons();
+      lucide.createIcons({'stroke-width': 1.5});
     }
 
     // ===== GA: BORROW FORM =====
@@ -1804,7 +1754,7 @@
           <div class="flex items-center gap-3 mb-1">
             ${eq.image_url ? `<img src="${he(eq.image_url)}" class="w-10 h-10 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style="background:var(--orange-light);"><i data-lucide="box" style="width:20px;height:20px;color:var(--orange);"></i></div>`}
             <div><p class="font-semibold text-gray-900">${he(eq.name)}</p>
-            <p class="text-xs text-gray-400">${he(eq.category||'')}${eq.serial_no?' · '+he(eq.serial_no):''} · คงเหลือ ${eq.available}</p></div>
+            <p class="eq-meta">${he(eq.category||'')}${eq.serial_no?' · '+he(eq.serial_no):''} · คงเหลือ ${eq.available}</p></div>
           </div>
         </div>
         <div class="space-y-4 mb-6">
@@ -1822,7 +1772,7 @@
         <div class="signature-pad mb-6">
           <div class="signature-pad__header">
             <span class="signature-pad__title">ลายเซ็นผู้ยืม</span>
-            <button onclick="clearSignCanvas('bfSignCanvas')" class="signature-pad__clear"><i data-lucide="eraser" class="w-3.5 h-3.5"></i> ล้าง</button>
+            <button onclick="clearSignCanvas('bfSignCanvas')" class="signature-pad__clear"><i data-lucide="eraser" class="w-[18px] h-[18px] text-[#64748B]"></i> ล้าง</button>
           </div>
           <div class="signature-pad__frame">
             <canvas id="bfSignCanvas" class="sig-canvas" style="width:100%;height:140px;"></canvas>
@@ -1831,9 +1781,9 @@
           <p class="text-xs text-gray-300 text-center mt-1">🔒 ลายเซ็นนี้ใช้เพื่อยืนยันการรับอุปกรณ์ และถูกจัดเก็บอย่างปลอดภัยในระบบ</p>
         </div>
         <button onclick="submitBorrow()" id="bfSubmitBtn" class="w-full py-3 gd-btn-primary text-sm font-semibold flex items-center justify-center gap-2">
-          <i data-lucide="check" class="w-4 h-4"></i> ยืนยันการยืม
+          <i data-lucide="check" class="w-[18px] h-[18px] text-[#64748B]"></i> ยืนยันการยืม
         </button>`;
-      goScreen('borrow-form'); lucide.createIcons();
+      goScreen('borrow-form'); lucide.createIcons({'stroke-width': 1.5});
       setTimeout(()=>initSignCanvas('bfSignCanvas'), 100);
     }
     function closeBorrowForm() { currentBorrowEq=null; goScreen('main'); switchTab(0); }
@@ -1870,8 +1820,8 @@
             closeBorrowForm();
           } catch(e) {
             console.error(e); toast('บันทึกไม่สำเร็จ','error');
-            btn.disabled=false; btn.innerHTML='<i data-lucide="check" class="w-4 h-4"></i> ยืนยันการยืม';
-            btn.classList.add('gd-btn-primary'); lucide.createIcons();
+            btn.disabled=false; btn.innerHTML='<i data-lucide="check" class="w-[18px] h-[18px] text-[#64748B]"></i> ยืนยันการยืม';
+            btn.classList.add('gd-btn-primary'); lucide.createIcons({'stroke-width': 1.5});
           }
         }
       });
@@ -1881,13 +1831,13 @@
     function renderReturnTab() {
       const active = BORROWS.filter(r=> r.status==='borrowed'||r.status==='overdue');
       const el = document.getElementById('tab-return');
-      el.innerHTML = `<div class="gd-page fade-in">
-        <div class="gd-page-header">
-          <p class="gd-section-title mb-2">Return</p>
-          <h2 class="text-xl font-bold tracking-tight text-slate-900">คืนอุปกรณ์</h2>
+      el.innerHTML = `<div class="ga-page ga-content fade-in">
+        <div class="ga-page ga-content-header">
+          
+          <h2 class="section-title-new">คืนอุปกรณ์</h2>
           <p class="text-sm text-slate-500 mt-1">รายการอุปกรณ์ที่กำลังยืมอยู่</p>
         </div>
-        <div class="space-y-4">
+        <div class="space-y-4 ga-reading">
           ${active.length ? active.map(r=>{
             const days = daysUntil(r.due_date);
             const isOD = r.status==='overdue';
@@ -1898,17 +1848,17 @@
                 </div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center justify-between gap-2 mb-0.5">
-                    <p class="font-semibold text-gray-900 text-sm truncate">${he(r.eq_name)}</p>
+                    <p class="eq-title truncate">${he(r.eq_name)}</p>
                     ${statusBadge(r.status)}
                   </div>
-                  <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)}</p>
+                  <p class="eq-meta">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)}</p>
                   <div class="flex items-center justify-between text-xs mt-1.5">
                     <span class="text-gray-400">กำหนดคืน ${fd(r.due_date)}</span>
                     <span class="${isOD?'text-red-600 font-semibold':'text-gray-500'}">${isOD?'เกิน '+Math.abs(days)+' วัน':(days===0?'วันนี้':days+' วัน')}</span>
                   </div>
                 </div>
               </div>
-              ${r.qty_borrowed>1?`<p class="text-xs text-gray-400 mt-2 pl-13">จำนวน: ${r.qty_borrowed} ชิ้น</p>`:''}
+              ${r.qty_borrowed>1?`<p class="eq-meta mt-2 pl-13">จำนวน: ${r.qty_borrowed} ชิ้น</p>`:''}
             </div>`;
           }).join('') : `<div class="flex flex-col items-center justify-center" style="margin-top:40px;">
             <i data-lucide="package" class="mb-3" style="width:32px;height:32px;color:#CBD5F5;"></i>
@@ -1916,7 +1866,7 @@
           </div>`}
         </div>
       </div>`;
-      lucide.createIcons();
+      lucide.createIcons({'stroke-width': 1.5});
     }
 
     // ===== GA: RETURN DETAIL =====
@@ -1939,7 +1889,7 @@
       document.getElementById('rd-badge').innerHTML = statusBadge(rec.status);
       document.getElementById('rd-body').innerHTML = `
         <div class="gd-card p-5 mb-4">
-          <h4 class="font-semibold text-gray-900 text-sm mb-3 flex items-center gap-2"><i data-lucide="clipboard-list" style="width:16px;height:16px;color:var(--orange);"></i> รายละเอียด</h4>
+          <h4 class="eq-title mb-3 flex items-center gap-2"><i data-lucide="clipboard-list" style="width:16px;height:16px;color:var(--orange);"></i> รายละเอียด</h4>
           <div class="space-y-2 text-sm">
             <div class="flex justify-between"><span class="text-gray-400">อุปกรณ์</span><span class="font-medium">${he(rec.eq_name)}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">จำนวน</span><span class="font-medium">${rec.qty_borrowed} ชิ้น</span></div>
@@ -1949,10 +1899,10 @@
             <div class="flex justify-between"><span class="text-gray-400">กำหนดคืน</span><span class="font-medium ${isOD?'text-red-600':''}">${fd(rec.due_date)}${isOD?' (เกินกำหนด!)':''}</span></div>
             ${rec.note?`<div class="flex justify-between"><span class="text-gray-400">หมายเหตุ</span><span class="font-medium">${he(rec.note)}</span></div>`:''}
           </div>
-          ${rec.sign_img?`<div class="mt-3 pt-3 border-t border-gray-100"><p class="text-xs text-gray-400 mb-2">ลายเซ็นตอนยืม</p><img src="${rec.sign_img}" class="w-full h-20 object-contain bg-white rounded-lg border border-gray-200 p-1"></div>`:''}
+          ${rec.sign_img?`<div class="mt-3 pt-3 border-t border-gray-100"><p class="eq-meta mb-2">ลายเซ็นตอนยืม</p><img src="${rec.sign_img}" class="w-full h-20 object-contain bg-white rounded-lg border border-gray-200 p-1"></div>`:''}
         </div>
         <div class="gd-card p-5 mb-4">
-          <h4 class="font-semibold text-gray-900 text-sm mb-3 flex items-center gap-2"><i data-lucide="clipboard-check" style="width:16px;height:16px;color:var(--orange);"></i> สภาพอุปกรณ์เมื่อคืน</h4>
+          <h4 class="eq-title mb-3 flex items-center gap-2"><i data-lucide="clipboard-check" style="width:16px;height:16px;color:var(--orange);"></i> สภาพอุปกรณ์เมื่อคืน</h4>
           <div class="flex gap-2 mb-3">
             <button id="rc-normal" onclick="setReturnCondition('normal')"
               class="flex-1 py-2.5 rounded-xl border-2 border-green-300 bg-green-50 text-green-700 text-xs font-semibold transition ring-green-400 hover:bg-green-100">
@@ -1972,18 +1922,18 @@
         <div class="signature-pad mb-6">
           <div class="signature-pad__header">
             <span class="signature-pad__title">ลายเซ็นยืนยันคืน</span>
-            <button onclick="clearSignCanvas('rdSignCanvas')" class="signature-pad__clear"><i data-lucide="eraser" class="w-3.5 h-3.5"></i> ล้าง</button>
+            <button onclick="clearSignCanvas('rdSignCanvas')" class="signature-pad__clear"><i data-lucide="eraser" class="w-[18px] h-[18px] text-[#64748B]"></i> ล้าง</button>
           </div>
           <div class="signature-pad__frame">
             <canvas id="rdSignCanvas" class="sig-canvas" style="width:100%;height:140px;"></canvas>
           </div>
           <p class="text-sm text-gray-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้คืนอุปกรณ์ตามรายการข้างต้นเรียบร้อยแล้ว</p>
-          <p class="text-xs text-gray-400 text-center mt-1">🔒 ลายเซ็นนี้ใช้เพื่อยืนยันการคืนอุปกรณ์ และถูกจัดเก็บอย่างปลอดภัยในระบบ</p>
+          <p class="eq-meta text-center mt-1">🔒 ลายเซ็นนี้ใช้เพื่อยืนยันการคืนอุปกรณ์ และถูกจัดเก็บอย่างปลอดภัยในระบบ</p>
         </div>
         <button onclick="submitReturn()" id="rdSubmitBtn" class="w-full py-3 gd-btn-primary text-sm font-semibold flex items-center justify-center gap-2">
-          <i data-lucide="check" class="w-4 h-4"></i> ยืนยันการคืน
+          <i data-lucide="check" class="w-[18px] h-[18px] text-[#64748B]"></i> ยืนยันการคืน
         </button>`;
-      goScreen('return-detail'); lucide.createIcons();
+      goScreen('return-detail'); lucide.createIcons({'stroke-width': 1.5});
       setTimeout(()=>initSignCanvas('rdSignCanvas'), 100);
     }
     function closeReturnDetail() { currentReturnRecord=null; goScreen('main'); switchTab(1); }
@@ -2014,8 +1964,8 @@
             closeReturnDetail();
           } catch(e) {
             console.error(e); toast('บันทึกไม่สำเร็จ','error');
-            btn.disabled=false; btn.innerHTML='<i data-lucide="check" class="w-4 h-4"></i> ยืนยันการคืน';
-            btn.classList.add('gd-btn-primary'); lucide.createIcons();
+            btn.disabled=false; btn.innerHTML='<i data-lucide="check" class="w-[18px] h-[18px] text-[#64748B]"></i> ยืนยันการคืน';
+            btn.classList.add('gd-btn-primary'); lucide.createIcons({'stroke-width': 1.5});
           }
         }
       });
@@ -2028,13 +1978,13 @@
         .filter(r => !historyFilter || r.status === historyFilter)
         .filter(r => !sq || (r.eq_name||'').toLowerCase().includes(sq));
       const el = document.getElementById('tab-history');
-      el.innerHTML = `<div class="gd-page fade-in">
-        <div class="gd-page-header">
+      el.innerHTML = `<div class="ga-page ga-content fade-in">
+        <div class="ga-page ga-content-header">
           <div class="flex items-center justify-between">
-            <div><p class="gd-section-title mb-2">History</p>
-            <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการยืม-คืน</h2></div>
+            <div>
+            <h2 class="section-title-new">ประวัติการยืม-คืน</h2></div>
             <button onclick="exportHistoryCSV('ga')" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition shrink-0">
-              <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV</button>
+              <i data-lucide="download" class="w-[18px] h-[18px] text-[#64748B]"></i> Export CSV</button>
           </div>
         </div>
         <input type="text" placeholder="ค้นหาชื่ออุปกรณ์..." value="${he(gaHistorySearch)}"
@@ -2046,25 +1996,25 @@
           <div class="chip ${historyFilter==='overdue'?'active':''}" onclick="historyFilter='overdue';renderHistoryTab()">เกินกำหนด</div>
           <div class="chip ${historyFilter==='returned'?'active':''}" onclick="historyFilter='returned';renderHistoryTab()">คืนแล้ว</div>
         </div>
-        <div class="space-y-4">
+        <div class="space-y-4 ga-reading">
           ${list.length ? list.map(r=>`<div class="gd-card p-5">
             <div class="flex items-start justify-between mb-1">
-              <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
+              <p class="eq-title">${he(r.eq_name)}</p>
               <div class="flex items-center gap-1.5">${conditionBadge(r.condition_on_return)}${statusBadge(r.status)}</div>
             </div>
-            <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)}</p>
-            <div class="flex items-center justify-between text-xs text-gray-400 mt-2">
+            <p class="eq-meta">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)}</p>
+            <div class="flex items-center justify-between eq-meta mt-2">
               <div><span>ยืม ${fd(r.borrowed_at)}</span><span class="mx-1">·</span><span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span></div>
-              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
+              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="eye" class="w-[18px] h-[18px] text-[#64748B]"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
             </div>
-            ${r.condition_note?`<p class="text-xs text-gray-400 mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
+            ${r.condition_note?`<p class="eq-meta mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
-            <span class="text-4xl mb-3">📋</span>
-            <p class="text-sm">ยังไม่มีประวัติการยืม</p>
+            <i data-lucide="archive" style="width:32px;height:32px;color:#CBD5E1;margin-bottom:12px;"></i>
+            <p style="font-size:13px;color:#64748B;">คุณยังไม่มีรายการยืมอุปกรณ์</p>
           </div>`}
         </div>
       </div>`;
-      lucide.createIcons();
+      lucide.createIcons({'stroke-width': 1.5});
     }
 
     // ===== MGR: DASHBOARD =====
@@ -2077,10 +2027,10 @@
       const recent = [...BORROWS].sort((a,b)=>new Date(b.borrowed_at)-new Date(a.borrowed_at)).slice(0,10);
 
       const el = document.getElementById('tab-dashboard');
-      el.innerHTML = `<div class="gd-page fade-in">
-        <div class="gd-page-header">
-          <p class="gd-section-title mb-2">Dashboard</p>
-          <h2 class="text-xl font-bold tracking-tight text-slate-900">ภาพรวมระบบ</h2>
+      el.innerHTML = `<div class="ga-page ga-content fade-in">
+        <div class="ga-page ga-content-header">
+          
+          <h2 class="section-title-new">ภาพรวมระบบ</h2>
         </div>
         <div class="grid grid-cols-2 gap-4 mb-6">
           <div class="kpi-card orange">
@@ -2097,19 +2047,19 @@
             <p class="kpi-number">${availableEq}</p><p class="kpi-label">อุปกรณ์พร้อมใช้</p></div>
         </div>
         <div class="card mb-5">
-          <h4 class="font-semibold text-gray-900 text-sm mb-4">รายการเกินกำหนด</h4>
+          <h4 class="eq-title mb-4">รายการเกินกำหนด</h4>
           ${overdueList.length ? overdueList.map(r=>`<div class="flex items-center gap-3 py-2.5 border-b border-gray-100 last:border-0 text-sm">
-            <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0"><i data-lucide="alert-triangle" class="w-4 h-4 text-red-500"></i></div>
+            <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0"><i data-lucide="alert-triangle" class="w-[18px] h-[18px] text-[#64748B]"></i></div>
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium text-gray-900 truncate">${he(r.eq_name)}</p>
-              <p class="text-xs text-gray-400">${he(r.borrower_name)} · เกิน ${Math.abs(daysUntil(r.due_date))} วัน</p>
+              <p class="eq-meta">${he(r.borrower_name)} · เกิน ${Math.abs(daysUntil(r.due_date))} วัน</p>
             </div>
             <button data-rid="${he(r.record_id||r.id||'')}" onclick="returnByManager(this.dataset.rid)"
-              class="shrink-0 px-2.5 py-1.5 text-white text-xs font-semibold rounded-lg transition flex items-center gap-1" style="background:#f97316;color:white;"><i data-lucide="corner-up-left" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">คืนแทน</span></button>
+              class="shrink-0 px-2.5 py-1.5 text-white text-xs font-semibold rounded-lg transition flex items-center gap-1" style="background:#f97316;color:white;"><i data-lucide="corner-up-left" class="w-[18px] h-[18px] text-[#64748B]"></i><span class="hidden sm:inline">คืนแทน</span></button>
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-8 text-slate-500"><span class="text-3xl mb-2">✓</span><p class="text-sm">ไม่มีรายการเกินกำหนด</p></div>`}
         </div>
         <div class="card mb-5">
-          <h4 class="font-semibold text-gray-900 text-sm mb-4">กิจกรรมล่าสุด</h4>
+          <h4 class="eq-title mb-4">กิจกรรมล่าสุด</h4>
           ${recent.length ? recent.map(r=>{
             const isRet = r.status==='returned';
             return `<div class="flex items-center gap-3 py-2 border-b border-gray-100 last:border-0">
@@ -2117,14 +2067,14 @@
                 <i data-lucide="${isRet?'corner-up-left':'corner-down-right'}" style="width:14px;height:14px;color:${isRet?'var(--success-text)':'var(--orange)'};"></i></div>
               <div class="flex-1 min-w-0">
                 <p class="text-xs font-medium text-gray-800 truncate">${he(r.eq_name)} · ${he(r.borrower_name)}</p>
-                <p class="text-[11px] text-gray-400">GA: ${he(r.ga_staff||'—')} · ${fd(isRet?r.returned_at:r.borrowed_at)}</p>
+                <p class="eq-meta">GA: ${he(r.ga_staff||'—')} · ${fd(isRet?r.returned_at:r.borrowed_at)}</p>
               </div>
               ${statusBadge(r.status)}
             </div>`;
-          }).join('') : `<p class="text-xs text-gray-400 text-center py-4">ไม่มีกิจกรรม</p>`}
+          }).join('') : `<p class="eq-meta text-center py-4">ไม่มีกิจกรรม</p>`}
         </div>
       </div>`;
-      lucide.createIcons();
+      lucide.createIcons({'stroke-width': 1.5});
     }
     // ===== MGR: RETURN ON BEHALF =====
     function returnByManager(recordId) {
@@ -2162,13 +2112,13 @@
         .filter(r => !mgrHistoryTo || (r.borrowed_at||'').slice(0,10) <= mgrHistoryTo);
       const selectCls = 'border border-gray-200 rounded-lg px-2 py-1.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-brand/30';
       const el = document.getElementById('tab-mgr-history');
-      el.innerHTML = `<div class="gd-page fade-in">
-        <div class="gd-page-header">
+      el.innerHTML = `<div class="ga-page ga-content fade-in">
+        <div class="ga-page ga-content-header">
           <div class="flex items-center justify-between">
-            <div><p class="gd-section-title mb-2">All Records</p>
-            <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติทั้งหมด</h2></div>
+            <div>
+            <h2 class="section-title-new">ประวัติทั้งหมด</h2></div>
             <button onclick="exportHistoryCSV('mgr')" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition shrink-0">
-              <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV</button>
+              <i data-lucide="download" class="w-[18px] h-[18px] text-[#64748B]"></i> Export CSV</button>
           </div>
         </div>
         <input type="text" placeholder="ค้นหาชื่ออุปกรณ์ หรือผู้ยืม..." value="${he(mgrHistorySearch)}"
@@ -2181,7 +2131,7 @@
           </select>
           <input type="date" value="${mgrHistoryFrom}" onchange="mgrHistoryFrom=this.value;renderMgrHistory()" class="${selectCls} shrink-0" title="ตั้งแต่วันที่">
           <input type="date" value="${mgrHistoryTo}" onchange="mgrHistoryTo=this.value;renderMgrHistory()" class="${selectCls} shrink-0" title="ถึงวันที่">
-          ${(mgrHistoryGa||mgrHistoryFrom||mgrHistoryTo)?`<button onclick="mgrHistoryGa='';mgrHistoryFrom='';mgrHistoryTo='';renderMgrHistory()" class="text-xs text-gray-400 hover:text-danger px-1 shrink-0">ล้าง</button>`:''}
+          ${(mgrHistoryGa||mgrHistoryFrom||mgrHistoryTo)?`<button onclick="mgrHistoryGa='';mgrHistoryFrom='';mgrHistoryTo='';renderMgrHistory()" class="eq-meta hover:text-danger px-1 shrink-0">ล้าง</button>`:''}
         </div>
         <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
           <div class="chip ${historyFilter===''?'active':''}" onclick="historyFilter='';renderMgrHistory()">ทั้งหมด</div>
@@ -2189,25 +2139,25 @@
           <div class="chip ${historyFilter==='overdue'?'active':''}" onclick="historyFilter='overdue';renderMgrHistory()">เกินกำหนด</div>
           <div class="chip ${historyFilter==='returned'?'active':''}" onclick="historyFilter='returned';renderMgrHistory()">คืนแล้ว</div>
         </div>
-        <div class="space-y-4">
+        <div class="space-y-4 ga-reading">
           ${list.length ? list.map(r=>`<div class="gd-card p-5">
             <div class="flex items-start justify-between mb-1">
-              <p class="font-semibold text-gray-900 text-sm">${he(r.eq_name)}</p>
+              <p class="eq-title">${he(r.eq_name)}</p>
               <div class="flex items-center gap-1.5">${conditionBadge(r.condition_on_return)}${statusBadge(r.status)}</div>
             </div>
-            <p class="text-xs text-gray-400">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)} · GA: ${he(r.ga_staff)}</p>
-            <div class="flex items-center justify-between text-xs text-gray-400 mt-2">
+            <p class="eq-meta">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)} · GA: ${he(r.ga_staff)}</p>
+            <div class="flex items-center justify-between eq-meta mt-2">
               <div><span>ยืม ${fd(r.borrowed_at)}</span><span class="mx-1">·</span><span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span></div>
-              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
+              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="eye" class="w-[18px] h-[18px] text-[#64748B]"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
             </div>
-            ${r.condition_note?`<p class="text-xs text-gray-400 mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
+            ${r.condition_note?`<p class="eq-meta mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
-            <span class="text-4xl mb-3">📭</span>
-            <p class="text-sm">ยังไม่มีประวัติในระบบ</p>
+            <i data-lucide="archive" style="width:32px;height:32px;color:#CBD5E1;margin-bottom:12px;"></i>
+            <p style="font-size:13px;color:#64748B;">คุณยังไม่มีรายการยืมอุปกรณ์</p>
           </div>`}
         </div>
       </div>`;
-      lucide.createIcons();
+      lucide.createIcons({'stroke-width': 1.5});
     }
 
     // ===== MGR: EQUIPMENT TAB =====
@@ -2220,11 +2170,11 @@
         const matchCat = !eqCatFilter || e.category === eqCatFilter;
         return matchSearch && matchCat;
       });
-      el.innerHTML = `<div class="gd-page fade-in">
+      el.innerHTML = `<div class="ga-page ga-content fade-in">
         <div class="flex items-center justify-between mb-3">
-          <h4 class="font-semibold text-gray-900 text-sm">รายการอุปกรณ์ <span class="text-gray-400 font-normal">(${filtered.length}/${EQ.length})</span></h4>
+          <h4 class="eq-title">รายการอุปกรณ์ <span class="text-gray-400 font-normal">(${filtered.length}/${EQ.length})</span></h4>
           <button onclick="showAddEquipment()" class="flex items-center gap-1.5 px-3 py-1.5 text-white text-xs font-semibold rounded-lg transition shadow-sm" style="background:#f97316;color:white;">
-            <i data-lucide="plus" class="w-3.5 h-3.5"></i> เพิ่มอุปกรณ์</button>
+            <i data-lucide="plus" class="w-[18px] h-[18px] text-[#64748B]"></i> เพิ่มอุปกรณ์</button>
         </div>
         <div class="flex flex-col sm:flex-row gap-2 mb-4">
           <div class="relative flex-1">
@@ -2241,23 +2191,23 @@
         </div>
         <div class="space-y-4 mb-6">
           ${filtered.length === 0 ? `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
-            <span class="text-4xl mb-3">${EQ.length === 0 ? '📦' : '🔍'}</span>
-            <p class="text-sm">${EQ.length === 0 ? "ยังไม่มีอุปกรณ์ กด '+ เพิ่มอุปกรณ์' เพื่อเริ่มต้น" : 'ไม่พบอุปกรณ์ที่ตรงกับการค้นหา'}</p>
+            <i data-lucide="archive" style="width:32px;height:32px;color:#CBD5E1;margin-bottom:12px;"></i>
+            <p style="font-size:13px;color:#64748B;">คุณยังไม่มีรายการยืมอุปกรณ์</p>
           </div>` :
           filtered.map(e=>`<div class="gd-card p-5">
             <div class="flex items-center gap-3">
               ${e.image_url ? `<img src="${he(e.image_url)}" class="w-11 h-11 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-lg shrink-0">📦</div>`}
               <div class="flex-1 min-w-0">
-                <p class="font-semibold text-gray-900 text-sm">${he(e.name)}</p>
-                <p class="text-xs text-gray-400 mt-0.5">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
+                <p class="eq-title">${he(e.name)}</p>
+                <p class="eq-meta mt-1">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
               </div>
               <div class="flex flex-col items-end gap-1 shrink-0">
                 <span class="text-xs px-2.5 py-1 rounded-full font-semibold" style="background:${e.available===0?'var(--danger-bg)':e.available<e.quantity?'#fef3c7':'var(--orange-light)'};color:${e.available===0?'var(--danger-text)':e.available<e.quantity?'#d97706':'var(--orange-dark)'};border:0.5px solid ${e.available===0?'#fecaca':e.available<e.quantity?'#fde68a':'var(--orange-border)'};">
                   ${e.available}/${e.quantity}
                 </span>
                 <div class="flex gap-0.5 mt-1">
-                  <button data-id="${he(e.eq_id)}" onclick="showEditEquipment(this.dataset.id)" class="p-1.5 rounded-lg text-gray-300 hover:bg-orange-50" style="transition:all 150ms;" onmouseover="this.querySelector('i').style.color='var(--orange)'" onmouseout="this.querySelector('i').style.color=''"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
-                  <button data-id="${he(e.eq_id)}" onclick="confirmDeleteEquip(this.dataset.id)" class="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                  <button data-id="${he(e.eq_id)}" onclick="showEditEquipment(this.dataset.id)" class="p-1.5 rounded-lg text-gray-300 hover:bg-orange-50" style="transition:all 150ms;" onmouseover="this.querySelector('i').style.color='var(--orange)'" onmouseout="this.querySelector('i').style.color=''"><i data-lucide="pencil" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
+                  <button data-id="${he(e.eq_id)}" onclick="confirmDeleteEquip(this.dataset.id)" class="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50"><i data-lucide="trash-2" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
                 </div>
               </div>
             </div>
@@ -2267,9 +2217,9 @@
         <!-- ===== CATEGORY MANAGEMENT ===== -->
         <div class="gd-card p-5">
           <div class="flex items-center justify-between mb-3">
-            <h4 class="font-semibold text-gray-900 text-sm">หมวดหมู่</h4>
+            <h4 class="eq-title">หมวดหมู่</h4>
             ${_addCatMode ? '' : `<button onclick="showAddCatInput()" class="gd-btn-secondary flex items-center gap-1 !w-auto !py-1.5 !px-2.5 text-xs font-semibold">
-              <i data-lucide="plus" class="w-3 h-3"></i> เพิ่มหมวดหมู่</button>`}
+              <i data-lucide="plus" class="w-[18px] h-[18px] text-[#64748B]"></i> เพิ่มหมวดหมู่</button>`}
           </div>
           ${_addCatMode ? `<div class="flex gap-2 mb-3">
             <input id="newCatInput" type="text" placeholder="ชื่อหมวดหมู่ใหม่" maxlength="50"
@@ -2278,7 +2228,7 @@
             <button onclick="saveCategory()" class="gd-btn-primary !w-auto !py-1.5 !px-3 text-xs font-semibold">บันทึก</button>
             <button onclick="cancelAddCat()" class="px-3 py-2 text-xs text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition">ยกเลิก</button>
           </div>` : ''}
-          ${CATS.length === 0 ? `<p class="text-xs text-gray-400 text-center py-4">ยังไม่มีหมวดหมู่ กด "+ เพิ่มหมวดหมู่" เพื่อเริ่มต้น</p>` :
+          ${CATS.length === 0 ? `<p class="eq-meta text-center py-4">ยังไม่มีหมวดหมู่ กด "+ เพิ่มหมวดหมู่" เพื่อเริ่มต้น</p>` :
           `<div class="space-y-1.5">
             ${CATS.map(c => {
               const inUse = EQ.some(e => e.category === c.name);
@@ -2288,14 +2238,14 @@
                   onclick="deleteCategoryById(this.dataset.id,this.dataset.name)"
                   class="p-1.5 rounded-lg transition ${inUse ? 'text-gray-200 cursor-not-allowed' : 'text-gray-300 hover:text-red-500 hover:bg-red-50'}"
                   ${inUse ? 'disabled title="มีอุปกรณ์ใช้หมวดหมู่นี้อยู่"' : 'title="ลบหมวดหมู่"'}>
-                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  <i data-lucide="trash-2" class="w-[18px] h-[18px] text-[#64748B]"></i>
                 </button>
               </div>`;
             }).join('')}
           </div>`}
         </div>
       </div>`;
-      lucide.createIcons();
+      lucide.createIcons({'stroke-width': 1.5});
       if (_addCatMode) setTimeout(()=>document.getElementById('newCatInput')?.focus(), 50);
     }
     // ===== CATEGORY CRUD =====
@@ -2438,15 +2388,18 @@
     // ===== MGR: MEMBERS TAB =====
     function renderMembersTab() {
       const el = document.getElementById('tab-members');
-      el.innerHTML = `<div class="gd-page fade-in">
+      el.innerHTML = `<div class="ga-page ga-content fade-in">
         <div class="flex items-center justify-between mb-4">
-          <h4 class="font-semibold text-gray-900 text-sm">รายชื่อสมาชิก</h4>
+          <h4 class="eq-title">รายชื่อสมาชิก</h4>
           <button onclick="openUserModal()" class="gd-btn-primary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-xs">
-            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> เพิ่มสมาชิก</button>
+            <i data-lucide="user-plus" class="w-[18px] h-[18px] text-[#64748B]"></i> เพิ่มสมาชิก</button>
         </div>
-        <div class="space-y-4">
+        <div class="space-y-4 ga-reading">
           ${(()=>{ const all=[...AU.ga.map(u=>({...u,type:'ga'})),...AU.mgr.map(u=>({...u,type:'mgr'}))];
-            if(!all.length) return `<div class="flex flex-col items-center justify-center py-16 text-slate-500"><span class="text-4xl mb-3">👥</span><p class="text-sm">ยังไม่มีสมาชิก</p></div>`;
+            if(!all.length) return `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
+            <i data-lucide="archive" style="width:32px;height:32px;color:#CBD5E1;margin-bottom:12px;"></i>
+            <p style="font-size:13px;color:#64748B;">คุณยังไม่มีรายการยืมอุปกรณ์</p>
+          </div>`;
             return all.map((u,i)=>{
               return `<div class="gd-card p-5 flex items-center justify-between fade-in">
                 <div class="flex items-center gap-3">
@@ -2455,8 +2408,8 @@
                   <p class="text-[10px] font-medium uppercase tracking-wider ${u.type==='mgr'?'text-purple-600':'text-gray-400'}">${u.type==='mgr'?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
                 </div>
                 <div class="flex items-center gap-1">
-                  <button data-name="${he(u.name)}" data-utype="${u.type}" onclick="openResetPin(this.dataset.name,this.dataset.utype)" class="p-2 rounded-lg text-gray-300 hover:text-amber-500 hover:bg-amber-50"><i data-lucide="key-round" class="w-4 h-4"></i></button>
-                  <button data-name="${he(u.name)}" data-utype="${u.type}" onclick="confirmDeleteUser(this.dataset.name,this.dataset.utype)" class="p-2 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                  <button data-name="${he(u.name)}" data-utype="${u.type}" onclick="openResetPin(this.dataset.name,this.dataset.utype)" class="p-2 rounded-lg text-gray-300 hover:text-amber-500 hover:bg-amber-50"><i data-lucide="key-round" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
+                  <button data-name="${he(u.name)}" data-utype="${u.type}" onclick="confirmDeleteUser(this.dataset.name,this.dataset.utype)" class="p-2 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50"><i data-lucide="trash-2" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
                 </div>
               </div>`;
             }).join('');
@@ -2464,23 +2417,23 @@
         </div>
         <div class="mt-6 border-t border-gray-100 pt-5">
           <div class="flex items-center justify-between mb-3">
-            <h4 class="font-semibold text-gray-900 text-sm flex items-center gap-2">
+            <h4 class="eq-title flex items-center gap-2">
               <i data-lucide="mail" style="width:16px;height:16px;color:var(--orange);"></i> ตั้งค่าการแจ้งเตือน Email
             </h4>
           </div>
-          <p class="text-xs text-gray-400 mb-3">รายชื่อผู้รับรายงานประจำสัปดาห์</p>
+          <p class="eq-meta mb-3">รายชื่อผู้รับรายงานประจำสัปดาห์</p>
           <div id="notif-recipients-list" class="space-y-2 mb-3">
             ${skeletonCards(2)}
           </div>
           <div class="flex gap-2">
             <button onclick="openRecipientModal()" class="flex items-center gap-1.5 px-3 py-2 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i> เพิ่มเมลล์</button>
+              <i data-lucide="plus" class="w-[18px] h-[18px] text-[#64748B]"></i> เพิ่มเมลล์</button>
             <button id="sendTestReportBtn" onclick="sendTestReport()" class="gd-btn-secondary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-xs">
-              <i data-lucide="send" class="w-3.5 h-3.5"></i> ส่งทดสอบตอนนี้</button>
+              <i data-lucide="send" class="w-[18px] h-[18px] text-[#64748B]"></i> ส่งทดสอบตอนนี้</button>
           </div>
         </div>
       </div>`;
-      lucide.createIcons();
+      lucide.createIcons({'stroke-width': 1.5});
       loadAndRenderRecipients();
     }
     function openUserModal() { showModal('userModal'); document.getElementById('newUserName').value=''; document.getElementById('newUserPin').value=''; document.getElementById('newUserRole').value='ga'; }
@@ -2550,7 +2503,7 @@
       const el = document.getElementById('notif-recipients-list');
       if (!el) return;
       if (!RECIPIENTS.length) {
-        el.innerHTML = `<p class="text-xs text-gray-400 text-center py-3">ยังไม่มีผู้รับรายงาน</p>`;
+        el.innerHTML = `<p class="eq-meta text-center py-3">ยังไม่มีผู้รับรายงาน</p>`;
         return;
       }
       el.innerHTML = RECIPIENTS.map(r => `<div class="gd-card p-4 flex items-center justify-between">
@@ -2558,7 +2511,7 @@
           <span class="text-base shrink-0">${r.is_active ? '✅' : '⬜'}</span>
           <div class="min-w-0">
             <p class="text-sm font-medium text-gray-900 truncate">${he(r.name)}</p>
-            <p class="text-xs text-gray-400 truncate">${he(r.email)}</p>
+            <p class="eq-meta truncate">${he(r.email)}</p>
           </div>
         </div>
         <div class="flex items-center gap-1 shrink-0">
@@ -2569,10 +2522,10 @@
           <button data-id="${r.id}" data-label="${he(r.name+' · '+r.email)}"
             onclick="confirmDeleteRecipient(this.dataset.id, this.dataset.label)"
             class="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50 transition">
-            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            <i data-lucide="trash-2" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
         </div>
       </div>`).join('');
-      lucide.createIcons();
+      lucide.createIcons({'stroke-width': 1.5});
     }
     function openRecipientModal() {
       document.getElementById('recipientName').value = '';
@@ -2621,16 +2574,16 @@
     async function sendTestReport() {
       const btn = document.getElementById('sendTestReportBtn');
       if (!btn) return;
-      btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i> กำลังส่ง...';
-      lucide.createIcons();
+      btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="w-[18px] h-[18px] text-[#64748B]"></i> กำลังส่ง...';
+      lucide.createIcons({'stroke-width': 1.5});
       try {
         const { data, error } = await sb.functions.invoke('send-weekly-report');
         if (error) throw error;
         const sent = data?.sent ?? '?';
         toast(`ส่งรายงานทดสอบเรียบร้อย (${sent} เมลล์)`, 'success');
       } catch(e) { toast('เกิดข้อผิดพลาด: ' + (e.message || 'ลองใหม่อีกครั้ง'), 'error'); }
-      btn.disabled = false; btn.innerHTML = '<i data-lucide="send" class="w-3.5 h-3.5"></i> ส่งทดสอบตอนนี้';
-      lucide.createIcons();
+      btn.disabled = false; btn.innerHTML = '<i data-lucide="send" class="w-[18px] h-[18px] text-[#64748B]"></i> ส่งทดสอบตอนนี้';
+      lucide.createIcons({'stroke-width': 1.5});
     }
 
     // ===== MGR: AUDIT LOG TAB =====
@@ -2664,9 +2617,9 @@
     }
     async function renderAuditLogTab() {
       const el = document.getElementById('tab-audit-log');
-      el.innerHTML = `<div class="gd-page fade-in"><div class="gd-page-header"><p class="gd-section-title mb-2">Audit Log</p><h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการดำเนินการ</h2></div>${skeletonCards(5)}</div>`;
+      el.innerHTML = `<div class="ga-page ga-content fade-in"><div class="ga-page ga-content-header"><h2 class="section-title-new">ประวัติการดำเนินการ</h2></div>${skeletonCards(5)}</div>`;
       const { data, error } = await sb.from('app_audit_logs').select('*').order('created_at', { ascending: false }).limit(300);
-      if (error) { el.innerHTML = `<div class="gd-page fade-in"><p class="text-sm text-danger text-center py-10">โหลดข้อมูลไม่สำเร็จ</p></div>`; return; }
+      if (error) { el.innerHTML = `<div class="ga-page ga-content fade-in"><p class="text-sm text-danger text-center py-10">โหลดข้อมูลไม่สำเร็จ</p></div>`; return; }
       AUDIT_LOGS = data || [];
       _renderAuditList();
     }
@@ -2677,17 +2630,17 @@
       const filtered = AUDIT_LOGS
         .filter(r => !auditFilter || r.action_type === auditFilter)
         .filter(r => !auditSearch || (r.actor_name||'').toLowerCase().includes(auditSearch.toLowerCase()));
-      el.innerHTML = `<div class="gd-page fade-in">
-        <div class="gd-page-header">
-          <p class="gd-section-title mb-2">Audit Log</p>
-          <h2 class="text-xl font-bold tracking-tight text-slate-900">ประวัติการดำเนินการ</h2>
+      el.innerHTML = `<div class="ga-page ga-content fade-in">
+        <div class="ga-page ga-content-header">
+          
+          <h2 class="section-title-new">ประวัติการดำเนินการ</h2>
         </div>
         <div class="flex gap-2 mb-3">
           <input id="auditSearchInput" type="text" placeholder="ค้นหาผู้ดำเนินการ..." value="${he(auditSearch)}"
             oninput="auditSearch=this.value;_renderAuditList()"
             class="gd-input" style="flex:1;height:38px;">
           <button onclick="exportAuditCSV()" class="gd-btn-primary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-xs font-semibold whitespace-nowrap">
-            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV</button>
+            <i data-lucide="download" class="w-[18px] h-[18px] text-[#64748B]"></i> Export CSV</button>
         </div>
         <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
           <div class="chip ${auditFilter===''?'active':''}" onclick="auditFilter='';_renderAuditList()">ทั้งหมด</div>
@@ -2697,16 +2650,16 @@
           ${filtered.length ? filtered.map(r=>`<div class="gd-card p-5">
             <div class="flex items-start justify-between gap-2 mb-1">
               ${auditTypeBadge(r.action_type)}
-              <span class="text-[11px] text-gray-400 shrink-0">${fdFull(r.created_at)}</span>
+              <span class="eq-meta shrink-0">${fdFull(r.created_at)}</span>
             </div>
             <p class="text-xs text-gray-500 mt-1">${he(r.actor_name||'—')}<span class="text-gray-300 mx-1">·</span>${auditDetail(r)}</p>
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
-            <span class="text-4xl mb-3">📋</span>
-            <p class="text-sm">ยังไม่มีประวัติการใช้งาน</p>
+            <i data-lucide="archive" style="width:32px;height:32px;color:#CBD5E1;margin-bottom:12px;"></i>
+            <p style="font-size:13px;color:#64748B;">คุณยังไม่มีรายการยืมอุปกรณ์</p>
           </div>`}
         </div>
       </div>`;
-      lucide.createIcons();
+      lucide.createIcons({'stroke-width': 1.5});
     }
     function exportAuditCSV() {
       const filtered = AUDIT_LOGS
@@ -2759,14 +2712,14 @@
       try {
         const cached = forceRefresh ? null : cacheGet('users');
         if (cached) {
-          AU = cached; buildLoginScreen(); goScreen('login'); lucide.createIcons();
+          AU = cached; buildLoginScreen(); goScreen('login'); lucide.createIcons({'stroke-width': 1.5});
           api('getUsers').then(d=>{ AU=d; cacheSet('users',d); buildLoginScreen(); }).catch(()=>{});
           return;
         }
         AU = await api('getUsers');
         if (AUTH_MODE === 'demo') toast('ไม่พบผู้ใช้ในระบบ — กรุณาติดต่อผู้ดูแลระบบ', 'warning');
         cacheSet('users', AU);
-        buildLoginScreen(); goScreen('login'); lucide.createIcons();
+        buildLoginScreen(); goScreen('login'); lucide.createIcons({'stroke-width': 1.5});
       } catch(e) {
         console.error('[init]', e);
         document.getElementById('loadingMsg').textContent = 'ไม่สามารถเชื่อมต่อได้ กรุณาลองใหม่';
