@@ -636,7 +636,7 @@
       height: 36px !important; padding: 0 16px !important; font-size: 14px !important; font-weight: 500 !important; border-radius: 10px !important; color: #64748B !important; background: transparent !important; display: flex !important; align-items: center !important; justify-content: center !important; transition: all .15s ease !important; border: 0 !important;
     }
     .top-tab.active, .tab-active { color: #0F172A !important; background: white !important; box-shadow: 0 1px 2px rgba(0,0,0,0.06) !important; }
-    .ga-list-container { max-width: 920px !important; margin-left: auto !important; margin-right: auto !important; }
+    .ga-list-container { max-width: 880px !important; margin-left: auto !important; margin-right: auto !important; }
     .gd-card, .card {
       background: white !important; border: 1px solid #E2E8F0 !important; border-radius: 16px !important; padding: 20px 24px !important; min-height: 72px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04) !important; transition: all .15s ease !important;
     }
@@ -790,7 +790,91 @@
       margin-top: 4px !important;
     }
   </style>
+
+  <style>
+    /* Final Density Optimization */
+    .gd-card, .card {
+      min-height: 68px !important;
+      padding: 18px 24px !important;
+      border-color: #E2E8F0 !important;
+    }
+    .gd-card:hover, .card:hover {
+      border-color: #CBD5E1 !important; /* Slightly more contrast than #E2E8F0 but subtle */
+    }
+    
+    .status-badge {
+      font-size: 12px !important;
+      padding: 4px 8px !important;
+      border-radius: 999px !important;
+    }
+    
+    .btn-action-borrow { font-size: 13px !important; }
+    .eq-title { font-size: 15px !important; font-weight: 500 !important; margin-bottom: 4px !important; line-height: 1.2 !important; }
+    .eq-meta { font-size: 13px !important; color: #64748B !important; line-height: 1.2 !important; margin-top: 0 !important; }
+  </style>
+
+  <style>
+    /* SaaS Grid List Layout */
+    .ga-list-container { max-width: 1000px !important; margin: auto !important; }
+    
+    .gd-card-grid {
+      display: grid !important;
+      grid-template-columns: 56px 1fr 140px 100px !important;
+      align-items: center !important;
+      padding: 16px 20px !important;
+      border-radius: 14px !important;
+      min-height: auto !important;
+      gap: 0 !important;
+    }
+    
+    .grid-icon { width: 40px; height: 40px; justify-self: start; }
+    .grid-icon-img { width: 40px; height: 40px; object-fit: cover; border-radius: 8px; border: 1px solid #E2E8F0; }
+    .grid-icon-box { width: 40px; height: 40px; border-radius: 8px; background: #F1F5F9; border: 1px solid #E2E8F0; display: flex; align-items: center; justify-content: center; }
+    
+    .grid-content { display: flex; flex-direction: column; gap: 4px; }
+    
+    .grid-badge { justify-self: end; }
+    
+    .grid-action { justify-self: end; }
+    
+    /* Responsive fallback just in case */
+    @media (max-width: 640px) {
+      .gd-card-grid {
+        grid-template-columns: 50px 1fr auto !important;
+      }
+      .grid-badge { display: none !important; }
+    }
+  </style>
+
+  <style>
+    /* Strict Responsive Navigation Breakpoints */
+    /* Mobile (0 - 767px) */
+    @media (max-width: 767px) {
+      .top-tabs, #top-tabs-inner { display: none !important; }
+      #bottom-nav { display: flex !important; }
+    }
+    
+    /* Tablet & Desktop (768px and up) */
+    @media (min-width: 768px) {
+      .top-tabs { 
+        display: flex !important; 
+        position: sticky !important; 
+        top: 0 !important; 
+        background: white !important; 
+        z-index: 40 !important; 
+        padding-top: 16px !important; /* Visual spacing when sticky */
+      }
+      #bottom-nav { display: none !important; }
+      body { padding-bottom: 0 !important; }
+    }
+    
+    /* Global Nuke for old duplicate bars */
+    #mainTabBar { display: none !important; }
+  </style>
 </head>
+
+
+
 
 
 
@@ -950,7 +1034,7 @@
               </div>
             </div>
             <!-- Mobile tab bar inside header -->
-            <div id="mainTabBar" style="display:flex;overflow-x:auto;gap:8px;margin-top:12px;scrollbar-width:none;"></div>
+            <div id="mainTabBar" style="display:none !important;" style="display:flex;overflow-x:auto;gap:8px;margin-top:12px;scrollbar-width:none;"></div>
             <!-- Desktop tab bar (underline style, shown below header) -->
             <div id="mainTabBar-desktop" style="opacity:0.6;"></div>
           </div>
@@ -1026,7 +1110,7 @@
     <div class="absolute inset-0 bg-black/40" onclick="closeEquipModal()"></div>
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:380px;">
       <h3 id="equipModalTitle" class="font-bold text-gray-900 text-lg mb-4">เพิ่มอุปกรณ์</h3>
-      <div class="space-y-4 ">
+      <div class="space-y-3 ">
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่ออุปกรณ์</label>
           <input type="text" id="eqName" placeholder="เช่น โน๊ตบุ๊ค Dell" class="gd-input"></div>
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">หมวดหมู่</label>
@@ -1069,11 +1153,11 @@
       </div>
       <div style="display:flex;gap:10px;justify-content:flex-end;">
         <button id="confirm-cancel"
-                style="padding:8px 18px;border-radius:10px;font-size:var(--fs-secondary);font-weight:600;background:#F1F5F9;color:#334155;border:none;cursor:pointer;font-family:'Noto Sans Thai','Inter',sans-serif;">
+                style="padding:8px 18px;border-radius:8px;font-size:var(--fs-secondary);font-weight:600;background:#F1F5F9;color:#334155;border:none;cursor:pointer;font-family:'Noto Sans Thai','Inter',sans-serif;">
           ยกเลิก
         </button>
         <button id="confirm-ok"
-                style="padding:8px 18px;border-radius:10px;font-size:var(--fs-secondary);font-weight:600;color:#fff;border:none;cursor:pointer;font-family:'Noto Sans Thai','Inter',sans-serif;">
+                style="padding:8px 18px;border-radius:8px;font-size:var(--fs-secondary);font-weight:600;color:#fff;border:none;cursor:pointer;font-family:'Noto Sans Thai','Inter',sans-serif;">
           ยืนยัน
         </button>
       </div>
@@ -1085,7 +1169,7 @@
     <div class="absolute inset-0 bg-black/40" onclick="closeUserModal()"></div>
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:360px;">
       <h3 class="font-bold text-gray-900 text-lg mb-4">เพิ่มสมาชิกใหม่</h3>
-      <div class="space-y-4 ">
+      <div class="space-y-3 ">
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
           <input type="text" id="newUserName" placeholder="เช่น สมชาย ใจดี" class="gd-input"></div>
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ตำแหน่ง/สิทธิ์</label>
@@ -1108,7 +1192,7 @@
     <div class="absolute inset-0 bg-black/40" onclick="closeRecipientModal()"></div>
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:360px;">
       <h3 class="font-bold text-gray-900 text-lg mb-4">เพิ่มผู้รับรายงาน</h3>
-      <div class="space-y-4 ">
+      <div class="space-y-3 ">
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
           <input type="text" id="recipientName" placeholder="เช่น สมชาย จิตรดี" class="gd-input"></div>
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">อีเมล</label>
@@ -1928,18 +2012,20 @@
           <div class="chip ${borrowCatFilter===''?'active':''}" onclick="borrowCatFilter='';renderBorrowTab()">ทั้งหมด</div>
           ${cats.map(c=>`<div class="chip ${borrowCatFilter===c?'active':''}" onclick="borrowCatFilter='${he(c)}';renderBorrowTab()">${he(c)}</div>`).join('')}
         </div>
-        <div class="space-y-4 " id="eqGrid">
-          ${filtered.length ? filtered.map(e=>`<div class="gd-card cursor-pointer" style="display:flex; justify-content:space-between; align-items:center;" onclick="openBorrowForm('${he(e.eq_id)}')">
-            <div style="display:flex; gap:16px; align-items:center; flex:1; min-width:0;">
-              ${e.image_url ? `<img src="${he(e.image_url)}" class="w-12 h-12 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-xl shrink-0">📦</div>`}
-              <div class="flex-1 min-w-0">
-                <p class="eq-title">${he(e.name)}</p>
-                <p class="eq-meta mt-1">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
-              </div>
+        <div class="space-y-3 " id="eqGrid">
+          ${filtered.length ? filtered.map(e=>`<div class="gd-card gd-card-grid cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
+            <div class="grid-icon">
+              ${e.image_url ? `<img src="${he(e.image_url)}" class="grid-icon-img"/>` : `<div class="grid-icon-box"><span style="font-size:18px;">📦</span></div>`}
             </div>
-            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0;">
+            <div class="grid-content">
+              <p class="eq-title">${he(e.name)}</p>
+              <p class="eq-meta">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
+            </div>
+            <div class="grid-badge">
               <span class="status-badge ${e.available<=2?'status-borrowed':'status-returned'}">คงเหลือ ${e.available}/${e.quantity}</span>
-              <button class="btn-action-borrow"><i data-lucide="hand" class="w-4 h-4 text-[#F97316]"></i> ยืม</button>
+            </div>
+            <div class="grid-action">
+              <button class="btn-action-borrow flex items-center gap-1.5"><i data-lucide="hand" class="w-4 h-4 text-[#F97316]"></i> ยืม</button>
             </div>
           </div>`).join('') : `
 <div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
@@ -1963,12 +2049,12 @@
       document.getElementById('bf-body').innerHTML = `
         <div class="gd-card p-5 mb-4">
           <div class="flex items-center gap-3 mb-1">
-            ${eq.image_url ? `<img src="${he(eq.image_url)}" class="w-10 h-10 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style="background:var(--orange-light);"><i data-lucide="box" style="width:20px;height:20px;color:var(--orange);"></i></div>`}
+            ${eq.image_url ? `<img src="${he(eq.image_url)}" style="width:36px; height:36px; min-width:36px; object-fit:cover; border-radius:8px; border:1px solid #E2E8F0;" class="shrink-0"/>` : `<div style="width:36px; height:36px; min-width:36px; border-radius:8px; background:#F1F5F9; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center;" class="shrink-0"><i data-lucide="box" style="width:20px;height:20px;color:var(--orange);"></i></div>`}
             <div><p class="font-semibold text-gray-900">${he(eq.name)}</p>
             <p class="eq-meta">${he(eq.category||'')}${eq.serial_no?' · '+he(eq.serial_no):''} · คงเหลือ ${eq.available}</p></div>
           </div>
         </div>
-        <div class="space-y-4 mb-6">
+        <div class="space-y-3 mb-6">
           <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">จำนวนที่ยืม</label>
             <input type="number" id="bfQty" min="1" max="${eq.available}" value="1" class="gd-input"></div>
           <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่อผู้ยืม</label>
@@ -2048,13 +2134,13 @@
           <h2 class="page-title">คืนอุปกรณ์</h2>
           <p class="text-sm text-slate-500 mt-1">รายการอุปกรณ์ที่กำลังยืมอยู่</p>
         </div>
-        <div class="space-y-4 ">
+        <div class="space-y-3 ">
           ${active.length ? active.map(r=>{
             const days = daysUntil(r.due_date);
             const isOD = r.status==='overdue';
             return `<div class="gd-card p-5 cursor-pointer ${isOD?'border-red-200 bg-red-50/30':''}" onclick="openReturnDetail('${he(r.record_id)}')">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style="background:${isOD?'#fee2e2':'#fff7ed'};">
+                <div style="width:36px; height:36px; min-width:36px; border-radius:8px; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center; background:${isOD?'#fee2e2':'#F1F5F9'};" class="shrink-0">
                   <span style="font-size:18px;">📦</span>
                 </div>
                 <div class="flex-1 min-w-0">
@@ -2207,7 +2293,7 @@
           <div class="chip ${historyFilter==='overdue'?'active':''}" onclick="historyFilter='overdue';renderHistoryTab()">เกินกำหนด</div>
           <div class="chip ${historyFilter==='returned'?'active':''}" onclick="historyFilter='returned';renderHistoryTab()">คืนแล้ว</div>
         </div>
-        <div class="space-y-4 ">
+        <div class="space-y-3 ">
           ${list.length ? list.map(r=>`<div class="gd-card" style="padding: 20px;">
             <div class="flex items-start justify-between mb-1">
               <p class="eq-title">${he(r.eq_name)}</p>
@@ -2218,7 +2304,7 @@
               <div><span>ยืม ${fd(r.borrowed_at)}</span><span class="mx-1">·</span><span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span></div>
               <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="eye" class="w-[18px] h-[18px] text-[#64748B]"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
             </div>
-            ${r.condition_note?`<p class="eq-meta mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
+            ${r.condition_note?`<p class="eq-meta">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : `
 <div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
   <h3 style="font-size:15px;font-weight:500;color:#0F172A;margin:0 0 4px 0;">ไม่มีรายการในระบบ</h3>
@@ -2352,7 +2438,7 @@
           <div class="chip ${historyFilter==='overdue'?'active':''}" onclick="historyFilter='overdue';renderMgrHistory()">เกินกำหนด</div>
           <div class="chip ${historyFilter==='returned'?'active':''}" onclick="historyFilter='returned';renderMgrHistory()">คืนแล้ว</div>
         </div>
-        <div class="space-y-4 ">
+        <div class="space-y-3 ">
           ${list.length ? list.map(r=>`<div class="gd-card" style="padding: 20px;">
             <div class="flex items-start justify-between mb-1">
               <p class="eq-title">${he(r.eq_name)}</p>
@@ -2363,7 +2449,7 @@
               <div><span>ยืม ${fd(r.borrowed_at)}</span><span class="mx-1">·</span><span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span></div>
               <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="eye" class="w-[18px] h-[18px] text-[#64748B]"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
             </div>
-            ${r.condition_note?`<p class="eq-meta mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
+            ${r.condition_note?`<p class="eq-meta">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : `
 <div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
   <h3 style="font-size:15px;font-weight:500;color:#0F172A;margin:0 0 4px 0;">ไม่มีรายการในระบบ</h3>
@@ -2404,7 +2490,7 @@
             ${cats.map(c=>`<option value="${he(c)}"${eqCatFilter===c?' selected':''}>${he(c)}</option>`).join('')}
           </select>
         </div>
-        <div class="space-y-4 mb-6">
+        <div class="space-y-3 mb-6">
           ${filtered.length === 0 ? `
 <div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
   <h3 style="font-size:15px;font-weight:500;color:#0F172A;margin:0 0 4px 0;">ไม่มีรายการในระบบ</h3>
@@ -2416,7 +2502,7 @@
               ${e.image_url ? `<img src="${he(e.image_url)}" class="w-11 h-11 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-lg shrink-0">📦</div>`}
               <div class="flex-1 min-w-0">
                 <p class="eq-title">${he(e.name)}</p>
-                <p class="eq-meta mt-1">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
+                <p class="eq-meta">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
               </div>
               <div class="flex flex-col items-end gap-1 shrink-0">
                 <span class="text-xs px-2.5 py-1 rounded-full font-semibold" style="background:${e.available===0?'var(--danger-bg)':e.available<e.quantity?'#fef3c7':'var(--orange-light)'};color:${e.available===0?'var(--danger-text)':e.available<e.quantity?'#d97706':'var(--orange-dark)'};border:0.5px solid ${e.available===0?'#fecaca':e.available<e.quantity?'#fde68a':'var(--orange-border)'};">
@@ -2611,7 +2697,7 @@
           <button onclick="openUserModal()" class="gd-btn-primary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-xs">
             <i data-lucide="user-plus" class="w-[18px] h-[18px] text-[#64748B]"></i> เพิ่มสมาชิก</button>
         </div>
-        <div class="space-y-4 ">
+        <div class="space-y-3 ">
           ${(()=>{ const all=[...AU.ga.map(u=>({...u,type:'ga'})),...AU.mgr.map(u=>({...u,type:'mgr'}))];
             if(!all.length) return `
 <div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
