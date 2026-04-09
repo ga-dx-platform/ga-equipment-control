@@ -143,45 +143,72 @@
     @keyframes spin { to { transform: rotate(360deg) } }
 
     /* ── Shell / Header ───────────────────────────────── */
-    .gd-shell {
-      background:
-        radial-gradient(circle at 0% 0%, rgba(249, 115, 22, 0.12), transparent 36%),
-        radial-gradient(circle at 100% 0%, rgba(251, 146, 60, 0.08), transparent 38%),
-        radial-gradient(circle at 50% 100%, rgba(194, 65, 12, 0.06), transparent 45%),
-        linear-gradient(180deg, #f6f9fd 0%, #edf3fb 48%, #e9f0fa 100%);
-    }
+    .gd-shell { background: #F8FAFC; }
+    
     .gd-header {
-      background: rgba(255, 255, 255, 0.94);
-      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.04);
-      position: relative;
-    }
-    /* Wave below header */
-    .header-wave {
-      position: absolute; bottom: -1px; left: 0;
-      width: 100%; height: 40px; display: block; pointer-events: none;
-    }
-    /* ── Cards ────────────────────────────────────────── */
-    .gd-card, .card {
       background: white;
-      border: 1px solid #E2E8F0;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(15,23,42,0.04);
-      transition: all .15s ease;
+      border-bottom: 1px solid #E2E8F0;
+    }
+
+    /* Wave below header */
+    
+    /* ── Cards ────────────────────────────────────────── */
+    
+    .gd-card, .card {
+      background: white !important; border: 1px solid #E2E8F0 !important; border-radius: 16px !important; padding: 20px 24px !important; min-height: 72px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04) !important; transition: all .15s ease !important;
     }
     .gd-card > :first-child { margin-top: 2px; }
     .gd-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06), 0 16px 32px rgba(15,23,42,0.08);
+      box-shadow: 0 6px 18px rgba(15,23,42,0.06), 0 18px 38px rgba(15,23,42,0.08);
     }
 
+    .page-title { font-size: 20px; font-weight: 600; color: #0F172A; }
+    .section-title { font-size: 16px; font-weight: 600; color: #0F172A; }
+    .eq-title { font-size: 15px; font-weight: 600; color: #0F172A; }
+    .eq-meta { font-size: 13px; color: #64748B; }
+    .badge-text { font-size: 12px; font-weight: 500; }
+
     /* ── Page layout ──────────────────────────────────── */
-    .ga-page { max-width: 1280px; margin: 0 auto; padding: 24px; }
-    .ga-content { max-width: 1100px; margin: 0 auto; }
-    .ga-reading { max-width: 920px; margin: 0 auto; }
+    
+    
+    .ga-list-container {
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
+
+    .gd-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    @media (max-width: 1024px) {
+      
+    .ga-list-container {
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
+
+    .gd-container { padding: 16px; }
+    }
+    @media (max-width: 768px) {
+      
+    .ga-list-container {
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
+
+    .gd-container { padding: 12px; }
+    }
+
+    
+    
     .gd-section {
       background: white;
       border: 1px solid #E2E8F0;
@@ -193,43 +220,45 @@
     
     .eq-title { font-size: 15px; font-weight: 600; color: #0F172A; }
     .eq-meta { font-size: 13px; color: #64748B; }
-    .section-title-new { font-size: 18px; font-weight: 600; color: #0F172A; }
+    .page-title { font-size: 18px; font-weight: 600; color: #0F172A; }
     /* ── Buttons ──────────────────────────────────────── */
+    
     button {
       font-family: 'Noto Sans Thai', 'Inter', sans-serif;
-      transition: all 150ms ease;
+      transition: all 120ms ease;
       cursor: pointer;
     }
     button:active { transform: scale(0.98); }
+    button:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2); }
 
     .gd-btn-primary, .btn-primary {
       background: #F97316;
       color: white; border: none;
       border-radius: 10px;
-      padding: 6px 14px;
-      font-size: 14px;
+      padding: 0 14px;
+      height: 36px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 13px;
       font-weight: 600;
-      min-height: 44px;
-      width: 100%;
     }
     .gd-btn-primary:hover, .btn-primary:hover {
-      filter: brightness(1.05);
+      background: #EA580C; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transform: translateY(-1px);
     }
     .gd-btn-primary:disabled, .gd-btn-primary.is-disabled {
-      background: #d4d0cd; color: #a8a29e;
-      pointer-events: none; box-shadow: none;
+      background: #CBD5E1; color: #F8FAFC; pointer-events: none;
     }
     .gd-btn-secondary, .btn-secondary {
       border: 1px solid #E2E8F0;
-      background: #F8FAFC;
-      color: #475569;
+      background: white;
+      color: #334155;
       border-radius: 10px;
-      padding: 6px 14px;
-      font-size: 14px;
+      padding: 0 14px;
+      height: 36px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 13px;
       font-weight: 600;
-      min-height: 44px;
     }
-    .gd-btn-secondary:hover, .btn-secondary:hover { background: #e2e8f0; }
+    .gd-btn-secondary:hover, .btn-secondary:hover { background: #F8FAFC; border-color: #CBD5E1; transform: translateY(-1px); }
 
 
     /* ── Inputs ───────────────────────────────────────── */
@@ -241,7 +270,7 @@
       padding: 0 var(--ga-space-lg);
       font-size: var(--ga-text-body); color: var(--text-primary);
       width: 100%;
-      height: 44px;
+      height: 40px;
       transition: border-color 150ms ease, box-shadow 150ms ease;
     }
     input:focus, select:focus, textarea:focus {
@@ -255,7 +284,7 @@
       background: var(--bg-input); border: 1px solid var(--border);
       border-radius: 10px; padding: 0 var(--ga-space-lg);
       font-size: var(--ga-text-body); color: var(--text-primary);
-      width: 100%; height: 44px;
+      width: 100%; height: 40px;
       font-family: 'Noto Sans Thai', 'Inter', sans-serif;
     }
 
@@ -264,16 +293,19 @@
     #confirm-ok:hover     { filter: brightness(1.08); }
 
     /* ── Modal panel ──────────────────────────────────── */
+    
     .gd-modal-panel {
-      background: var(--bg-card);
-      border-radius: var(--ga-radius-lg);
-      border: 1px solid var(--border);
-      box-shadow: var(--ga-shadow-md);
-      padding: var(--ga-space-2xl) var(--ga-space-xl);
+      background: white;
+      border-radius: 16px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 10px 40px rgba(15,23,42,0.1);
+      padding: 24px;
+      max-width: 520px !important;
     }
 
+
     /* ── Section title ────────────────────────────────── */
-    .gd-section-title {
+    .section-title {
       font-size: var(--ga-text-caption);
       font-weight: var(--ga-fw-semibold);
       letter-spacing: 0.06em;
@@ -281,21 +313,19 @@
       color: var(--text-muted);
     }
     /* ── Status badges ────────────────────────────────── */
-    .status-badge{
-      font-size:12px;
-      font-weight:500;
-      padding:4px 10px;
-      border-radius:999px;
-      background:#F1F5F9;
-      color:#475569;
-      border:1px solid #E2E8F0;
-      display: inline-flex; align-items: center; gap: 5px;
+    
+    .status-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
       white-space: nowrap;
     }
-    .status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-    .status-borrowed { background:#FFF7ED; color:#C2410C; border:1px solid #FED7AA; } /* using as low stock mapped from legacy */
-    .status-returned { background:#EFF6FF; color:#1D4ED8; border:1px solid #BFDBFE; } /* good stock */
-    .status-overdue  { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+    .status-dot { display: none; }
+    .status-borrowed, .badge-borrowed { background: #FFF7ED; color: #C2410C; border: 1px solid #FFEDD5; }
+    .status-returned, .badge-returned { background: #ECFDF5; color: #047857; border: 1px solid #D1FAE5; }
+    .status-overdue, .badge-overdue { background: #FEF2F2; color: #B91C1C; border: 1px solid #FEE2E2; }
 
 
     /* ── KPI cards ────────────────────────────────────── */
@@ -340,8 +370,8 @@
 
     /* ── Avatar ───────────────────────────────────────── */
     .ga-avatar {
-      width: 44px;
-      height: 44px;
+      width: 40px;
+      height: 40px;
       border-radius: 12px;
       display: flex;
       align-items: center;
@@ -470,68 +500,61 @@
     .user-card:hover  { transform: translateY(-1px); box-shadow: var(--ga-shadow-md); border-color: rgba(249, 115, 22, 0.32); background: rgba(255,255,255,0.96); }
     .user-card:active { transform: scale(0.98); }
     .user-card.selected { border-color: rgba(249, 115, 22, 0.62); box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.12), 0 12px 24px rgba(194, 65, 12, 0.1); }
-    .admin-card { border-color: rgba(148, 163, 184, 0.3); background: linear-gradient(120deg, rgba(241, 245, 249, 0.8), rgba(248, 250, 252, 0.95)); }
-
+    .admin-card { border-color: rgba(148, 163, 184, 0.3); background:#F8FAFC; }
     /* ── Top tabs (desktop) ───────────────────────────── */
     .top-tabs {
-      display: none;
       width: 100%;
-      margin-top: 0;
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-      padding: 0;
-      align-items: flex-end;
-      gap: 0;
-      justify-content: flex-start;
-    }
-    /* Inner row inside top-tabs — aligns with gd-page */
-    .top-tabs-inner {
-      max-width: 1180px;
+      max-width: 1100px;
       margin: 0 auto;
-      width: 100%;
-      padding: 0 40px;
+      padding: 0 24px;
+      background: white;
       display: flex;
-      align-items: flex-end;
-      gap: var(--ga-space-xl);
+      justify-content: flex-start;
+      margin-bottom: 24px;
+    }
+    .top-tabs-inner {
+      padding: 4px;
+      background: #F1F5F9;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
     .top-tab {
-      padding: 14px 2px 12px;
-      font-size: var(--ga-text-body);
-      font-weight: var(--ga-fw-semibold);
-      color: var(--text-muted);
+      height: 36px;
+      padding: 0 16px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 10px;
+      color: #64748B;
       border: 0;
-      border-radius: 0;
-      cursor: pointer;
-      transition: color 150ms ease;
-      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
-      position: relative;
+      background: transparent;
+      display: flex; align-items: center; justify-content: center;
     }
-    .top-tab.active { color: #0f172a; background: transparent; box-shadow: none; }
-    .top-tab.active::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -1px;
-      height: 2px;
-      border-radius: 999px;
-      background: var(--orange);
+    .top-tab.active {
+      color: #0F172A;
+      background: white;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
     }
+    .top-tab.active::after { display: none; }
+
 
     /* ── In-header tab bar (compat) ───────────────────── */
+    
     #mainTabBar, #mainTabBar-desktop {
-      overflow-x: auto; scrollbar-width: none; gap: var(--ga-space-sm);
+      overflow-x: auto; scrollbar-width: none; gap: 4px;
       border: 0;
-      border-radius: var(--ga-radius-md);
-      padding: var(--ga-space-xs);
-      background: rgba(15, 23, 42, 0.06);
+      border-radius: 12px;
+      padding: 4px;
+      background: #F1F5F9;
+      display: flex;
+      margin: 12px auto 0;
+      max-width: max-content;
     }
-    #mainTabBar::-webkit-scrollbar,
-    #mainTabBar-desktop::-webkit-scrollbar { display: none; }
-
-    .main-tab { white-space: nowrap; cursor: pointer; font-family: 'Noto Sans Thai', 'Inter', sans-serif; }
-    #mainTabBar .main-tab { letter-spacing: .01em; border-radius: 10px; transition: all .2s ease; }
-    #mainTabBar .main-tab:hover { color: #9a3412; background: rgba(255, 255, 255, .8); }
+    .main-tab { white-space: nowrap; cursor: pointer; font-family: 'Noto Sans Thai', 'Inter', sans-serif; display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 16px; font-size: 14px; font-weight: 500; border-radius: 10px; border: none; }
+    .tab-active { color: #0F172A; background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .tab-inactive { color: #64748B; background: transparent; }
+    .tab-inactive:hover { color: #334155; }
     /* Mobile pill inside header */
     .tab-active {
       color: var(--text-primary);
@@ -544,7 +567,16 @@
     .tab-inactive { color: var(--text-secondary); border: 1px solid transparent; background: transparent; border-radius: 10px; }
     /* Desktop underline */
     @media (min-width: 1024px) {
-      .top-tabs { display: flex; }
+      .top-tabs {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      background: white;
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 24px;
+    }
       #mainTabBar { display: none !important; }
       #mainTabBar-desktop { display: none !important; }
     }
@@ -574,14 +606,54 @@
 
     @media (max-width: 767px) {
       #bottom-nav { display: flex; }
-      .top-tabs   { display: none !important; }
+      .top-tabs {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      background: white;
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 24px;
+    }
       #screen-main { padding-bottom: 88px; }
       .gd-page { padding: 24px 16px 48px; }
     }
 
     #screen-main .gd-header > svg { display: none; }
   </style>
+
+  <style>
+    /* Final SaaS Polish Overrides */
+    .gd-container { max-width: 1100px !important; margin: 0 auto !important; padding: 0 24px !important; }
+    .top-tabs { 
+      width: 100% !important; max-width: 1100px !important; margin: 0 auto !important; padding: 0 24px !important; background: white !important; display: flex !important; justify-content: flex-start !important; 
+    }
+    .top-tabs-inner {
+      display: inline-flex !important; gap: 8px !important; padding: 6px !important; background: #F1F5F9 !important; border-radius: 12px !important; margin-bottom: 24px !important;
+    }
+    .top-tab {
+      height: 36px !important; padding: 0 16px !important; font-size: 14px !important; font-weight: 500 !important; border-radius: 10px !important; color: #64748B !important; background: transparent !important; display: flex !important; align-items: center !important; justify-content: center !important; transition: all .15s ease !important; border: 0 !important;
+    }
+    .top-tab.active, .tab-active { color: #0F172A !important; background: white !important; box-shadow: 0 1px 2px rgba(0,0,0,0.06) !important; }
+    .ga-list-container { max-width: 920px !important; margin-left: auto !important; margin-right: auto !important; }
+    .gd-card, .card {
+      background: white !important; border: 1px solid #E2E8F0 !important; border-radius: 16px !important; padding: 20px 24px !important; min-height: 72px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04) !important; transition: all .15s ease !important;
+    }
+    .gd-card:hover, .card:hover { transform: translateY(-2px) !important; box-shadow: 0 2px 4px rgba(0,0,0,0.04), 0 8px 16px rgba(0,0,0,0.06) !important; }
+    .btn-action-borrow { font-size: 13px !important; font-weight: 500 !important; color: #F97316 !important; background: transparent !important; transition: all .15s ease !important; border-radius: 10px !important; padding: 6px 14px !important;}
+    .btn-action-borrow:hover { background: #FFF7ED !important; }
+    button:hover { filter: brightness(0.97); }
+    .kpi-card { padding: 20px !important; height: auto !important; }
+    .kpi-number { font-size: 28px !important; font-weight: 600 !important; color: #0F172A !important; }
+    .kpi-label { font-size: 13px !important; color: #64748B !important; }
+    .kpi-icon-wrap { width: 40px !important; height: 40px !important; border-radius: 10px !important; display: flex !important; align-items: center !important; justify-content: center !important;}
+    .page-title { font-size: 20px !important; font-weight: 600 !important; color:#0F172A !important;}
+    .section-title { font-size: 18px !important; font-weight: 600 !important; color:#0F172A !important;}
+    .eq-title { font-size: 15px !important; font-weight: 600 !important;}
+  </style>
 </head>
+
 
 <body class="h-full gd-shell">
   <div id="app-root" class="h-full w-full flex justify-center overflow-auto">
@@ -590,7 +662,7 @@
       <!-- LOADING -->
       <div id="screen-loading" class="screen active">
         <div class="flex-1 flex flex-col items-center justify-center gap-4 px-6">
-          <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-2" style="background:var(--orange-gradient);">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-2" style="background:#F97316;">
             <span class="text-white text-xl font-bold">EC</span>
           </div>
           <div class="flex flex-col items-center gap-3">
@@ -611,7 +683,7 @@
           <div class="auth-shell">
             <div class="auth-block">
             <div class="auth-brand">
-              <div style="width:48px;height:48px;border-radius:14px;background:var(--orange-gradient);box-shadow:0 6px 18px rgba(249,115,22,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <div style="width:48px;height:48px;border-radius:14px;background:#F97316;box-shadow:0 6px 18px rgba(249,115,22,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                 <span style="color:#fff;font-size:18px;font-weight:600;font-family:'Noto Sans Thai','Inter',sans-serif;">EC</span>
               </div>
               <p style="margin:0;font-size:14px;font-weight:600;color:#0f172a;font-family:'Noto Sans Thai','Inter',sans-serif;">Equipment Control</p>
@@ -622,11 +694,11 @@
                 <p style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
               </div>
               <div class="mb-6">
-                <p class="gd-section-title mb-3">เลือกผู้ใช้งาน</p>
+                <p class="section-title mb-3">เลือกผู้ใช้งาน</p>
                 <div id="gaUserList" class="space-y-2.5"></div>
               </div>
               <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;">
-                <p class="gd-section-title mb-3 flex items-center gap-1.5">
+                <p class="section-title mb-3 flex items-center gap-1.5">
                   <i data-lucide="shield" style="width:12px;height:12px;"></i>Admin access
                 </p>
                 <div id="mgrUserList" class="space-y-2.5"></div>
@@ -643,7 +715,7 @@
           <div class="auth-shell">
             <div class="auth-block">
             <div class="auth-brand">
-              <div style="width:48px;height:48px;border-radius:14px;background:var(--orange-gradient);box-shadow:0 6px 18px rgba(249,115,22,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <div style="width:48px;height:48px;border-radius:14px;background:#F97316;box-shadow:0 6px 18px rgba(249,115,22,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                 <span style="color:#fff;font-size:18px;font-weight:600;font-family:'Noto Sans Thai','Inter',sans-serif;">EC</span>
               </div>
               <p style="margin:0;font-size:14px;font-weight:600;color:#0f172a;font-family:'Noto Sans Thai','Inter',sans-serif;">Equipment Control</p>
@@ -699,7 +771,7 @@
       <!-- MAIN -->
       <div id="screen-main" class="screen">
         <!-- App header: orange gradient + wave -->
-        <div class="gd-header" style="position:sticky;top:0;z-index:20;padding:16px 16px 14px;">
+        <div class="gd-header" style="position:sticky;top:0;z-index:20;padding:16px 20px;">
           <div class="gd-inner" style="padding:0 24px;">
             <!-- Avatar + name + role + buttons -->
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
@@ -743,10 +815,7 @@
             <div id="mainTabBar-desktop" style="display:none;"></div>
           </div>
           <!-- Wave -->
-          <svg viewBox="0 0 400 48" preserveAspectRatio="none"
-               style="position:absolute;bottom:-1px;left:0;width:100%;height:48px;pointer-events:none;">
-            <path d="M0,24 Q100,48 200,24 Q300,0 400,24 L400,48 L0,48 Z" fill="#fafaf9"/>
-          </svg>
+          
         </div>
         <!-- Desktop top tabs (outside gradient, below wave) -->
         <div class="top-tabs" id="top-tabs-bar">
@@ -817,7 +886,7 @@
     <div class="absolute inset-0 bg-black/40" onclick="closeEquipModal()"></div>
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:380px;">
       <h3 id="equipModalTitle" class="font-bold text-gray-900 text-lg mb-4">เพิ่มอุปกรณ์</h3>
-      <div class="space-y-4 ga-reading">
+      <div class="space-y-4 ">
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่ออุปกรณ์</label>
           <input type="text" id="eqName" placeholder="เช่น โน๊ตบุ๊ค Dell" class="gd-input"></div>
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">หมวดหมู่</label>
@@ -841,7 +910,7 @@
         </div>
       </div>
       <div class="flex gap-3 mt-6">
-        <button onclick="closeEquipModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
+        <button onclick="closeEquipModal()" class="flex-1 gd-btn-secondary">ยกเลิก</button>
         <button onclick="submitEquipment()" class="flex-1 py-2.5 gd-btn-primary" id="eqSubmitBtn">บันทึก</button>
       </div>
     </div>
@@ -852,7 +921,7 @@
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
     <div class="relative w-full mx-4" style="max-width:380px;background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(15,23,42,0.15);padding:24px;">
       <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:20px;">
-        <div id="confirm-icon-wrap" style="width:44px;height:44px;border-radius:50%;background:#F1F5F9;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;"></div>
+        <div id="confirm-icon-wrap" style="width:40px;height:40px;border-radius:50%;background:#F1F5F9;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;"></div>
         <div>
           <h3 id="confirm-title" style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Noto Sans Thai','Inter',sans-serif;"></h3>
           <p id="confirm-message" style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
@@ -876,7 +945,7 @@
     <div class="absolute inset-0 bg-black/40" onclick="closeUserModal()"></div>
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:360px;">
       <h3 class="font-bold text-gray-900 text-lg mb-4">เพิ่มสมาชิกใหม่</h3>
-      <div class="space-y-4 ga-reading">
+      <div class="space-y-4 ">
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
           <input type="text" id="newUserName" placeholder="เช่น สมชาย ใจดี" class="gd-input"></div>
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ตำแหน่ง/สิทธิ์</label>
@@ -888,7 +957,7 @@
           <input type="password" id="newUserPin" maxlength="6" placeholder="••••••" class="gd-input text-center tracking-widest font-bold"></div>
       </div>
       <div class="flex gap-3 mt-6">
-        <button onclick="closeUserModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
+        <button onclick="closeUserModal()" class="flex-1 gd-btn-secondary">ยกเลิก</button>
         <button onclick="confirmAddUser()" class="flex-1 py-2.5 gd-btn-primary" id="addUserBtn">บันทึก</button>
       </div>
     </div>
@@ -899,14 +968,14 @@
     <div class="absolute inset-0 bg-black/40" onclick="closeRecipientModal()"></div>
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:360px;">
       <h3 class="font-bold text-gray-900 text-lg mb-4">เพิ่มผู้รับรายงาน</h3>
-      <div class="space-y-4 ga-reading">
+      <div class="space-y-4 ">
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
           <input type="text" id="recipientName" placeholder="เช่น สมชาย จิตรดี" class="gd-input"></div>
         <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">อีเมล</label>
           <input type="email" id="recipientEmail" placeholder="example@company.com" class="gd-input"></div>
       </div>
       <div class="flex gap-3 mt-6">
-        <button onclick="closeRecipientModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
+        <button onclick="closeRecipientModal()" class="flex-1 gd-btn-secondary">ยกเลิก</button>
         <button onclick="confirmAddRecipient()" id="addRecipientBtn" class="flex-1 py-2.5 gd-btn-primary">บันทึก</button>
       </div>
     </div>
@@ -922,7 +991,7 @@
         <p class="font-semibold text-gray-900 text-base">ออกจากระบบ?</p>
       </div>
       <div class="flex gap-3">
-        <button onclick="closeLogoutModal()" class="flex-1 py-2.5 gd-btn-secondary">ยกเลิก</button>
+        <button onclick="closeLogoutModal()" class="flex-1 gd-btn-secondary">ยกเลิก</button>
         <button onclick="logout()" class="flex-1 py-2.5 gd-btn-danger">ออกจากระบบ</button>
       </div>
     </div>
@@ -963,7 +1032,7 @@
         <div class="numpad-key" onclick="cpEnterPin('0')">0</div>
         <div class="numpad-key" onclick="cpDeletePin()"><i data-lucide="delete" class="w-[18px] h-[18px] text-[#64748B]"></i></div>
       </div>
-      <button onclick="closeChangePinModal()" class="w-full py-2.5 gd-btn-secondary">ยกเลิก</button>
+      <button onclick="closeChangePinModal()" class="w-full gd-btn-secondary">ยกเลิก</button>
     </div>
   </div>
 
@@ -1705,37 +1774,39 @@
         return true;
       });
       const el = document.getElementById('tab-borrow');
-      el.innerHTML = `<div class="ga-page ga-content fade-in">
-        <div class="ga-page ga-content-header">
+      el.innerHTML = `<div class="gd-container fade-in">
+        <div class="gd-container-header">
           
-          <h2 class="section-title-new">ยืมอุปกรณ์</h2>
+          <h2 class="page-title">ยืมอุปกรณ์</h2>
           <p class="text-sm text-slate-500 mt-1">เลือกอุปกรณ์ที่ต้องการยืม (คงเหลือ > 0)</p>
         </div>
         <div class="mb-4">
           <input type="text" placeholder="ค้นหาอุปกรณ์..." class="gd-input" value="${he(borrowSearchQ)}"
             oninput="borrowSearchQ=this.value;renderBorrowTab()">
         </div>
-        <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
+        <div class="overflow-x-auto flex gap-2 mb-5" style="scrollbar-width:none;">
           <div class="chip ${borrowCatFilter===''?'active':''}" onclick="borrowCatFilter='';renderBorrowTab()">ทั้งหมด</div>
           ${cats.map(c=>`<div class="chip ${borrowCatFilter===c?'active':''}" onclick="borrowCatFilter='${he(c)}';renderBorrowTab()">${he(c)}</div>`).join('')}
         </div>
-        <div class="space-y-4 ga-reading" id="eqGrid">
-          ${filtered.length ? filtered.map(e=>`<div class="gd-card p-5 cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
-            <div class="flex items-center gap-3">
+        <div class="space-y-4 " id="eqGrid">
+          ${filtered.length ? filtered.map(e=>`<div class="gd-card cursor-pointer" style="display:flex; justify-content:space-between; align-items:center;" onclick="openBorrowForm('${he(e.eq_id)}')">
+            <div style="display:flex; gap:16px; align-items:center; flex:1; min-width:0;">
               ${e.image_url ? `<img src="${he(e.image_url)}" class="w-12 h-12 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-xl shrink-0">📦</div>`}
               <div class="flex-1 min-w-0">
                 <p class="eq-title">${he(e.name)}</p>
                 <p class="eq-meta mt-1">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
               </div>
-              <div class="flex flex-col items-end gap-1.5 shrink-0">
-                <span class="text-xs px-2.5 py-1 rounded-full font-semibold ${e.available<=2?'bg-amber-50 text-amber-700 border border-amber-200':'bg-blue-50 text-brand border border-blue-200'}">คงเหลือ ${e.available}/${e.quantity}</span>
-                <button class="text-xs font-semibold text-brand flex items-center gap-1"><i data-lucide="hand" class="w-[18px] h-[18px] text-[#64748B]"></i> ยืม</button>
-              </div>
             </div>
-          </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
-            <i data-lucide="archive" style="width:32px;height:32px;color:#CBD5E1;margin-bottom:12px;"></i>
-            <p style="font-size:13px;color:#64748B;">คุณยังไม่มีรายการยืมอุปกรณ์</p>
-          </div>`}
+            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0;">
+              <span class="status-badge ${e.available<=2?'status-borrowed':'status-returned'}">คงเหลือ ${e.available}/${e.quantity}</span>
+              <button class="btn-action-borrow"><i data-lucide="hand" class="w-4 h-4 text-[#F97316]"></i> ยืม</button>
+            </div>
+          </div>`).join('') : `
+<div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
+  <h3 style="font-size:15px;font-weight:500;color:#0F172A;margin:0 0 4px 0;">ไม่มีรายการในระบบ</h3>
+  <p style="font-size:13px;color:#64748B;line-height:1.5;margin:0;">คุณยังไม่มีรายการอุปกรณ์ที่ระบุ</p>
+</div>
+`}
         </div>
       </div>`;
       lucide.createIcons({'stroke-width': 1.5});
@@ -1780,7 +1851,7 @@
           <p class="text-sm text-gray-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้รับอุปกรณ์ตามรายการข้างต้นในสภาพสมบูรณ์</p>
           <p class="text-xs text-gray-300 text-center mt-1">🔒 ลายเซ็นนี้ใช้เพื่อยืนยันการรับอุปกรณ์ และถูกจัดเก็บอย่างปลอดภัยในระบบ</p>
         </div>
-        <button onclick="submitBorrow()" id="bfSubmitBtn" class="w-full py-3 gd-btn-primary text-sm font-semibold flex items-center justify-center gap-2">
+        <button onclick="submitBorrow()" id="bfSubmitBtn" class="w-full gd-btn-primary text-sm font-semibold flex items-center justify-center gap-2">
           <i data-lucide="check" class="w-[18px] h-[18px] text-[#64748B]"></i> ยืนยันการยืม
         </button>`;
       goScreen('borrow-form'); lucide.createIcons({'stroke-width': 1.5});
@@ -1831,13 +1902,13 @@
     function renderReturnTab() {
       const active = BORROWS.filter(r=> r.status==='borrowed'||r.status==='overdue');
       const el = document.getElementById('tab-return');
-      el.innerHTML = `<div class="ga-page ga-content fade-in">
-        <div class="ga-page ga-content-header">
+      el.innerHTML = `<div class="gd-container fade-in">
+        <div class="gd-container-header">
           
-          <h2 class="section-title-new">คืนอุปกรณ์</h2>
+          <h2 class="page-title">คืนอุปกรณ์</h2>
           <p class="text-sm text-slate-500 mt-1">รายการอุปกรณ์ที่กำลังยืมอยู่</p>
         </div>
-        <div class="space-y-4 ga-reading">
+        <div class="space-y-4 ">
           ${active.length ? active.map(r=>{
             const days = daysUntil(r.due_date);
             const isOD = r.status==='overdue';
@@ -1930,7 +2001,7 @@
           <p class="text-sm text-gray-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้คืนอุปกรณ์ตามรายการข้างต้นเรียบร้อยแล้ว</p>
           <p class="eq-meta text-center mt-1">🔒 ลายเซ็นนี้ใช้เพื่อยืนยันการคืนอุปกรณ์ และถูกจัดเก็บอย่างปลอดภัยในระบบ</p>
         </div>
-        <button onclick="submitReturn()" id="rdSubmitBtn" class="w-full py-3 gd-btn-primary text-sm font-semibold flex items-center justify-center gap-2">
+        <button onclick="submitReturn()" id="rdSubmitBtn" class="w-full gd-btn-primary text-sm font-semibold flex items-center justify-center gap-2">
           <i data-lucide="check" class="w-[18px] h-[18px] text-[#64748B]"></i> ยืนยันการคืน
         </button>`;
       goScreen('return-detail'); lucide.createIcons({'stroke-width': 1.5});
@@ -1978,11 +2049,11 @@
         .filter(r => !historyFilter || r.status === historyFilter)
         .filter(r => !sq || (r.eq_name||'').toLowerCase().includes(sq));
       const el = document.getElementById('tab-history');
-      el.innerHTML = `<div class="ga-page ga-content fade-in">
-        <div class="ga-page ga-content-header">
+      el.innerHTML = `<div class="gd-container fade-in">
+        <div class="gd-container-header">
           <div class="flex items-center justify-between">
             <div>
-            <h2 class="section-title-new">ประวัติการยืม-คืน</h2></div>
+            <h2 class="page-title">ประวัติการยืม-คืน</h2></div>
             <button onclick="exportHistoryCSV('ga')" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition shrink-0">
               <i data-lucide="download" class="w-[18px] h-[18px] text-[#64748B]"></i> Export CSV</button>
           </div>
@@ -1990,14 +2061,14 @@
         <input type="text" placeholder="ค้นหาชื่ออุปกรณ์..." value="${he(gaHistorySearch)}"
           oninput="gaHistorySearch=this.value;renderHistoryTab()"
           class="gd-input" style="margin-bottom:12px;">
-        <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
+        <div class="overflow-x-auto flex gap-2 mb-5" style="scrollbar-width:none;">
           <div class="chip ${historyFilter===''?'active':''}" onclick="historyFilter='';renderHistoryTab()">ทั้งหมด</div>
           <div class="chip ${historyFilter==='borrowed'?'active':''}" onclick="historyFilter='borrowed';renderHistoryTab()">กำลังยืม</div>
           <div class="chip ${historyFilter==='overdue'?'active':''}" onclick="historyFilter='overdue';renderHistoryTab()">เกินกำหนด</div>
           <div class="chip ${historyFilter==='returned'?'active':''}" onclick="historyFilter='returned';renderHistoryTab()">คืนแล้ว</div>
         </div>
-        <div class="space-y-4 ga-reading">
-          ${list.length ? list.map(r=>`<div class="gd-card p-5">
+        <div class="space-y-4 ">
+          ${list.length ? list.map(r=>`<div class="gd-card" style="padding: 20px;">
             <div class="flex items-start justify-between mb-1">
               <p class="eq-title">${he(r.eq_name)}</p>
               <div class="flex items-center gap-1.5">${conditionBadge(r.condition_on_return)}${statusBadge(r.status)}</div>
@@ -2008,10 +2079,12 @@
               <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="eye" class="w-[18px] h-[18px] text-[#64748B]"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
             </div>
             ${r.condition_note?`<p class="eq-meta mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
-          </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
-            <i data-lucide="archive" style="width:32px;height:32px;color:#CBD5E1;margin-bottom:12px;"></i>
-            <p style="font-size:13px;color:#64748B;">คุณยังไม่มีรายการยืมอุปกรณ์</p>
-          </div>`}
+          </div>`).join('') : `
+<div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
+  <h3 style="font-size:15px;font-weight:500;color:#0F172A;margin:0 0 4px 0;">ไม่มีรายการในระบบ</h3>
+  <p style="font-size:13px;color:#64748B;line-height:1.5;margin:0;">คุณยังไม่มีรายการอุปกรณ์ที่ระบุ</p>
+</div>
+`}
         </div>
       </div>`;
       lucide.createIcons({'stroke-width': 1.5});
@@ -2027,10 +2100,10 @@
       const recent = [...BORROWS].sort((a,b)=>new Date(b.borrowed_at)-new Date(a.borrowed_at)).slice(0,10);
 
       const el = document.getElementById('tab-dashboard');
-      el.innerHTML = `<div class="ga-page ga-content fade-in">
-        <div class="ga-page ga-content-header">
+      el.innerHTML = `<div class="gd-container fade-in">
+        <div class="gd-container-header">
           
-          <h2 class="section-title-new">ภาพรวมระบบ</h2>
+          <h2 class="page-title">ภาพรวมระบบ</h2>
         </div>
         <div class="grid grid-cols-2 gap-4 mb-6">
           <div class="kpi-card orange">
@@ -2046,7 +2119,7 @@
             <div style="width:32px;height:32px;border-radius:8px;background:var(--orange-light);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="box" style="width:16px;height:16px;color:var(--orange);"></i></div>
             <p class="kpi-number">${availableEq}</p><p class="kpi-label">อุปกรณ์พร้อมใช้</p></div>
         </div>
-        <div class="card mb-5">
+        <div class="card mb-5 ga-list-container">
           <h4 class="eq-title mb-4">รายการเกินกำหนด</h4>
           ${overdueList.length ? overdueList.map(r=>`<div class="flex items-center gap-3 py-2.5 border-b border-gray-100 last:border-0 text-sm">
             <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0"><i data-lucide="alert-triangle" class="w-[18px] h-[18px] text-[#64748B]"></i></div>
@@ -2058,7 +2131,7 @@
               class="shrink-0 px-2.5 py-1.5 text-white text-xs font-semibold rounded-lg transition flex items-center gap-1" style="background:#f97316;color:white;"><i data-lucide="corner-up-left" class="w-[18px] h-[18px] text-[#64748B]"></i><span class="hidden sm:inline">คืนแทน</span></button>
           </div>`).join('') : `<div class="flex flex-col items-center justify-center py-8 text-slate-500"><span class="text-3xl mb-2">✓</span><p class="text-sm">ไม่มีรายการเกินกำหนด</p></div>`}
         </div>
-        <div class="card mb-5">
+        <div class="card mb-5 ga-list-container">
           <h4 class="eq-title mb-4">กิจกรรมล่าสุด</h4>
           ${recent.length ? recent.map(r=>{
             const isRet = r.status==='returned';
@@ -2112,11 +2185,11 @@
         .filter(r => !mgrHistoryTo || (r.borrowed_at||'').slice(0,10) <= mgrHistoryTo);
       const selectCls = 'border border-gray-200 rounded-lg px-2 py-1.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-brand/30';
       const el = document.getElementById('tab-mgr-history');
-      el.innerHTML = `<div class="ga-page ga-content fade-in">
-        <div class="ga-page ga-content-header">
+      el.innerHTML = `<div class="gd-container fade-in">
+        <div class="gd-container-header">
           <div class="flex items-center justify-between">
             <div>
-            <h2 class="section-title-new">ประวัติทั้งหมด</h2></div>
+            <h2 class="page-title">ประวัติทั้งหมด</h2></div>
             <button onclick="exportHistoryCSV('mgr')" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition shrink-0">
               <i data-lucide="download" class="w-[18px] h-[18px] text-[#64748B]"></i> Export CSV</button>
           </div>
@@ -2133,14 +2206,14 @@
           <input type="date" value="${mgrHistoryTo}" onchange="mgrHistoryTo=this.value;renderMgrHistory()" class="${selectCls} shrink-0" title="ถึงวันที่">
           ${(mgrHistoryGa||mgrHistoryFrom||mgrHistoryTo)?`<button onclick="mgrHistoryGa='';mgrHistoryFrom='';mgrHistoryTo='';renderMgrHistory()" class="eq-meta hover:text-danger px-1 shrink-0">ล้าง</button>`:''}
         </div>
-        <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
+        <div class="overflow-x-auto flex gap-2 mb-5" style="scrollbar-width:none;">
           <div class="chip ${historyFilter===''?'active':''}" onclick="historyFilter='';renderMgrHistory()">ทั้งหมด</div>
           <div class="chip ${historyFilter==='borrowed'?'active':''}" onclick="historyFilter='borrowed';renderMgrHistory()">กำลังยืม</div>
           <div class="chip ${historyFilter==='overdue'?'active':''}" onclick="historyFilter='overdue';renderMgrHistory()">เกินกำหนด</div>
           <div class="chip ${historyFilter==='returned'?'active':''}" onclick="historyFilter='returned';renderMgrHistory()">คืนแล้ว</div>
         </div>
-        <div class="space-y-4 ga-reading">
-          ${list.length ? list.map(r=>`<div class="gd-card p-5">
+        <div class="space-y-4 ">
+          ${list.length ? list.map(r=>`<div class="gd-card" style="padding: 20px;">
             <div class="flex items-start justify-between mb-1">
               <p class="eq-title">${he(r.eq_name)}</p>
               <div class="flex items-center gap-1.5">${conditionBadge(r.condition_on_return)}${statusBadge(r.status)}</div>
@@ -2151,10 +2224,12 @@
               <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="eye" class="w-[18px] h-[18px] text-[#64748B]"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
             </div>
             ${r.condition_note?`<p class="eq-meta mt-1">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
-          </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
-            <i data-lucide="archive" style="width:32px;height:32px;color:#CBD5E1;margin-bottom:12px;"></i>
-            <p style="font-size:13px;color:#64748B;">คุณยังไม่มีรายการยืมอุปกรณ์</p>
-          </div>`}
+          </div>`).join('') : `
+<div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
+  <h3 style="font-size:15px;font-weight:500;color:#0F172A;margin:0 0 4px 0;">ไม่มีรายการในระบบ</h3>
+  <p style="font-size:13px;color:#64748B;line-height:1.5;margin:0;">คุณยังไม่มีรายการอุปกรณ์ที่ระบุ</p>
+</div>
+`}
         </div>
       </div>`;
       lucide.createIcons({'stroke-width': 1.5});
@@ -2170,7 +2245,7 @@
         const matchCat = !eqCatFilter || e.category === eqCatFilter;
         return matchSearch && matchCat;
       });
-      el.innerHTML = `<div class="ga-page ga-content fade-in">
+      el.innerHTML = `<div class="gd-container fade-in">
         <div class="flex items-center justify-between mb-3">
           <h4 class="eq-title">รายการอุปกรณ์ <span class="text-gray-400 font-normal">(${filtered.length}/${EQ.length})</span></h4>
           <button onclick="showAddEquipment()" class="flex items-center gap-1.5 px-3 py-1.5 text-white text-xs font-semibold rounded-lg transition shadow-sm" style="background:#f97316;color:white;">
@@ -2190,11 +2265,13 @@
           </select>
         </div>
         <div class="space-y-4 mb-6">
-          ${filtered.length === 0 ? `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
-            <i data-lucide="archive" style="width:32px;height:32px;color:#CBD5E1;margin-bottom:12px;"></i>
-            <p style="font-size:13px;color:#64748B;">คุณยังไม่มีรายการยืมอุปกรณ์</p>
-          </div>` :
-          filtered.map(e=>`<div class="gd-card p-5">
+          ${filtered.length === 0 ? `
+<div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
+  <h3 style="font-size:15px;font-weight:500;color:#0F172A;margin:0 0 4px 0;">ไม่มีรายการในระบบ</h3>
+  <p style="font-size:13px;color:#64748B;line-height:1.5;margin:0;">คุณยังไม่มีรายการอุปกรณ์ที่ระบุ</p>
+</div>
+` :
+          filtered.map(e=>`<div class="gd-card" style="padding: 20px;">
             <div class="flex items-center gap-3">
               ${e.image_url ? `<img src="${he(e.image_url)}" class="w-11 h-11 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-lg shrink-0">📦</div>`}
               <div class="flex-1 min-w-0">
@@ -2215,7 +2292,7 @@
         </div>
 
         <!-- ===== CATEGORY MANAGEMENT ===== -->
-        <div class="gd-card p-5">
+        <div class="gd-card" style="padding: 20px;">
           <div class="flex items-center justify-between mb-3">
             <h4 class="eq-title">หมวดหมู่</h4>
             ${_addCatMode ? '' : `<button onclick="showAddCatInput()" class="gd-btn-secondary flex items-center gap-1 !w-auto !py-1.5 !px-2.5 text-xs font-semibold">
@@ -2388,18 +2465,20 @@
     // ===== MGR: MEMBERS TAB =====
     function renderMembersTab() {
       const el = document.getElementById('tab-members');
-      el.innerHTML = `<div class="ga-page ga-content fade-in">
+      el.innerHTML = `<div class="gd-container fade-in">
         <div class="flex items-center justify-between mb-4">
           <h4 class="eq-title">รายชื่อสมาชิก</h4>
           <button onclick="openUserModal()" class="gd-btn-primary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-xs">
             <i data-lucide="user-plus" class="w-[18px] h-[18px] text-[#64748B]"></i> เพิ่มสมาชิก</button>
         </div>
-        <div class="space-y-4 ga-reading">
+        <div class="space-y-4 ">
           ${(()=>{ const all=[...AU.ga.map(u=>({...u,type:'ga'})),...AU.mgr.map(u=>({...u,type:'mgr'}))];
-            if(!all.length) return `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
-            <i data-lucide="archive" style="width:32px;height:32px;color:#CBD5E1;margin-bottom:12px;"></i>
-            <p style="font-size:13px;color:#64748B;">คุณยังไม่มีรายการยืมอุปกรณ์</p>
-          </div>`;
+            if(!all.length) return `
+<div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
+  <h3 style="font-size:15px;font-weight:500;color:#0F172A;margin:0 0 4px 0;">ไม่มีรายการในระบบ</h3>
+  <p style="font-size:13px;color:#64748B;line-height:1.5;margin:0;">คุณยังไม่มีรายการอุปกรณ์ที่ระบุ</p>
+</div>
+`;
             return all.map((u,i)=>{
               return `<div class="gd-card p-5 flex items-center justify-between fade-in">
                 <div class="flex items-center gap-3">
@@ -2617,9 +2696,9 @@
     }
     async function renderAuditLogTab() {
       const el = document.getElementById('tab-audit-log');
-      el.innerHTML = `<div class="ga-page ga-content fade-in"><div class="ga-page ga-content-header"><h2 class="section-title-new">ประวัติการดำเนินการ</h2></div>${skeletonCards(5)}</div>`;
+      el.innerHTML = `<div class="gd-container fade-in"><div class="gd-container-header"><h2 class="page-title">ประวัติการดำเนินการ</h2></div>${skeletonCards(5)}</div>`;
       const { data, error } = await sb.from('app_audit_logs').select('*').order('created_at', { ascending: false }).limit(300);
-      if (error) { el.innerHTML = `<div class="ga-page ga-content fade-in"><p class="text-sm text-danger text-center py-10">โหลดข้อมูลไม่สำเร็จ</p></div>`; return; }
+      if (error) { el.innerHTML = `<div class="gd-container fade-in"><p class="text-sm text-danger text-center py-10">โหลดข้อมูลไม่สำเร็จ</p></div>`; return; }
       AUDIT_LOGS = data || [];
       _renderAuditList();
     }
@@ -2630,10 +2709,10 @@
       const filtered = AUDIT_LOGS
         .filter(r => !auditFilter || r.action_type === auditFilter)
         .filter(r => !auditSearch || (r.actor_name||'').toLowerCase().includes(auditSearch.toLowerCase()));
-      el.innerHTML = `<div class="ga-page ga-content fade-in">
-        <div class="ga-page ga-content-header">
+      el.innerHTML = `<div class="gd-container fade-in">
+        <div class="gd-container-header">
           
-          <h2 class="section-title-new">ประวัติการดำเนินการ</h2>
+          <h2 class="page-title">ประวัติการดำเนินการ</h2>
         </div>
         <div class="flex gap-2 mb-3">
           <input id="auditSearchInput" type="text" placeholder="ค้นหาผู้ดำเนินการ..." value="${he(auditSearch)}"
@@ -2642,21 +2721,23 @@
           <button onclick="exportAuditCSV()" class="gd-btn-primary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-xs font-semibold whitespace-nowrap">
             <i data-lucide="download" class="w-[18px] h-[18px] text-[#64748B]"></i> Export CSV</button>
         </div>
-        <div class="overflow-x-auto flex gap-2 pb-3 mb-3" style="scrollbar-width:none;">
+        <div class="overflow-x-auto flex gap-2 mb-5" style="scrollbar-width:none;">
           <div class="chip ${auditFilter===''?'active':''}" onclick="auditFilter='';_renderAuditList()">ทั้งหมด</div>
           ${filterTypes.map(t=>`<div class="chip ${auditFilter===t?'active':''}" onclick="auditFilter='${t}';_renderAuditList()">${AUDIT_TYPE_META[t]?.label||t}</div>`).join('')}
         </div>
         <div class="space-y-2">
-          ${filtered.length ? filtered.map(r=>`<div class="gd-card p-5">
+          ${filtered.length ? filtered.map(r=>`<div class="gd-card" style="padding: 20px;">
             <div class="flex items-start justify-between gap-2 mb-1">
               ${auditTypeBadge(r.action_type)}
               <span class="eq-meta shrink-0">${fdFull(r.created_at)}</span>
             </div>
             <p class="text-xs text-gray-500 mt-1">${he(r.actor_name||'—')}<span class="text-gray-300 mx-1">·</span>${auditDetail(r)}</p>
-          </div>`).join('') : `<div class="flex flex-col items-center justify-center py-16 text-slate-500">
-            <i data-lucide="archive" style="width:32px;height:32px;color:#CBD5E1;margin-bottom:12px;"></i>
-            <p style="font-size:13px;color:#64748B;">คุณยังไม่มีรายการยืมอุปกรณ์</p>
-          </div>`}
+          </div>`).join('') : `
+<div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
+  <h3 style="font-size:15px;font-weight:500;color:#0F172A;margin:0 0 4px 0;">ไม่มีรายการในระบบ</h3>
+  <p style="font-size:13px;color:#64748B;line-height:1.5;margin:0;">คุณยังไม่มีรายการอุปกรณ์ที่ระบุ</p>
+</div>
+`}
         </div>
       </div>`;
       lucide.createIcons({'stroke-width': 1.5});
