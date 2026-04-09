@@ -652,7 +652,147 @@
     .section-title { font-size: 18px !important; font-weight: 600 !important; color:#0F172A !important;}
     .eq-title { font-size: 15px !important; font-weight: 600 !important;}
   </style>
+
+  <style>
+    /* Final Micro UX Polish */
+    html {
+      --tx-color: color .15s ease;
+      --tx-bg: background .15s ease;
+      --tx-border: border .15s ease;
+      --tx-transform: transform .12s ease;
+      --tx-shadow: box-shadow .15s ease;
+      --tx-all: var(--tx-color), var(--tx-bg), var(--tx-border), var(--tx-transform), var(--tx-shadow);
+    }
+    
+    * { outline: none; }
+    
+    .top-tab { transition: var(--tx-all) !important; cursor: pointer; }
+    .top-tab:not(.active):hover { background: #E2E8F0 !important; }
+    .top-tab.active { box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important; }
+    
+    .gd-card, .card {
+      transition: var(--tx-all) !important;
+      cursor: pointer !important;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+    }
+    .gd-card:hover, .card:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.06) !important;
+    }
+    
+    .btn-action-borrow { transition: var(--tx-all) !important; }
+    .btn-action-borrow:hover { color: #EA580C !important; }
+    .btn-action-borrow i { transition: transform .12s ease !important; }
+    .btn-action-borrow:hover i { transform: translateX(2px) !important; }
+    
+    button { transition: var(--tx-all) !important; }
+    button:active { transform: scale(0.98) !important; }
+    
+    .status-badge {
+      font-weight: 500 !important;
+      padding: 4px 10px !important;
+      border: 1px solid rgba(0,0,0,0.05) !important;
+    }
+    
+    .gd-input:focus, input:focus, select:focus, textarea:focus {
+      border-color: #F97316 !important;
+      box-shadow: 0 0 0 3px rgba(249,115,22,0.15) !important;
+      outline: none !important;
+    }
+    
+    svg[data-lucide] { opacity: 0.85; transition: opacity .15s ease; }
+    *:hover > svg[data-lucide], button:hover svg[data-lucide], .gd-card:hover svg[data-lucide] { opacity: 1; }
+    
+    @keyframes fadeInSaaS {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    .fade-in { animation: fadeInSaaS .18s ease forwards !important; }
+    
+    .kpi-number { color: #0F172A !important; transition: color .15s ease; }
+    .kpi-card:hover .kpi-number { color: #F97316 !important; }
+    
+    /* Skeleton updates */
+    .skeleton-card {
+      height: 72px !important;
+      background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%) !important;
+      background-size: 200% 100% !important;
+      animation: pulse 1.2s infinite ease-in-out !important;
+    }
+    @keyframes pulse {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    
+    .role-badge-mgr {
+      font-size: 12px !important;
+      padding: 4px 8px !important;
+      background: #FFF7ED !important;
+      border: 1px solid #FED7AA !important;
+      color: #C2410C !important;
+      border-radius: 999px !important;
+    }
+    
+  </style>
+
+  <style>
+    /* Responsive Navigation Logic */
+    /* Hide top tabs on mobile, hide bottom nav on desktop */
+    @media (max-width: 768px) {
+      .top-tabs, #mainTabBar { display: none !important; }
+      #bottom-nav { display: flex !important; }
+    }
+    @media (min-width: 769px) {
+      #bottom-nav { display: none !important; }
+      /* Ensure that the space reserved for bottom nav on mobile is freed on desktop */
+      body { padding-bottom: 0 !important; }
+    }
+
+    /* Bottom Nav Aesthetics */
+    #bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: calc(64px + env(safe-area-inset-bottom)) !important;
+      padding-bottom: env(safe-area-inset-bottom) !important;
+      background: white !important;
+      border-top: 1px solid #E2E8F0 !important;
+      z-index: 50;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -1px 3px rgba(0,0,0,0.02);
+    }
+    
+    .bn-item {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex: 1 !important;
+      height: 100% !important;
+      color: #64748B !important;
+      cursor: pointer !important;
+      transition: color .15s ease !important;
+    }
+    .bn-item.active {
+      color: #F97316 !important;
+    }
+    .bn-item i, .bn-item svg[data-lucide] {
+      width: 20px !important;
+      height: 20px !important;
+      color: currentColor !important;
+      opacity: 1 !important; /* override the 0.85 default */
+    }
+    .bn-label {
+      font-size: 12px !important;
+      font-weight: 500 !important;
+      color: currentColor !important;
+      margin-top: 4px !important;
+    }
+  </style>
 </head>
+
+
 
 
 <body class="h-full gd-shell">
@@ -812,7 +952,7 @@
             <!-- Mobile tab bar inside header -->
             <div id="mainTabBar" style="display:flex;overflow-x:auto;gap:8px;margin-top:12px;scrollbar-width:none;"></div>
             <!-- Desktop tab bar (underline style, shown below header) -->
-            <div id="mainTabBar-desktop" style="display:none;"></div>
+            <div id="mainTabBar-desktop" style="opacity:0.6;"></div>
           </div>
           <!-- Wave -->
           
@@ -1529,7 +1669,7 @@
         const isMgr = role === 'mgr';
         return `<button type="button" class="user-card ${isMgr?'admin-card':''} w-full flex items-center gap-3.5 px-4 py-3.5 text-left" data-name="${he(u.name)}" data-role="${role}" onclick="selectUser(this.dataset.name,this.dataset.role)">
           ${avEl(u.name, role)}<div class="flex-1 min-w-0"><p class="font-semibold ${isMgr?'text-slate-700':'text-slate-900'} text-[15px] leading-tight truncate">${he(u.name)}</p>
-          <p class="text-xs text-slate-500 mt-1">${isMgr?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
+          <p class="role-badge-mgr mt-1" style="display:inline-flex;">${isMgr?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
           <i data-lucide="chevron-right" class="w-[18px] h-[18px] text-[#64748B]"></i></button>`;
       }
       gaList.innerHTML = AU.ga.map((u,i) => row(u,i,'ga')).join('');
@@ -1985,7 +2125,7 @@
               class="flex-1 py-2.5 rounded-xl border-2 border-red-300 bg-red-50 text-red-700 text-xs font-semibold transition ring-red-400 hover:bg-red-100">
               <span class="block text-base">❌</span>สูญหาย</button>
           </div>
-          <div id="rc-note-wrap" style="display:none;">
+          <div id="rc-note-wrap" style="opacity:0.6;">
             <textarea id="rc-note" rows="2" placeholder="ระบุรายละเอียด (เช่น รอยแตก, หายไปบางส่วน)"
               class="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-brand resize-none"></textarea>
           </div>
@@ -2484,7 +2624,7 @@
                 <div class="flex items-center gap-3">
                   ${avEl(u.name, u.type)}
                   <div><p class="font-medium text-gray-900 text-sm">${he(u.name)}</p>
-                  <p class="text-[10px] font-medium uppercase tracking-wider ${u.type==='mgr'?'text-purple-600':'text-gray-400'}">${u.type==='mgr'?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
+                  <p class="${u.type==='mgr'?'role-badge-mgr':'text-[12px] text-gray-400'}">${u.type==='mgr'?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
                 </div>
                 <div class="flex items-center gap-1">
                   <button data-name="${he(u.name)}" data-utype="${u.type}" onclick="openResetPin(this.dataset.name,this.dataset.utype)" class="p-2 rounded-lg text-gray-300 hover:text-amber-500 hover:bg-amber-50"><i data-lucide="key-round" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
