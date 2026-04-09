@@ -2030,7 +2030,7 @@
             toast('ยืมอุปกรณ์เรียบร้อยแล้ว','success');
             closeBorrowForm();
           } catch(e) {
-            console.error(e); toast('บันทึกไม่สำเร็จ','error');
+            console.error(e); toast('ไม่สามารถบันทึกข้อมูลได้','error');
             btn.disabled=false; btn.innerHTML='<i data-lucide="check" class="w-[18px] h-[18px] text-[#64748B]"></i> ยืนยันการยืม';
             btn.classList.add('gd-btn-primary'); lucide.createIcons({'stroke-width': 1.5});
           }
@@ -2174,7 +2174,7 @@
             toast('คืนอุปกรณ์เรียบร้อยแล้ว','success');
             closeReturnDetail();
           } catch(e) {
-            console.error(e); toast('บันทึกไม่สำเร็จ','error');
+            console.error(e); toast('ไม่สามารถบันทึกข้อมูลได้','error');
             btn.disabled=false; btn.innerHTML='<i data-lucide="check" class="w-[18px] h-[18px] text-[#64748B]"></i> ยืนยันการคืน';
             btn.classList.add('gd-btn-primary'); lucide.createIcons({'stroke-width': 1.5});
           }
@@ -2582,7 +2582,7 @@
         EQ = await api('getEquipment');
         toast(_editEqId?'บันทึกการเปลี่ยนแปลงแล้ว':'เพิ่มอุปกรณ์เรียบร้อยแล้ว','success');
         closeEquipModal(); renderEquipmentTab();
-      } catch(e) { console.error(e); toast('บันทึกไม่สำเร็จ','error'); }
+      } catch(e) { console.error(e); toast('ไม่สามารถบันทึกข้อมูลได้','error'); }
       btn.disabled=false; btn.textContent='บันทึก';
     }
     function confirmDeleteEquip(eqId) {
@@ -2773,7 +2773,7 @@
         const r = RECIPIENTS.find(r => r.id === id);
         if (r) r.is_active = !currentlyActive;
         renderRecipientsList();
-      } catch(e) { toast('บันทึกไม่สำเร็จ', 'error'); }
+      } catch(e) { toast('ไม่สามารถบันทึกข้อมูลได้', 'error'); }
     }
     function confirmDeleteRecipient(id, label) {
       showConfirm({
