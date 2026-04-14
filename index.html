@@ -11,6 +11,7 @@
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -928,6 +929,42 @@
   </style>
 
   <style>
+    /* ===== Analytics Dashboard ===== */
+    .filter-bar { background:#fff; border:0.5px solid #e7e5e4; border-radius:12px; padding:14px 16px; margin-bottom:16px; }
+    .filter-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .filter-title { font-size:12px; font-weight:500; color:#78716c; display:flex; align-items:center; gap:6px; }
+    .filter-reset-btn { font-size:11px; color:#f97316; background:none; border:none; cursor:pointer; padding:0; font-family:'Noto Sans Thai','Inter',sans-serif; }
+    .filter-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+    .filter-item { display:flex; flex-direction:column; gap:4px; }
+    .filter-label { font-size:10px; color:#a8a29e; font-weight:500; text-transform:uppercase; letter-spacing:0.05em; }
+    .filter-item select { font-size:12px; padding:7px 10px; border-radius:8px; border:0.5px solid #e7e5e4; background:#fafaf9; color:#1c1917; cursor:pointer; font-family:'Noto Sans Thai','Inter',sans-serif; width:100%; }
+    .filter-item select:focus { outline:2px solid #f97316; outline-offset:1px; }
+    .active-chips { display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding-top:10px; border-top:0.5px solid #f5f5f4; margin-top:10px; }
+    .chips-label { font-size:11px; color:#a8a29e; }
+    .filter-chip { display:flex; align-items:center; gap:4px; background:#fff7ed; color:#c2410c; border:0.5px solid #fed7aa; border-radius:20px; padding:3px 10px; font-size:11px; font-family:'Noto Sans Thai','Inter',sans-serif; }
+    .chip-remove { cursor:pointer; opacity:0.6; font-size:13px; background:none; border:none; padding:0; color:#c2410c; }
+    .analytics-kpi-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-bottom:16px; }
+    .analytics-kpi { background:#fff; border:0.5px solid #e7e5e4; border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:4px; }
+    .analytics-kpi.danger { background:#fff5f5; border-color:#fecaca; }
+    .kpi-label { font-size:11px; color:#a8a29e; }
+    .kpi-label.red { color:#ef4444; }
+    .kpi-value { font-size:28px; font-weight:600; line-height:1; color:#1c1917; font-family:'Noto Sans Thai','Inter',sans-serif; }
+    .kpi-value.orange { color:#f97316; }
+    .kpi-value.green { color:#10b981; }
+    .kpi-value.red { color:#ef4444; }
+    .charts-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+    .chart-card { background:#fff; border:0.5px solid #e7e5e4; border-radius:12px; padding:16px; }
+    .chart-card-title { font-size:13px; font-weight:500; color:#78716c; margin:0 0 12px; }
+    .chart-legend { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:8px; font-size:11px; color:#78716c; }
+    .leg-sq { width:8px; height:8px; border-radius:2px; display:inline-block; margin-right:4px; }
+    @media (max-width:767px) {
+      .filter-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .analytics-kpi-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .charts-row-2 { grid-template-columns:1fr; }
+    }
+  </style>
+
+  <style>
     /* Strict SaaS Vertical Rhythm */
     
     /* Pull the bottom margin off the tab container so we can control spacing block-by-block on the container itself */
@@ -1258,6 +1295,9 @@
         <div id="tab-equipment" class="flex-1 overflow-auto hidden"></div>
         <div id="tab-members" class="flex-1 overflow-auto hidden"></div>
         <div id="tab-audit-log" class="flex-1 overflow-auto hidden"></div>
+        <!-- Analytics Tabs -->
+        <div id="tab-analytics-mgr" class="flex-1 overflow-auto hidden"></div>
+        <div id="tab-analytics-ga" class="flex-1 overflow-auto hidden"></div>
       </div>
       <!-- Mobile bottom nav -->
       <div id="bottom-nav"></div>
@@ -2120,8 +2160,8 @@
       const badge = oc > 0 ? `<span class="ml-1 inline-flex items-center justify-center min-w-[16px] h-4 px-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">${oc > 9 ? '9+' : oc}</span>` : '';
       const topInner = document.getElementById('top-tabs-inner');
       if (isMgr) {
-        const tabs = ['ภาพรวม','ประวัติ','อุปกรณ์','สมาชิก','Audit'];
-        const icons = ['layout-dashboard','history','box','users','clipboard-list'];
+        const tabs = ['ภาพรวม','Analytics','ประวัติ','อุปกรณ์','สมาชิก','Audit'];
+        const icons = ['layout-dashboard','bar-chart-2','history','box','users','clipboard-list'];
         bar.innerHTML = tabs.map((t,i)=>
           `<button class="main-tab ${i===0?'tab-active':'tab-inactive'}" style="flex:1;padding:10px 12px;font-size:var(--fs-body);font-weight:600;text-align:center;" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
         if (topInner) topInner.innerHTML = tabs.map((t,i)=>
@@ -2130,9 +2170,9 @@
         if (bn) bn.innerHTML = tabs.map((t,i)=>
           `<div class="bn-item ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${icons[i]}" style="width:20px;height:20px;"></i><span class="bn-label">${t}${i===0?badge:''}</span></div>`).join('');
       } else {
-        const tabs = ['ยืม','คืน','ประวัติ'];
-        const fullTabs = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ'];
-        const icons = ['package-plus','package-check','history'];
+        const tabs = ['ยืม','คืน','ประวัติ','สถิติ'];
+        const fullTabs = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ','สถิติ'];
+        const icons = ['package-plus','package-check','history','bar-chart-2'];
         bar.innerHTML = tabs.map((t,i)=>
           `<button class="main-tab ${i===0?'tab-active':'tab-inactive'}" style="flex:1;padding:10px 12px;font-size:var(--fs-body);font-weight:600;text-align:center;" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
         if (topInner) topInner.innerHTML = fullTabs.map((t,i)=>
@@ -2167,17 +2207,19 @@
       document.querySelectorAll('#mainTabBar .main-tab').forEach((b,i)=> { b.classList.toggle('tab-active',i===idx); b.classList.toggle('tab-inactive',i!==idx); });
       document.querySelectorAll('#top-tabs-inner .top-tab').forEach((b,i)=> b.classList.toggle('active',i===idx));
       document.querySelectorAll('#bottom-nav .bn-item').forEach((b,i)=> b.classList.toggle('active',i===idx));
-      ['borrow','return','history','dashboard','mgr-history','equipment','members','audit-log'].forEach(t=> { const el=document.getElementById('tab-'+t); if(el) el.style.display='none'; });
+      ['borrow','return','history','dashboard','analytics-mgr','analytics-ga','mgr-history','equipment','members','audit-log'].forEach(t=> { const el=document.getElementById('tab-'+t); if(el) el.style.display='none'; });
       if (isMgr) {
         if(idx===0){ document.getElementById('tab-dashboard').style.display='block'; renderDashboard(); }
-        if(idx===1){ document.getElementById('tab-mgr-history').style.display='block'; renderMgrHistory(); }
-        if(idx===2){ document.getElementById('tab-equipment').style.display='block'; renderEquipmentTab(); }
-        if(idx===3){ document.getElementById('tab-members').style.display='block'; renderMembersTab(); }
-        if(idx===4){ document.getElementById('tab-audit-log').style.display='block'; renderAuditLogTab(); }
+        if(idx===1){ document.getElementById('tab-analytics-mgr').style.display='block'; renderAnalyticsTab(); }
+        if(idx===2){ document.getElementById('tab-mgr-history').style.display='block'; renderMgrHistory(); }
+        if(idx===3){ document.getElementById('tab-equipment').style.display='block'; renderEquipmentTab(); }
+        if(idx===4){ document.getElementById('tab-members').style.display='block'; renderMembersTab(); }
+        if(idx===5){ document.getElementById('tab-audit-log').style.display='block'; renderAuditLogTab(); }
       } else {
         if(idx===0){ document.getElementById('tab-borrow').style.display='block'; renderBorrowTab(); }
         if(idx===1){ document.getElementById('tab-return').style.display='block'; renderReturnTab(); }
         if(idx===2){ document.getElementById('tab-history').style.display='block'; renderHistoryTab(); }
+        if(idx===3){ document.getElementById('tab-analytics-ga').style.display='block'; renderAnalyticsTab(); }
       }
       lucide.createIcons({'stroke-width': 1.5});
     }
@@ -3338,6 +3380,378 @@
       } catch(e) { timeline.innerHTML = '<p class="text-slate-500 text-sm">โหลดประวัติไม่สำเร็จ</p>'; }
     }
     function closeRecordDetail() { document.getElementById('record-detail-modal').classList.add('hidden'); }
+
+    // ===== ANALYTICS DASHBOARD =====
+    let analyticsBarChartInstance = null;
+    let analyticsDonutChartInstance = null;
+    let analyticsLineChartInstance = null;
+
+    function renderAnalyticsTab() {
+      const isMgr = CU.role === 'mgr';
+      // Clear both containers to prevent duplicate canvas IDs
+      ['tab-analytics-mgr','tab-analytics-ga'].forEach(id => {
+        const c = document.getElementById(id);
+        if (c) c.innerHTML = '';
+      });
+      if (analyticsBarChartInstance) { analyticsBarChartInstance.destroy(); analyticsBarChartInstance = null; }
+      if (analyticsDonutChartInstance) { analyticsDonutChartInstance.destroy(); analyticsDonutChartInstance = null; }
+      if (analyticsLineChartInstance) { analyticsLineChartInstance.destroy(); analyticsLineChartInstance = null; }
+
+      const el = document.getElementById(isMgr ? 'tab-analytics-mgr' : 'tab-analytics-ga');
+      if (!el) return;
+
+      el.innerHTML = `<div class="gd-container fade-in">
+        <div class="gd-container-header">
+          <h2 class="page-title">${isMgr ? 'Analytics' : 'สถิติการยืม'}</h2>
+          <p class="text-sm text-slate-500 mt-1">${isMgr ? 'ภาพรวมการยืมอุปกรณ์ทั้งหมด' : 'ข้อมูลการยืมของคุณ'}</p>
+        </div>
+        <div class="filter-bar">
+          <div class="filter-top">
+            <span class="filter-title">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              ตัวกรอง
+            </span>
+            <button onclick="resetAllFilters()" class="filter-reset-btn">ล้างทั้งหมด</button>
+          </div>
+          <div class="filter-grid">
+            <div class="filter-item">
+              <label class="filter-label">ช่วงเวลา</label>
+              <select id="filterPeriod" onchange="applyFilters()">
+                <option value="all">ทุกช่วงเวลา</option>
+                <option value="7">7 วันล่าสุด</option>
+                <option value="30" selected>เดือนนี้</option>
+                <option value="90">3 เดือนล่าสุด</option>
+              </select>
+            </div>
+            ${isMgr ? `<div class="filter-item" id="filterStaffWrapper">
+              <label class="filter-label">GA Staff</label>
+              <select id="filterStaff" onchange="applyFilters()">
+                <option value="all">ทุกคน</option>
+              </select>
+            </div>` : ''}
+            <div class="filter-item">
+              <label class="filter-label">หมวดหมู่</label>
+              <select id="filterCategory" onchange="applyFilters()">
+                <option value="all">ทุกหมวดหมู่</option>
+              </select>
+            </div>
+            <div class="filter-item">
+              <label class="filter-label">สถานะ</label>
+              <select id="filterStatus" onchange="applyFilters()">
+                <option value="all">ทุกสถานะ</option>
+                <option value="borrowed">กำลังยืม</option>
+                <option value="returned">คืนแล้ว</option>
+                <option value="overdue">เกินกำหนด</option>
+              </select>
+            </div>
+          </div>
+          <div id="activeChips" class="active-chips" style="display:none">
+            <span class="chips-label">กรองโดย:</span>
+            <div id="chipsContainer"></div>
+          </div>
+        </div>
+        <div class="analytics-kpi-grid">
+          <div class="analytics-kpi">
+            <span class="kpi-label">ยืมทั้งหมด</span>
+            <span class="kpi-value orange" id="kpiTotal">-</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="kpi-label">คืนแล้ว</span>
+            <span class="kpi-value green" id="kpiReturned">-</span>
+          </div>
+          <div class="analytics-kpi">
+            <span class="kpi-label">กำลังยืม</span>
+            <span class="kpi-value" id="kpiBorrowed">-</span>
+          </div>
+          <div class="analytics-kpi danger">
+            <span class="kpi-label red">เกินกำหนด</span>
+            <span class="kpi-value red" id="kpiOverdue">-</span>
+          </div>
+        </div>
+        <div class="charts-row-2">
+          <div class="chart-card">
+            <p class="chart-card-title">ยืมรายเดือน</p>
+            <div style="position:relative;height:200px">
+              <canvas id="analyticsBarChart" role="img" aria-label="Bar chart แสดงจำนวนการยืมรายเดือน">ข้อมูลยืมรายเดือน</canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <p class="chart-card-title">สัดส่วนตามหมวดหมู่</p>
+            <div id="donutLegend" class="chart-legend"></div>
+            <div style="position:relative;height:160px">
+              <canvas id="analyticsDonutChart" role="img" aria-label="Donut chart สัดส่วนหมวดหมู่อุปกรณ์">สัดส่วนหมวดหมู่</canvas>
+            </div>
+          </div>
+        </div>
+        <div class="chart-card" style="margin-bottom:12px">
+          <p class="chart-card-title">Trend การยืมรายสัปดาห์</p>
+          <div class="chart-legend">
+            <span><span class="leg-sq" style="background:#f97316"></span>ยืม</span>
+            <span><span class="leg-sq" style="background:#10b981"></span>คืน</span>
+            <span><span class="leg-sq" style="background:#ef4444"></span>เกินกำหนด</span>
+          </div>
+          <div style="position:relative;height:200px">
+            <canvas id="analyticsLineChart" role="img" aria-label="Line chart trend การยืมรายสัปดาห์">Trend การยืม</canvas>
+          </div>
+        </div>
+        ${isMgr ? `<div class="chart-card" id="staffSummarySection">
+          <p class="chart-card-title">สรุปรายบุคคล</p>
+          <div style="overflow-x:auto">
+            <table id="staffSummaryTable" style="width:100%;font-size:13px;border-collapse:collapse">
+              <thead>
+                <tr style="border-bottom:1px solid #e7e5e4">
+                  <th style="text-align:left;padding:8px;color:#a8a29e;font-weight:500">GA Staff</th>
+                  <th style="text-align:center;padding:8px;color:#a8a29e;font-weight:500">ยืมทั้งหมด</th>
+                  <th style="text-align:center;padding:8px;color:#a8a29e;font-weight:500">คืนแล้ว</th>
+                  <th style="text-align:center;padding:8px;color:#a8a29e;font-weight:500">กำลังยืม</th>
+                  <th style="text-align:center;padding:8px;color:#a8a29e;font-weight:500">เกินกำหนด</th>
+                </tr>
+              </thead>
+              <tbody id="staffSummaryBody"></tbody>
+            </table>
+          </div>
+        </div>` : ''}
+      </div>`;
+
+      if (isMgr) populateStaffFilter();
+      populateCategoryFilter();
+      lucide.createIcons({'stroke-width': 1.5});
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const isMgr = CU?.role === 'mgr';
+      const period = document.getElementById('filterPeriod')?.value || 'all';
+      const staff = document.getElementById('filterStaff')?.value || 'all';
+      const category = document.getElementById('filterCategory')?.value || 'all';
+      const status = document.getElementById('filterStatus')?.value || 'all';
+
+      let filtered = [...BORROWS];
+
+      if (period !== 'all') {
+        const days = parseInt(period);
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - days);
+        filtered = filtered.filter(r => new Date(r.borrowed_at) >= cutoff);
+      }
+
+      if (staff !== 'all') {
+        filtered = filtered.filter(r => r.ga_staff === staff);
+      }
+
+      if (category !== 'all') {
+        filtered = filtered.filter(r => {
+          const eq = EQ.find(e => e.eq_id === r.eq_id || e.id === r.eq_id);
+          return eq?.category === category;
+        });
+      }
+
+      if (status !== 'all') {
+        filtered = filtered.filter(r => r.status === status);
+      }
+
+      updateActiveChips({ period, staff, category, status });
+      updateKPIs(filtered);
+      updateBarChart(filtered);
+      updateDonutChart(filtered);
+      updateLineChart(filtered);
+      if (isMgr) updateStaffTable(filtered);
+    }
+
+    function updateKPIs(data) {
+      const t = document.getElementById('kpiTotal');
+      const ret = document.getElementById('kpiReturned');
+      const bor = document.getElementById('kpiBorrowed');
+      const ov = document.getElementById('kpiOverdue');
+      if (t) t.textContent = data.length;
+      if (ret) ret.textContent = data.filter(r => r.status === 'returned').length;
+      if (bor) bor.textContent = data.filter(r => r.status === 'borrowed').length;
+      if (ov) ov.textContent = data.filter(r => r.status === 'overdue').length;
+    }
+
+    function updateBarChart(data) {
+      const canvas = document.getElementById('analyticsBarChart');
+      if (!canvas) return;
+      const months = {};
+      data.forEach(r => {
+        if (!r.borrowed_at) return;
+        const d = new Date(r.borrowed_at);
+        const key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+        if (!months[key]) months[key] = { label: d.toLocaleDateString('th-TH', {month:'short', year:'2-digit'}), count: 0 };
+        months[key].count++;
+      });
+      const sortedKeys = Object.keys(months).sort().slice(-6);
+      const labels = sortedKeys.map(k => months[k].label);
+      const values = sortedKeys.map(k => months[k].count);
+      if (analyticsBarChartInstance) analyticsBarChartInstance.destroy();
+      analyticsBarChartInstance = new Chart(canvas, {
+        type: 'bar',
+        data: { labels, datasets: [{ data: values, backgroundColor: '#f97316', borderRadius: 6 }] },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { font: { size: 11, family: 'Noto Sans Thai' }, autoSkip: false } },
+            y: { ticks: { font: { size: 11 } }, beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    function updateDonutChart(data) {
+      const canvas = document.getElementById('analyticsDonutChart');
+      if (!canvas) return;
+      const cats = {};
+      data.forEach(r => {
+        const eq = EQ.find(e => e.eq_id === r.eq_id || e.id === r.eq_id);
+        const name = eq?.category || 'อื่นๆ';
+        cats[name] = (cats[name] || 0) + 1;
+      });
+      const labels = Object.keys(cats);
+      const values = Object.values(cats);
+      const colors = ['#f97316','#fb923c','#fdba74','#fed7aa','#fde68a','#d97706'];
+      const total = values.reduce((a,b) => a+b, 0) || 1;
+      const legendEl = document.getElementById('donutLegend');
+      if (legendEl) {
+        legendEl.innerHTML = labels.length
+          ? labels.map((l,i) => `<span><span class="leg-sq" style="background:${colors[i%colors.length]}"></span>${he(l)} ${Math.round(values[i]/total*100)}%</span>`).join('')
+          : '<span style="color:#a8a29e">ไม่มีข้อมูล</span>';
+      }
+      if (analyticsDonutChartInstance) analyticsDonutChartInstance.destroy();
+      analyticsDonutChartInstance = new Chart(canvas, {
+        type: 'doughnut',
+        data: { labels, datasets: [{ data: values, backgroundColor: colors.slice(0, labels.length), borderWidth: 0 }] },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          cutout: '65%'
+        }
+      });
+    }
+
+    function updateLineChart(data) {
+      const canvas = document.getElementById('analyticsLineChart');
+      if (!canvas) return;
+      const weeks = {};
+      data.forEach(r => {
+        if (!r.borrowed_at) return;
+        const d = new Date(r.borrowed_at);
+        const yr = d.getFullYear();
+        const wn = Math.ceil((d.getDate() + new Date(yr, d.getMonth(), 1).getDay()) / 7);
+        const key = `${yr}-${String(d.getMonth()+1).padStart(2,'0')}-W${wn}`;
+        if (!weeks[key]) weeks[key] = { label: `W${wn} ${d.toLocaleDateString('th-TH',{month:'short'})}`, borrowed:0, returned:0, overdue:0 };
+        weeks[key].borrowed++;
+        if (r.status === 'returned') weeks[key].returned++;
+        if (r.status === 'overdue') weeks[key].overdue++;
+      });
+      const sortedKeys = Object.keys(weeks).sort().slice(-8);
+      const labels = sortedKeys.map(k => weeks[k].label);
+      if (analyticsLineChartInstance) analyticsLineChartInstance.destroy();
+      analyticsLineChartInstance = new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label:'ยืม', data: sortedKeys.map(k => weeks[k].borrowed), borderColor:'#f97316', backgroundColor:'rgba(249,115,22,0.08)', tension:0.4, fill:true, pointRadius:3 },
+            { label:'คืน', data: sortedKeys.map(k => weeks[k].returned), borderColor:'#10b981', backgroundColor:'transparent', tension:0.4, pointRadius:3 },
+            { label:'เกิน', data: sortedKeys.map(k => weeks[k].overdue), borderColor:'#ef4444', borderDash:[4,4], backgroundColor:'transparent', tension:0.4, pointRadius:3 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { font: { size: 11, family: 'Noto Sans Thai' }, autoSkip: false, maxRotation: 45 } },
+            y: { ticks: { font: { size: 11 } }, beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    function updateStaffTable(data) {
+      const tbody = document.getElementById('staffSummaryBody');
+      if (!tbody) return;
+      const staffMap = {};
+      data.forEach(r => {
+        const name = r.ga_staff || 'ไม่ระบุ';
+        if (!staffMap[name]) staffMap[name] = { total:0, returned:0, borrowed:0, overdue:0 };
+        staffMap[name].total++;
+        if (r.status === 'returned') staffMap[name].returned++;
+        if (r.status === 'borrowed') staffMap[name].borrowed++;
+        if (r.status === 'overdue') staffMap[name].overdue++;
+      });
+      tbody.innerHTML = Object.entries(staffMap)
+        .sort((a,b) => b[1].total - a[1].total)
+        .map(([name, s]) => `<tr style="border-bottom:0.5px solid #f5f5f4">
+          <td style="padding:8px;font-weight:500">${he(name)}</td>
+          <td style="text-align:center;padding:8px">${s.total}</td>
+          <td style="text-align:center;padding:8px;color:#10b981">${s.returned}</td>
+          <td style="text-align:center;padding:8px">${s.borrowed}</td>
+          <td style="text-align:center;padding:8px;color:${s.overdue>0?'#ef4444':'inherit'}">${s.overdue}</td>
+        </tr>`).join('') || `<tr><td colspan="5" style="padding:16px;text-align:center;color:#a8a29e;font-size:13px">ไม่มีข้อมูล</td></tr>`;
+    }
+
+    function updateActiveChips(filters) {
+      const periodLabels = { '7':'7 วันล่าสุด','30':'เดือนนี้','90':'3 เดือนล่าสุด' };
+      const statusLabels = { borrowed:'กำลังยืม', returned:'คืนแล้ว', overdue:'เกินกำหนด' };
+      const chips = [];
+      if (filters.period !== 'all') chips.push({ label: periodLabels[filters.period] || filters.period, key:'period' });
+      if (filters.staff !== 'all') {
+        const el = document.getElementById('filterStaff');
+        const label = el?.options[el.selectedIndex]?.text;
+        if (label) chips.push({ label, key:'staff' });
+      }
+      if (filters.category !== 'all') {
+        const el = document.getElementById('filterCategory');
+        const label = el?.options[el.selectedIndex]?.text;
+        if (label) chips.push({ label, key:'category' });
+      }
+      if (filters.status !== 'all') chips.push({ label: statusLabels[filters.status] || filters.status, key:'status' });
+      const container = document.getElementById('chipsContainer');
+      const wrapper = document.getElementById('activeChips');
+      if (!container || !wrapper) return;
+      if (chips.length === 0) { wrapper.style.display = 'none'; return; }
+      wrapper.style.display = 'flex';
+      container.innerHTML = chips.map(c => `<div class="filter-chip">${he(c.label)}<button class="chip-remove" onclick="removeFilter('${c.key}')">×</button></div>`).join('');
+    }
+
+    function removeFilter(key) {
+      const defaults = { period:'all', staff:'all', category:'all', status:'all' };
+      const el = document.getElementById('filter' + key.charAt(0).toUpperCase() + key.slice(1));
+      if (el) el.value = defaults[key];
+      applyFilters();
+    }
+
+    function resetAllFilters() {
+      ['filterPeriod','filterStaff','filterCategory','filterStatus'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = 'all';
+      });
+      applyFilters();
+    }
+
+    function populateStaffFilter() {
+      const staffNames = [...new Set(BORROWS.map(r => r.ga_staff).filter(Boolean))].sort();
+      const select = document.getElementById('filterStaff');
+      if (!select) return;
+      staffNames.forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        select.appendChild(opt);
+      });
+    }
+
+    function populateCategoryFilter() {
+      const select = document.getElementById('filterCategory');
+      if (!select) return;
+      (CATS || []).forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.name;
+        opt.textContent = c.name;
+        select.appendChild(opt);
+      });
+    }
 
     // Start app
     document.addEventListener('DOMContentLoaded', () => init());
