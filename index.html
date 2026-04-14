@@ -962,6 +962,16 @@
       border-color: #fdba74 !important;
       box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
     }
+    /* Utility: mirrors Tailwind's hidden — used by JS toggle */
+    .hidden { display: none !important; }
+    /* Empty chart overlay */
+    .chart-empty-msg {
+      display: none;
+      position: absolute; inset: 0;
+      align-items: center; justify-content: center;
+      font-size: 13px; color: #a8a29e;
+      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+    }
   </style>
 
   <style>
@@ -1189,8 +1199,8 @@
                 <div id="gaUserList" class="space-y-2.5"></div>
               </div>
               <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;">
-                <p class="section-title mb-3 flex items-center gap-1.5">
-                  <i data-lucide="shield" style="width:12px;height:12px;"></i>Admin access
+                <p class="section-title mb-3" style="display:flex;align-items:center;gap:6px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>ผู้ดูแลระบบ
                 </p>
                 <div id="mgrUserList" class="space-y-2.5"></div>
               </div>
@@ -1314,11 +1324,11 @@
         </div>
         <!-- Overdue Banner -->
         <div class="gd-inner" style="padding:0 40px;">
-          <div id="overdue-banner" class="hidden mt-3 rounded-xl px-4 py-3 flex items-center gap-3 bg-red-50 border border-red-200">
-            <i data-lucide="alert-triangle" class="w-[18px] h-[18px] text-[#64748B]"></i>
-            <p id="overdue-banner-text" class="text-sm font-medium text-red-700 flex-1"></p>
-            <button onclick="document.getElementById('overdue-banner').classList.add('hidden')" class="p-1 rounded-lg hover:bg-red-100 transition">
-              <i data-lucide="x" class="w-[18px] h-[18px] text-[#64748B]"></i>
+          <div id="overdue-banner" class="hidden" style="margin-top:12px;border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;background:#fef2f2;border:1px solid #fecaca;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            <p id="overdue-banner-text" style="font-size:14px;font-weight:500;color:#b91c1c;flex:1;margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
+            <button onclick="document.getElementById('overdue-banner').classList.add('hidden')" style="padding:4px;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#b91c1c;flex-shrink:0;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             </button>
           </div>
         </div>
@@ -3440,7 +3450,7 @@
 
       el.innerHTML = `<div class="gd-container fade-in">
         <div class="gd-container-header">
-          <h2 class="page-title">${isMgr ? 'Analytics' : 'สถิติการยืม'}</h2>
+          <h2 class="page-title">${isMgr ? 'สถิติภาพรวม' : 'สถิติการยืม'}</h2>
           <p class="text-sm text-slate-500 mt-1">${isMgr ? 'ภาพรวมการยืมอุปกรณ์ทั้งหมด' : 'ข้อมูลการยืมของคุณ'}</p>
         </div>
         <div class="filter-bar">
@@ -3511,6 +3521,7 @@
             <p class="chart-card-title">ยืมรายเดือน</p>
             <div style="position:relative;height:200px">
               <canvas id="analyticsBarChart" role="img" aria-label="Bar chart แสดงจำนวนการยืมรายเดือน">ข้อมูลยืมรายเดือน</canvas>
+              <div id="barChartEmpty" class="chart-empty-msg">ไม่มีข้อมูลในช่วงเวลานี้</div>
             </div>
           </div>
           <div class="chart-card">
@@ -3518,18 +3529,20 @@
             <div id="donutLegend" class="chart-legend"></div>
             <div style="position:relative;height:160px">
               <canvas id="analyticsDonutChart" role="img" aria-label="Donut chart สัดส่วนหมวดหมู่อุปกรณ์">สัดส่วนหมวดหมู่</canvas>
+              <div id="donutChartEmpty" class="chart-empty-msg">ไม่มีข้อมูลในช่วงเวลานี้</div>
             </div>
           </div>
         </div>
         <div class="chart-card" style="margin-bottom:12px">
-          <p class="chart-card-title">Trend การยืมรายสัปดาห์</p>
+          <p class="chart-card-title">แนวโน้มการยืมรายสัปดาห์</p>
           <div class="chart-legend">
             <span><span class="leg-sq" style="background:#f97316"></span>ยืม</span>
             <span><span class="leg-sq" style="background:#10b981"></span>คืน</span>
             <span><span class="leg-sq" style="background:#ef4444"></span>เกินกำหนด</span>
           </div>
           <div style="position:relative;height:200px">
-            <canvas id="analyticsLineChart" role="img" aria-label="Line chart trend การยืมรายสัปดาห์">Trend การยืม</canvas>
+            <canvas id="analyticsLineChart" role="img" aria-label="แนวโน้มการยืมรายสัปดาห์">แนวโน้มการยืม</canvas>
+            <div id="lineChartEmpty" class="chart-empty-msg">ไม่มีข้อมูลในช่วงเวลานี้</div>
           </div>
         </div>
         ${isMgr ? `<div class="chart-card" id="staffSummarySection">
@@ -3538,7 +3551,7 @@
             <table id="staffSummaryTable" style="width:100%;font-size:13px;border-collapse:collapse">
               <thead>
                 <tr style="border-bottom:1px solid #e7e5e4">
-                  <th style="text-align:left;padding:8px;color:#a8a29e;font-weight:500">GA Staff</th>
+                  <th style="text-align:left;padding:8px;color:#a8a29e;font-weight:500">เจ้าหน้าที่ GA</th>
                   <th style="text-align:center;padding:8px;color:#a8a29e;font-weight:500">ยืมทั้งหมด</th>
                   <th style="text-align:center;padding:8px;color:#a8a29e;font-weight:500">คืนแล้ว</th>
                   <th style="text-align:center;padding:8px;color:#a8a29e;font-weight:500">กำลังยืม</th>
@@ -3621,6 +3634,15 @@
       const sortedKeys = Object.keys(months).sort().slice(-6);
       const labels = sortedKeys.map(k => months[k].label);
       const values = sortedKeys.map(k => months[k].count);
+      const barEmpty = document.getElementById('barChartEmpty');
+      if (sortedKeys.length === 0) {
+        canvas.style.display = 'none';
+        if (barEmpty) barEmpty.style.display = 'flex';
+        if (analyticsBarChartInstance) { analyticsBarChartInstance.destroy(); analyticsBarChartInstance = null; }
+        return;
+      }
+      canvas.style.display = '';
+      if (barEmpty) barEmpty.style.display = 'none';
       if (analyticsBarChartInstance) analyticsBarChartInstance.destroy();
       analyticsBarChartInstance = new Chart(canvas, {
         type: 'bar',
@@ -3650,11 +3672,20 @@
       const colors = ['#f97316','#fb923c','#fdba74','#fed7aa','#fde68a','#d97706'];
       const total = values.reduce((a,b) => a+b, 0) || 1;
       const legendEl = document.getElementById('donutLegend');
+      const donutEmpty = document.getElementById('donutChartEmpty');
       if (legendEl) {
         legendEl.innerHTML = labels.length
           ? labels.map((l,i) => `<span><span class="leg-sq" style="background:${colors[i%colors.length]}"></span>${he(l)} ${Math.round(values[i]/total*100)}%</span>`).join('')
           : '<span style="color:#a8a29e">ไม่มีข้อมูล</span>';
       }
+      if (labels.length === 0) {
+        canvas.style.display = 'none';
+        if (donutEmpty) donutEmpty.style.display = 'flex';
+        if (analyticsDonutChartInstance) { analyticsDonutChartInstance.destroy(); analyticsDonutChartInstance = null; }
+        return;
+      }
+      canvas.style.display = '';
+      if (donutEmpty) donutEmpty.style.display = 'none';
       if (analyticsDonutChartInstance) analyticsDonutChartInstance.destroy();
       analyticsDonutChartInstance = new Chart(canvas, {
         type: 'doughnut',
@@ -3684,6 +3715,15 @@
       });
       const sortedKeys = Object.keys(weeks).sort().slice(-8);
       const labels = sortedKeys.map(k => weeks[k].label);
+      const lineEmpty = document.getElementById('lineChartEmpty');
+      if (sortedKeys.length === 0) {
+        canvas.style.display = 'none';
+        if (lineEmpty) lineEmpty.style.display = 'flex';
+        if (analyticsLineChartInstance) { analyticsLineChartInstance.destroy(); analyticsLineChartInstance = null; }
+        return;
+      }
+      canvas.style.display = '';
+      if (lineEmpty) lineEmpty.style.display = 'none';
       if (analyticsLineChartInstance) analyticsLineChartInstance.destroy();
       analyticsLineChartInstance = new Chart(canvas, {
         type: 'line',
