@@ -734,7 +734,16 @@
       color: #C2410C !important;
       border-radius: 999px !important;
     }
-    
+
+    .role-badge-ga {
+      font-size: 12px !important;
+      padding: 4px 8px !important;
+      background: #F8FAFC !important;
+      border: 1px solid #CBD5E1 !important;
+      color: #475569 !important;
+      border-radius: 999px !important;
+    }
+
   </style>
 
   <style>
@@ -790,6 +799,14 @@
       font-weight: 500 !important;
       color: currentColor !important;
       margin-top: 4px !important;
+    }
+    .bn-compact i, .bn-compact svg[data-lucide] {
+      width: 16px !important;
+      height: 16px !important;
+    }
+    .bn-compact .bn-label {
+      font-size: 10px !important;
+      margin-top: 2px !important;
     }
   </style>
 
@@ -978,6 +995,7 @@
     .leg-sq { width:8px; height:8px; border-radius:2px; display:inline-block; margin-right:4px; }
     @media (max-width:767px) {
       .filter-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .filter-item-ga-last { grid-column: span 2; }
       .analytics-kpi-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
       .charts-row-2 { grid-template-columns:1fr; }
     }
@@ -1270,7 +1288,7 @@
                                border:1px solid #e2e8f0;color:#475569;
                                border-radius:12px;width:36px;height:36px;padding:0;font-size:13px;
                                font-family:'Noto Sans Thai','Inter',sans-serif;">
-                  <i data-lucide="key-round" style="width:14px;height:14px;"></i>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>
                 </button>
                 <button onclick="confirmLogout()" title="ออกจากระบบ"
                         style="display:flex;align-items:center;justify-content:center;
@@ -1278,7 +1296,7 @@
                                border:1px solid #e2e8f0;color:#475569;
                                border-radius:12px;width:36px;height:36px;padding:0;font-size:13px;
                                font-family:'Noto Sans Thai','Inter',sans-serif;">
-                  <i data-lucide="log-out" style="width:14px;height:14px;"></i>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                 </button>
               </div>
             </div>
@@ -2185,9 +2203,10 @@
           `<button class="main-tab ${i===0?'tab-active':'tab-inactive'}" style="flex:1;padding:10px 12px;font-size:var(--fs-body);font-weight:600;text-align:center;" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
         if (topInner) topInner.innerHTML = tabs.map((t,i)=>
           `<button class="top-tab ${i===0?'active':''}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
+        const navLabels = ['ภาพรวม','สถิติ','ประวัติ','อุปกรณ์','สมาชิก','Audit'];
         const bn = document.getElementById('bottom-nav');
-        if (bn) bn.innerHTML = tabs.map((t,i)=>
-          `<div class="bn-item ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${icons[i]}" style="width:20px;height:20px;"></i><span class="bn-label">${t}${i===0?badge:''}</span></div>`).join('');
+        if (bn) bn.innerHTML = navLabels.map((t,i)=>
+          `<div class="bn-item bn-compact ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${icons[i]}" style="width:16px;height:16px;"></i><span class="bn-label">${t}${i===0?badge:''}</span></div>`).join('');
       } else {
         const tabs = ['ยืม','คืน','ประวัติ','สถิติ'];
         const fullTabs = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ','สถิติ'];
@@ -2996,7 +3015,7 @@
                 <div class="flex items-center gap-3">
                   ${avEl(u.name, u.type)}
                   <div><p class="font-medium text-gray-900 text-sm">${he(u.name)}</p>
-                  <p class="${u.type==='mgr'?'role-badge-mgr':'text-[12px] text-gray-400'}">${u.type==='mgr'?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
+                  <p class="${u.type==='mgr'?'role-badge-mgr':'role-badge-ga'}">${u.type==='mgr'?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
                 </div>
                 <div class="flex items-center gap-1">
                   <button data-name="${he(u.name)}" data-utype="${u.type}" onclick="openResetPin(this.dataset.name,this.dataset.utype)" class="p-2 rounded-lg text-gray-300 hover:text-amber-500 hover:bg-amber-50"><i data-lucide="key-round" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
@@ -3454,7 +3473,7 @@
                 <option value="all">ทุกหมวดหมู่</option>
               </select>
             </div>
-            <div class="filter-item">
+            <div class="filter-item${!isMgr ? ' filter-item-ga-last' : ''}">
               <label class="filter-label">สถานะ</label>
               <select id="filterStatus" onchange="applyFilters()">
                 <option value="all">ทุกสถานะ</option>
