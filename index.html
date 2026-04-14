@@ -844,6 +844,61 @@
       }
       .grid-badge { display: none !important; }
     }
+
+    /* View toggle buttons */
+    .view-toggle-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 8px; border: none; cursor: pointer;
+      transition: all .15s ease;
+    }
+    .view-toggle-btn.active  { background: #F97316 !important; color: #fff !important; }
+    .view-toggle-btn.inactive { background: transparent !important; color: #a8a29e !important; }
+
+    /* Grid-card layout (grid view) */
+    .gd-card-grid-card {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      padding: 16px 12px 12px !important;
+      border-radius: 14px !important;
+      text-align: center !important;
+    }
+    .gd-card-grid-card .gc-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: #F1F5F9; border: 1px solid #E2E8F0;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 10px; flex-shrink: 0;
+    }
+    .gd-card-grid-card .gc-icon img {
+      width: 48px; height: 48px; object-fit: cover; border-radius: 12px;
+    }
+    .gd-card-grid-card .gc-name {
+      font-size: 14px; font-weight: 500; color: #0F172A; margin-bottom: 4px; line-height: 1.3;
+    }
+    .gd-card-grid-card .gc-meta {
+      font-size: 11px; color: #64748B; margin-bottom: 8px; line-height: 1.4;
+    }
+    .gd-card-grid-card .gc-badge { margin-bottom: 10px; }
+    .gd-card-grid-card .gc-btn {
+      width: 100%; font-size: 13px; font-weight: 500;
+      color: white; background: #F97316;
+      border: none; border-radius: 10px;
+      padding: 7px 0; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: background .15s ease; margin-top: auto;
+    }
+    .gd-card-grid-card .gc-btn:hover { background: #EA580C !important; }
+
+    /* Equipment grid containers */
+    #eqGrid.view-list  { display: flex; flex-direction: column; gap: 12px; }
+    #eqGrid.view-grid  {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (min-width: 768px) {
+      #eqGrid.view-grid { grid-template-columns: repeat(3, 1fr) !important; }
+    }
   </style>
 
   <style>
@@ -1438,6 +1493,7 @@
     let currentBorrowEq = null, currentReturnRecord = null;
     let returnCondition = '';
     let borrowSearchQ = '', borrowCatFilter = '';
+    let borrowViewMode = localStorage.getItem('equipmentViewMode') || 'list';
     let historyFilter = '';
     let gaHistorySearch = '';
     let mgrHistorySearch = '', mgrHistoryGa = '', mgrHistoryFrom = '', mgrHistoryTo = '';
@@ -2127,6 +2183,12 @@
     }
 
     // ===== GA: BORROW TAB =====
+    function setBorrowViewMode(mode) {
+      borrowViewMode = mode;
+      localStorage.setItem('equipmentViewMode', mode);
+      renderBorrowTab();
+    }
+
     function renderBorrowTab() {
       const avail = EQ.filter(e=> e.available > 0);
       const cats = CATS.map(c => c.name);
@@ -2137,10 +2199,21 @@
       });
       const el = document.getElementById('tab-borrow');
       el.innerHTML = `<div class="gd-container fade-in">
-        <div class="gd-container-header">
-          
-          <h2 class="page-title">ยืมอุปกรณ์</h2>
-          <p class="text-sm text-slate-500 mt-1">เลือกอุปกรณ์ที่ต้องการยืม (คงเหลือ > 0)</p>
+        <div class="gd-container-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+          <div>
+            <h2 class="page-title">ยืมอุปกรณ์</h2>
+            <p class="text-sm text-slate-500 mt-1">เลือกอุปกรณ์ที่ต้องการยืม (คงเหลือ > 0)</p>
+          </div>
+          <div style="display:flex; gap:4px; background:#F1F5F9; border-radius:10px; padding:4px;">
+            <button class="view-toggle-btn ${borrowViewMode==='list'?'active':'inactive'}"
+              onclick="setBorrowViewMode('list')" title="List view">
+              <i data-lucide="list" style="width:16px;height:16px;"></i>
+            </button>
+            <button class="view-toggle-btn ${borrowViewMode==='grid'?'active':'inactive'}"
+              onclick="setBorrowViewMode('grid')" title="Grid view">
+              <i data-lucide="layout-grid" style="width:16px;height:16px;"></i>
+            </button>
+          </div>
         </div>
         <div class="mb-4">
           <input type="text" placeholder="ค้นหาอุปกรณ์..." class="gd-input" value="${he(borrowSearchQ)}"
@@ -2150,22 +2223,36 @@
           <div class="chip ${borrowCatFilter===''?'active':''}" onclick="borrowCatFilter='';renderBorrowTab()">ทั้งหมด</div>
           ${cats.map(c=>`<div class="chip ${borrowCatFilter===c?'active':''}" onclick="borrowCatFilter='${he(c)}';renderBorrowTab()">${he(c)}</div>`).join('')}
         </div>
-        <div class="space-y-3 " id="eqGrid">
-          ${filtered.length ? filtered.map(e=>`<div class="gd-card gd-card-grid cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
-            <div class="grid-icon">
-              ${e.image_url ? `<img src="${he(e.image_url)}" class="grid-icon-img"/>` : `<div class="grid-icon-box"><span style="font-size:18px;">📦</span></div>`}
-            </div>
-            <div class="grid-content">
-              <p class="eq-title">${he(e.name)}</p>
-              <p class="eq-meta">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
-            </div>
-            <div class="grid-badge">
-              <span class="status-badge ${e.available<=2?'status-borrowed':'status-returned'}">คงเหลือ ${e.available}/${e.quantity}</span>
-            </div>
-            <div class="grid-action">
-              <button class="btn-action-borrow flex items-center gap-1.5"><i data-lucide="hand" class="w-4 h-4 text-[#F97316]"></i> ยืม</button>
-            </div>
-          </div>`).join('') : `
+        <div class="view-${borrowViewMode}" id="eqGrid">
+          ${filtered.length ? filtered.map(e=> borrowViewMode === 'grid' ? `
+            <div class="gd-card gd-card-grid-card cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
+              <div class="gc-icon">
+                ${e.image_url ? `<img src="${he(e.image_url)}"/>` : `<span style="font-size:24px;">📦</span>`}
+              </div>
+              <p class="gc-name">${he(e.name)}</p>
+              <p class="gc-meta">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
+              <div class="gc-badge">
+                <span class="status-badge ${e.available<=2?'status-borrowed':'status-returned'}">คงเหลือ ${e.available}/${e.quantity}</span>
+              </div>
+              <button class="gc-btn" onclick="event.stopPropagation();openBorrowForm('${he(e.eq_id)}')">
+                <i data-lucide="hand" style="width:14px;height:14px;"></i> ยืม
+              </button>
+            </div>` : `
+            <div class="gd-card gd-card-grid cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
+              <div class="grid-icon">
+                ${e.image_url ? `<img src="${he(e.image_url)}" class="grid-icon-img"/>` : `<div class="grid-icon-box"><span style="font-size:18px;">📦</span></div>`}
+              </div>
+              <div class="grid-content">
+                <p class="eq-title">${he(e.name)}</p>
+                <p class="eq-meta">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
+              </div>
+              <div class="grid-badge">
+                <span class="status-badge ${e.available<=2?'status-borrowed':'status-returned'}">คงเหลือ ${e.available}/${e.quantity}</span>
+              </div>
+              <div class="grid-action">
+                <button class="btn-action-borrow flex items-center gap-1.5"><i data-lucide="hand" class="w-4 h-4 text-[#F97316]"></i> ยืม</button>
+              </div>
+            </div>`).join('') : `
 <div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
   <h3 style="font-size:15px;font-weight:500;color:#0F172A;margin:0 0 4px 0;">ไม่มีรายการในระบบ</h3>
   <p style="font-size:13px;color:#64748B;line-height:1.5;margin:0;">คุณยังไม่มีรายการอุปกรณ์ที่ระบุ</p>
