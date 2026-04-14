@@ -356,6 +356,7 @@
 
     /* ── Chip filters ─────────────────────────────────── */
     .chip {
+      display: inline-flex; align-items: center; flex-shrink: 0;
       padding: var(--ga-space-sm) var(--ga-space-lg);
       border-radius: 999px;
       font-size: var(--ga-text-secondary);
@@ -926,6 +927,24 @@
     
     /* Global Nuke for old duplicate bars */
     #mainTabBar { display: none !important; }
+
+    /* Compact filter-row inputs (select + date) — replaces Tailwind selectCls */
+    .gd-filter-input {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0 10px;
+      font-size: 12px;
+      color: var(--text-primary);
+      height: 32px;
+      width: auto;
+      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+    }
+    .gd-filter-input:focus {
+      outline: none;
+      border-color: #fdba74 !important;
+      box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
+    }
   </style>
 
   <style>
@@ -2547,8 +2566,8 @@
           <div class="flex items-center justify-between">
             <div>
             <h2 class="page-title">ประวัติการยืม-คืน</h2></div>
-            <button onclick="exportHistoryCSV('ga')" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition shrink-0">
-              <i data-lucide="download" class="w-[18px] h-[18px] text-[#64748B]"></i> Export CSV</button>
+            <button onclick="exportHistoryCSV('ga')" class="gd-btn-secondary gap-1.5">
+              <i data-lucide="download" style="width:14px;height:14px;"></i> Export CSV</button>
           </div>
         </div>
         <input type="text" placeholder="ค้นหาชื่ออุปกรณ์..." value="${he(gaHistorySearch)}"
@@ -2676,15 +2695,15 @@
         .filter(r => !mgrHistoryGa || r.ga_staff === mgrHistoryGa)
         .filter(r => !mgrHistoryFrom || (r.borrowed_at||'') >= mgrHistoryFrom)
         .filter(r => !mgrHistoryTo || (r.borrowed_at||'').slice(0,10) <= mgrHistoryTo);
-      const selectCls = 'border border-gray-200 rounded-lg px-2 py-1.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-brand/30';
+      const selectCls = 'gd-filter-input';
       const el = document.getElementById('tab-mgr-history');
       el.innerHTML = `<div class="gd-container fade-in">
         <div class="gd-container-header">
           <div class="flex items-center justify-between">
             <div>
             <h2 class="page-title">ประวัติทั้งหมด</h2></div>
-            <button onclick="exportHistoryCSV('mgr')" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition shrink-0">
-              <i data-lucide="download" class="w-[18px] h-[18px] text-[#64748B]"></i> Export CSV</button>
+            <button onclick="exportHistoryCSV('mgr')" class="gd-btn-secondary gap-1.5">
+              <i data-lucide="download" style="width:14px;height:14px;"></i> Export CSV</button>
           </div>
         </div>
         <input type="text" placeholder="ค้นหาชื่ออุปกรณ์ หรือผู้ยืม..." value="${he(mgrHistorySearch)}"
