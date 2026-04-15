@@ -323,7 +323,10 @@
       font-weight: 500;
       white-space: nowrap;
     }
-    .status-dot { display: none; }
+    .status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-right: 5px; vertical-align: middle; position: relative; top: -1px; }
+    .status-borrowed .status-dot, .badge-borrowed .status-dot { background: #f59e0b; }
+    .status-returned .status-dot, .badge-returned .status-dot { background: #10b981; }
+    .status-overdue  .status-dot, .badge-overdue  .status-dot { background: #ef4444; }
     .status-borrowed, .badge-borrowed { background: #FFF7ED; color: #C2410C; border: 1px solid #FFEDD5; }
     .status-returned, .badge-returned { background: #ECFDF5; color: #047857; border: 1px solid #D1FAE5; }
     .status-overdue, .badge-overdue { background: #FEF2F2; color: #B91C1C; border: 1px solid #FEE2E2; }
@@ -491,6 +494,15 @@
       border: 1px solid rgba(148, 163, 184, 0.2);
       background: var(--bg-card);
       box-shadow: var(--ga-shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .auth-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #f97316 0%, #fb923c 50%, #fbbf24 100%);
     }
     .login-wave-card { background: var(--bg-page); }
     .user-card {
@@ -601,8 +613,11 @@
     }
     .bn-item.active { color: var(--orange); }
     .bn-item.active::before {
-      content: ''; position: absolute; top: 0; left: 25%; right: 25%;
-      height: 2px; background: var(--orange); border-radius: 0 0 3px 3px;
+      content: ''; position: absolute;
+      top: 8px; left: 50%; transform: translateX(-50%);
+      width: 40px; height: 30px;
+      background: rgba(249, 115, 22, 0.1);
+      border-radius: 10px;
     }
     .bn-label { font-size: var(--ga-text-caption); font-weight: var(--ga-fw-semibold); line-height: 1; }
 
@@ -863,6 +878,9 @@
       }
       .grid-badge { display: none !important; }
     }
+
+    /* Category accent stripe on list cards */
+    .eq-cat-stripe { border-left: 3px solid var(--cat-accent, #E2E8F0) !important; }
 
     /* View toggle buttons */
     .view-toggle-btn {
@@ -1759,6 +1777,14 @@
       return `hsl(${hue}, 65%, 55%)`;
     }
 
+    function catAccentColor(cat) {
+      if (!cat) return '#E2E8F0';
+      const palette = ['#f97316','#3b82f6','#10b981','#8b5cf6','#ec4899','#f59e0b','#06b6d4','#84cc16'];
+      let hash = 0;
+      for (let i = 0; i < cat.length; i++) hash = cat.charCodeAt(i) + ((hash << 5) - hash);
+      return palette[Math.abs(hash) % palette.length];
+    }
+
     function avc(name, role) {
       if (role === 'manager' || role === 'mgr') return '#2563EB';
       if (role === 'admin') return '#7C3AED';
@@ -1815,7 +1841,7 @@
       const bg = { success:'bg-emerald-700', error:'bg-red-700', warning:'bg-amber-700', info:'bg-slate-800' };
       const el = document.createElement('div');
       el.className = `flex items-center gap-2.5 px-4 py-3 text-white text-sm font-medium rounded-xl shadow-lg ${bg[type]||bg.info} translate-x-full opacity-0 transition-all duration-300 pointer-events-auto`;
-      el.innerHTML = `<i data-lucide="${icons[type]||'info'}" class="w-[18px] h-[18px] text-[#64748B]"></i><p class="leading-tight">${msg}</p>`;
+      el.innerHTML = `<i data-lucide="${icons[type]||'info'}" class="w-[18px] h-[18px] shrink-0"></i><p class="leading-tight">${msg}</p>`;
       container.appendChild(el);
       lucide.createIcons({'stroke-width': 1.5});
       requestAnimationFrame(() => { el.classList.remove('translate-x-full','opacity-0'); });
@@ -1837,6 +1863,22 @@
       okBtn.onclick = () => { close(); onConfirm(); };
       document.getElementById('confirm-cancel').onclick = close;
     }
+    function emptyState(title, sub, type='list') {
+      const paths = {
+        search: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z',
+        list:   'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
+        check:  'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
+        users:  'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75',
+      };
+      return `<div style="display:flex;flex-direction:column;align-items:center;padding:40px 24px;text-align:center;">
+        <div style="width:48px;height:48px;border-radius:14px;background:#F1F5F9;display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="${paths[type]||paths.list}"/></svg>
+        </div>
+        <p style="font-size:14px;font-weight:600;color:#0F172A;margin:0 0 4px;">${he(title)}</p>
+        <p style="font-size:13px;color:#64748B;line-height:1.5;margin:0;">${he(sub)}</p>
+      </div>`;
+    }
+
     function skeletonCards(n) {
       return Array(n).fill(0).map(()=>`<div class="gd-card p-5 mb-3"><div class="flex justify-between mb-2"><div><div class="h-3.5 skeleton rounded w-36 mb-1.5"></div><div class="h-3 skeleton rounded w-24"></div></div><div class="h-5 skeleton rounded-full w-14"></div></div></div>`).join('');
     }
@@ -2494,7 +2536,7 @@
           ${cats.map(c=>`<div class="chip ${borrowCatFilter===c?'active':''}" onclick="borrowCatFilter='${he(c)}';renderBorrowTab()">${he(c)}</div>`).join('')}
         </div>
         <div class="view-${borrowViewMode}" id="eqGrid">
-          ${filtered.length ? filtered.map(e=> borrowViewMode === 'grid' ? `
+          ${filtered.length ? filtered.map(e => borrowViewMode === 'grid' ? `
             <div class="gd-card gd-card-grid-card cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
               <div class="gc-icon">
                 ${e.image_url ? `<img src="${he(e.image_url)}"/>` : `<span style="font-size:24px;">📦</span>`}
@@ -2508,7 +2550,7 @@
                 <i data-lucide="hand" style="width:14px;height:14px;"></i> ยืม
               </button>
             </div>` : `
-            <div class="gd-card gd-card-grid cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
+            <div class="gd-card gd-card-grid eq-cat-stripe cursor-pointer" style="--cat-accent:${catAccentColor(e.category)}" onclick="openBorrowForm('${he(e.eq_id)}')">
               <div class="grid-icon">
                 ${e.image_url ? `<img src="${he(e.image_url)}" class="grid-icon-img"/>` : `<div class="grid-icon-box"><span style="font-size:18px;">📦</span></div>`}
               </div>
@@ -2522,12 +2564,7 @@
               <div class="grid-action">
                 <button class="btn-action-borrow flex items-center gap-1.5"><i data-lucide="hand" class="w-4 h-4 text-[#F97316]"></i> ยืม</button>
               </div>
-            </div>`).join('') : `
-<div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
-  <h3 style="font-size:15px;font-weight:500;color:#0F172A;margin:0 0 4px 0;">ไม่มีรายการในระบบ</h3>
-  <p style="font-size:13px;color:#64748B;line-height:1.5;margin:0;">คุณยังไม่มีรายการอุปกรณ์ที่ระบุ</p>
-</div>
-`}
+            </div>`).join('') : emptyState('ไม่พบอุปกรณ์','ลองเปลี่ยนหมวดหมู่หรือคำค้นหา','search')}
         </div>
       </div>`;
       lucide.createIcons({'stroke-width': 1.5});
@@ -2652,10 +2689,7 @@
               </div>
               ${r.qty_borrowed>1?`<p class="eq-meta mt-2 pl-13">จำนวน: ${r.qty_borrowed} ชิ้น</p>`:''}
             </div>`;
-          }).join('') : `<div class="flex flex-col items-center justify-center" style="margin-top:40px;">
-            <i data-lucide="package" class="mb-3" style="width:32px;height:32px;color:#CBD5F5;"></i>
-            <p style="font-size:13px;color:#64748B;">ยังไม่มีรายการยืมอุปกรณ์</p>
-          </div>`}
+          }).join('') : emptyState('ยังไม่มีรายการยืม','รายการยืมอุปกรณ์จะปรากฏที่นี่','list')}
         </div>
       </div>`;
       lucide.createIcons({'stroke-width': 1.5});
@@ -2800,12 +2834,7 @@
               <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="eye" class="w-[18px] h-[18px] text-[#64748B]"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
             </div>
             ${r.condition_note?`<p class="eq-meta">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
-          </div>`).join('') : `
-<div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
-  <h3 style="font-size:15px;font-weight:500;color:#0F172A;margin:0 0 4px 0;">ไม่มีรายการในระบบ</h3>
-  <p style="font-size:13px;color:#64748B;line-height:1.5;margin:0;">คุณยังไม่มีรายการอุปกรณ์ที่ระบุ</p>
-</div>
-`}
+          </div>`).join('') : emptyState('ยังไม่มีประวัติ','บันทึกการยืม-คืนจะปรากฏที่นี่','list')}
         </div>
       </div>`;
       lucide.createIcons({'stroke-width': 1.5});
@@ -2850,7 +2879,7 @@
             </div>
             <button data-rid="${he(r.record_id||r.id||'')}" onclick="returnByManager(this.dataset.rid)"
               class="shrink-0 px-2.5 py-1.5 text-white text-xs font-semibold rounded-lg transition flex items-center gap-1" style="background:#f97316;color:white;"><i data-lucide="corner-up-left" class="w-[18px] h-[18px] text-[#64748B]"></i><span class="hidden sm:inline">คืนแทน</span></button>
-          </div>`).join('') : `<div class="flex flex-col items-center justify-center py-8 text-slate-500"><span class="text-3xl mb-2">✓</span><p class="text-sm">ไม่มีรายการเกินกำหนด</p></div>`}
+          </div>`).join('') : emptyState('ไม่มีรายการเกินกำหนด','ทุกอุปกรณ์อยู่ในสถานะปกติ','check')}
         </div>
         <div class="card mb-5">
           <h4 class="eq-title mb-4">กิจกรรมล่าสุด</h4>
@@ -2945,12 +2974,7 @@
               <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center gap-1"><i data-lucide="eye" class="w-[18px] h-[18px] text-[#64748B]"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
             </div>
             ${r.condition_note?`<p class="eq-meta">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
-          </div>`).join('') : `
-<div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
-  <h3 style="font-size:15px;font-weight:500;color:#0F172A;margin:0 0 4px 0;">ไม่มีรายการในระบบ</h3>
-  <p style="font-size:13px;color:#64748B;line-height:1.5;margin:0;">คุณยังไม่มีรายการอุปกรณ์ที่ระบุ</p>
-</div>
-`}
+          </div>`).join('') : emptyState('ไม่พบรายการ','ลองเปลี่ยนตัวกรองหรือช่วงวันที่','search')}
         </div>
       </div>`;
       lucide.createIcons({'stroke-width': 1.5});
@@ -2986,12 +3010,7 @@
           </select>
         </div>
         <div class="space-y-3 mb-6">
-          ${filtered.length === 0 ? `
-<div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
-  <h3 style="font-size:15px;font-weight:500;color:#0F172A;margin:0 0 4px 0;">ไม่มีรายการในระบบ</h3>
-  <p style="font-size:13px;color:#64748B;line-height:1.5;margin:0;">คุณยังไม่มีรายการอุปกรณ์ที่ระบุ</p>
-</div>
-` :
+          ${filtered.length === 0 ? emptyState('ไม่พบอุปกรณ์','ลองค้นหาด้วยคำอื่นหรือเปลี่ยนหมวดหมู่','search') :
           filtered.map(e=>`<div class="gd-card" style="padding: 20px;">
             <div class="flex items-center gap-3">
               ${e.image_url ? `<img src="${he(e.image_url)}" class="w-11 h-11 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-lg shrink-0">📦</div>`}
@@ -3194,12 +3213,7 @@
         </div>
         <div class="space-y-3 ">
           ${(()=>{ const all=[...AU.ga.map(u=>({...u,type:'ga'})),...AU.mgr.map(u=>({...u,type:'mgr'}))];
-            if(!all.length) return `
-<div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
-  <h3 style="font-size:15px;font-weight:500;color:#0F172A;margin:0 0 4px 0;">ไม่มีรายการในระบบ</h3>
-  <p style="font-size:13px;color:#64748B;line-height:1.5;margin:0;">คุณยังไม่มีรายการอุปกรณ์ที่ระบุ</p>
-</div>
-`;
+            if(!all.length) return emptyState('ยังไม่มีสมาชิก','เพิ่มสมาชิกโดยใช้ปุ่ม + ด้านบน','users');
             return all.map((u,i)=>{
               const catBadge = u.type === 'ga' ? (() => {
                 const ac = u.allowed_categories;
@@ -3524,12 +3538,7 @@
               <span class="eq-meta shrink-0">${fdFull(r.created_at)}</span>
             </div>
             <p class="text-xs text-gray-500 mt-1">${he(r.actor_name||'—')}<span class="text-gray-300 mx-1">·</span>${auditDetail(r)}</p>
-          </div>`).join('') : `
-<div class="flex flex-col items-center justify-center py-12 mx-auto" style="max-width:320px; text-align:center;">
-  <h3 style="font-size:15px;font-weight:500;color:#0F172A;margin:0 0 4px 0;">ไม่มีรายการในระบบ</h3>
-  <p style="font-size:13px;color:#64748B;line-height:1.5;margin:0;">คุณยังไม่มีรายการอุปกรณ์ที่ระบุ</p>
-</div>
-`}
+          </div>`).join('') : emptyState('ยังไม่มีบันทึก','กิจกรรมในระบบจะปรากฏที่นี่','list')}
         </div>
       </div>`;
       lucide.createIcons({'stroke-width': 1.5});
