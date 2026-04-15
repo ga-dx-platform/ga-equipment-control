@@ -123,6 +123,8 @@
       font-family: 'Noto Sans Thai', 'Inter', sans-serif;
       font-size: var(--fs-body); color: var(--text-primary);
       background: var(--bg-page);
+      background-image: radial-gradient(rgba(15,23,42,0.055) 1px, transparent 1px);
+      background-size: 20px 20px;
     }
     *, *::before, *::after { box-sizing: border-box; }
     * { -webkit-tap-highlight-color: transparent; }
@@ -356,6 +358,15 @@
     /* compat */
     .stat-card { transition: transform 150ms; border-radius: var(--ga-radius-lg); }
     .stat-card:active { transform: scale(0.97); }
+
+    /* ── Chip row scroller ────────────────────────────── */
+    .chip-row {
+      display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
+      margin-bottom: 20px; padding-right: 8px;
+      -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 48px), transparent 100%);
+      mask-image: linear-gradient(90deg, #000 calc(100% - 48px), transparent 100%);
+    }
+    .chip-row::-webkit-scrollbar { display: none; }
 
     /* ── Chip filters ─────────────────────────────────── */
     .chip {
@@ -1010,7 +1021,10 @@
     .chip-remove { cursor:pointer; opacity:0.6; font-size:13px; background:none; border:none; padding:0; color:#c2410c; }
     .analytics-kpi-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-bottom:16px; }
     .analytics-kpi { background:#fff; border:0.5px solid #e7e5e4; border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:4px; }
-    .analytics-kpi.danger { background:#fff5f5; border-color:#fecaca; }
+    .analytics-kpi.tint-orange { background:linear-gradient(135deg,#fff7ed 0%,#fff 60%); border-color:#fed7aa; }
+    .analytics-kpi.tint-green  { background:linear-gradient(135deg,#ecfdf5 0%,#fff 60%); border-color:#a7f3d0; }
+    .analytics-kpi.tint-blue   { background:linear-gradient(135deg,#eff6ff 0%,#fff 60%); border-color:#bfdbfe; }
+    .analytics-kpi.danger      { background:linear-gradient(135deg,#fff1f2 0%,#fff 60%); border-color:#fecdd3; }
     .kpi-label { font-size:11px; color:#a8a29e; }
     .kpi-label.red { color:#ef4444; }
     .kpi-value { font-size:28px; font-weight:600; line-height:1; color:#1c1917; font-family:'Noto Sans Thai','Inter',sans-serif; }
@@ -1777,6 +1791,10 @@
       return `hsl(${hue}, 65%, 55%)`;
     }
 
+    function eqIconSvg(sz = 20, stroke = '#94A3B8') {
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>`;
+    }
+
     function catAccentColor(cat) {
       if (!cat) return '#E2E8F0';
       const palette = ['#f97316','#3b82f6','#10b981','#8b5cf6','#ec4899','#f59e0b','#06b6d4','#84cc16'];
@@ -1877,6 +1895,21 @@
         <p style="font-size:14px;font-weight:600;color:#0F172A;margin:0 0 4px;">${he(title)}</p>
         <p style="font-size:13px;color:#64748B;line-height:1.5;margin:0;">${he(sub)}</p>
       </div>`;
+    }
+
+    function countUp(el, target, dur = 600) {
+      if (!el) return;
+      const raw = el.textContent;
+      const start = (raw === '-' || raw === '') ? 0 : (parseInt(raw) || 0);
+      if (start === target) { el.textContent = target; return; }
+      const t0 = performance.now();
+      function tick(now) {
+        const p = Math.min((now - t0) / dur, 1);
+        const ease = 1 - Math.pow(1 - p, 3); // easeOutCubic
+        el.textContent = Math.round(start + (target - start) * ease);
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
     }
 
     function skeletonCards(n) {
@@ -2531,7 +2564,7 @@
           <input type="text" placeholder="ค้นหาอุปกรณ์..." class="gd-input" value="${he(borrowSearchQ)}"
             oninput="borrowSearchQ=this.value;renderBorrowTab()">
         </div>
-        <div class="overflow-x-auto flex gap-2 mb-5" style="scrollbar-width:none;">
+        <div class="chip-row">
           <div class="chip ${borrowCatFilter===''?'active':''}" onclick="borrowCatFilter='';renderBorrowTab()">ทั้งหมด</div>
           ${cats.map(c=>`<div class="chip ${borrowCatFilter===c?'active':''}" onclick="borrowCatFilter='${he(c)}';renderBorrowTab()">${he(c)}</div>`).join('')}
         </div>
@@ -2539,7 +2572,7 @@
           ${filtered.length ? filtered.map(e => borrowViewMode === 'grid' ? `
             <div class="gd-card gd-card-grid-card cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
               <div class="gc-icon">
-                ${e.image_url ? `<img src="${he(e.image_url)}"/>` : `<span style="font-size:24px;">📦</span>`}
+                ${e.image_url ? `<img src="${he(e.image_url)}"/>` : eqIconSvg(28)}
               </div>
               <p class="gc-name">${he(e.name)}</p>
               <p class="gc-meta">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
@@ -2552,7 +2585,7 @@
             </div>` : `
             <div class="gd-card gd-card-grid eq-cat-stripe cursor-pointer" style="--cat-accent:${catAccentColor(e.category)}" onclick="openBorrowForm('${he(e.eq_id)}')">
               <div class="grid-icon">
-                ${e.image_url ? `<img src="${he(e.image_url)}" class="grid-icon-img"/>` : `<div class="grid-icon-box"><span style="font-size:18px;">📦</span></div>`}
+                ${e.image_url ? `<img src="${he(e.image_url)}" class="grid-icon-img"/>` : `<div class="grid-icon-box">${eqIconSvg(18)}</div>`}
               </div>
               <div class="grid-content">
                 <p class="eq-title">${he(e.name)}</p>
@@ -2673,7 +2706,7 @@
             return `<div class="gd-card p-5 cursor-pointer ${isOD?'border-red-200 bg-red-50/30':''}" onclick="openReturnDetail('${he(r.record_id)}')">
               <div class="flex items-center gap-3">
                 <div style="width:36px; height:36px; min-width:36px; border-radius:8px; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center; background:${isOD?'#fee2e2':'#F1F5F9'};" class="shrink-0">
-                  <span style="font-size:18px;">📦</span>
+                  ${eqIconSvg(18, isOD?'#ef4444':'#94A3B8')}
                 </div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center justify-between gap-2 mb-0.5">
@@ -2816,7 +2849,7 @@
         <input type="text" placeholder="ค้นหาชื่ออุปกรณ์..." value="${he(gaHistorySearch)}"
           oninput="gaHistorySearch=this.value;renderHistoryTab()"
           class="gd-input" style="margin-bottom:12px;">
-        <div class="overflow-x-auto flex gap-2 mb-5" style="scrollbar-width:none;">
+        <div class="chip-row">
           <div class="chip ${historyFilter===''?'active':''}" onclick="historyFilter='';renderHistoryTab()">ทั้งหมด</div>
           <div class="chip ${historyFilter==='borrowed'?'active':''}" onclick="historyFilter='borrowed';renderHistoryTab()">กำลังยืม</div>
           <div class="chip ${historyFilter==='overdue'?'active':''}" onclick="historyFilter='overdue';renderHistoryTab()">เกินกำหนด</div>
@@ -2858,16 +2891,16 @@
         <div class="dash-kpi-grid">
           <div class="kpi-card orange">
             <div style="width:32px;height:32px;border-radius:8px;background:var(--orange-light);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="clock-3" style="width:20px;height:20px;color:var(--orange);"></i></div>
-            <p class="kpi-number">${totalBorrowed}</p><p class="kpi-label">กำลังยืม</p></div>
+            <p class="kpi-number" id="dkpi1">0</p><p class="kpi-label">กำลังยืม</p></div>
           <div class="kpi-card danger">
             <div style="width:32px;height:32px;border-radius:8px;background:var(--danger-bg);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="alert-triangle" style="width:20px;height:20px;color:#ef4444;"></i></div>
-            <p class="kpi-number">${overdueList.length}</p><p class="kpi-label">เกินกำหนด</p></div>
+            <p class="kpi-number" id="dkpi2">0</p><p class="kpi-label">เกินกำหนด</p></div>
           <div class="kpi-card success">
             <div style="width:32px;height:32px;border-radius:8px;background:var(--success-bg);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="check-circle" style="width:20px;height:20px;color:var(--success-text);"></i></div>
-            <p class="kpi-number">${returnedToday}</p><p class="kpi-label">คืนวันนี้</p></div>
+            <p class="kpi-number" id="dkpi3">0</p><p class="kpi-label">คืนวันนี้</p></div>
           <div class="kpi-card orange">
             <div style="width:32px;height:32px;border-radius:8px;background:var(--orange-light);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="box" style="width:20px;height:20px;color:var(--orange);"></i></div>
-            <p class="kpi-number">${availableEq}</p><p class="kpi-label">อุปกรณ์พร้อมใช้</p></div>
+            <p class="kpi-number" id="dkpi4">0</p><p class="kpi-label">อุปกรณ์พร้อมใช้</p></div>
         </div>
         <div class="card mb-5">
           <h4 class="eq-title mb-4">รายการเกินกำหนด</h4>
@@ -2898,6 +2931,10 @@
         </div>
       </div>`;
       lucide.createIcons({'stroke-width': 1.5});
+      countUp(document.getElementById('dkpi1'), totalBorrowed);
+      countUp(document.getElementById('dkpi2'), overdueList.length);
+      countUp(document.getElementById('dkpi3'), returnedToday);
+      countUp(document.getElementById('dkpi4'), availableEq);
     }
     // ===== MGR: RETURN ON BEHALF =====
     function returnByManager(recordId) {
@@ -2947,7 +2984,7 @@
         <input type="text" placeholder="ค้นหาชื่ออุปกรณ์ หรือผู้ยืม..." value="${he(mgrHistorySearch)}"
           oninput="mgrHistorySearch=this.value;renderMgrHistory()"
           class="gd-input" style="margin-bottom:8px;">
-        <div class="overflow-x-auto flex gap-2 mb-3 pb-1" style="scrollbar-width:none;">
+        <div class="chip-row" style="margin-bottom:12px;">
           <select onchange="mgrHistoryGa=this.value;renderMgrHistory()" class="${selectCls} shrink-0">
             <option value="">GA ทั้งหมด</option>
             ${gaStaffs.map(g=>`<option value="${he(g)}" ${mgrHistoryGa===g?'selected':''}>${he(g)}</option>`).join('')}
@@ -2956,7 +2993,7 @@
           <input type="date" value="${mgrHistoryTo}" onchange="mgrHistoryTo=this.value;renderMgrHistory()" class="${selectCls} shrink-0" title="ถึงวันที่">
           ${(mgrHistoryGa||mgrHistoryFrom||mgrHistoryTo)?`<button onclick="mgrHistoryGa='';mgrHistoryFrom='';mgrHistoryTo='';renderMgrHistory()" class="eq-meta hover:text-danger px-1 shrink-0">ล้าง</button>`:''}
         </div>
-        <div class="overflow-x-auto flex gap-2 mb-5" style="scrollbar-width:none;">
+        <div class="chip-row">
           <div class="chip ${historyFilter===''?'active':''}" onclick="historyFilter='';renderMgrHistory()">ทั้งหมด</div>
           <div class="chip ${historyFilter==='borrowed'?'active':''}" onclick="historyFilter='borrowed';renderMgrHistory()">กำลังยืม</div>
           <div class="chip ${historyFilter==='overdue'?'active':''}" onclick="historyFilter='overdue';renderMgrHistory()">เกินกำหนด</div>
@@ -3013,7 +3050,7 @@
           ${filtered.length === 0 ? emptyState('ไม่พบอุปกรณ์','ลองค้นหาด้วยคำอื่นหรือเปลี่ยนหมวดหมู่','search') :
           filtered.map(e=>`<div class="gd-card" style="padding: 20px;">
             <div class="flex items-center gap-3">
-              ${e.image_url ? `<img src="${he(e.image_url)}" class="w-11 h-11 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div class="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-lg shrink-0">📦</div>`}
+              ${e.image_url ? `<img src="${he(e.image_url)}" class="w-11 h-11 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div style="width:44px;height:44px;border-radius:12px;background:#F1F5F9;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${eqIconSvg(22)}</div>`}
               <div class="flex-1 min-w-0">
                 <p class="eq-title">${he(e.name)}</p>
                 <p class="eq-meta">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
@@ -3527,7 +3564,7 @@
           <button onclick="exportAuditCSV()" class="gd-btn-primary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-xs font-semibold whitespace-nowrap">
             <i data-lucide="download" class="w-[18px] h-[18px] text-[#64748B]"></i> Export CSV</button>
         </div>
-        <div class="overflow-x-auto flex gap-2 mb-5" style="scrollbar-width:none;">
+        <div class="chip-row">
           <div class="chip ${auditFilter===''?'active':''}" onclick="auditFilter='';_renderAuditList()">ทั้งหมด</div>
           ${filterTypes.map(t=>`<div class="chip ${auditFilter===t?'active':''}" onclick="auditFilter='${t}';_renderAuditList()">${AUDIT_TYPE_META[t]?.label||t}</div>`).join('')}
         </div>
@@ -3770,15 +3807,15 @@
           </div>
         </div>
         <div class="analytics-kpi-grid">
-          <div class="analytics-kpi">
+          <div class="analytics-kpi tint-orange">
             <span class="kpi-label">ยืมทั้งหมด</span>
             <span class="kpi-value orange" id="kpiTotal">-</span>
           </div>
-          <div class="analytics-kpi">
+          <div class="analytics-kpi tint-green">
             <span class="kpi-label">คืนแล้ว</span>
             <span class="kpi-value green" id="kpiReturned">-</span>
           </div>
-          <div class="analytics-kpi">
+          <div class="analytics-kpi tint-blue">
             <span class="kpi-label">กำลังยืม</span>
             <span class="kpi-value" id="kpiBorrowed">-</span>
           </div>
@@ -3898,14 +3935,10 @@
     }
 
     function updateKPIs(data) {
-      const t = document.getElementById('kpiTotal');
-      const ret = document.getElementById('kpiReturned');
-      const bor = document.getElementById('kpiBorrowed');
-      const ov = document.getElementById('kpiOverdue');
-      if (t) t.textContent = data.length;
-      if (ret) ret.textContent = data.filter(r => r.status === 'returned').length;
-      if (bor) bor.textContent = data.filter(r => r.status === 'borrowed').length;
-      if (ov) ov.textContent = data.filter(r => r.status === 'overdue').length;
+      countUp(document.getElementById('kpiTotal'),    data.length);
+      countUp(document.getElementById('kpiReturned'), data.filter(r => r.status === 'returned').length);
+      countUp(document.getElementById('kpiBorrowed'), data.filter(r => r.status === 'borrowed').length);
+      countUp(document.getElementById('kpiOverdue'),  data.filter(r => r.status === 'overdue').length);
     }
 
     function updateBarChart(data) {
@@ -4157,7 +4190,7 @@
           <div class="flex items-center gap-3 min-w-0">
             <div class="shrink-0">
               <img id="detail-equipment-image" src="" alt="" class="w-14 h-14 object-cover rounded-xl border border-stone-200 hidden"/>
-              <div id="detail-equipment-placeholder" class="w-14 h-14 rounded-xl bg-stone-100 flex items-center justify-center text-2xl">📦</div>
+              <div id="detail-equipment-placeholder" style="width:56px;height:56px;border-radius:14px;background:#F1F5F9;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;">${eqIconSvg(26)}</div>
             </div>
             <span id="detail-equipment-name" class="font-bold text-xl leading-tight text-[#1c1917]"></span>
           </div>
