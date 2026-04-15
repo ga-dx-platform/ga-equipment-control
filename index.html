@@ -1148,6 +1148,42 @@
   </style>
 
   <style>
+    /* ===== Category Access Modal ===== */
+    .cat-modal-radio-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px; cursor: pointer;
+      border: 1.5px solid #E2E8F0; background: white;
+      transition: border-color .15s, background .15s;
+    }
+    .cat-modal-radio-row:hover { border-color: #FED7AA; background: #FFFBF7; }
+    .cat-modal-radio {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid #CBD5E1; background: white; flex-shrink: 0;
+      transition: border-color .15s, background .15s;
+    }
+    .cat-modal-radio.active {
+      border-color: #F97316; background: #F97316;
+      box-shadow: inset 0 0 0 3px white;
+    }
+    .cat-checkbox-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 14px; border-bottom: 1px solid #F1F5F9;
+      cursor: pointer; font-size: 13px; color: #334155;
+      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      background: white; transition: background .12s;
+    }
+    .cat-checkbox-row:last-child { border-bottom: none; }
+    .cat-checkbox-row:hover { background: #FFFBF7; }
+    .cat-checkbox-box {
+      width: 18px; height: 18px; border-radius: 5px;
+      border: 2px solid #CBD5E1; background: white; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .15s, background .15s;
+    }
+    .cat-checkbox-box.checked {
+      border-color: #F97316; background: #F97316;
+    }
+
     /* ===== Manager Dashboard UI Rebalance ===== */
 
     /* 1 ── Orange gradient header */
@@ -1560,6 +1596,40 @@
     </div>
   </div>
 
+  <!-- Category Access Modal -->
+  <div id="catModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
+    <div class="absolute inset-0 bg-black/40" onclick="closeCatModal()"></div>
+    <div class="relative w-full gd-modal-panel mx-4 md:mx-auto" style="max-width:420px;max-height:90vh;overflow-y:auto;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div>
+          <p style="font-size:15px;font-weight:600;color:#0F172A;margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">หมวดหมู่ที่เข้าถึงได้</p>
+          <p id="catModalUserName" style="font-size:13px;color:#64748B;margin:4px 0 0;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
+        </div>
+        <button onclick="closeCatModal()" style="width:32px;height:32px;border-radius:50%;border:1px solid #E2E8F0;background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <!-- Mode radio -->
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+        <label class="cat-modal-radio-row" onclick="catModalSetMode('all')">
+          <span id="catRadioAll" class="cat-modal-radio active"></span>
+          <span style="font-size:14px;font-family:'Noto Sans Thai','Inter',sans-serif;">เห็นทุกหมวดหมู่</span>
+        </label>
+        <label class="cat-modal-radio-row" onclick="catModalSetMode('custom')">
+          <span id="catRadioCustom" class="cat-modal-radio"></span>
+          <span style="font-size:14px;font-family:'Noto Sans Thai','Inter',sans-serif;">เลือกเฉพาะหมวด</span>
+        </label>
+      </div>
+      <!-- Checkboxes (shown only in custom mode) -->
+      <div id="catCheckboxList" style="display:none;border:1px solid #E2E8F0;border-radius:10px;overflow:hidden;margin-bottom:16px;"></div>
+      <!-- Buttons -->
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button onclick="closeCatModal()" style="padding:8px 16px;border-radius:10px;border:1px solid #E2E8F0;background:white;font-size:13px;font-weight:500;color:#475569;cursor:pointer;font-family:'Noto Sans Thai','Inter',sans-serif;">ยกเลิก</button>
+        <button onclick="saveCatModal()" style="padding:8px 20px;border-radius:10px;border:none;background:#F97316;font-size:13px;font-weight:600;color:white;cursor:pointer;font-family:'Noto Sans Thai','Inter',sans-serif;">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Logout Modal -->
   <div id="logoutModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
     <div class="absolute inset-0 bg-black/40" onclick="closeLogoutModal()"></div>
@@ -1636,6 +1706,7 @@
     // ===== STATE =====
     let AU = { ga: [], mgr: [] }, CU = null, SU = null, PB = '';
     let _cpStep = 0, _cpOld = '', _cpNew = '', _cpConf = ''; // change-PIN modal state
+    let _catRealtimeChannel = null; // Supabase Realtime channel for category changes
     let AUTH_MODE = 'demo'; // users_with_pin | demo
     const FALLBACK_PIN = ''; // intentionally empty — demo login is disabled for security
     const FALLBACK_USERS = {
@@ -1808,11 +1879,11 @@
     async function api(action, params = {}) {
       try {
         if (action === 'getUsers') {
-          const { data: users, error: usersErr } = await sb.from('users').select('full_name, role, is_active').eq('is_active', true);
+          const { data: users, error: usersErr } = await sb.from('users').select('full_name, role, is_active, allowed_categories').eq('is_active', true);
           if (!usersErr && Array.isArray(users)) {
             const mapped = {
-              ga: users.filter(u=>u.role==='ga').map(u=>({name:u.full_name,role:'ga'})),
-              mgr: users.filter(u=>u.role==='mgr').map(u=>({name:u.full_name,role:'mgr'}))
+              ga: users.filter(u=>u.role==='ga').map(u=>({name:u.full_name,role:'ga',allowed_categories:u.allowed_categories??null})),
+              mgr: users.filter(u=>u.role==='mgr').map(u=>({name:u.full_name,role:'mgr',allowed_categories:null}))
             };
             if (mapped.ga.length || mapped.mgr.length) {
               AUTH_MODE = 'users_with_pin';
@@ -1827,11 +1898,12 @@
             return { ok: String(params.pin).padStart(6,'0') === FALLBACK_PIN };
           }
           // AUTH_MODE === 'users_with_pin': verify against users.pin_hash
-          const { data } = await sb.from('users').select('pin_hash').eq('full_name', params.name).eq('is_active', true).single();
+          const { data } = await sb.from('users').select('pin_hash, allowed_categories').eq('full_name', params.name).eq('is_active', true).single();
           if (!data) return { ok: false };
           const stored = String(data.pin_hash), input = String(params.pin).padStart(6,'0'), hInput = await sha256(input);
-          if (stored === hInput) return { ok: true };
-          if (stored === input) { await sb.from('users').update({ pin_hash: hInput }).eq('full_name', params.name); return { ok: true }; }
+          const ac = data.allowed_categories ?? null;
+          if (stored === hInput) return { ok: true, allowed_categories: ac };
+          if (stored === input) { await sb.from('users').update({ pin_hash: hInput }).eq('full_name', params.name); return { ok: true, allowed_categories: ac }; }
           return { ok: false };
         }
         if (action === 'changePin') {
@@ -2012,6 +2084,15 @@
           await logAction('MEMBER_DELETE','users',params.name,null,{name:params.name,role:params.role});
           return { ok: true };
         }
+        if (action === 'updateUserCategories') {
+          // categories = null (see all) | string[] (specific categories)
+          const { error } = await sb.from('users')
+            .update({ allowed_categories: params.categories })
+            .eq('full_name', params.name).eq('role', 'ga');
+          if (error) throw error;
+          await logAction('UPDATE_CATEGORIES','users',params.name,null,{name:params.name,categories:params.categories});
+          return { ok: true };
+        }
         if (action === 'getRecipients') {
           const { data, error } = await sb.from('report_recipients').select('*').order('created_at');
           if (error) throw error;
@@ -2150,9 +2231,12 @@
           api('getCategories')
         ]);
         if (res.ok) {
-          PIN_ATTEMPTS = 0; CU = { ...SU }; EQ = eqData; BORROWS = brData; CATS = catData;
+          PIN_ATTEMPTS = 0;
+          CU = { ...SU, allowed_categories: res.allowed_categories ?? null };
+          EQ = eqData; BORROWS = brData; CATS = catData;
           toast('ยินดีต้อนรับ ' + CU.name.split(' ')[0]);
           buildMain(); goScreen('main'); lucide.createIcons({'stroke-width': 1.5}); startAutoLogout();
+          if (CU.role === 'ga') setupCategoryRealtime();
         } else {
           PIN_ATTEMPTS++;
           const rem = PIN_MAX_ATTEMPTS - PIN_ATTEMPTS;
@@ -2254,9 +2338,25 @@
       }
     }
 
+    function setupCategoryRealtime() {
+      if (_catRealtimeChannel) { sb.removeChannel(_catRealtimeChannel); _catRealtimeChannel = null; }
+      _catRealtimeChannel = sb.channel('cat-access-watch')
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'users' }, (payload) => {
+          if (payload.new.full_name !== CU?.name) return;
+          const newCats = payload.new.allowed_categories ?? null;
+          CU.allowed_categories = newCats;
+          // Reset chip filter if current category is no longer allowed
+          if (borrowCatFilter && newCats && !newCats.includes(borrowCatFilter)) borrowCatFilter = '';
+          const bt = document.getElementById('tab-borrow');
+          if (bt && bt.style.display !== 'none') renderBorrowTab();
+        })
+        .subscribe();
+    }
+
     function logout() {
       closeLogoutModal(); stopAutoLogout();
       signatureListenersCleanup?.();
+      if (_catRealtimeChannel) { sb.removeChannel(_catRealtimeChannel); _catRealtimeChannel = null; }
       CU=null; SU=null; EQ=[]; BORROWS=[]; goScreen('login'); lucide.createIcons({'stroke-width': 1.5});
     }
     function startAutoLogout() {
@@ -2355,8 +2455,12 @@
     }
 
     function renderBorrowTab() {
-      const avail = EQ.filter(e=> e.available > 0);
-      const cats = CATS.map(c => c.name);
+      const allowedCats = CU?.allowed_categories; // null = see all; string[] = restricted
+      const avail = EQ.filter(e => e.available > 0 &&
+        (!allowedCats || allowedCats.length === 0 || allowedCats.includes(e.category)));
+      const cats = (allowedCats && allowedCats.length > 0)
+        ? CATS.filter(c => allowedCats.includes(c.name)).map(c => c.name)
+        : CATS.map(c => c.name);
       const filtered = avail.filter(e=> {
         if (borrowCatFilter && e.category !== borrowCatFilter) return false;
         if (borrowSearchQ && !e.name.toLowerCase().includes(borrowSearchQ.toLowerCase())) return false;
@@ -3096,13 +3200,31 @@
 </div>
 `;
             return all.map((u,i)=>{
+              const catBadge = u.type === 'ga' ? (() => {
+                const ac = u.allowed_categories;
+                if (!ac || ac.length === 0)
+                  return `<span style="font-size:10px;padding:2px 8px;border-radius:999px;background:#EFF6FF;color:#3B82F6;border:1px solid #BFDBFE;font-family:'Noto Sans Thai','Inter',sans-serif;">ทุกหมวด</span>`;
+                return `<span style="font-size:10px;padding:2px 8px;border-radius:999px;background:#FFF7ED;color:#F97316;border:1px solid #FED7AA;font-family:'Noto Sans Thai','Inter',sans-serif;">${ac.length} หมวด</span>`;
+              })() : '';
+              const catBtn = u.type === 'ga'
+                ? `<button data-name="${he(u.name)}" onclick="openCatModal(this.dataset.name)"
+                     style="padding:6px 8px;border-radius:8px;border:1px solid #E2E8F0;background:white;cursor:pointer;display:flex;align-items:center;gap:4px;font-size:12px;color:#475569;font-weight:500;font-family:'Noto Sans Thai','Inter',sans-serif;" title="ตั้งค่าหมวดหมู่">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg>
+                     หมวด</button>`
+                : '';
               return `<div class="gd-card p-5 flex items-center justify-between fade-in">
                 <div class="flex items-center gap-3">
                   ${avEl(u.name, u.type)}
-                  <div><p class="font-medium text-gray-900 text-sm">${he(u.name)}</p>
-                  <p class="${u.type==='mgr'?'role-badge-mgr':'role-badge-ga'}">${u.type==='mgr'?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
+                  <div>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                      <p class="font-medium text-gray-900 text-sm">${he(u.name)}</p>
+                      ${catBadge}
+                    </div>
+                    <p class="${u.type==='mgr'?'role-badge-mgr':'role-badge-ga'}">${u.type==='mgr'?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p>
+                  </div>
                 </div>
                 <div class="flex items-center gap-1">
+                  ${catBtn}
                   <button data-name="${he(u.name)}" data-utype="${u.type}" onclick="openResetPin(this.dataset.name,this.dataset.utype)" class="p-2 rounded-lg text-gray-300 hover:text-amber-500 hover:bg-amber-50"><i data-lucide="key-round" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
                   <button data-name="${he(u.name)}" data-utype="${u.type}" onclick="confirmDeleteUser(this.dataset.name,this.dataset.utype)" class="p-2 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50"><i data-lucide="trash-2" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
                 </div>
@@ -3180,6 +3302,58 @@
         await api('changePin', { name, newPin, role });
         toast('Reset PIN เรียบร้อยแล้ว','success');
       } catch(e){ toast('Reset ไม่สำเร็จ','error'); }
+    }
+
+    // ===== CATEGORY ACCESS MODAL =====
+    let _catModalName = null, _catModalMode = 'all', _catModalSelected = new Set();
+
+    function openCatModal(name) {
+      _catModalName = name;
+      const u = AU.ga.find(u => u.name === name);
+      const ac = u?.allowed_categories;
+      _catModalMode = (!ac || ac.length === 0) ? 'all' : 'custom';
+      _catModalSelected = new Set(ac || []);
+      document.getElementById('catModalUserName').textContent = name;
+      catModalSetMode(_catModalMode);
+      showModal('catModal');
+    }
+    function closeCatModal() { hideModal('catModal'); }
+    function catModalSetMode(mode) {
+      _catModalMode = mode;
+      document.getElementById('catRadioAll').classList.toggle('active', mode === 'all');
+      document.getElementById('catRadioCustom').classList.toggle('active', mode === 'custom');
+      const list = document.getElementById('catCheckboxList');
+      if (mode === 'custom') {
+        list.style.display = 'block';
+        list.innerHTML = CATS.map(c => {
+          const checked = _catModalSelected.has(c.name);
+          return `<div class="cat-checkbox-row" onclick="catModalToggle('${he(c.name)}')">
+            <span id="catcb-${he(c.name)}" class="cat-checkbox-box${checked?' checked':''}">
+              ${checked?`<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+            </span>
+            ${he(c.name)}
+          </div>`;
+        }).join('');
+      } else {
+        list.style.display = 'none';
+      }
+    }
+    function catModalToggle(catName) {
+      if (_catModalSelected.has(catName)) _catModalSelected.delete(catName);
+      else _catModalSelected.add(catName);
+      catModalSetMode('custom'); // re-render checkboxes
+    }
+    async function saveCatModal() {
+      const categories = _catModalMode === 'all' ? null : [..._catModalSelected];
+      try {
+        await api('updateUserCategories', { name: _catModalName, categories });
+        // Update AU.ga local
+        const u = AU.ga.find(u => u.name === _catModalName);
+        if (u) u.allowed_categories = categories;
+        toast('บันทึกเรียบร้อยแล้ว', 'success');
+        closeCatModal();
+        renderMembersTab();
+      } catch(e) { toast('บันทึกไม่สำเร็จ', 'error'); }
     }
 
     // ===== MGR: NOTIFICATION / RECIPIENTS =====
@@ -3296,6 +3470,7 @@
       CATEGORY_CREATE:  { label:'เพิ่มหมวดหมู่',  cls:'bg-amber-50 text-warn' },
       CATEGORY_DELETE:  { label:'ลบหมวดหมู่',     cls:'bg-red-50 text-danger' },
       CHANGE_PIN:       { label:'เปลี่ยน PIN',     cls:'bg-gray-100 text-gray-600' },
+      UPDATE_CATEGORIES:{ label:'ตั้งค่าหมวด',    cls:'bg-blue-50 text-blue-600' },
     };
     function auditTypeBadge(t) {
       const m = AUDIT_TYPE_META[t] || { label: t, cls: 'bg-gray-100 text-gray-500' };
