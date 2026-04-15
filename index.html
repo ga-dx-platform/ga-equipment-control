@@ -983,8 +983,9 @@
     .filter-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
     .filter-item { display:flex; flex-direction:column; gap:4px; }
     .filter-label { font-size:10px; color:#a8a29e; font-weight:500; text-transform:uppercase; letter-spacing:0.05em; }
-    .filter-item select { font-size:12px; padding:7px 10px; border-radius:8px; border:0.5px solid #e7e5e4; background:#fafaf9; color:#1c1917; cursor:pointer; font-family:'Noto Sans Thai','Inter',sans-serif; width:100%; }
-    .filter-item select:focus { outline:2px solid #f97316; outline-offset:1px; }
+    .filter-item select, .filter-item input[type="date"] { font-size:12px; padding:7px 10px; border-radius:8px; border:0.5px solid #e7e5e4; background:#fafaf9; color:#1c1917; cursor:pointer; font-family:'Noto Sans Thai','Inter',sans-serif; width:100%; }
+    .filter-item select:focus, .filter-item input[type="date"]:focus { outline:2px solid #f97316; outline-offset:1px; }
+    .filter-daterange { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
     .active-chips { display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding-top:10px; border-top:0.5px solid #f5f5f4; margin-top:10px; }
     .chips-label { font-size:11px; color:#a8a29e; }
     .filter-chip { display:flex; align-items:center; gap:4px; background:#fff7ed; color:#c2410c; border:0.5px solid #fed7aa; border-radius:20px; padding:3px 10px; font-size:11px; font-family:'Noto Sans Thai','Inter',sans-serif; }
@@ -3719,6 +3720,7 @@
                 <option value="7">7 วันล่าสุด</option>
                 <option value="30" selected>เดือนนี้</option>
                 <option value="90">3 เดือนล่าสุด</option>
+                <option value="custom">กำหนดเอง</option>
               </select>
             </div>
             ${isMgr ? `<div class="filter-item" id="filterStaffWrapper">
@@ -3741,6 +3743,16 @@
                 <option value="returned">คืนแล้ว</option>
                 <option value="overdue">เกินกำหนด</option>
               </select>
+            </div>
+          </div>
+          <div id="filterDateRange" class="filter-daterange" style="display:none">
+            <div class="filter-item">
+              <label class="filter-label">ตั้งแต่วันที่</label>
+              <input type="date" id="filterDateFrom" onchange="applyFilters()">
+            </div>
+            <div class="filter-item">
+              <label class="filter-label">ถึงวันที่</label>
+              <input type="date" id="filterDateTo" onchange="applyFilters()">
             </div>
           </div>
           <div id="activeChips" class="active-chips" style="display:none">
@@ -3826,10 +3838,27 @@
       const staff = document.getElementById('filterStaff')?.value || 'all';
       const category = document.getElementById('filterCategory')?.value || 'all';
       const status = document.getElementById('filterStatus')?.value || 'all';
+      const dateFrom = document.getElementById('filterDateFrom')?.value || '';
+      const dateTo = document.getElementById('filterDateTo')?.value || '';
+
+      // Show/hide custom date range row
+      const drEl = document.getElementById('filterDateRange');
+      if (drEl) drEl.style.display = period === 'custom' ? 'grid' : 'none';
 
       let filtered = [...BORROWS];
 
-      if (period !== 'all') {
+      if (period === 'custom') {
+        if (dateFrom) {
+          const from = new Date(dateFrom);
+          from.setHours(0, 0, 0, 0);
+          filtered = filtered.filter(r => new Date(r.borrowed_at) >= from);
+        }
+        if (dateTo) {
+          const to = new Date(dateTo);
+          to.setHours(23, 59, 59, 999);
+          filtered = filtered.filter(r => new Date(r.borrowed_at) <= to);
+        }
+      } else if (period !== 'all') {
         const days = parseInt(period);
         const cutoff = new Date();
         cutoff.setDate(cutoff.getDate() - days);
@@ -3851,7 +3880,7 @@
         filtered = filtered.filter(r => r.status === status);
       }
 
-      updateActiveChips({ period, staff, category, status });
+      updateActiveChips({ period, staff, category, status, dateFrom, dateTo });
       updateKPIs(filtered);
       updateBarChart(filtered);
       updateDonutChart(filtered);
@@ -4023,7 +4052,14 @@
       const periodLabels = { '7':'7 วันล่าสุด','30':'เดือนนี้','90':'3 เดือนล่าสุด' };
       const statusLabels = { borrowed:'กำลังยืม', returned:'คืนแล้ว', overdue:'เกินกำหนด' };
       const chips = [];
-      if (filters.period !== 'all') chips.push({ label: periodLabels[filters.period] || filters.period, key:'period' });
+      if (filters.period === 'custom') {
+        const parts = [];
+        if (filters.dateFrom) parts.push(filters.dateFrom.split('-').reverse().join('/'));
+        if (filters.dateTo) parts.push(filters.dateTo.split('-').reverse().join('/'));
+        if (parts.length > 0) chips.push({ label: parts.length === 2 ? `${parts[0]} – ${parts[1]}` : (filters.dateFrom ? `ตั้งแต่ ${parts[0]}` : `ถึง ${parts[0]}`), key:'period' });
+      } else if (filters.period !== 'all') {
+        chips.push({ label: periodLabels[filters.period] || filters.period, key:'period' });
+      }
       if (filters.staff !== 'all') {
         const el = document.getElementById('filterStaff');
         const label = el?.options[el.selectedIndex]?.text;
@@ -4047,6 +4083,9 @@
       const defaults = { period:'all', staff:'all', category:'all', status:'all' };
       const el = document.getElementById('filter' + key.charAt(0).toUpperCase() + key.slice(1));
       if (el) el.value = defaults[key];
+      if (key === 'period') {
+        ['filterDateFrom','filterDateTo'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
+      }
       applyFilters();
     }
 
@@ -4055,6 +4094,12 @@
         const el = document.getElementById(id);
         if (el) el.value = 'all';
       });
+      ['filterDateFrom','filterDateTo'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      const drEl = document.getElementById('filterDateRange');
+      if (drEl) drEl.style.display = 'none';
       applyFilters();
     }
 
