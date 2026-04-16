@@ -3931,6 +3931,10 @@
               <tbody id="staffSummaryBody"></tbody>
             </table>
           </div>
+        </div>
+        <div class="chart-card" id="feedbackSection">
+          <p class="chart-card-title">ความคิดเห็นจากการประเมิน</p>
+          <div id="feedbackList"></div>
         </div>` : ''}
       </div>`;
 
@@ -3993,7 +3997,7 @@
       updateBarChart(filtered);
       updateDonutChart(filtered);
       updateLineChart(filtered);
-      if (isMgr) updateStaffTable(filtered);
+      if (isMgr) { updateStaffTable(filtered); updateFeedbackSection(filtered); }
     }
 
     function updateKPIs(data) {
@@ -4166,6 +4170,31 @@
             <td style="text-align:center;padding:8px">${ratingCell}</td>
           </tr>`;
         }).join('') || `<tr><td colspan="6" style="padding:16px;text-align:center;color:#a8a29e;font-size:13px">ไม่มีข้อมูล</td></tr>`;
+    }
+
+    function updateFeedbackSection(data) {
+      const el = document.getElementById('feedbackList');
+      if (!el) return;
+      const items = [...data]
+        .filter(r => r.service_rating)
+        .sort((a,b) => new Date(b.returned_at||b.borrowed_at) - new Date(a.returned_at||a.borrowed_at));
+      if (!items.length) {
+        el.innerHTML = `<p style="text-align:center;color:#a8a29e;font-size:13px;padding:16px 0">ไม่มีข้อมูลการประเมินในช่วงเวลานี้</p>`;
+        return;
+      }
+      el.innerHTML = items.map(r => `
+        <div style="padding:10px 0;border-bottom:0.5px solid #f5f5f4;last-child:border-0">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+              <span style="color:#f59e0b;font-size:13px;line-height:1">${'★'.repeat(r.service_rating)}${'☆'.repeat(5-r.service_rating)}</span>
+              <span style="font-size:12px;font-weight:500;color:#1c1917">${he(r.borrower_name)}</span>
+              <span style="font-size:11px;color:#a8a29e">· GA: ${he(r.ga_staff||'—')}</span>
+            </div>
+            <span style="font-size:11px;color:#a8a29e;white-space:nowrap;flex-shrink:0">${fd(r.returned_at||r.borrowed_at)}</span>
+          </div>
+          <p style="font-size:12px;color:#57534e;margin:0;padding-left:2px">${r.service_feedback ? he(r.service_feedback) : '<span style="color:#d1d5db;font-style:italic">ไม่มีความคิดเห็น</span>'}</p>
+          <p style="font-size:11px;color:#d1d5db;margin:2px 0 0;padding-left:2px">${he(r.eq_name)}</p>
+        </div>`).join('');
     }
 
     function updateActiveChips(filters) {
