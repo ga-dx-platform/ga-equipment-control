@@ -3972,8 +3972,8 @@
       const eqRecord = EQ.find(e => e.eq_id === r.eq_id || e.id === r.eq_id);
       const imgEl = document.getElementById('detail-equipment-image');
       const phEl = document.getElementById('detail-equipment-placeholder');
-      if (eqRecord?.image_url) { imgEl.src = eqRecord.image_url; imgEl.classList.remove('hidden'); phEl.classList.add('hidden'); }
-      else { imgEl.classList.add('hidden'); phEl.classList.remove('hidden'); }
+      if (eqRecord?.image_url) { imgEl.src = eqRecord.image_url; imgEl.classList.remove('hidden'); phEl.style.display = 'none'; }
+      else { imgEl.classList.add('hidden'); phEl.style.display = 'flex'; }
       document.getElementById('detail-borrower-name').textContent = r.borrower_name || '-';
       document.getElementById('detail-borrower-dept').textContent = r.borrower_dept || '-';
       document.getElementById('detail-qty').textContent = `${r.qty_borrowed || 1} ชิ้น`;
