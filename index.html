@@ -1286,6 +1286,238 @@
       background: rgba(0,0,0,0.04) !important;
     }
   </style>
+
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       Premium UI Enhancement Layer
+       ═══════════════════════════════════════════════════════ */
+
+    /* ── 1. Status dot pulse (borrowed = amber, overdue = red) ─ */
+    @keyframes dot-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+      60%       { box-shadow: 0 0 0 5px transparent; opacity: 0.8; }
+    }
+    .status-borrowed .status-dot,
+    .badge-borrowed  .status-dot {
+      animation: dot-pulse 2.2s ease-in-out infinite;
+      color: #f59e0b;
+    }
+    .status-overdue .status-dot,
+    .badge-overdue  .status-dot {
+      animation: dot-pulse 1.6s ease-in-out infinite;
+      color: #ef4444;
+    }
+
+    /* ── 2. Header glass action buttons ────────────────────── */
+    #screen-main > .gd-header button:not([onclick*="goScreen"]) {
+      background: rgba(255,255,255,0.18) !important;
+      border: 1px solid rgba(255,255,255,0.35) !important;
+      backdrop-filter: blur(8px) !important;
+      -webkit-backdrop-filter: blur(8px) !important;
+    }
+    #screen-main > .gd-header button:not([onclick*="goScreen"]):hover {
+      background: rgba(255,255,255,0.28) !important;
+    }
+    #screen-main > .gd-header button svg,
+    #screen-main > .gd-header button i[data-lucide] {
+      stroke: white !important;
+      color: white !important;
+    }
+
+    /* ── 3. Primary button gradient + glow ─────────────────── */
+    .gd-btn-primary, .btn-primary {
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 45%, #ea580c 100%) !important;
+      box-shadow: 0 2px 10px rgba(249,115,22,0.35), inset 0 1px 0 rgba(255,255,255,0.15) !important;
+    }
+    .gd-btn-primary:hover:not(:disabled), .btn-primary:hover:not(:disabled) {
+      box-shadow: 0 4px 16px rgba(249,115,22,0.45), inset 0 1px 0 rgba(255,255,255,0.15) !important;
+      filter: brightness(1.04) !important;
+    }
+    .gd-btn-primary:disabled, .gd-btn-primary.is-disabled {
+      background: #CBD5E1 !important;
+      box-shadow: none !important;
+    }
+
+    /* ── 4. KPI card top accent bar ────────────────────────── */
+    .kpi-card { position: relative !important; overflow: hidden !important; }
+    .kpi-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #f97316, #fbbf24);
+      border-radius: 0;
+    }
+    .kpi-card.danger::after  { background: linear-gradient(90deg, #ef4444, #f87171); }
+    .kpi-card.success::after { background: linear-gradient(90deg, #10b981, #34d399); }
+
+    /* Analytics KPI top accent */
+    .analytics-kpi { position: relative !important; overflow: hidden !important; }
+    .analytics-kpi::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2.5px;
+      border-radius: 0;
+    }
+    .analytics-kpi.tint-orange::after { background: linear-gradient(90deg, #f97316, #fbbf24); }
+    .analytics-kpi.tint-green::after  { background: linear-gradient(90deg, #10b981, #34d399); }
+    .analytics-kpi.tint-blue::after   { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    .analytics-kpi.danger::after      { background: linear-gradient(90deg, #ef4444, #f87171); }
+
+    /* ── 5. Numpad key 3D press depth ──────────────────────── */
+    .numpad-key {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+      box-shadow: 0 3px 0 #d1d5db, 0 5px 12px rgba(0,0,0,0.07) !important;
+      border-bottom: none !important;
+    }
+    .numpad-key:active {
+      box-shadow: 0 0 0 #d1d5db, 0 1px 4px rgba(0,0,0,0.06) !important;
+      transform: translateY(3px) scale(0.97) !important;
+    }
+
+    /* ── 6. Modal backdrop blur + panel slide-in ───────────── */
+    #equipModal .absolute.inset-0,
+    #userModal .absolute.inset-0,
+    #recipientModal .absolute.inset-0,
+    #catModal .absolute.inset-0 {
+      backdrop-filter: blur(6px) saturate(1.2) !important;
+      -webkit-backdrop-filter: blur(6px) saturate(1.2) !important;
+      background: rgba(15,23,42,0.48) !important;
+    }
+    .gd-modal-panel {
+      animation: modal-slide-in 0.24s cubic-bezier(0.34,1.08,0.64,1) !important;
+    }
+    @keyframes modal-slide-in {
+      from { transform: translateY(16px) scale(0.97); opacity: 0; }
+      to   { transform: translateY(0)    scale(1);    opacity: 1; }
+    }
+
+    /* ── 7. Auth screen ambient orbs ───────────────────────── */
+    .auth-shell { position: relative !important; overflow: hidden !important; }
+    .auth-shell::before,
+    .auth-shell::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .auth-shell::before {
+      width: 380px; height: 380px;
+      background: radial-gradient(circle, rgba(249,115,22,0.11) 0%, transparent 70%);
+      top: -120px; right: -100px;
+      filter: blur(40px);
+    }
+    .auth-shell::after {
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(251,191,36,0.09) 0%, transparent 70%);
+      bottom: 40px; left: -80px;
+      filter: blur(50px);
+    }
+    .auth-block { position: relative !important; z-index: 1 !important; }
+
+    /* ── 8. Loading logo pulse ring ─────────────────────────── */
+    @keyframes logo-glow-pulse {
+      0%   { box-shadow: 0 6px 18px rgba(249,115,22,0.25), 0 0 0 0   rgba(249,115,22,0.35); }
+      60%  { box-shadow: 0 6px 18px rgba(249,115,22,0.25), 0 0 0 16px rgba(249,115,22,0); }
+      100% { box-shadow: 0 6px 18px rgba(249,115,22,0.25), 0 0 0 0   rgba(249,115,22,0); }
+    }
+    #screen-loading .w-14 {
+      animation: logo-glow-pulse 2.2s ease-out infinite !important;
+    }
+    /* Also keep the auth brand logo pulsing */
+    .auth-brand > div:first-child {
+      animation: logo-glow-pulse 2.8s ease-out infinite;
+    }
+
+    /* ── 9. Card hover orange hint ──────────────────────────── */
+    .gd-card:hover, .card:hover {
+      border-color: rgba(249,115,22,0.28) !important;
+      box-shadow: 0 6px 20px rgba(249,115,22,0.08), 0 2px 6px rgba(0,0,0,0.04) !important;
+    }
+
+    /* ── 10. Active chip glow + stronger gradient ───────────── */
+    .chip.active {
+      box-shadow: 0 4px 18px rgba(249,115,22,0.30), 0 1px 4px rgba(0,0,0,0.06) !important;
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 45%, #ea580c 100%) !important;
+    }
+
+    /* ── 11. Bottom nav pill indicator ─────────────────────── */
+    .bn-item.active::before {
+      top: 6px !important;
+      height: 3px !important;
+      width: 28px !important;
+      border-radius: 99px !important;
+      background: linear-gradient(90deg, #f97316, #fb923c) !important;
+      box-shadow: 0 2px 8px rgba(249,115,22,0.4) !important;
+    }
+
+    /* ── 12. Overdue banner icon pulse ─────────────────────── */
+    #overdue-banner svg:first-child {
+      animation: warning-pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes warning-pulse {
+      0%, 100% { opacity: 1;   transform: scale(1);    }
+      50%       { opacity: 0.65; transform: scale(1.08); }
+    }
+
+    /* ── 13. Chart card left accent ─────────────────────────── */
+    .chart-card {
+      border-left: 3px solid #fed7aa !important;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    }
+    .chart-card:hover {
+      border-left-color: #f97316 !important;
+      box-shadow: 0 4px 16px rgba(249,115,22,0.08) !important;
+    }
+
+    /* ── 14. Auth card inner polish ─────────────────────────── */
+    .auth-card {
+      box-shadow: 0 16px 48px rgba(15,23,42,0.10),
+                  inset 0 1px 0 rgba(255,255,255,0.9) !important;
+    }
+
+    /* ── 15. Selected user card gradient background ─────────── */
+    .user-card.selected {
+      background: linear-gradient(135deg, #fffbf7 0%, #ffffff 100%) !important;
+    }
+
+    /* ── 16. Secondary button premium look ──────────────────── */
+    .gd-btn-secondary, .btn-secondary {
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 3px rgba(15,23,42,0.06) !important;
+    }
+    .gd-btn-secondary:hover, .btn-secondary:hover {
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 2px 8px rgba(15,23,42,0.10) !important;
+    }
+
+    /* ── 17. Input focus — warmer orange ring ───────────────── */
+    input:focus, select:focus, textarea:focus {
+      border-color: #f97316 !important;
+      box-shadow: 0 0 0 4px rgba(249,115,22,0.12), 0 1px 3px rgba(0,0,0,0.04) !important;
+    }
+
+    /* ── 18. gd-section — subtle inner shadow ───────────────── */
+    .gd-section {
+      box-shadow: 0 1px 4px rgba(15,23,42,0.04), inset 0 1px 0 rgba(255,255,255,0.8) !important;
+    }
+
+    /* ── 19. Avatar — ring glow ─────────────────────────────── */
+    #main-avatar {
+      box-shadow:
+        0 0 0 2.5px rgba(255,255,255,0.6),
+        0 0 0 4.5px rgba(255,255,255,0.25),
+        0 4px 12px rgba(0,0,0,0.20) !important;
+    }
+
+    /* ── 20. Fade-in — slightly longer for premium feel ─────── */
+    .fade-in {
+      animation: fadeInPremium 0.28s cubic-bezier(0.22,1,0.36,1) both !important;
+    }
+    @keyframes fadeInPremium {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0);   }
+    }
+  </style>
 </head>
 
 
