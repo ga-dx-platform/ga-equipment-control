@@ -2899,7 +2899,8 @@
     }
 
     // ===== MGR: DASHBOARD =====
-    function renderDashboard() {
+    async function renderDashboard() {
+      BORROWS = await api('getBorrows', { name: CU.name, role: CU.role });
       const totalBorrowed = BORROWS.filter(r=>r.status==='borrowed'||r.status==='overdue').length;
       const overdueList = [...BORROWS.filter(r=>r.status==='overdue')].sort((a,b)=>new Date(a.due_date)-new Date(b.due_date));
       const today = new Date().toISOString().slice(0,10);
@@ -4130,25 +4131,41 @@
 
     function updateStaffTable(data) {
       const tbody = document.getElementById('staffSummaryBody');
+      const thead = document.querySelector('#staffSummaryTable thead tr');
       if (!tbody) return;
       const staffMap = {};
       data.forEach(r => {
         const name = r.ga_staff || 'ไม่ระบุ';
-        if (!staffMap[name]) staffMap[name] = { total:0, returned:0, borrowed:0, overdue:0 };
+        if (!staffMap[name]) staffMap[name] = { total:0, returned:0, borrowed:0, overdue:0, ratingSum:0, ratingCount:0 };
         staffMap[name].total++;
         if (r.status === 'returned') staffMap[name].returned++;
         if (r.status === 'borrowed') staffMap[name].borrowed++;
         if (r.status === 'overdue') staffMap[name].overdue++;
+        if (r.service_rating) { staffMap[name].ratingSum += r.service_rating; staffMap[name].ratingCount++; }
       });
+      if (thead && !thead.querySelector('.rating-col-header')) {
+        const th = document.createElement('th');
+        th.className = 'rating-col-header';
+        th.style = 'text-align:center;padding:8px;color:#a8a29e;font-weight:500';
+        th.textContent = '★ คะแนน';
+        thead.appendChild(th);
+      }
       tbody.innerHTML = Object.entries(staffMap)
         .sort((a,b) => b[1].total - a[1].total)
-        .map(([name, s]) => `<tr style="border-bottom:0.5px solid #f5f5f4">
-          <td style="padding:8px;font-weight:500">${he(name)}</td>
-          <td style="text-align:center;padding:8px">${s.total}</td>
-          <td style="text-align:center;padding:8px;color:#10b981">${s.returned}</td>
-          <td style="text-align:center;padding:8px">${s.borrowed}</td>
-          <td style="text-align:center;padding:8px;color:${s.overdue>0?'#ef4444':'inherit'}">${s.overdue}</td>
-        </tr>`).join('') || `<tr><td colspan="5" style="padding:16px;text-align:center;color:#a8a29e;font-size:13px">ไม่มีข้อมูล</td></tr>`;
+        .map(([name, s]) => {
+          const avg = s.ratingCount ? (s.ratingSum / s.ratingCount).toFixed(1) : null;
+          const ratingCell = avg
+            ? `<span style="color:#f59e0b;font-weight:600">${avg}</span><span style="color:#d1d5db;font-size:11px"> (${s.ratingCount})</span>`
+            : `<span style="color:#d1d5db">—</span>`;
+          return `<tr style="border-bottom:0.5px solid #f5f5f4">
+            <td style="padding:8px;font-weight:500">${he(name)}</td>
+            <td style="text-align:center;padding:8px">${s.total}</td>
+            <td style="text-align:center;padding:8px;color:#10b981">${s.returned}</td>
+            <td style="text-align:center;padding:8px">${s.borrowed}</td>
+            <td style="text-align:center;padding:8px;color:${s.overdue>0?'#ef4444':'inherit'}">${s.overdue}</td>
+            <td style="text-align:center;padding:8px">${ratingCell}</td>
+          </tr>`;
+        }).join('') || `<tr><td colspan="6" style="padding:16px;text-align:center;color:#a8a29e;font-size:13px">ไม่มีข้อมูล</td></tr>`;
     }
 
     function updateActiveChips(filters) {
