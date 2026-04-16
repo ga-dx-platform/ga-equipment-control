@@ -2899,7 +2899,8 @@
     }
 
     // ===== MGR: DASHBOARD =====
-    function renderDashboard() {
+    async function renderDashboard() {
+      BORROWS = await api('getBorrows', { name: CU.name, role: CU.role });
       const totalBorrowed = BORROWS.filter(r=>r.status==='borrowed'||r.status==='overdue').length;
       const overdueList = [...BORROWS.filter(r=>r.status==='overdue')].sort((a,b)=>new Date(a.due_date)-new Date(b.due_date));
       const today = new Date().toISOString().slice(0,10);
