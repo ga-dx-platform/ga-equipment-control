@@ -1734,12 +1734,31 @@
 
     /* ── Analytics KPI ───────────────────────────────────── */
     .analytics-kpi {
-      background: var(--mf-card) !important;
       border: 1px solid var(--mf-border-soft) !important;
       border-radius: 16px !important;
       box-shadow: var(--mf-shadow-sm) !important;
     }
     .analytics-kpi::after { display: none !important; }
+    .analytics-kpi.tint-orange {
+      background: linear-gradient(135deg, #FFF1E6 0%, #FFFFFF 65%) !important;
+      border-color: #FBDDC0 !important;
+    }
+    .analytics-kpi.tint-orange .kpi-number { color: #EA580C !important; }
+    .analytics-kpi.tint-green {
+      background: linear-gradient(135deg, #E8F7EE 0%, #FFFFFF 65%) !important;
+      border-color: #BFE5CB !important;
+    }
+    .analytics-kpi.tint-green .kpi-number { color: #0F6E56 !important; }
+    .analytics-kpi.tint-blue {
+      background: linear-gradient(135deg, #EAF1FB 0%, #FFFFFF 65%) !important;
+      border-color: #BFD6F4 !important;
+    }
+    .analytics-kpi.tint-blue .kpi-number { color: #1D4ED8 !important; }
+    .analytics-kpi.danger {
+      background: linear-gradient(135deg, #FEECEC 0%, #FFFFFF 65%) !important;
+      border-color: #FBD4D4 !important;
+    }
+    .analytics-kpi.danger .kpi-number { color: #B91C1C !important; }
 
     /* ── Chips ───────────────────────────────────────────── */
     .chip {
