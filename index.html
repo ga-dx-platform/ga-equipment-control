@@ -1928,6 +1928,100 @@
     #screen-loading .w-14 {
       background: var(--mf-hero-grad) !important;
     }
+
+    /* ── Borrow tab density polish ───────────────────────── */
+    #tab-borrow .gd-container { max-width: 980px !important; }
+
+    /* Mini KPI strip above the list */
+    .eq-kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .eq-kpi-strip .eq-kpi {
+      background: var(--mf-card);
+      border: 1px solid var(--mf-border-soft);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: var(--mf-shadow-sm);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .eq-kpi:hover { transform: translateY(-1px); box-shadow: var(--mf-shadow-md); }
+    .eq-kpi .eq-kpi-ico {
+      width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .eq-kpi .eq-kpi-val {
+      font-size: 20px; font-weight: 700; color: var(--mf-text);
+      line-height: 1; letter-spacing: -0.02em;
+    }
+    .eq-kpi .eq-kpi-lbl {
+      font-size: 11px; color: var(--mf-text-3); margin-top: 2px;
+      font-weight: 500;
+    }
+    .eq-kpi.t-all    .eq-kpi-ico { background: #FFF1E8; color: #EA580C; }
+    .eq-kpi.t-out    .eq-kpi-ico { background: #FFF4EC; color: #C2410C; }
+    .eq-kpi.t-low    .eq-kpi-ico { background: #FEF4D6; color: #92400E; }
+    .eq-kpi.t-ready  .eq-kpi-ico { background: #EAF7EE; color: #0F6E56; }
+    @media (max-width: 640px) {
+      .eq-kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Stock progress bar inside list row */
+    .eq-stock-wrap {
+      display: flex; flex-direction: column; gap: 4px;
+      min-width: 160px; max-width: 220px;
+    }
+    .eq-stock-meta {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; color: var(--mf-text-2);
+    }
+    .eq-stock-bar {
+      height: 6px; border-radius: 999px;
+      background: #FCE8D6; overflow: hidden; position: relative;
+    }
+    .eq-stock-fill {
+      height: 100%; border-radius: 999px;
+      background: linear-gradient(90deg, #F97316, #FB923C);
+      transition: width .3s ease;
+    }
+    .eq-stock-fill.low  { background: linear-gradient(90deg, #D97706, #F59E0B); }
+    .eq-stock-fill.out  { background: linear-gradient(90deg, #B91C1C, #EF4444); }
+    .eq-stock-fill.full { background: linear-gradient(90deg, #0F6E56, #10B981); }
+
+    /* Widen list row grid to include stock bar + meta info */
+    .gd-card-grid {
+      grid-template-columns: 40px 1fr 200px 140px max-content !important;
+      gap: 16px !important;
+    }
+    .eq-sub-meta {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; color: var(--mf-text-3);
+      margin-top: 4px; flex-wrap: wrap;
+    }
+    .eq-sub-meta .eq-chip-sm {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 8px; border-radius: 999px;
+      background: var(--mf-hover);
+      color: var(--mf-text-2);
+      font-weight: 500;
+      border: 1px solid var(--mf-border-soft);
+    }
+    .eq-sub-meta .eq-chip-sm svg { width: 11px; height: 11px; }
+
+    @media (max-width: 900px) {
+      .gd-card-grid {
+        grid-template-columns: 40px 1fr 140px max-content !important;
+      }
+      .eq-stock-wrap { display: none !important; }
+    }
+    @media (max-width: 640px) {
+      .gd-card-grid {
+        grid-template-columns: 40px 1fr auto !important;
+      }
+    }
   </style>
 </head>
 
@@ -3231,8 +3325,9 @@
 
     function renderBorrowTab() {
       const allowedCats = CU?.allowed_categories; // null = see all; string[] = restricted
-      const avail = EQ.filter(e => e.available > 0 &&
+      const visibleEq = EQ.filter(e =>
         (!allowedCats || allowedCats.length === 0 || allowedCats.includes(e.category)));
+      const avail = visibleEq.filter(e => e.available > 0);
       const cats = (allowedCats && allowedCats.length > 0)
         ? CATS.filter(c => allowedCats.includes(c.name)).map(c => c.name)
         : CATS.map(c => c.name);
@@ -3241,6 +3336,27 @@
         if (borrowSearchQ && !e.name.toLowerCase().includes(borrowSearchQ.toLowerCase())) return false;
         return true;
       });
+      // last-borrowed-at per eq_id (most recent)
+      const lastBorrowMap = {};
+      BORROWS.forEach(b => {
+        const t = new Date(b.borrowed_at).getTime();
+        if (!lastBorrowMap[b.eq_id] || t > lastBorrowMap[b.eq_id]) lastBorrowMap[b.eq_id] = t;
+      });
+      const sinceLabel = (ts) => {
+        if (!ts) return 'ยังไม่เคยถูกยืม';
+        const diff = Math.floor((Date.now() - ts) / 86400000);
+        if (diff <= 0) return 'ยืมวันนี้';
+        if (diff === 1) return 'ยืมเมื่อวาน';
+        if (diff < 7) return `ยืม ${diff} วันที่แล้ว`;
+        if (diff < 30) return `ยืม ${Math.floor(diff/7)} สัปดาห์ก่อน`;
+        if (diff < 365) return `ยืม ${Math.floor(diff/30)} เดือนก่อน`;
+        return `ยืม >1 ปีก่อน`;
+      };
+      // Stats
+      const totalItems = visibleEq.reduce((s,e)=> s + (e.quantity||0), 0);
+      const outItems   = visibleEq.reduce((s,e)=> s + ((e.quantity||0) - (e.available||0)), 0);
+      const lowCount   = visibleEq.filter(e => e.available > 0 && e.available <= 2).length;
+      const readyCount = visibleEq.filter(e => e.available === e.quantity && e.quantity > 0).length;
       const el = document.getElementById('tab-borrow');
       el.innerHTML = `<div class="gd-container fade-in">
         <div class="gd-container-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
@@ -3257,6 +3373,24 @@
               onclick="setBorrowViewMode('grid')" title="Grid view">
               <i data-lucide="layout-grid" style="width:16px;height:16px;"></i>
             </button>
+          </div>
+        </div>
+        <div class="eq-kpi-strip">
+          <div class="eq-kpi t-all">
+            <div class="eq-kpi-ico"><i data-lucide="boxes" style="width:18px;height:18px;"></i></div>
+            <div><div class="eq-kpi-val">${totalItems}</div><div class="eq-kpi-lbl">ทั้งหมด</div></div>
+          </div>
+          <div class="eq-kpi t-out">
+            <div class="eq-kpi-ico"><i data-lucide="arrow-up-right" style="width:18px;height:18px;"></i></div>
+            <div><div class="eq-kpi-val">${outItems}</div><div class="eq-kpi-lbl">ยืมออก</div></div>
+          </div>
+          <div class="eq-kpi t-low">
+            <div class="eq-kpi-ico"><i data-lucide="alert-triangle" style="width:18px;height:18px;"></i></div>
+            <div><div class="eq-kpi-val">${lowCount}</div><div class="eq-kpi-lbl">ใกล้หมด</div></div>
+          </div>
+          <div class="eq-kpi t-ready">
+            <div class="eq-kpi-ico"><i data-lucide="check-circle" style="width:18px;height:18px;"></i></div>
+            <div><div class="eq-kpi-val">${readyCount}</div><div class="eq-kpi-lbl">พร้อมยืมครบ</div></div>
           </div>
         </div>
         <div class="mb-4">
@@ -3282,6 +3416,11 @@
                 <i data-lucide="hand" style="width:14px;height:14px;"></i> ยืม
               </button>
             </div>` : `
+            ${(() => {
+              const pct = e.quantity ? Math.round((e.available / e.quantity) * 100) : 0;
+              const cls = e.available === 0 ? 'out' : e.available <= 2 ? 'low' : e.available === e.quantity ? 'full' : '';
+              const last = sinceLabel(lastBorrowMap[e.eq_id]);
+              return `
             <div class="gd-card gd-card-grid eq-cat-stripe cursor-pointer" style="--cat-accent:${catAccentColor(e.category)}" onclick="openBorrowForm('${he(e.eq_id)}')">
               <div class="grid-icon">
                 ${e.image_url ? `<img src="${he(e.image_url)}" class="grid-icon-img"/>` : `<div class="grid-icon-box">${eqIconSvg(18)}</div>`}
@@ -3289,6 +3428,16 @@
               <div class="grid-content">
                 <p class="eq-title">${he(e.name)}</p>
                 <p class="eq-meta">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
+                <div class="eq-sub-meta">
+                  <span class="eq-chip-sm"><i data-lucide="history" style="width:11px;height:11px;"></i>${last}</span>
+                </div>
+              </div>
+              <div class="eq-stock-wrap">
+                <div class="eq-stock-meta">
+                  <span>คงเหลือ</span>
+                  <span style="font-weight:600;color:var(--mf-text);">${e.available}/${e.quantity}</span>
+                </div>
+                <div class="eq-stock-bar"><div class="eq-stock-fill ${cls}" style="width:${pct}%"></div></div>
               </div>
               <div class="grid-badge">
                 <span class="status-badge ${e.available<=2?'status-borrowed':'status-returned'}">คงเหลือ ${e.available}/${e.quantity}</span>
@@ -3296,7 +3445,7 @@
               <div class="grid-action">
                 <button class="btn-action-borrow flex items-center gap-1.5"><i data-lucide="hand" class="w-4 h-4 text-[#F97316]"></i> ยืม</button>
               </div>
-            </div>`).join('') : emptyState('ไม่พบอุปกรณ์','ลองเปลี่ยนหมวดหมู่หรือคำค้นหา','search')}
+            </div>`;})()}`).join('') : emptyState('ไม่พบอุปกรณ์','ลองเปลี่ยนหมวดหมู่หรือคำค้นหา','search')}
         </div>
       </div>`;
       lucide.createIcons({'stroke-width': 1.5});
