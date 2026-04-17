@@ -4,14 +4,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- CSP: restrict external origins. 'unsafe-inline' is required by the inline handlers/styles used across this SPA. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>GA Equipment Control</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="https://cdn.tailwindcss.com/3.4.17" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" crossorigin="anonymous"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -1980,8 +1984,31 @@
     };
     let EQ = [], BORROWS = [], CATS = []; // CATS = [{id,name,is_active,created_at}]
     let _addCatMode = false; // toggle inline add-category input in equipment tab
-    let PIN_ATTEMPTS = 0, PIN_LOCKED_UNTIL = 0;
+    // Per-user PIN rate limiter: counters + lock timestamp persisted to localStorage so
+    // refreshing or closing the tab does not reset the counter. Key = user full_name.
     const PIN_MAX_ATTEMPTS = 5, PIN_LOCK_MS = 60000;
+    const PIN_STORE_KEY = 'ga_pin_attempts_v1';
+    function _pinStoreRead() {
+      try { return JSON.parse(localStorage.getItem(PIN_STORE_KEY) || '{}') || {}; } catch (e) { return {}; }
+    }
+    function _pinStoreWrite(s) { try { localStorage.setItem(PIN_STORE_KEY, JSON.stringify(s)); } catch (e) {} }
+    function pinGetAttempts(name) { return _pinStoreRead()[name] || { count: 0, lockedUntil: 0 }; }
+    function pinRecordFail(name) {
+      const s = _pinStoreRead();
+      const cur = s[name] || { count: 0, lockedUntil: 0 };
+      cur.count = (cur.count || 0) + 1;
+      // Progressive lockout: 60s after 5 failures, doubled each additional batch of 5.
+      if (cur.count >= PIN_MAX_ATTEMPTS) {
+        const overflow = Math.floor(cur.count / PIN_MAX_ATTEMPTS);
+        cur.lockedUntil = Date.now() + PIN_LOCK_MS * Math.pow(2, overflow - 1);
+      }
+      s[name] = cur; _pinStoreWrite(s);
+      return cur;
+    }
+    function pinReset(name) {
+      const s = _pinStoreRead();
+      delete s[name]; _pinStoreWrite(s);
+    }
     let _alTimer = null, _alWarnTimer = null;
     const AUTO_LOGOUT_MS = 15 * 60 * 1000;
     let drawing = false, sctx = null, hasSignatureStroke = false;
@@ -2050,9 +2077,23 @@
 
     // ===== UTILS =====
     function he(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    // Only allow safe image URL schemes; blocks javascript:, vbscript:, data:text/html, etc.
+    function safeImgUrl(u) {
+      if (!u) return '';
+      const s = String(u).trim();
+      if (/^https?:\/\//i.test(s)) return he(s);
+      if (/^data:image\/(png|jpe?g|gif|webp|svg\+xml);/i.test(s)) return he(s);
+      return '';
+    }
     async function sha256(str) {
       const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
       return Array.from(new Uint8Array(buf)).map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+    // Debounce helper: collapses rapid calls (e.g. per-keystroke re-renders) into one.
+    const _debounceTimers = {};
+    function debounce(key, fn, ms = 200) {
+      clearTimeout(_debounceTimers[key]);
+      _debounceTimers[key] = setTimeout(fn, ms);
     }
     function fd(d) {
       if (!d) return '-';
@@ -2092,7 +2133,7 @@
       const bg = { success:'bg-emerald-700', error:'bg-red-700', warning:'bg-amber-700', info:'bg-slate-800' };
       const el = document.createElement('div');
       el.className = `flex items-center gap-2.5 px-4 py-3 text-white text-sm font-medium rounded-xl shadow-lg ${bg[type]||bg.info} translate-x-full opacity-0 transition-all duration-300 pointer-events-auto`;
-      el.innerHTML = `<i data-lucide="${icons[type]||'info'}" class="w-[18px] h-[18px] shrink-0"></i><p class="leading-tight">${msg}</p>`;
+      el.innerHTML = `<i data-lucide="${icons[type]||'info'}" class="w-[18px] h-[18px] shrink-0"></i><p class="leading-tight">${he(msg)}</p>`;
       container.appendChild(el);
       lucide.createIcons({'stroke-width': 1.5});
       requestAnimationFrame(() => { el.classList.remove('translate-x-full','opacity-0'); });
@@ -2216,8 +2257,12 @@
           return { ok: false };
         }
         if (action === 'changePin') {
+          // Resolve primary key first so the UPDATE targets exactly one row (name+role is not unique enough).
+          const { data: target, error: selErr } = await sb.from('users')
+            .select('id').eq('full_name', params.name).eq('role', params.role).eq('is_active', true).single();
+          if (selErr || !target) throw new Error('User not found');
           const h = await sha256(String(params.newPin).padStart(6,'0'));
-          const { data: updated, error } = await sb.from('users').update({ pin_hash: h }).eq('full_name', params.name).eq('role', params.role).select('full_name');
+          const { data: updated, error } = await sb.from('users').update({ pin_hash: h }).eq('id', target.id).select('id');
           if (error) throw error;
           if (!updated?.length) throw new Error('PIN update matched 0 rows — check Supabase RLS UPDATE policy on users table');
           await logAction('MEMBER_RESET_PIN','users',params.name,null,{name:params.name,role:params.role});
@@ -2275,10 +2320,21 @@
           }));
         }
         if (action === 'getBorrows') {
-          let q = sb.from('borrow_records').select('*');
+          // Exclude large base64 signature columns (sign_img, return_sign_img) from list queries.
+          // Signatures are fetched on-demand via getBorrowSignatures when a record is opened.
+          const cols = 'record_id,eq_id,eq_name,qty_borrowed,borrower_name,borrower_dept,ga_staff,borrowed_at,due_date,returned_at,status,note,condition_on_return,condition_note,service_rating,service_feedback';
+          let q = sb.from('borrow_records').select(cols);
           if (params.role === 'ga') q = q.eq('ga_staff', params.name);
-          const { data } = await q.order('borrowed_at', { ascending: false });
+          const limit = Math.min(parseInt(params.limit) || 500, 1000);
+          const { data } = await q.order('borrowed_at', { ascending: false }).limit(limit);
           return detectOverdue(data || []);
+        }
+        if (action === 'getBorrowSignatures') {
+          const { data } = await sb.from('borrow_records')
+            .select('sign_img, return_sign_img')
+            .eq('record_id', params.record_id)
+            .maybeSingle();
+          return data || { sign_img: null, return_sign_img: null };
         }
         if (action === 'createBorrow') {
           const rid = 'BR' + Date.now();
@@ -2509,7 +2565,7 @@
       lucide.createIcons({'stroke-width': 1.5});
     }
     function selectUser(name, role) {
-      SU = { name, role }; PIN_ATTEMPTS = 0; PB = '';
+      SU = { name, role }; PB = '';
       const av = document.getElementById('pin-avatar');
       av.className = 'ga-avatar mx-auto mb-3';
       av.style.cssText = `background: ${avc(name, role)};`;
@@ -2531,7 +2587,8 @@
 
     async function checkPin() {
       const now = Date.now();
-      if (PIN_LOCKED_UNTIL > now) { document.getElementById('pin-error').textContent = `ล็อกชั่วคราว ${Math.ceil((PIN_LOCKED_UNTIL-now)/1000)} วินาที`; PB=''; updatePinDots(); return; }
+      const rec = pinGetAttempts(SU?.name);
+      if (rec.lockedUntil > now) { document.getElementById('pin-error').textContent = `ล็อกชั่วคราว ${Math.ceil((rec.lockedUntil-now)/1000)} วินาที`; PB=''; updatePinDots(); return; }
       document.querySelectorAll('#screen-pin .numpad-key').forEach(b=>b.style.pointerEvents='none');
       document.getElementById('pin-error').innerHTML = '<span style="color:var(--orange);display:flex;align-items:center;justify-content:center;gap:6px;"><svg class="animate-spin w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> กำลังตรวจสอบ...</span>';
       try {
@@ -2542,16 +2599,16 @@
           api('getCategories')
         ]);
         if (res.ok) {
-          PIN_ATTEMPTS = 0;
+          pinReset(SU.name);
           CU = { ...SU, allowed_categories: res.allowed_categories ?? null };
           EQ = eqData; BORROWS = brData; CATS = catData;
           toast('ยินดีต้อนรับ ' + CU.name.split(' ')[0]);
           buildMain(); goScreen('main'); lucide.createIcons({'stroke-width': 1.5}); startAutoLogout();
           if (CU.role === 'ga') setupCategoryRealtime();
         } else {
-          PIN_ATTEMPTS++;
-          const rem = PIN_MAX_ATTEMPTS - PIN_ATTEMPTS;
-          if (PIN_ATTEMPTS >= PIN_MAX_ATTEMPTS) { PIN_LOCKED_UNTIL = Date.now()+PIN_LOCK_MS; document.getElementById('pin-error').textContent = `ล็อกชั่วคราว ${PIN_LOCK_MS/1000} วินาที`; }
+          const updated = pinRecordFail(SU.name);
+          const rem = PIN_MAX_ATTEMPTS - (updated.count % PIN_MAX_ATTEMPTS || PIN_MAX_ATTEMPTS);
+          if (updated.lockedUntil > Date.now()) { document.getElementById('pin-error').textContent = `ล็อกชั่วคราว ${Math.ceil((updated.lockedUntil-Date.now())/1000)} วินาที`; }
           else document.getElementById('pin-error').textContent = `PIN ไม่ถูกต้อง (เหลือ ${rem} ครั้ง)`;
           document.querySelectorAll('#pin-dots .pin-dot').forEach(d=>{ d.classList.remove('filled'); d.classList.add('error'); });
           setTimeout(()=>{ PB=''; updatePinDots(); document.querySelectorAll('#pin-dots .pin-dot').forEach(d=>d.classList.remove('error')); }, 700);
@@ -2797,7 +2854,7 @@
         </div>
         <div class="mb-4">
           <input type="text" placeholder="ค้นหาอุปกรณ์..." class="gd-input" value="${he(borrowSearchQ)}"
-            oninput="borrowSearchQ=this.value;renderBorrowTab()">
+            oninput="borrowSearchQ=this.value;debounce('borrowSearch',renderBorrowTab)">
         </div>
         <div class="chip-row">
           <div class="chip ${borrowCatFilter===''?'active':''}" onclick="borrowCatFilter='';renderBorrowTab()">ทั้งหมด</div>
@@ -2981,9 +3038,17 @@
         if (s) s.style.color = i <= val ? '#f59e0b' : '#d1d5db';
       }
     }
-    function openReturnDetail(rid) {
+    async function openReturnDetail(rid) {
       const rec = BORROWS.find(r=>r.record_id===rid);
       if (!rec) { toast('ไม่พบรายการ','error'); return; }
+      // Signatures are not fetched in the list query (bandwidth); load on demand.
+      if (rec.sign_img === undefined) {
+        try {
+          const sigs = await api('getBorrowSignatures', { record_id: rid });
+          rec.sign_img = sigs?.sign_img || null;
+          rec.return_sign_img = sigs?.return_sign_img || null;
+        } catch (e) { rec.sign_img = null; rec.return_sign_img = null; }
+      }
       currentReturnRecord = rec; returnCondition = ''; serviceRating = 0;
       document.getElementById('rd-eq-name').textContent = rec.eq_name;
       const isOD = rec.status === 'overdue';
@@ -3000,7 +3065,7 @@
             <div class="flex justify-between"><span class="text-gray-400">กำหนดคืน</span><span class="font-medium ${isOD?'text-red-600':''}">${fd(rec.due_date)}${isOD?' (เกินกำหนด!)':''}</span></div>
             ${rec.note?`<div class="flex justify-between"><span class="text-gray-400">หมายเหตุ</span><span class="font-medium">${he(rec.note)}</span></div>`:''}
           </div>
-          ${rec.sign_img?`<div class="mt-3 pt-3 border-t border-gray-100"><p class="eq-meta mb-2">ลายเซ็นตอนยืม</p><img src="${rec.sign_img}" class="w-full h-20 object-contain bg-white rounded-lg border border-gray-200 p-1"></div>`:''}
+          ${rec.sign_img?`<div class="mt-3 pt-3 border-t border-gray-100"><p class="eq-meta mb-2">ลายเซ็นตอนยืม</p><img src="${safeImgUrl(rec.sign_img)}" class="w-full h-20 object-contain bg-white rounded-lg border border-gray-200 p-1"></div>`:''}
         </div>
         <div class="gd-card p-5 mb-4">
           <h4 class="eq-title mb-3 flex items-center gap-2"><i data-lucide="clipboard-check" style="width:16px;height:16px;color:var(--orange);"></i> สภาพอุปกรณ์เมื่อคืน</h4>
@@ -3104,7 +3169,7 @@
           </div>
         </div>
         <input type="text" placeholder="ค้นหาชื่ออุปกรณ์..." value="${he(gaHistorySearch)}"
-          oninput="gaHistorySearch=this.value;renderHistoryTab()"
+          oninput="gaHistorySearch=this.value;debounce('gaHistory',renderHistoryTab)"
           class="gd-input" style="margin-bottom:12px;">
         <div class="chip-row">
           <div class="chip ${historyFilter===''?'active':''}" onclick="historyFilter='';renderHistoryTab()">ทั้งหมด</div>
@@ -3276,7 +3341,7 @@
           </div>
         </div>
         <input type="text" placeholder="ค้นหาชื่ออุปกรณ์ หรือผู้ยืม..." value="${he(mgrHistorySearch)}"
-          oninput="mgrHistorySearch=this.value;renderMgrHistory()"
+          oninput="mgrHistorySearch=this.value;debounce('mgrHistory',renderMgrHistory)"
           class="gd-input" style="margin-bottom:8px;">
         <div class="chip-row" style="margin-bottom:12px;">
           <select onchange="mgrHistoryGa=this.value;renderMgrHistory()" class="${selectCls} shrink-0">
@@ -3331,7 +3396,7 @@
           <div class="relative flex-1">
             <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"></i>
             <input id="eqSearchInput" type="text" placeholder="ค้นหาชื่อหรือ Serial No." value="${he(eqSearch)}"
-              oninput="eqSearch=this.value;renderEquipmentTab()"
+              oninput="eqSearch=this.value;debounce('eqSearch',renderEquipmentTab)"
               class="w-full pl-9 pr-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-brand">
           </div>
           <select id="eqCatSelect" onchange="eqCatFilter=this.value;renderEquipmentTab()"
@@ -3452,7 +3517,7 @@
       document.getElementById('eqQty').value = eq.quantity;
       document.getElementById('equip-image-input').value = '';
       const preview = document.getElementById('equip-image-preview');
-      if (eq.image_url) { document.getElementById('equip-image-preview-img').src = eq.image_url; preview.classList.remove('hidden'); }
+      if (eq.image_url) { document.getElementById('equip-image-preview-img').src = safeImgUrl(eq.image_url); preview.classList.remove('hidden'); }
       else { preview.classList.add('hidden'); }
       showModal('equipModal');
     }
@@ -3853,7 +3918,7 @@
         </div>
         <div class="flex gap-2 mb-3">
           <input id="auditSearchInput" type="text" placeholder="ค้นหาผู้ดำเนินการ..." value="${he(auditSearch)}"
-            oninput="auditSearch=this.value;_renderAuditList()"
+            oninput="auditSearch=this.value;debounce('auditSearch',_renderAuditList)"
             class="gd-input" style="flex:1;height:38px;">
           <button onclick="exportAuditCSV()" class="gd-btn-primary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-xs font-semibold whitespace-nowrap">
             <i data-lucide="download" class="w-[18px] h-[18px] text-[#64748B]"></i> Export CSV</button>
@@ -3968,11 +4033,19 @@
       document.getElementById('record-detail-modal').classList.remove('hidden');
       const r = BORROWS.find(b => (b.record_id||b.id) === recordId);
       if (!r) { document.getElementById('detail-timeline').innerHTML = '<p class="text-slate-500 text-sm">ไม่พบข้อมูล</p>'; return; }
+      // Lazy-load signatures (not in list query to save bandwidth).
+      if (r.sign_img === undefined) {
+        try {
+          const sigs = await api('getBorrowSignatures', { record_id: r.record_id || r.id });
+          r.sign_img = sigs?.sign_img || null;
+          r.return_sign_img = sigs?.return_sign_img || null;
+        } catch (e) { r.sign_img = null; r.return_sign_img = null; }
+      }
       document.getElementById('detail-equipment-name').textContent = r.eq_name || '-';
       const eqRecord = EQ.find(e => e.eq_id === r.eq_id || e.id === r.eq_id);
       const imgEl = document.getElementById('detail-equipment-image');
       const phEl = document.getElementById('detail-equipment-placeholder');
-      if (eqRecord?.image_url) { imgEl.src = eqRecord.image_url; imgEl.classList.remove('hidden'); phEl.style.display = 'none'; }
+      if (eqRecord?.image_url) { imgEl.src = safeImgUrl(eqRecord.image_url); imgEl.classList.remove('hidden'); phEl.style.display = 'none'; }
       else { imgEl.classList.add('hidden'); phEl.style.display = 'flex'; }
       document.getElementById('detail-borrower-name').textContent = r.borrower_name || '-';
       document.getElementById('detail-borrower-dept').textContent = r.borrower_dept || '-';
@@ -3994,7 +4067,7 @@
       else { noteSection.classList.add('hidden'); }
       // Borrow signature
       const sigSection = document.getElementById('detail-signature-section');
-      if (r.sign_img) { document.getElementById('detail-signature').src = r.sign_img; sigSection.classList.remove('hidden'); }
+      if (r.sign_img) { document.getElementById('detail-signature').src = safeImgUrl(r.sign_img); sigSection.classList.remove('hidden'); }
       else { sigSection.classList.add('hidden'); }
       // Return info section
       const condMap = { normal: 'ปกติ ✓', damaged: '🟡 ชำรุด', lost: '🔴 สูญหาย' };
@@ -4009,12 +4082,12 @@
       } else { returnSection.classList.add('hidden'); }
       // Return signature
       const retSignSection = document.getElementById('detail-return-sign-section');
-      if (r.return_sign_img) { document.getElementById('detail-return-signature').src = r.return_sign_img; retSignSection.classList.remove('hidden'); }
+      if (r.return_sign_img) { document.getElementById('detail-return-signature').src = safeImgUrl(r.return_sign_img); retSignSection.classList.remove('hidden'); }
       else { retSignSection.classList.add('hidden'); }
       const timeline = document.getElementById('detail-timeline');
       timeline.innerHTML = '<p class="text-slate-500 text-xs">กำลังโหลดประวัติ...</p>';
       try {
-        const { data: logs } = await sb.from('app_audit_logs').select('*').eq('target_id', recordId).order('created_at', { ascending: true });
+        const { data: logs } = await sb.from('app_audit_logs').select('*').eq('target_id', recordId).order('created_at', { ascending: true }).limit(100);
         timeline.innerHTML = logs?.length ? logs.map(renderTimelineItem).join('') : '<p class="text-slate-500 text-sm">ไม่มีประวัติการดำเนินการ</p>';
       } catch(e) { timeline.innerHTML = '<p class="text-slate-500 text-sm">โหลดประวัติไม่สำเร็จ</p>'; }
     }
