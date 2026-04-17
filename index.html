@@ -1934,7 +1934,7 @@
         <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
       </div>
       <div id="cp-error" style="height:20px;text-align:center;font-size:var(--fs-secondary);color:#ef4444;margin-bottom:12px;font-family:'Noto Sans Thai','Inter',sans-serif;"></div>
-      <div class="grid grid-cols-3 gap-3 mb-4">
+      <div class="mb-4" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:260px;margin:0 auto 16px;">
         <div class="numpad-key" onclick="cpEnterPin('1')">1</div>
         <div class="numpad-key" onclick="cpEnterPin('2')">2</div>
         <div class="numpad-key" onclick="cpEnterPin('3')">3</div>
@@ -1944,7 +1944,7 @@
         <div class="numpad-key" onclick="cpEnterPin('7')">7</div>
         <div class="numpad-key" onclick="cpEnterPin('8')">8</div>
         <div class="numpad-key" onclick="cpEnterPin('9')">9</div>
-        <div class="numpad-key"></div>
+        <div class="numpad-key" style="opacity:0;pointer-events:none;"></div>
         <div class="numpad-key" onclick="cpEnterPin('0')">0</div>
         <div class="numpad-key" onclick="cpDeletePin()"><i data-lucide="delete" class="w-[18px] h-[18px] text-[#64748B]"></i></div>
       </div>
