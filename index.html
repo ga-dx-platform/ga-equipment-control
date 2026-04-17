@@ -1520,6 +1520,377 @@
       to   { opacity: 1; transform: translateY(0);   }
     }
   </style>
+
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       MeetFlow Theme — warm cream + coral gradient
+       Final authoritative layer. Overrides all prior styles.
+    ═══════════════════════════════════════════════════════ */
+
+    :root {
+      --mf-bg:          #FFF8F4;
+      --mf-card:        #FFFFFF;
+      --mf-input:       #FAF5F0;
+      --mf-hover:       #FFF1E8;
+      --mf-border:      #F5E9DE;
+      --mf-border-soft: #FBEFE4;
+      --mf-text:        #1F1B16;
+      --mf-text-2:      #6B5E55;
+      --mf-text-3:      #A8998C;
+      --mf-coral-1:     #FB923C;
+      --mf-coral-2:     #F87171;
+      --mf-orange:      #F97316;
+      --mf-orange-d:    #EA580C;
+      --mf-shadow-sm:   0 1px 2px rgba(194, 65, 12, 0.04), 0 2px 8px rgba(194, 65, 12, 0.05);
+      --mf-shadow-md:   0 4px 16px rgba(194, 65, 12, 0.07), 0 1px 3px rgba(194, 65, 12, 0.05);
+      --mf-shadow-lg:   0 12px 32px rgba(194, 65, 12, 0.10), 0 2px 6px rgba(194, 65, 12, 0.06);
+      --mf-hero-grad:   linear-gradient(120deg, #F97316 0%, #FB7B53 45%, #FB8A7A 100%);
+    }
+
+    /* ── Page background ─────────────────────────────────── */
+    html, body {
+      background: var(--mf-bg) !important;
+      background-image: none !important;
+      color: var(--mf-text) !important;
+    }
+    .gd-shell { background: var(--mf-bg) !important; }
+
+    /* ── Header becomes compact hero banner ─────────────── */
+    #screen-main > .gd-header {
+      background: var(--mf-bg) !important;
+      border-bottom: none !important;
+      padding: 16px 20px 0 !important;
+    }
+    #screen-main > .gd-header > svg.header-wave { display: none !important; }
+    #screen-main > .gd-header .gd-inner {
+      background: var(--mf-hero-grad) !important;
+      border-radius: 20px !important;
+      padding: 16px 20px !important;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(249, 115, 22, 0.18), inset 0 1px 0 rgba(255,255,255,0.20) !important;
+    }
+    #screen-main > .gd-header .gd-inner::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -40px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    #screen-main > .gd-header .gd-inner::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -30px;
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, rgba(253, 186, 116, 0.25) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    #screen-main > .gd-header #main-user-name {
+      color: #fff !important;
+      font-size: 17px !important;
+      font-weight: 600 !important;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+    #screen-main > .gd-header #main-user-role {
+      color: #fff !important;
+      background: rgba(255,255,255,0.22) !important;
+      border: 1px solid rgba(255,255,255,0.35) !important;
+      font-weight: 500 !important;
+      backdrop-filter: blur(6px);
+    }
+    #main-greeting {
+      color: rgba(255,255,255,0.92) !important;
+      font-size: 12px !important;
+      font-weight: 500 !important;
+      margin: 0 0 2px !important;
+      letter-spacing: 0.02em;
+      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+    }
+    #main-avatar {
+      background: rgba(255,255,255,0.22) !important;
+      backdrop-filter: blur(6px);
+      box-shadow:
+        0 0 0 2px rgba(255,255,255,0.45),
+        0 4px 12px rgba(0,0,0,0.15) !important;
+      color: #fff !important;
+    }
+    #screen-main > .gd-header button:not([onclick*="goScreen"]) {
+      background: rgba(255,255,255,0.22) !important;
+      border: 1px solid rgba(255,255,255,0.30) !important;
+      backdrop-filter: blur(8px) !important;
+      color: #fff !important;
+    }
+    #screen-main > .gd-header button:not([onclick*="goScreen"]):hover {
+      background: rgba(255,255,255,0.34) !important;
+    }
+
+    /* ── Top tabs: pill style MeetFlow ───────────────────── */
+    .top-tabs {
+      background: transparent !important;
+      margin-bottom: 16px !important;
+      padding: 16px 24px 0 !important;
+    }
+    .top-tabs-inner {
+      background: var(--mf-card) !important;
+      border: 1px solid var(--mf-border) !important;
+      border-bottom: 1px solid var(--mf-border) !important;
+      border-radius: 14px !important;
+      padding: 5px !important;
+      gap: 4px !important;
+      width: auto !important;
+      box-shadow: var(--mf-shadow-sm) !important;
+    }
+    .top-tab {
+      height: 36px !important;
+      padding: 0 16px !important;
+      font-size: 13px !important;
+      font-weight: 500 !important;
+      color: var(--mf-text-2) !important;
+      background: transparent !important;
+      border: 0 !important;
+      border-radius: 10px !important;
+      box-shadow: none !important;
+      margin-bottom: 0 !important;
+    }
+    .top-tab:hover:not(.active) {
+      color: var(--mf-orange-d) !important;
+      background: var(--mf-hover) !important;
+    }
+    .top-tab.active {
+      color: #fff !important;
+      background: var(--mf-hero-grad) !important;
+      border-bottom: 0 !important;
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.30) !important;
+      font-weight: 600 !important;
+    }
+
+    /* ── Cards ───────────────────────────────────────────── */
+    .gd-card, .card {
+      background: var(--mf-card) !important;
+      border: 1px solid var(--mf-border-soft) !important;
+      border-radius: 18px !important;
+      box-shadow: var(--mf-shadow-sm) !important;
+    }
+    .gd-card:hover, .card:hover {
+      transform: translateY(-2px) !important;
+      border-color: var(--mf-border) !important;
+      box-shadow: var(--mf-shadow-md) !important;
+    }
+
+    /* ── KPI cards ───────────────────────────────────────── */
+    .kpi-card {
+      background: var(--mf-card) !important;
+      border: 1px solid var(--mf-border-soft) !important;
+      border-radius: 18px !important;
+      padding: 18px !important;
+      box-shadow: var(--mf-shadow-sm) !important;
+      overflow: hidden !important;
+    }
+    .kpi-card::after { display: none !important; }
+    .kpi-number {
+      color: var(--mf-text) !important;
+      font-size: 30px !important;
+      font-weight: 700 !important;
+      letter-spacing: -0.02em;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: var(--mf-shadow-md) !important;
+      border-color: var(--mf-border) !important;
+    }
+    .kpi-card:hover .kpi-number { color: var(--mf-orange-d) !important; }
+    .kpi-label { color: var(--mf-text-3) !important; font-size: 12px !important; }
+    .kpi-icon-wrap {
+      background: var(--mf-hover) !important;
+      color: var(--mf-orange-d) !important;
+    }
+    .kpi-card.danger {
+      background: #FFF5F1 !important;
+      border-color: #FBDDD0 !important;
+    }
+    .kpi-card.success {
+      background: #F0FAF4 !important;
+      border-color: #D4EEDC !important;
+    }
+
+    /* ── Analytics KPI ───────────────────────────────────── */
+    .analytics-kpi {
+      background: var(--mf-card) !important;
+      border: 1px solid var(--mf-border-soft) !important;
+      border-radius: 16px !important;
+      box-shadow: var(--mf-shadow-sm) !important;
+    }
+    .analytics-kpi::after { display: none !important; }
+
+    /* ── Chips ───────────────────────────────────────────── */
+    .chip {
+      background: var(--mf-card) !important;
+      border: 1px solid var(--mf-border) !important;
+      color: var(--mf-text-2) !important;
+    }
+    .chip:hover:not(.active) {
+      border-color: var(--mf-coral-1) !important;
+      color: var(--mf-orange-d) !important;
+    }
+    .chip.active {
+      background: var(--mf-hero-grad) !important;
+      border-color: transparent !important;
+      box-shadow: 0 4px 14px rgba(249, 115, 22, 0.28) !important;
+    }
+
+    /* ── Status badges ───────────────────────────────────── */
+    .status-badge {
+      font-weight: 500 !important;
+      border-radius: 999px !important;
+      padding: 4px 10px !important;
+    }
+    .status-borrowed, .badge-borrowed {
+      background: #FFF1E8 !important;
+      color: #C2410C !important;
+      border: 1px solid #FEDBC5 !important;
+    }
+    .status-returned, .badge-returned {
+      background: #EAF7EE !important;
+      color: #0F6E56 !important;
+      border: 1px solid #CDEBD8 !important;
+    }
+    .status-overdue, .badge-overdue {
+      background: #FEECEC !important;
+      color: #B91C1C !important;
+      border: 1px solid #FBD4D4 !important;
+    }
+
+    /* ── Chart card ──────────────────────────────────────── */
+    .chart-card {
+      background: var(--mf-card) !important;
+      border: 1px solid var(--mf-border-soft) !important;
+      border-left: 1px solid var(--mf-border-soft) !important;
+      border-radius: 16px !important;
+      padding: 18px !important;
+      box-shadow: var(--mf-shadow-sm) !important;
+    }
+    .chart-card:hover {
+      border-color: var(--mf-border) !important;
+      border-left-color: var(--mf-border) !important;
+      box-shadow: var(--mf-shadow-md) !important;
+    }
+    .chart-card-title {
+      color: var(--mf-text-2) !important;
+      font-weight: 600 !important;
+    }
+
+    /* ── Inputs ──────────────────────────────────────────── */
+    input:focus, select:focus, textarea:focus, .gd-input:focus {
+      border-color: var(--mf-orange) !important;
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15) !important;
+    }
+
+    /* ── Primary buttons ─────────────────────────────────── */
+    .gd-btn-primary, .btn-primary {
+      background: var(--mf-hero-grad) !important;
+      box-shadow: 0 4px 14px rgba(249, 115, 22, 0.30), inset 0 1px 0 rgba(255,255,255,0.18) !important;
+    }
+    .gd-btn-primary:hover:not(:disabled), .btn-primary:hover:not(:disabled) {
+      box-shadow: 0 6px 18px rgba(249, 115, 22, 0.40), inset 0 1px 0 rgba(255,255,255,0.18) !important;
+    }
+
+    /* ── Bottom nav (mobile) ─────────────────────────────── */
+    #bottom-nav {
+      background: rgba(255, 248, 244, 0.92) !important;
+      border-top: 1px solid var(--mf-border-soft) !important;
+    }
+    .bn-item.active { color: var(--mf-orange-d) !important; }
+    .bn-item.active::before {
+      background: linear-gradient(90deg, var(--mf-orange) 0%, var(--mf-coral-1) 100%) !important;
+      box-shadow: 0 2px 8px rgba(249, 115, 22, 0.36) !important;
+    }
+
+    /* ── Login / Auth — refresh colors, keep layout ──────── */
+    .login-shell,
+    .auth-shell {
+      background: linear-gradient(180deg, #FFFCF8 0%, var(--mf-bg) 60%) !important;
+    }
+    .auth-shell::before {
+      background: radial-gradient(circle, rgba(249, 115, 22, 0.14) 0%, transparent 70%) !important;
+    }
+    .auth-shell::after {
+      background: radial-gradient(circle, rgba(251, 146, 60, 0.12) 0%, transparent 70%) !important;
+    }
+    .auth-card {
+      background: var(--mf-card) !important;
+      border: 1px solid var(--mf-border-soft) !important;
+      box-shadow: var(--mf-shadow-lg) !important;
+    }
+    .auth-card::before {
+      background: var(--mf-hero-grad) !important;
+      height: 4px !important;
+    }
+    .user-card {
+      background: var(--mf-card) !important;
+      border: 1px solid var(--mf-border-soft) !important;
+    }
+    .user-card:hover {
+      border-color: rgba(249, 115, 22, 0.40) !important;
+      box-shadow: var(--mf-shadow-md) !important;
+    }
+    .user-card.selected {
+      background: linear-gradient(135deg, #FFF8F4 0%, #FFFFFF 100%) !important;
+      border-color: rgba(249, 115, 22, 0.55) !important;
+      box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.14), var(--mf-shadow-md) !important;
+    }
+    .admin-card {
+      background: #FFFCF8 !important;
+      border-color: var(--mf-border) !important;
+    }
+
+    /* ── PIN screen ──────────────────────────────────────── */
+    .numpad-key {
+      background: linear-gradient(180deg, #ffffff 0%, #FFF8F4 100%) !important;
+      border: 1px solid var(--mf-border-soft) !important;
+      box-shadow: 0 2px 0 var(--mf-border), 0 4px 10px rgba(194, 65, 12, 0.06) !important;
+      color: var(--mf-text) !important;
+    }
+    .numpad-key:active {
+      box-shadow: 0 0 0 var(--mf-border), 0 1px 3px rgba(194, 65, 12, 0.05) !important;
+      transform: translateY(2px) scale(0.97) !important;
+      background: var(--mf-hover) !important;
+    }
+    .pin-dots-dark .pin-dot { border-color: var(--mf-border) !important; }
+    .pin-dots-dark .pin-dot.filled {
+      background: var(--mf-orange) !important;
+      border-color: var(--mf-orange) !important;
+    }
+
+    /* ── Section title ───────────────────────────────────── */
+    .section-title { color: var(--mf-text) !important; }
+    .page-title { color: var(--mf-text) !important; }
+
+    /* ── Input / select surface ──────────────────────────── */
+    .gd-input {
+      background: var(--mf-input) !important;
+      border: 1px solid var(--mf-border) !important;
+    }
+
+    /* ── Overdue banner ──────────────────────────────────── */
+    #overdue-banner {
+      background: #FEECEC !important;
+      border: 1px solid #FBD4D4 !important;
+      border-radius: 14px !important;
+    }
+
+    /* ── Modal panel ─────────────────────────────────────── */
+    .gd-modal-panel {
+      background: var(--mf-card) !important;
+      border: 1px solid var(--mf-border-soft) !important;
+      box-shadow: var(--mf-shadow-lg) !important;
+    }
+
+    /* ── Loading screen logo ─────────────────────────────── */
+    #screen-loading .w-14 {
+      background: var(--mf-hero-grad) !important;
+    }
+  </style>
 </head>
 
 
@@ -1654,8 +2025,9 @@
                 <!-- Glass avatar -->
                 <div id="main-avatar" class="ga-avatar"></div>
                 <div>
+                  <p id="main-greeting" style="margin:0 0 2px;"></p>
                   <p id="main-user-name"
-                     style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 2px;font-family:'Noto Sans Thai','Inter',sans-serif;line-height:1.2;"></p>
+                     style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Noto Sans Thai','Inter',sans-serif;line-height:1.2;"></p>
                   <span id="main-user-role"
                         style="display:inline-block;font-size:11px;color:#c2410c;
                                background:#fff7ed;
@@ -2736,6 +3108,12 @@
       av.textContent = ini(CU.name);
       document.getElementById('main-user-name').textContent = CU.name;
       document.getElementById('main-user-role').textContent = isMgr ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่ GA';
+      const gEl = document.getElementById('main-greeting');
+      if (gEl) {
+        const h = new Date().getHours();
+        const g = h < 12 ? 'สวัสดีตอนเช้า' : h < 17 ? 'สวัสดีตอนบ่าย' : 'สวัสดีตอนเย็น';
+        gEl.textContent = g + ' 👋';
+      }
       const bar = document.getElementById('mainTabBar');
       const oc = BORROWS.filter(r => r.status === 'overdue').length;
       const badge = oc > 0 ? `<span class="ml-1 inline-flex items-center justify-center min-w-[16px] h-4 px-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">${oc > 9 ? '9+' : oc}</span>` : '';
