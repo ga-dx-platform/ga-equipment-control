@@ -1677,6 +1677,24 @@
       border-color: var(--mf-border) !important;
       box-shadow: var(--mf-shadow-md) !important;
     }
+    /* Preserve category-colored left stripe on equipment list cards */
+    .gd-card.eq-cat-stripe, .card.eq-cat-stripe {
+      border-left: 4px solid var(--cat-accent, #E2E8F0) !important;
+    }
+    /* Tint the equipment icon box by category accent */
+    .eq-cat-stripe .grid-icon-box {
+      background: color-mix(in srgb, var(--cat-accent, #F1F5F9) 14%, #ffffff) !important;
+      border: 1px solid color-mix(in srgb, var(--cat-accent, #E2E8F0) 28%, #ffffff) !important;
+      color: var(--cat-accent) !important;
+    }
+    .eq-cat-stripe .grid-icon-box svg { stroke: var(--cat-accent) !important; }
+    /* Grid-view icon tint (uses --cat-accent inline style on card) */
+    .gd-card-grid-card .gc-icon {
+      background: color-mix(in srgb, var(--cat-accent, #F1F5F9) 14%, #ffffff) !important;
+      border: 1px solid color-mix(in srgb, var(--cat-accent, #E2E8F0) 28%, #ffffff) !important;
+      color: var(--cat-accent, #64748B) !important;
+    }
+    .gd-card-grid-card .gc-icon svg { stroke: var(--cat-accent, #64748B) !important; }
 
     /* ── KPI cards ───────────────────────────────────────── */
     .kpi-card {
@@ -3232,7 +3250,7 @@
         </div>
         <div class="view-${borrowViewMode}" id="eqGrid">
           ${filtered.length ? filtered.map(e => borrowViewMode === 'grid' ? `
-            <div class="gd-card gd-card-grid-card cursor-pointer" onclick="openBorrowForm('${he(e.eq_id)}')">
+            <div class="gd-card gd-card-grid-card cursor-pointer" style="--cat-accent:${catAccentColor(e.category)}" onclick="openBorrowForm('${he(e.eq_id)}')">
               <div class="gc-icon">
                 ${e.image_url ? `<img src="${he(e.image_url)}"/>` : eqIconSvg(28)}
               </div>
