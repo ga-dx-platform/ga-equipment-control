@@ -330,7 +330,7 @@
     .status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-right: 5px; vertical-align: middle; position: relative; top: -1px; }
     .status-borrowed .status-dot, .badge-borrowed .status-dot { background: #f59e0b; }
     .status-returned .status-dot, .badge-returned .status-dot { background: #10b981; }
-    .status-overdue  .status-dot, .badge-overdue  .status-dot { background: #ef4444; }
+    .status-overdue  .status-dot, .badge-overdue  .status-dot { background: #DC6B19; }
     .status-borrowed, .badge-borrowed { background: #FFF7ED; color: #C2410C; border: 1px solid #FFEDD5; }
     .status-returned, .badge-returned { background: #ECFDF5; color: #047857; border: 1px solid #D1FAE5; }
     .status-overdue, .badge-overdue { background: #FEF2F2; color: #B91C1C; border: 1px solid #FEE2E2; }
@@ -355,7 +355,7 @@
     .kpi-label { font-size: var(--ga-text-small); color: var(--text-muted); margin-top: auto; padding-top: var(--ga-space-xs); }
     .kpi-card.orange .kpi-number { color: var(--orange); }
     .kpi-card.danger  { background: #fff5f5; border-color: #fecaca; }
-    .kpi-card.danger  .kpi-number { color: #ef4444; }
+    .kpi-card.danger  .kpi-number { color: #DC6B19; }
     .kpi-card.success .kpi-number { color: #10b981; }
     /* compat */
     .stat-card { transition: transform 150ms; border-radius: var(--ga-radius-lg); }
@@ -411,7 +411,7 @@
       transition: all 150ms ease;
     }
     .pin-dot.filled { background: #fff; border-color: #fff; transform: scale(1.1); }
-    .pin-dot.error  { background: #fca5a5; border-color: #ef4444; animation: shake 0.4s ease; }
+    .pin-dot.error  { background: #fca5a5; border-color: #DC6B19; animation: shake 0.4s ease; }
 
     /* PIN dots inside white panel (Change-PIN modal, etc.) */
     .pin-dots-dark .pin-dot              { border-color: #d6d3d1; background: #fff; }
@@ -1028,11 +1028,11 @@
     .analytics-kpi.tint-blue   { background:linear-gradient(135deg,#eff6ff 0%,#fff 60%); border-color:#bfdbfe; }
     .analytics-kpi.danger      { background:linear-gradient(135deg,#fff1f2 0%,#fff 60%); border-color:#fecdd3; }
     .kpi-label { font-size:11px; color:#a8a29e; }
-    .kpi-label.red { color:#ef4444; }
+    .kpi-label.red { color:#DC6B19; }
     .kpi-value { font-size:28px; font-weight:600; line-height:1; color:#1c1917; font-family:'Noto Sans Thai','Inter',sans-serif; }
     .kpi-value.orange { color:#f97316; }
     .kpi-value.green { color:#10b981; }
-    .kpi-value.red { color:#ef4444; }
+    .kpi-value.red { color:#DC6B19; }
     .charts-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
     .chart-card { background:#fff; border:0.5px solid #e7e5e4; border-radius:12px; padding:16px; }
     .chart-card-title { font-size:13px; font-weight:500; color:#78716c; margin:0 0 12px; }
@@ -1307,7 +1307,7 @@
     .status-overdue .status-dot,
     .badge-overdue  .status-dot {
       animation: dot-pulse 1.6s ease-in-out infinite;
-      color: #ef4444;
+      color: #DC6B19;
     }
 
     /* ── 2. Header glass action buttons ────────────────────── */
@@ -1350,7 +1350,7 @@
       background: linear-gradient(90deg, #f97316, #fbbf24);
       border-radius: 0;
     }
-    .kpi-card.danger::after  { background: linear-gradient(90deg, #ef4444, #f87171); }
+    .kpi-card.danger::after  { background: linear-gradient(90deg, #DC6B19, #f87171); }
     .kpi-card.success::after { background: linear-gradient(90deg, #10b981, #34d399); }
 
     /* Analytics KPI top accent */
@@ -1364,7 +1364,7 @@
     .analytics-kpi.tint-orange::after { background: linear-gradient(90deg, #f97316, #fbbf24); }
     .analytics-kpi.tint-green::after  { background: linear-gradient(90deg, #10b981, #34d399); }
     .analytics-kpi.tint-blue::after   { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-    .analytics-kpi.danger::after      { background: linear-gradient(90deg, #ef4444, #f87171); }
+    .analytics-kpi.danger::after      { background: linear-gradient(90deg, #DC6B19, #f87171); }
 
     /* ── 5. Numpad key 3D press depth ──────────────────────── */
     .numpad-key {
@@ -1988,7 +1988,7 @@
       transition: width .3s ease;
     }
     .eq-stock-fill.low  { background: linear-gradient(90deg, #D97706, #F59E0B); }
-    .eq-stock-fill.out  { background: linear-gradient(90deg, #B91C1C, #EF4444); }
+    .eq-stock-fill.out  { background: linear-gradient(90deg, #B91C1C, #DC6B19); }
     .eq-stock-fill.full { background: linear-gradient(90deg, #0F6E56, #10B981); }
 
     /* Widen list row grid to include stock bar + meta info */
@@ -2021,6 +2021,460 @@
       .gd-card-grid {
         grid-template-columns: 40px 1fr auto !important;
       }
+    }
+
+    .btn-logout-confirm {
+      background: #EF4444 !important;
+      color: #ffffff !important;
+      border: none !important;
+    }
+    .btn-logout-cancel {
+      background: transparent !important;
+      color: #6B7280 !important;
+      border: 1.5px solid #E5E7EB !important;
+    }
+
+    .audit-filter-pills {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding-bottom: 4px;
+      margin-bottom: 20px;
+      padding-right: 8px;
+    }
+    .audit-filter-pills::-webkit-scrollbar { display: none; }
+
+    .section-title {
+      font-weight: 700 !important;
+      font-size: 18px !important;
+      color: #1C1917 !important;
+      text-transform: none !important;
+      letter-spacing: normal !important;
+    }
+    .section-subtitle {
+      color: #9CA3AF !important;
+      font-size: 13px !important;
+    }
+
+    .stat-card {
+      background: #ffffff !important;
+      border: 0.5px solid #E7E5E4 !important;
+    }
+    .kpi-card.danger,
+    .kpi-card.success {
+      background: #ffffff !important;
+      border-color: #E7E5E4 !important;
+    }
+
+    .empty-state-icon-wrap {
+      width: 64px;
+      height: 64px;
+      border-radius: 14px;
+      background: #FFF7ED;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .empty-state-icon {
+      width: 64px;
+      height: 64px;
+      color: #FDBA74;
+    }
+    .empty-state-text {
+      color: #9CA3AF;
+      font-size: 14px;
+      margin: 8px 0 16px;
+      line-height: 1.5;
+    }
+
+    .availability-legend {
+      display: flex;
+      gap: 16px;
+      font-size: 11px;
+      color: #A8A29E;
+      margin-bottom: 12px;
+    }
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 4px;
+    }
+    .legend-dot.green { background: #10B981; }
+    .legend-dot.amber { background: #F59E0B; }
+    .legend-dot.red   { background: #DC6B19; }
+
+    .tab-content {
+      animation: fadeIn 0.15s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04) !important;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06) !important;
+    }
+
+    button {
+      transition: transform 0.1s ease;
+    }
+    button:active { transform: scale(0.97); }
+
+    .pin-dot.filled {
+      animation: pinPulse 0.15s ease;
+    }
+    @keyframes pinPulse {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+
+    .progress-bar { transition: width 0.6s ease; }
+    .progress-bar.high   { background: #10B981 !important; }
+    .progress-bar.medium { background: #F59E0B !important; }
+    .progress-bar.low    { background: #DC6B19 !important; }
+
+    .app-header {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    }
+    #screen-main > .gd-header.app-header {
+      background: linear-gradient(145deg, #f97316, #ea580c) !important;
+      padding: 20px 20px 52px !important;
+      position: relative !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12) !important;
+    }
+    #screen-main > .gd-header.app-header #main-user-name {
+      color: #ffffff !important;
+    }
+    #screen-main > .gd-header.app-header #main-user-role {
+      background: rgba(255,255,255,0.2) !important;
+      border: 1px solid rgba(255,255,255,0.3) !important;
+      color: #ffffff !important;
+      border-radius: 20px !important;
+      padding: 3px 12px !important;
+      font-size: 12px !important;
+    }
+    #main-avatar {
+      background: rgba(255,255,255,0.25) !important;
+      border: 1.5px solid rgba(255,255,255,0.4) !important;
+      color: #ffffff !important;
+      border-radius: 9999px !important;
+    }
+    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]):not(#main-hero-cta) {
+      background: rgba(255,255,255,0.2) !important;
+      border: 1px solid rgba(255,255,255,0.3) !important;
+      color: #ffffff !important;
+      border-radius: 8px !important;
+    }
+    #screen-main > .gd-header > svg.header-wave {
+      display: block !important;
+      height: 48px !important;
+    }
+
+    .top-tab:not(.active):hover {
+      background: #FFF0E8 !important;
+      transition: background 0.2s ease;
+    }
+    .bottom-nav .nav-item:not(.active):hover,
+    .bottom-nav .bn-item:not(.active):hover {
+      background: #FFF0E8;
+      border-radius: 8px;
+    }
+
+    .user-list-item {
+      transition: background 0.15s ease, border-left 0.15s ease;
+      border-left: 3px solid transparent;
+    }
+    .user-list-item:hover {
+      background: #FFF5F0 !important;
+      border-left: 3px solid #F97316;
+    }
+  </style>
+  <style>
+    /* MeetFlow compact topbar rebalance */
+    body,
+    .gd-shell,
+    #app-root {
+      background: #FFF8F4 !important;
+    }
+
+    #screen-main > .gd-header.app-header {
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 20 !important;
+      padding: 12px 20px 0 !important;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+    #screen-main > .gd-header.app-header .gd-inner {
+      background: linear-gradient(120deg, #F97316 0%, #FB7B53 45%, #FB8A7A 100%) !important;
+      border-radius: 16px !important;
+      padding: 14px 20px !important;
+      box-shadow: 0 6px 18px rgba(249,115,22,0.16), inset 0 1px 0 rgba(255,255,255,0.18) !important;
+    }
+    #screen-main > .gd-header.app-header #main-avatar {
+      width: 40px !important;
+      height: 40px !important;
+      border-radius: 999px !important;
+      background: rgba(255,255,255,0.25) !important;
+      border: 1.5px solid rgba(255,255,255,0.4) !important;
+      color: #fff !important;
+    }
+    #screen-main > .gd-header.app-header #main-greeting {
+      font-size: 11.5px !important;
+      opacity: 0.85 !important;
+      color: rgba(255,255,255,0.92) !important;
+      margin: 0 0 1px !important;
+      line-height: 1.15 !important;
+    }
+    #screen-main > .gd-header.app-header #main-user-name {
+      color: #fff !important;
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      margin: 0 0 2px !important;
+      max-width: 220px !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+    }
+    #screen-main > .gd-header.app-header #main-user-role {
+      font-size: 10.5px !important;
+      letter-spacing: 0.04em !important;
+      padding: 2px 8px !important;
+      border-radius: 999px !important;
+      background: rgba(255,255,255,0.22) !important;
+      border: 1px solid rgba(255,255,255,0.30) !important;
+      color: #fff !important;
+    }
+    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]):not(#main-hero-cta) {
+      width: 32px !important;
+      height: 32px !important;
+      border-radius: 10px !important;
+      background: rgba(255,255,255,0.20) !important;
+      border: 1px solid rgba(255,255,255,0.28) !important;
+      color: #fff !important;
+      backdrop-filter: blur(8px) !important;
+      -webkit-backdrop-filter: blur(8px) !important;
+    }
+    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]) svg,
+    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]) i[data-lucide] {
+      width: 14px !important;
+      height: 14px !important;
+      stroke: #fff !important;
+      color: #fff !important;
+    }
+    #screen-main > .gd-header.app-header > svg.header-wave { display: none !important; }
+
+    .top-tabs {
+      padding: 12px 24px 0 !important;
+      background: transparent !important;
+      margin-bottom: 0 !important;
+    }
+    .top-tabs-inner {
+      display: inline-flex !important;
+      gap: 4px !important;
+      background: #FFFFFF !important;
+      border: 1px solid #F1E6DA !important;
+      border-radius: 999px !important;
+      padding: 4px !important;
+      width: fit-content !important;
+      max-width: 100% !important;
+      box-shadow: none !important;
+    }
+    .top-tab {
+      padding: 7px 16px !important;
+      height: auto !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: #6B5B4F !important;
+      border-radius: 999px !important;
+      border: 0 !important;
+      margin: 0 !important;
+      transition: all 0.15s ease !important;
+      background: transparent !important;
+    }
+    .top-tab.active {
+      background: linear-gradient(135deg,#F97316,#EA580C) !important;
+      color: #fff !important;
+      box-shadow: 0 2px 8px rgba(249,115,22,0.28) !important;
+    }
+    .top-tab:hover:not(.active) { background: #FFF1E6 !important; }
+
+    @media (max-width: 600px) {
+      #screen-main > .gd-header.app-header {
+        padding: 10px 16px 0 !important;
+      }
+      #screen-main > .gd-header.app-header .gd-inner {
+        padding: 12px 16px !important;
+        border-radius: 14px !important;
+      }
+      #screen-main > .gd-header.app-header #main-user-name {
+        max-width: 145px !important;
+      }
+      .top-tabs {
+        padding: 10px 16px 0 !important;
+      }
+      .top-tabs-inner {
+        overflow-x: auto !important;
+        scrollbar-width: none !important;
+      }
+      .top-tabs-inner::-webkit-scrollbar { display: none !important; }
+    }
+  </style>
+  <style>
+    /* Hero banner topbar (final override) */
+    #screen-main {
+      background: #FFF8F4 !important;
+    }
+    #screen-main > .gd-header.app-header {
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 20 !important;
+      padding: 10px 20px 0 !important;
+      background: #FFF8F4 !important;
+    }
+    #screen-main > .gd-header.app-header .gd-inner {
+      background: linear-gradient(120deg, #F97316 0%, #FB7B53 45%, #FB8A7A 100%) !important;
+      border-radius: 16px !important;
+      padding: 14px 20px !important;
+      min-height: 92px !important;
+      box-shadow: 0 6px 18px rgba(249,115,22,0.16), inset 0 1px 0 rgba(255,255,255,0.18) !important;
+      overflow: visible !important;
+    }
+    #screen-main > .gd-header > svg.header-wave {
+      display: none !important;
+    }
+    #main-avatar {
+      width: 40px !important;
+      height: 40px !important;
+      background: rgba(255,255,255,0.25) !important;
+      border: 1.5px solid rgba(255,255,255,0.4) !important;
+      color: #fff !important;
+      box-shadow: none !important;
+    }
+    #main-greeting {
+      margin: 0 0 1px !important;
+      font-size: 11.5px !important;
+      color: rgba(255,255,255,0.92) !important;
+      opacity: 0.85 !important;
+      line-height: 1.2 !important;
+    }
+    #main-summary {
+      margin: 0 0 2px !important;
+      font-size: 11px !important;
+      color: rgba(255,255,255,0.90) !important;
+      line-height: 1.2 !important;
+      max-width: 360px !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+    #screen-main > .gd-header.app-header #main-user-name {
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      color: #fff !important;
+      margin: 0 0 2px !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 260px !important;
+    }
+    #screen-main > .gd-header.app-header #main-user-role {
+      font-size: 10.5px !important;
+      letter-spacing: .04em !important;
+      color: #fff !important;
+      border-radius: 999px !important;
+      padding: 2px 8px !important;
+      background: rgba(255,255,255,0.22) !important;
+      border: 1px solid rgba(255,255,255,0.30) !important;
+    }
+    #main-hero-cta {
+      height: 32px !important;
+      min-width: 78px !important;
+      border-radius: 10px !important;
+      background: rgba(255,255,255,0.20) !important;
+      border: 1px solid rgba(255,255,255,0.28) !important;
+      backdrop-filter: blur(8px) !important;
+      color: #fff !important;
+      white-space: nowrap !important;
+    }
+    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]):not(#main-hero-cta) {
+      width: 32px !important;
+      height: 32px !important;
+      border-radius: 10px !important;
+      background: rgba(255,255,255,0.20) !important;
+      border: 1px solid rgba(255,255,255,0.28) !important;
+      backdrop-filter: blur(8px) !important;
+      color: #fff !important;
+    }
+    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]):not(#main-hero-cta) svg {
+      width: 14px !important;
+      height: 14px !important;
+    }
+    .top-tabs {
+      padding: 12px 24px 0 !important;
+      margin-bottom: 10px !important;
+    }
+    .top-tabs-inner {
+      background: #fff !important;
+      border: 1px solid #F1E6DA !important;
+      border-radius: 999px !important;
+      padding: 4px !important;
+      gap: 4px !important;
+      width: fit-content !important;
+      max-width: 100% !important;
+      box-shadow: none !important;
+    }
+    .top-tab {
+      padding: 7px 16px !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: #6B5B4F !important;
+      border-radius: 999px !important;
+      transition: all .15s ease !important;
+      height: auto !important;
+    }
+    .top-tab.active {
+      background: linear-gradient(135deg,#F97316,#EA580C) !important;
+      color: #fff !important;
+      box-shadow: 0 2px 8px rgba(249,115,22,0.28) !important;
+    }
+    .top-tab:hover:not(.active) {
+      background: #FFF1E6 !important;
+    }
+    @media (max-width: 600px) {
+      #screen-main > .gd-header.app-header {
+        padding: 8px 12px 0 !important;
+      }
+      #screen-main > .gd-header.app-header .gd-inner {
+        padding: 12px 16px !important;
+        min-height: 82px !important;
+      }
+      #screen-main > .gd-header.app-header #main-user-name {
+        max-width: 140px !important;
+      }
+      #main-summary {
+        max-width: 190px !important;
+      }
+      .top-tabs {
+        padding: 10px 12px 0 !important;
+      }
+      .top-tabs-inner {
+        overflow-x: auto !important;
+        scrollbar-width: none !important;
+      }
+      .top-tabs-inner::-webkit-scrollbar { display: none !important; }
     }
   </style>
 </head>
@@ -2119,7 +2573,7 @@
               <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
             </div>
             <div id="pin-error"
-                 style="height:20px;text-align:center;font-size:var(--fs-secondary);color:#ef4444;margin-bottom:20px;font-family:'Noto Sans Thai','Inter',sans-serif;"></div>
+                 style="height:20px;text-align:center;font-size:var(--fs-secondary);color:#DC6B19;margin-bottom:20px;font-family:'Noto Sans Thai','Inter',sans-serif;"></div>
             <!-- Numpad -->
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:260px;margin:0 auto;">
               <div class="numpad-key" onclick="enterPin('1')">1</div>
@@ -2149,7 +2603,7 @@
       <!-- MAIN -->
       <div id="screen-main" class="screen">
         <!-- App header: orange gradient + wave -->
-        <div class="gd-header" style="position:sticky;top:0;z-index:20;padding:16px 20px;">
+        <div class="gd-header app-header" style="position:sticky;top:0;z-index:20;padding:12px 20px 0;">
           <div class="gd-inner" style="padding:0 24px;">
             <!-- Avatar + name + role + buttons -->
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
@@ -2157,24 +2611,33 @@
                 <!-- Glass avatar -->
                 <div id="main-avatar" class="ga-avatar"></div>
                 <div>
-                  <p id="main-greeting" style="margin:0 0 2px;"></p>
+                  <p id="main-greeting" style="margin:0 0 1px;"></p>
+                  <p id="main-summary" style="margin:0 0 2px;"></p>
                   <p id="main-user-name"
                      style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Noto Sans Thai','Inter',sans-serif;line-height:1.2;"></p>
                   <span id="main-user-role"
-                        style="display:inline-block;font-size:11px;color:#c2410c;
+                        style="display:inline-block;font-size:12px;color:#c2410c;
                                background:#fff7ed;
                                border:1px solid #fed7aa;
-                               border-radius:20px;padding:2px 10px;
+                               border-radius:20px;padding:3px 12px;
                                font-family:'Noto Sans Thai','Inter',sans-serif;">GA Staff</span>
                 </div>
               </div>
               <!-- Glass action buttons -->
               <div style="display:flex;align-items:center;gap:6px;">
+                <button id="main-hero-cta" onclick="switchTab(0)" title="เปิดหน้าหลัก"
+                        style="display:flex;align-items:center;justify-content:center;
+                               background:#fff;
+                               border:1px solid #e2e8f0;color:#475569;
+                               border-radius:8px;height:32px;padding:0 12px;font-size:12px;font-weight:600;
+                               font-family:'Noto Sans Thai','Inter',sans-serif;">
+                  เริ่มใช้งาน
+                </button>
                 <button onclick="openChangePinModal()" title="เปลี่ยน PIN"
                         style="display:flex;align-items:center;justify-content:center;
                                background:#fff;
                                border:1px solid #e2e8f0;color:#475569;
-                               border-radius:12px;width:36px;height:36px;padding:0;font-size:13px;
+                               border-radius:8px;width:36px;height:36px;padding:0;font-size:13px;
                                font-family:'Noto Sans Thai','Inter',sans-serif;">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>
                 </button>
@@ -2182,7 +2645,7 @@
                         style="display:flex;align-items:center;justify-content:center;
                                background:#fff;
                                border:1px solid #e2e8f0;color:#475569;
-                               border-radius:12px;width:36px;height:36px;padding:0;font-size:13px;
+                               border-radius:8px;width:36px;height:36px;padding:0;font-size:13px;
                                font-family:'Noto Sans Thai','Inter',sans-serif;">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                 </button>
@@ -2194,10 +2657,9 @@
             <div id="mainTabBar-desktop" style="opacity:0.6;"></div>
           </div>
           <!-- Wave -->
-          <svg class="header-wave" viewBox="0 0 1440 28" preserveAspectRatio="none"
-               style="position:absolute;bottom:-1px;left:0;width:100%;height:28px;pointer-events:none;"
-               fill="#F4F7FC">
-            <path d="M0,14 C360,28 1080,0 1440,14 L1440,28 L0,28 Z"/>
+          <svg class="header-wave" viewBox="0 0 400 48" preserveAspectRatio="none"
+               style="position:absolute;bottom:-1px;left:0;width:100%;height:48px;pointer-events:none;">
+            <path d="M0,24 Q100,48 200,24 Q300,0 400,24 L400,48 L0,48 Z" fill="#fafaf9"/>
           </svg>
         </div>
         <!-- Desktop top tabs (outside gradient, below wave) -->
@@ -2207,7 +2669,7 @@
         <!-- Overdue Banner -->
         <div class="gd-inner" style="padding:0 40px;">
           <div id="overdue-banner" style="display:none;margin-top:12px;border-radius:12px;padding:12px 16px;align-items:center;gap:12px;background:#fef2f2;border:1px solid #fecaca;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC6B19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
             <p id="overdue-banner-text" style="font-size:14px;font-weight:500;color:#b91c1c;flex:1;margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
             <button onclick="document.getElementById('overdue-banner').style.display='none'" style="padding:4px;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#b91c1c;flex-shrink:0;">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
@@ -2215,21 +2677,21 @@
           </div>
         </div>
         <!-- GA Tabs -->
-        <div id="tab-borrow" class="flex-1 overflow-auto hidden"></div>
-        <div id="tab-return" class="flex-1 overflow-auto hidden"></div>
-        <div id="tab-history" class="flex-1 overflow-auto hidden"></div>
+        <div id="tab-borrow" class="tab-content flex-1 overflow-auto hidden"></div>
+        <div id="tab-return" class="tab-content flex-1 overflow-auto hidden"></div>
+        <div id="tab-history" class="tab-content flex-1 overflow-auto hidden"></div>
         <!-- MGR Tabs -->
-        <div id="tab-dashboard" class="flex-1 overflow-auto hidden"></div>
-        <div id="tab-mgr-history" class="flex-1 overflow-auto hidden"></div>
-        <div id="tab-equipment" class="flex-1 overflow-auto hidden"></div>
-        <div id="tab-members" class="flex-1 overflow-auto hidden"></div>
-        <div id="tab-audit-log" class="flex-1 overflow-auto hidden"></div>
+        <div id="tab-dashboard" class="tab-content flex-1 overflow-auto hidden"></div>
+        <div id="tab-mgr-history" class="tab-content flex-1 overflow-auto hidden"></div>
+        <div id="tab-equipment" class="tab-content flex-1 overflow-auto hidden"></div>
+        <div id="tab-members" class="tab-content flex-1 overflow-auto hidden"></div>
+        <div id="tab-audit-log" class="tab-content flex-1 overflow-auto hidden"></div>
         <!-- Analytics Tabs -->
-        <div id="tab-analytics-mgr" class="flex-1 overflow-auto hidden"></div>
-        <div id="tab-analytics-ga" class="flex-1 overflow-auto hidden"></div>
+        <div id="tab-analytics-mgr" class="tab-content flex-1 overflow-auto hidden"></div>
+        <div id="tab-analytics-ga" class="tab-content flex-1 overflow-auto hidden"></div>
       </div>
       <!-- Mobile bottom nav -->
-      <div id="bottom-nav"></div>
+      <div id="bottom-nav" class="bottom-nav"></div>
 
       <!-- BORROW FORM (overlay) -->
       <div id="screen-borrow-form" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--bg-page);">
@@ -2411,8 +2873,8 @@
         <p class="font-semibold text-gray-900 text-base">ออกจากระบบ?</p>
       </div>
       <div class="flex gap-3">
-        <button onclick="closeLogoutModal()" class="flex-1 gd-btn-secondary">ยกเลิก</button>
-        <button onclick="logout()" class="flex-1 py-2.5 gd-btn-danger">ออกจากระบบ</button>
+        <button onclick="closeLogoutModal()" class="flex-1 py-2.5 btn-logout-cancel">ยกเลิก</button>
+        <button onclick="logout()" class="flex-1 py-2.5 btn-logout-confirm">ออกจากระบบ</button>
       </div>
     </div>
   </div>
@@ -2437,7 +2899,7 @@
         <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
         <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
       </div>
-      <div id="cp-error" style="height:20px;text-align:center;font-size:var(--fs-secondary);color:#ef4444;margin-bottom:12px;font-family:'Noto Sans Thai','Inter',sans-serif;"></div>
+      <div id="cp-error" style="height:20px;text-align:center;font-size:var(--fs-secondary);color:#DC6B19;margin-bottom:12px;font-family:'Noto Sans Thai','Inter',sans-serif;"></div>
       <div class="mb-4" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:260px;margin:0 auto 16px;">
         <div class="numpad-key" onclick="cpEnterPin('1')">1</div>
         <div class="numpad-key" onclick="cpEnterPin('2')">2</div>
@@ -2657,7 +3119,7 @@
       okBtn.onclick = () => { close(); onConfirm(); };
       document.getElementById('confirm-cancel').onclick = close;
     }
-    function emptyState(title, sub, type='list') {
+    function emptyState(title, sub, type='list', ctaLabel='', ctaAction='') {
       const paths = {
         search: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z',
         list:   'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
@@ -2665,11 +3127,12 @@
         users:  'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75',
       };
       return `<div style="display:flex;flex-direction:column;align-items:center;padding:40px 24px;text-align:center;">
-        <div style="width:48px;height:48px;border-radius:14px;background:#F1F5F9;display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="${paths[type]||paths.list}"/></svg>
+        <div class="empty-state-icon-wrap">
+          <svg class="empty-state-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="${paths[type]||paths.list}"/></svg>
         </div>
         <p style="font-size:14px;font-weight:600;color:#0F172A;margin:0 0 4px;">${he(title)}</p>
-        <p style="font-size:13px;color:#64748B;line-height:1.5;margin:0;">${he(sub)}</p>
+        <p class="empty-state-text">${he(sub)}</p>
+        ${ctaLabel && ctaAction ? `<button onclick="${ctaAction}" class="gd-btn-primary !w-auto !px-4 !py-2 text-sm font-semibold">${he(ctaLabel)}</button>` : ''}
       </div>`;
     }
 
@@ -3050,7 +3513,7 @@
       const gaList = document.getElementById('gaUserList'), mgrList = document.getElementById('mgrUserList');
       function row(u, i, role) {
         const isMgr = role === 'mgr';
-        return `<button type="button" class="user-card ${isMgr?'admin-card':''} w-full flex items-center gap-3.5 px-4 py-3.5 text-left" data-name="${he(u.name)}" data-role="${role}" onclick="selectUser(this.dataset.name,this.dataset.role)">
+        return `<button type="button" class="user-card user-list-item ${isMgr?'admin-card':''} w-full flex items-center gap-3.5 px-4 py-3.5 text-left" data-name="${he(u.name)}" data-role="${role}" onclick="selectUser(this.dataset.name,this.dataset.role)">
           ${avEl(u.name, role)}<div class="flex-1 min-w-0"><p class="font-semibold ${isMgr?'text-slate-700':'text-slate-900'} text-[15px] leading-tight truncate">${he(u.name)}</p>
           <p class="role-badge-mgr mt-1" style="display:inline-flex;">${isMgr?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p></div>
           <i data-lucide="chevron-right" class="w-[18px] h-[18px] text-[#64748B]"></i></button>`;
@@ -3249,6 +3712,17 @@
       const bar = document.getElementById('mainTabBar');
       const oc = BORROWS.filter(r => r.status === 'overdue').length;
       const badge = oc > 0 ? `<span class="ml-1 inline-flex items-center justify-center min-w-[16px] h-4 px-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">${oc > 9 ? '9+' : oc}</span>` : '';
+      const summaryEl = document.getElementById('main-summary');
+      if (summaryEl) {
+        summaryEl.textContent = isMgr
+          ? `วันนี้มีรายการยืมค้าง ${BORROWS.filter(r => ['borrowed','overdue'].includes(r.status)).length} รายการ`
+          : `พร้อมใช้งาน ${EQUIP.reduce((s, e) => s + Number(e.available_qty || 0), 0)} ชิ้น • เกินกำหนด ${oc} รายการ`;
+      }
+      const ctaEl = document.getElementById('main-hero-cta');
+      if (ctaEl) {
+        ctaEl.textContent = isMgr ? 'จัดการอุปกรณ์' : 'เริ่มยืม';
+        ctaEl.setAttribute('onclick', isMgr ? 'switchTab(3)' : 'switchTab(0)');
+      }
       const topInner = document.getElementById('top-tabs-inner');
       if (isMgr) {
         const tabs = ['ภาพรวม','Analytics','ประวัติ','อุปกรณ์','สมาชิก','Audit'];
@@ -3260,7 +3734,7 @@
         const navLabels = ['ภาพรวม','สถิติ','ประวัติ','อุปกรณ์','สมาชิก','Audit'];
         const bn = document.getElementById('bottom-nav');
         if (bn) bn.innerHTML = navLabels.map((t,i)=>
-          `<div class="bn-item bn-compact ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${icons[i]}" style="width:16px;height:16px;"></i><span class="bn-label">${t}${i===0?badge:''}</span></div>`).join('');
+          `<div class="bn-item nav-item bn-compact ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${icons[i]}" style="width:16px;height:16px;"></i><span class="bn-label">${t}${i===0?badge:''}</span></div>`).join('');
       } else {
         const tabs = ['ยืม','คืน','ประวัติ','สถิติ'];
         const fullTabs = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ','สถิติ'];
@@ -3271,7 +3745,7 @@
           `<button class="top-tab ${i===0?'active':''}" onclick="switchTab(${i})">${t}${i===1?badge:''}</button>`).join('');
         const bn = document.getElementById('bottom-nav');
         if (bn) bn.innerHTML = tabs.map((t,i)=>
-          `<div class="bn-item ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${icons[i]}" style="width:20px;height:20px;"></i><span class="bn-label">${t}${i===1?badge:''}</span></div>`).join('');
+          `<div class="bn-item nav-item ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${icons[i]}" style="width:20px;height:20px;"></i><span class="bn-label">${t}${i===1?badge:''}</span></div>`).join('');
       }
       showOverdueBanner();
       switchTab(0);
@@ -3405,7 +3879,7 @@
           ${filtered.length ? filtered.map(e => borrowViewMode === 'grid' ? `
             <div class="gd-card gd-card-grid-card cursor-pointer" style="--cat-accent:${catAccentColor(e.category)}" onclick="openBorrowForm('${he(e.eq_id)}')">
               <div class="gc-icon">
-                ${e.image_url ? `<img src="${he(e.image_url)}"/>` : eqIconSvg(28)}
+                ${eqIconSvg(28)}
               </div>
               <p class="gc-name">${he(e.name)}</p>
               <p class="gc-meta">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
@@ -3418,12 +3892,12 @@
             </div>` : `
             ${(() => {
               const pct = e.quantity ? Math.round((e.available / e.quantity) * 100) : 0;
-              const cls = e.available === 0 ? 'out' : e.available <= 2 ? 'low' : e.available === e.quantity ? 'full' : '';
+              const cls = pct > 50 ? 'high' : (pct >= 20 ? 'medium' : 'low');
               const last = sinceLabel(lastBorrowMap[e.eq_id]);
               return `
             <div class="gd-card gd-card-grid eq-cat-stripe cursor-pointer" style="--cat-accent:${catAccentColor(e.category)}" onclick="openBorrowForm('${he(e.eq_id)}')">
               <div class="grid-icon">
-                ${e.image_url ? `<img src="${he(e.image_url)}" class="grid-icon-img"/>` : `<div class="grid-icon-box">${eqIconSvg(18)}</div>`}
+                <div class="grid-icon-box">${eqIconSvg(18)}</div>
               </div>
               <div class="grid-content">
                 <p class="eq-title">${he(e.name)}</p>
@@ -3437,7 +3911,7 @@
                   <span>คงเหลือ</span>
                   <span style="font-weight:600;color:var(--mf-text);">${e.available}/${e.quantity}</span>
                 </div>
-                <div class="eq-stock-bar"><div class="eq-stock-fill ${cls}" style="width:${pct}%"></div></div>
+                <div class="eq-stock-bar"><div class="eq-stock-fill progress-bar ${cls}" style="width:${pct}%"></div></div>
               </div>
               <div class="grid-badge">
                 <span class="status-badge ${e.available<=2?'status-borrowed':'status-returned'}">คงเหลือ ${e.available}/${e.quantity}</span>
@@ -3551,10 +4025,10 @@
           ${active.length ? active.map(r=>{
             const days = daysUntil(r.due_date);
             const isOD = r.status==='overdue';
-            return `<div class="gd-card p-5 cursor-pointer ${isOD?'border-red-200 bg-red-50/30':''}" onclick="openReturnDetail('${he(r.record_id)}')">
+            return `<div class="gd-card p-5 cursor-pointer ${isOD?'border-[#F7CFB1] bg-[#FFF7F0]':''}" onclick="openReturnDetail('${he(r.record_id)}')">
               <div class="flex items-center gap-3">
-                <div style="width:36px; height:36px; min-width:36px; border-radius:8px; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center; background:${isOD?'#fee2e2':'#F1F5F9'};" class="shrink-0">
-                  ${eqIconSvg(18, isOD?'#ef4444':'#94A3B8')}
+                <div style="width:36px; height:36px; min-width:36px; border-radius:8px; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center; background:${isOD?'#FFF1E8':'#F1F5F9'};" class="shrink-0">
+                  ${eqIconSvg(18, isOD?'#DC6B19':'#94A3B8')}
                 </div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center justify-between gap-2 mb-0.5">
@@ -3564,13 +4038,13 @@
                   <p class="eq-meta">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)}</p>
                   <div class="flex items-center justify-between text-xs mt-1.5">
                     <span class="text-gray-400">กำหนดคืน ${fd(r.due_date)}</span>
-                    <span class="${isOD?'text-red-600 font-semibold':'text-gray-500'}">${isOD?'เกิน '+Math.abs(days)+' วัน':(days===0?'วันนี้':days+' วัน')}</span>
+                    <span class="${isOD?'text-[#DC6B19] font-semibold':'text-gray-500'}">${isOD?'เกิน '+Math.abs(days)+' วัน':(days===0?'วันนี้':days+' วัน')}</span>
                   </div>
                 </div>
               </div>
               ${r.qty_borrowed>1?`<p class="eq-meta mt-2 pl-13">จำนวน: ${r.qty_borrowed} ชิ้น</p>`:''}
             </div>`;
-          }).join('') : emptyState('ยังไม่มีรายการยืม','รายการยืมอุปกรณ์จะปรากฏที่นี่','list')}
+          }).join('') : emptyState('ยังไม่มีรายการยืม','รายการยืมอุปกรณ์จะปรากฏที่นี่','list','เริ่มยืม','switchTab(0)')}
         </div>
       </div>`;
       lucide.createIcons({'stroke-width': 1.5});
@@ -3777,7 +4251,7 @@
             <div style="width:32px;height:32px;border-radius:8px;background:var(--orange-light);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="clock-3" style="width:20px;height:20px;color:var(--orange);"></i></div>
             <p class="kpi-number" id="dkpi1">0</p><p class="kpi-label">กำลังยืม</p></div>
           <div class="kpi-card danger">
-            <div style="width:32px;height:32px;border-radius:8px;background:var(--danger-bg);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="alert-triangle" style="width:20px;height:20px;color:#ef4444;"></i></div>
+            <div style="width:32px;height:32px;border-radius:8px;background:var(--danger-bg);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="alert-triangle" style="width:20px;height:20px;color:#DC6B19;"></i></div>
             <p class="kpi-number" id="dkpi2">0</p><p class="kpi-label">เกินกำหนด</p></div>
           <div class="kpi-card success">
             <div style="width:32px;height:32px;border-radius:8px;background:var(--success-bg);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="check-circle" style="width:20px;height:20px;color:var(--success-text);"></i></div>
@@ -3948,6 +4422,11 @@
           <button onclick="showAddEquipment()" class="flex items-center gap-1.5 px-3 py-1.5 text-white text-xs font-semibold rounded-lg transition shadow-sm" style="background:#f97316;color:white;">
             <i data-lucide="plus" class="w-[18px] h-[18px] text-[#64748B]"></i> เพิ่มอุปกรณ์</button>
         </div>
+        <div class="availability-legend">
+          <span><span class="legend-dot green"></span>พร้อมใช้</span>
+          <span><span class="legend-dot amber"></span>เกือบหมด</span>
+          <span><span class="legend-dot red"></span>หมด</span>
+        </div>
         <div class="flex flex-col sm:flex-row gap-2 mb-4">
           <div class="relative flex-1">
             <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"></i>
@@ -3962,7 +4441,7 @@
           </select>
         </div>
         <div class="space-y-3 mb-6">
-          ${filtered.length === 0 ? emptyState('ไม่พบอุปกรณ์','ลองค้นหาด้วยคำอื่นหรือเปลี่ยนหมวดหมู่','search') :
+          ${filtered.length === 0 ? emptyState('ไม่พบอุปกรณ์','ลองค้นหาด้วยคำอื่นหรือเปลี่ยนหมวดหมู่','search','เพิ่มอุปกรณ์','showAddEquipment()') :
           filtered.map(e=>`<div class="gd-card" style="padding: 20px;">
             <div class="flex items-center gap-3">
               ${e.image_url ? `<img src="${he(e.image_url)}" class="w-11 h-11 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div style="width:44px;height:44px;border-radius:12px;background:#F1F5F9;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${eqIconSvg(22)}</div>`}
@@ -4141,7 +4620,7 @@
       const eq = EQ.find(e=>e.eq_id===eqId); if(!eq) return;
       showConfirm({
         title: 'ลบอุปกรณ์นี้?', message: eq.name, icon: '🗑️',
-        confirmText: 'ลบเลย', iconBg: '#FEE2E2', confirmColor: '#EF4444',
+        confirmText: 'ลบเลย', iconBg: '#FEE2E2', confirmColor: '#DC6B19',
         onConfirm: () => executeDeleteEquipment(eqId)
       });
     }
@@ -4243,7 +4722,7 @@
       if(name===CU.name){ toast('ไม่สามารถลบตัวเองได้'); return; }
       showConfirm({
         title: 'ลบสมาชิก?', message: name, icon: '🗑️',
-        confirmText: 'ลบเลย', iconBg: '#FEE2E2', confirmColor: '#EF4444',
+        confirmText: 'ลบเลย', iconBg: '#FEE2E2', confirmColor: '#DC6B19',
         onConfirm: () => executeDeleteUser(name, role)
       });
     }
@@ -4395,7 +4874,7 @@
     function confirmDeleteRecipient(id, label) {
       showConfirm({
         title: 'ลบผู้รับรายงาน?', message: label, icon: '🗑️',
-        confirmText: 'ลบเลย', iconBg: '#FEE2E2', confirmColor: '#EF4444',
+        confirmText: 'ลบเลย', iconBg: '#FEE2E2', confirmColor: '#DC6B19',
         onConfirm: () => executeDeleteRecipient(id)
       });
     }
@@ -4479,7 +4958,7 @@
           <button onclick="exportAuditCSV()" class="gd-btn-primary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-xs font-semibold whitespace-nowrap">
             <i data-lucide="download" class="w-[18px] h-[18px] text-[#64748B]"></i> Export CSV</button>
         </div>
-        <div class="chip-row">
+        <div class="audit-filter-pills">
           <div class="chip ${auditFilter===''?'active':''}" onclick="auditFilter='';_renderAuditList()">ทั้งหมด</div>
           ${filterTypes.map(t=>`<div class="chip ${auditFilter===t?'active':''}" onclick="auditFilter='${t}';_renderAuditList()">${AUDIT_TYPE_META[t]?.label||t}</div>`).join('')}
         </div>
@@ -4611,7 +5090,7 @@
       document.getElementById('detail-due-date').textContent = fd(r.due_date);
       const statusMap = {
         borrowed: { label: 'กำลังยืม',  cls: 'bg-amber-100 text-amber-700' },
-        overdue:  { label: 'เกินกำหนด', cls: 'bg-red-100 text-red-700' },
+        overdue:  { label: 'เกินกำหนด', cls: 'bg-[#FFF4E8] text-[#DC6B19]' },
         returned: { label: 'คืนแล้ว',   cls: 'bg-emerald-100 text-emerald-700' },
       };
       const s = statusMap[r.status] || { label: r.status, cls: 'bg-stone-100 text-stone-700' };
@@ -4769,7 +5248,7 @@
           <div class="chart-legend">
             <span><span class="leg-sq" style="background:#f97316"></span>ยืม</span>
             <span><span class="leg-sq" style="background:#10b981"></span>คืน</span>
-            <span><span class="leg-sq" style="background:#ef4444"></span>เกินกำหนด</span>
+            <span><span class="leg-sq" style="background:#DC6B19"></span>เกินกำหนด</span>
           </div>
           <div style="position:relative;height:200px">
             <canvas id="analyticsLineChart" role="img" aria-label="แนวโน้มการยืมรายสัปดาห์">แนวโน้มการยืม</canvas>
@@ -4892,9 +5371,17 @@
       canvas.style.display = '';
       if (barEmpty) barEmpty.style.display = 'none';
       if (analyticsBarChartInstance) analyticsBarChartInstance.destroy();
+      const ctx = canvas.getContext('2d');
+      let barFill = '#F97316';
+      if (ctx) {
+        const grad = ctx.createLinearGradient(0, 0, 0, canvas.height || 200);
+        grad.addColorStop(0, 'rgba(249,115,22,0.95)');
+        grad.addColorStop(1, 'rgba(249,115,22,0.65)');
+        barFill = grad;
+      }
       analyticsBarChartInstance = new Chart(canvas, {
         type: 'bar',
-        data: { labels, datasets: [{ data: values, backgroundColor: '#f97316', borderRadius: 6 }] },
+        data: { labels, datasets: [{ data: values, backgroundColor: barFill, borderRadius: 4 }] },
         options: {
           responsive: true, maintainAspectRatio: false,
           plugins: { legend: { display: false } },
@@ -4979,8 +5466,8 @@
           labels,
           datasets: [
             { label:'ยืม', data: sortedKeys.map(k => weeks[k].borrowed), borderColor:'#f97316', backgroundColor:'rgba(249,115,22,0.08)', tension:0.4, fill:true, pointRadius:3 },
-            { label:'คืน', data: sortedKeys.map(k => weeks[k].returned), borderColor:'#10b981', backgroundColor:'transparent', tension:0.4, pointRadius:3 },
-            { label:'เกิน', data: sortedKeys.map(k => weeks[k].overdue), borderColor:'#ef4444', borderDash:[4,4], backgroundColor:'transparent', tension:0.4, pointRadius:3 }
+            { label:'คืน', data: sortedKeys.map(k => weeks[k].returned), borderColor:'#10b981', backgroundColor:'transparent', tension:0.4, pointRadius:3, fill:false },
+            { label:'เกิน', data: sortedKeys.map(k => weeks[k].overdue), borderColor:'#DC6B19', borderDash:[4,4], backgroundColor:'transparent', tension:0.4, pointRadius:3 }
           ]
         },
         options: {
@@ -5027,7 +5514,7 @@
             <td style="text-align:center;padding:8px">${s.total}</td>
             <td style="text-align:center;padding:8px;color:#10b981">${s.returned}</td>
             <td style="text-align:center;padding:8px">${s.borrowed}</td>
-            <td style="text-align:center;padding:8px;color:${s.overdue>0?'#ef4444':'inherit'}">${s.overdue}</td>
+            <td style="text-align:center;padding:8px;color:${s.overdue>0?'#DC6B19':'inherit'}">${s.overdue}</td>
             <td style="text-align:center;padding:8px">${ratingCell}</td>
           </tr>`;
         }).join('') || `<tr><td colspan="6" style="padding:16px;text-align:center;color:#a8a29e;font-size:13px">ไม่มีข้อมูล</td></tr>`;
