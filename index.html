@@ -9,7 +9,7 @@
   <title>GA Equipment Control</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -117,6 +117,13 @@
       --fs-secondary:  var(--ga-text-secondary);
       --fs-helper:     var(--ga-text-small);
       --fs-caption:    var(--ga-text-caption);
+
+      /* Audit polish tokens */
+      --radius-card: 12px;
+      --radius-modal: 16px;
+      --shadow-card: 0 1px 3px rgba(0,0,0,0.08);
+      --section-gap: 24px;
+      --inner-gap: 16px;
     }
 
     /* ── Base ─────────────────────────────────────────── */
@@ -124,12 +131,15 @@
       height: 100%; margin: 0;
       font-family: 'Noto Sans Thai', 'Inter', sans-serif;
       font-size: var(--fs-body); color: var(--text-primary);
+      line-height: 1.7;
+      word-break: keep-all;
       background: var(--bg-page);
       background-image: radial-gradient(rgba(15,23,42,0.055) 1px, transparent 1px);
       background-size: 20px 20px;
     }
     *, *::before, *::after { box-sizing: border-box; }
-    * { -webkit-tap-highlight-color: transparent; }
+    * { font-family: 'Noto Sans Thai', sans-serif; -webkit-tap-highlight-color: transparent; }
+    p, span, td, li, label { line-height: 1.7; }
     ::-webkit-scrollbar { width: 0; height: 0; }
 
     /* ── Screens ──────────────────────────────────────── */
@@ -160,7 +170,7 @@
     /* ── Cards ────────────────────────────────────────── */
     
     .gd-card, .card {
-      background: white !important; border: 1px solid #E2E8F0 !important; border-radius: 16px !important; padding: 20px 24px !important; min-height: 72px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04) !important; transition: all .15s ease !important;
+      background: white !important; border: 1px solid #E2E8F0 !important; border-radius: var(--radius-card) !important; padding: 20px 24px !important; min-height: 72px !important; box-shadow: var(--shadow-card) !important; transition: all .15s ease !important;
     }
     .gd-card > :first-child { margin-top: 2px; }
     .gd-card:hover {
@@ -217,8 +227,10 @@
     .gd-section {
       background: white;
       border: 1px solid #E2E8F0;
-      border-radius: 16px;
+      border-radius: var(--radius-card);
       padding: 18px 22px;
+      margin-bottom: var(--section-gap);
+      gap: var(--inner-gap);
     }
 
 
@@ -301,12 +313,15 @@
     
     .gd-modal-panel {
       background: white;
-      border-radius: 16px;
+      border-radius: var(--radius-modal);
       border: 1px solid #E2E8F0;
       box-shadow: 0 10px 40px rgba(15,23,42,0.1);
       padding: 24px;
       max-width: 520px !important;
     }
+    .modal-title { font-size: 18px; font-weight: 700; }
+    .modal-label { font-size: 14px; font-weight: 500; }
+    .modal-placeholder { font-style: normal; }
 
 
     /* ── Section title ────────────────────────────────── */
@@ -410,7 +425,8 @@
       background: transparent;
       transition: all 150ms ease;
     }
-    .pin-dot.filled { background: #fff; border-color: #fff; transform: scale(1.1); }
+    .pin-dot.filled { background: #fff; border-color: #fff; transform: scale(1.1); transition: all ease-in 0.1s; }
+    .pin-dot.pin-success-flash { background:#22C55E !important; border-color:#22C55E !important; }
     .pin-dot.error  { background: #fca5a5; border-color: #DC6B19; animation: shake 0.4s ease; }
 
     /* PIN dots inside white panel (Change-PIN modal, etc.) */
@@ -424,7 +440,7 @@
       height: 52px;
       border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 22px; font-weight: var(--ga-fw-medium);
+      font-size: 22px; font-weight: 500;
       font-family: 'Noto Sans Thai', 'Inter', sans-serif;
       color: var(--text-primary); cursor: pointer;
       background: var(--bg-card); border: 1px solid var(--border);
@@ -651,6 +667,21 @@
     }
 
     #screen-main .gd-header > svg { display: none; }
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -668,10 +699,10 @@
     .top-tab.active, .tab-active { color: #0F172A !important; background: white !important; box-shadow: 0 1px 2px rgba(0,0,0,0.06) !important; }
     .ga-list-container { max-width: 880px !important; margin-left: auto !important; margin-right: auto !important; }
     .gd-card, .card {
-      background: white !important; border: 1px solid #E2E8F0 !important; border-radius: 16px !important; padding: 20px 24px !important; min-height: 72px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04) !important; transition: all .15s ease !important;
+      background: white !important; border: 1px solid #E2E8F0 !important; border-radius: var(--radius-card) !important; padding: 20px 24px !important; min-height: 72px !important; box-shadow: var(--shadow-card) !important; transition: all .15s ease !important;
     }
     .gd-card:hover, .card:hover { transform: translateY(-2px) !important; box-shadow: 0 2px 4px rgba(0,0,0,0.04), 0 8px 16px rgba(0,0,0,0.06) !important; }
-    .btn-action-borrow { font-size: 13px !important; font-weight: 500 !important; color: #F97316 !important; background: transparent !important; transition: all .15s ease !important; border-radius: 10px !important; padding: 6px 14px !important;}
+    .btn-action-borrow { font-size: 13px !important; font-weight: 500 !important; color: #E86B00 !important; background: transparent !important; transition: all .15s ease !important; border-radius: 10px !important; padding: 6px 14px !important;}
     .btn-action-borrow:hover { background: #FFF7ED !important; }
     button:hover { filter: brightness(0.97); }
     .kpi-card { padding: 20px !important; height: auto !important; }
@@ -681,6 +712,21 @@
     .page-title { font-size: 20px !important; font-weight: 600 !important; color:#0F172A !important;}
     .section-title { font-size: 18px !important; font-weight: 600 !important; color:#0F172A !important;}
     .eq-title { font-size: 15px !important; font-weight: 600 !important;}
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -772,6 +818,21 @@
       border-radius: 999px !important;
     }
 
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -836,6 +897,21 @@
       font-size: 10px !important;
       margin-top: 2px !important;
     }
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -858,6 +934,21 @@
     .btn-action-borrow { font-size: 13px !important; }
     .eq-title { font-size: 15px !important; font-weight: 500 !important; margin-bottom: 4px !important; line-height: 1.2 !important; }
     .eq-meta { font-size: 13px !important; color: #64748B !important; line-height: 1.2 !important; margin-top: 0 !important; }
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -940,6 +1031,21 @@
     @media (min-width: 768px) {
       #eqGrid.view-grid { grid-template-columns: repeat(3, 1fr) !important; }
     }
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -994,6 +1100,21 @@
       font-size: 13px; color: #a8a29e;
       font-family: 'Noto Sans Thai', 'Inter', sans-serif;
     }
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1038,6 +1159,21 @@
       .analytics-kpi-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
       .charts-row-2 { grid-template-columns:1fr; }
     }
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1083,6 +1219,21 @@
       margin-bottom: 24px !important;
     }
     
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1161,6 +1312,21 @@
       gap: var(--space-4) !important; /* Name -> Meta exactly 4px */
     }
     
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1268,6 +1434,21 @@
       color: #334155 !important;
       background: rgba(0,0,0,0.04) !important;
     }
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1490,6 +1671,21 @@
       from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: translateY(0);   }
     }
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -2497,6 +2693,21 @@
       background: #FFF5F0 !important;
       border-left: 3px solid #F97316;
     }
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
   <style>
     /* MeetFlow compact topbar rebalance */
@@ -2806,6 +3017,21 @@
       background: #FFF5F0 !important;
       border-left: 3px solid #F97316;
     }
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
   <style>
     /* MeetFlow compact topbar rebalance */
@@ -2938,6 +3164,21 @@
       }
       .top-tabs-inner::-webkit-scrollbar { display: none !important; }
     }
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
   <style>
     /* Hero banner topbar (final override) */
@@ -3260,6 +3501,21 @@
       background: #FFF5F0 !important;
       border-left: 3px solid #F97316;
     }
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
   <style>
     /* MeetFlow compact topbar rebalance */
@@ -3392,6 +3648,21 @@
       }
       .top-tabs-inner::-webkit-scrollbar { display: none !important; }
     }
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
   <style>
     /* Hero banner topbar (final override) */
@@ -3537,6 +3808,21 @@
       }
       .top-tabs-inner::-webkit-scrollbar { display: none !important; }
     }
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -3720,6 +4006,21 @@
         display: none !important;
       }
     }
+
+
+    /* Batch 3 typography hierarchy */
+    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 14px; color: #9CA3AF; }
+    .equipment-name, .eq-title { font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
+    .qty-label { font-size: 12px; }
+    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
+    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 13px !important; }
+    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
 </head>
@@ -3767,7 +4068,7 @@
             </div>
             <div class="auth-card fade-in">
               <div class="text-center mb-8">
-                <h1 style="font-size:var(--fs-page-title);font-weight:600;color:var(--text-primary);margin:0 0 6px;font-family:'Noto Sans Thai','Inter',sans-serif;">เข้าสู่ระบบ</h1>
+                <h1 style="font-size:var(--fs-page-title);font-weight:600;color:var(--text-primary);margin:0 0 10px;font-family:'Noto Sans Thai','Inter',sans-serif;">เข้าสู่ระบบ</h1>
                 <p style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
               </div>
               <div class="mb-6">
@@ -3799,7 +4100,7 @@
             </div>
             <div class="auth-card fade-in" style="position:relative;">
               <button onclick="goScreen('login')"
-                style="position:absolute;top:18px;left:18px;width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;">
+                style="position:absolute;top:18px;left:18px;width:44px;height:44px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;">
                 <i data-lucide="arrow-left" style="width:16px;height:16px;color:#334155;"></i>
               </button>
               <div class="text-center mb-8">
@@ -3810,7 +4111,7 @@
                 <div id="pin-avatar" class="ga-avatar mx-auto mb-3"></div>
                 <p id="pin-name"
                   style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
-                <p style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">กรอก PIN 6 หลัก</p>
+                <p style="font-size:13px;color:#9CA3AF;margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">กรอก PIN 6 หลัก</p>
               </div>
             <!-- PIN dots -->
             <div id="pin-dots" class="pin-dots-dark" style="display:flex;justify-content:center;gap:14px;margin-bottom:12px;">
@@ -4188,7 +4489,7 @@
 
   <!-- Toast container -->
   <div id="toast-container"
-    class="fixed bottom-6 right-6 z-[200] flex flex-col gap-2 items-end pointer-events-none">
+    class="fixed top-6 right-6 z-[200] flex flex-col gap-2 items-end pointer-events-none">
   </div>
 
   <script>
@@ -4255,7 +4556,7 @@
     let historyFilter = '';
     let gaHistorySearch = '';
     let mgrHistorySearch = '', mgrHistoryGa = '', mgrHistoryFrom = '', mgrHistoryTo = '';
-    let AUDIT_LOGS = [], auditFilter = '', auditSearch = '';
+    let AUDIT_LOGS = [], auditFilter = '', auditSearch = '', auditDateFrom = '', auditDateTo = '';
     let eqSearch = '', eqCatFilter = '';
 
     // ===== AUDIT LOG HELPER =====
@@ -4356,8 +4657,49 @@
       t.classList.add('active'); t.style.display = 'flex';
       syncBottomNavVisibility(name);
     }
-    function showModal(id) { const m = document.getElementById(id); if(m) { m.classList.remove('pointer-events-none','opacity-0'); m.classList.add('pointer-events-auto','opacity-100'); lucide.createIcons({'stroke-width': 1.5}); } }
+    function showModal(id) {
+      const m = document.getElementById(id);
+      if (!m) return;
+      m.classList.remove('pointer-events-none','opacity-0');
+      m.classList.add('pointer-events-auto','opacity-100');
+      const backdrop = m.querySelector('.absolute.inset-0');
+      if (backdrop && !backdrop.dataset.outsideCloseBound) {
+        backdrop.dataset.outsideCloseBound = '1';
+        backdrop.addEventListener('click', (e) => {
+          if (e.target !== backdrop) return;
+          const closeName = `close${id.charAt(0).toUpperCase()}${id.slice(1)}`;
+          if (typeof window[closeName] === 'function') window[closeName]();
+          else hideModal(id);
+        });
+      }
+      lucide.createIcons({'stroke-width': 1.5});
+    }
     function hideModal(id) { const m = document.getElementById(id); if(m) { m.classList.add('pointer-events-none','opacity-0'); m.classList.remove('pointer-events-auto','opacity-100'); } }
+    function closeTopModal() {
+      const modalOrder = [
+        ['record-detail-modal', closeRecordDetail],
+        ['confirm-dialog', () => document.getElementById('confirm-dialog')?.classList.add('hidden')],
+        ['changePinModal', closeChangePinModal],
+        ['logoutModal', closeLogoutModal],
+        ['catModal', closeCatModal],
+        ['recipientModal', closeRecipientModal],
+        ['userModal', closeUserModal],
+        ['equipModal', closeEquipModal]
+      ];
+      for (const [id, closeFn] of modalOrder) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const visible = id === 'record-detail-modal' || id === 'confirm-dialog'
+          ? !el.classList.contains('hidden')
+          : !el.classList.contains('pointer-events-none');
+        if (!visible) continue;
+        closeFn();
+        return;
+      }
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeTopModal();
+    });
     function showToast(msg, type='info') {
       const container = document.getElementById('toast-container');
       if (!container) return;
@@ -4369,7 +4711,7 @@
       container.appendChild(el);
       lucide.createIcons({'stroke-width': 1.5});
       requestAnimationFrame(() => { el.classList.remove('translate-x-full','opacity-0'); });
-      setTimeout(() => { el.classList.add('translate-x-full','opacity-0'); setTimeout(() => el.remove(), 300); }, 2600);
+      setTimeout(() => { el.classList.add('translate-x-full','opacity-0'); setTimeout(() => el.remove(), 300); }, 3000);
     }
     function toast(msg, tone='info') { showToast(msg, tone); }
     function showConfirm({ title, message, icon = '❓', iconBg = '#F1F5F9', confirmText = 'ยืนยัน', confirmColor = '#F97316', onConfirm }) {
@@ -4394,6 +4736,15 @@
         check:  'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
         users:  'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75',
       };
+      if (type === 'search') {
+        const term = title.replace(/^ไม่พบ\\s*/,'').replaceAll('\"','').trim();
+        return `<div class="empty-search" style="display:flex;flex-direction:column;align-items:center;padding:40px 24px;text-align:center;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#A8A29E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <p style="font-size:14px;font-weight:600;color:#0F172A;margin:10px 0 2px;">ไม่พบ \"<span id="searchTerm">${he(term || sub || '')}</span>\"</p>
+          <small style="font-size:12px;color:#9CA3AF;">ลองค้นหาด้วยคำอื่น</small>
+          ${ctaLabel && ctaAction ? `<button onclick="${ctaAction}" class="gd-btn-primary !w-auto !px-4 !py-2 text-sm font-semibold" style="margin-top:10px;">${he(ctaLabel)}</button>` : ''}
+        </div>`;
+      }
       return `<div style="display:flex;flex-direction:column;align-items:center;padding:40px 24px;text-align:center;">
         <div class="empty-state-icon-wrap">
           <svg class="empty-state-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="${paths[type]||paths.list}"/></svg>
@@ -4456,6 +4807,12 @@
         }
         return r;
       });
+    }
+    function getAvailabilityClass(available, total) {
+      const pct = total ? (available / total) * 100 : 0;
+      if (pct > 50) return 'high';
+      if (pct > 20) return 'medium';
+      return 'low';
     }
 
     // ===== API =====
@@ -4764,6 +5121,7 @@
       sizeSignatureCanvas(c); bindSignatureEvents(c);
     }
     function clearSignCanvas(canvasId) {
+      if (!confirm('ต้องการล้างลายเซ็นใช่ไหม?')) return;
       const c = document.getElementById(canvasId); if (!c) return;
       sctx = c.getContext('2d');
       if (sctx) { const w=c.offsetWidth, h=c.offsetHeight; sctx.clearRect(0,0,w*2,h*2); sctx.fillStyle='#FFFFFF'; sctx.fillRect(0,0,w*2,h*2); hasSignatureStroke = false; }
@@ -4829,7 +5187,11 @@
           CU = { ...SU, allowed_categories: res.allowed_categories ?? null };
           EQ = eqData; BORROWS = brData; CATS = catData;
           toast('ยินดีต้อนรับ ' + CU.name.split(' ')[0]);
-          buildMain(); goScreen('main'); lucide.createIcons({'stroke-width': 1.5}); startAutoLogout();
+          document.querySelectorAll('#pin-dots .pin-dot').forEach(d=>d.classList.add('pin-success-flash'));
+          setTimeout(()=> {
+            document.querySelectorAll('#pin-dots .pin-dot').forEach(d=>d.classList.remove('pin-success-flash'));
+            buildMain(); goScreen('main'); lucide.createIcons({'stroke-width': 1.5}); startAutoLogout();
+          }, 200);
           if (CU.role === 'ga') setupCategoryRealtime();
         } else {
           const updated = pinRecordFail(SU.name);
@@ -5102,6 +5464,9 @@
       const lowCount   = visibleEq.filter(e => e.available > 0 && e.available <= 2).length;
       const readyCount = visibleEq.filter(e => e.available === e.quantity && e.quantity > 0).length;
       const el = document.getElementById('tab-borrow');
+      const eqEmptyState = eqCatFilter
+        ? `<p style="font-size:14px;color:#78716C;text-align:center;padding:24px 12px;">ไม่มีอุปกรณ์ในหมวด \"<span>${he(eqCatFilter)}</span>\"</p>`
+        : emptyState('ไม่พบอุปกรณ์', eqSearch || 'คำค้นหา', 'search','เพิ่มอุปกรณ์','showAddEquipment()');
       el.innerHTML = `<div class="gd-container fade-in">
         <div class="gd-container-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
           <div>
@@ -5162,7 +5527,7 @@
             </div>` : `
             ${(() => {
               const pct = e.quantity ? Math.round((e.available / e.quantity) * 100) : 0;
-              const cls = pct > 50 ? 'high' : (pct >= 20 ? 'medium' : 'low');
+              const cls = getAvailabilityClass(e.available, e.quantity);
               const last = sinceLabel(lastBorrowMap[e.eq_id]);
               return `
             <div class="gd-card gd-card-grid eq-cat-stripe cursor-pointer" style="--cat-accent:${catAccentColor(e.category)}" onclick="openBorrowForm('${he(e.eq_id)}')">
@@ -5203,6 +5568,7 @@
       document.getElementById('bf-eq-name').textContent = eq.name + ' (คงเหลือ ' + eq.available + ')';
       const defaultDue = new Date(); defaultDue.setDate(defaultDue.getDate()+7);
       const dueStr = defaultDue.toISOString().slice(0,10);
+      const todayStr = new Date().toISOString().slice(0,10);
       document.getElementById('bf-body').innerHTML = `
         <div class="gd-card p-5 mb-4">
           <div class="flex items-center gap-3 mb-1">
@@ -5212,27 +5578,28 @@
           </div>
         </div>
         <div class="space-y-3 mb-6">
-          <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">จำนวนที่ยืม</label>
-            <input type="number" id="bfQty" min="1" max="${eq.available}" value="1" class="gd-input"></div>
-          <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่อผู้ยืม</label>
+          <div><label class="text-xs font-medium text-gray-500 mb-1.5 block">จำนวนที่ยืม</label>
+            <input type="number" id="bfQty" min="1" max="${eq.available}" value="1" class="gd-input">
+            <p style="font-size:11px;color:#9CA3AF;margin-top:6px;">ยืมได้สูงสุด ${eq.available} ชิ้น</p></div>
+          <div><label class="text-xs font-medium text-gray-500 mb-1.5 block">ชื่อผู้ยืม</label>
             <input type="text" id="bfBorrower" placeholder="ชื่อ-นามสกุลผู้ยืม" class="gd-input"></div>
-          <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">รหัสพนักงาน</label>
+          <div><label class="text-xs font-medium text-gray-500 mb-1.5 block">รหัสพนักงาน</label>
             <input type="text" id="bfDept" maxlength="6" pattern="[0-9]{6}" placeholder="เช่น 087256" class="gd-input"></div>
-          <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">กำหนดคืน</label>
-            <input type="date" id="bfDue" value="${dueStr}" class="gd-input"></div>
-          <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">หมายเหตุ <span class="font-normal text-gray-400">(ไม่บังคับ)</span></label>
+          <div><label class="text-xs font-medium text-gray-500 mb-1.5 block">กำหนดคืน</label>
+            <input type="date" id="bfDue" value="${dueStr}" min="${todayStr}" class="gd-input"></div>
+          <div><label class="text-xs font-medium text-gray-500 mb-1.5 block">หมายเหตุ <span class="font-normal text-gray-400" style="font-size:11px;">(ไม่บังคับ)</span></label>
             <textarea id="bfNote" rows="2" placeholder="เช่น ใช้งานประชุมลูกค้า" class="gd-input" style="height:auto;padding:10px 14px;"></textarea></div>
         </div>
         <div class="signature-pad mb-6">
           <div class="signature-pad__header">
-            <span class="signature-pad__title">ลายเซ็นผู้ยืม</span>
+            <span class="signature-pad__title">เซ็นชื่อในกล่องด้านล่าง <span style="color:#DC2626;">*</span></span>
             <button onclick="clearSignCanvas('bfSignCanvas')" class="signature-pad__clear"><i data-lucide="eraser" class="w-[18px] h-[18px] text-[#64748B]"></i> ล้าง</button>
           </div>
           <div class="signature-pad__frame">
             <canvas id="bfSignCanvas" class="sig-canvas" style="width:100%;height:140px;"></canvas>
           </div>
           <p class="text-sm text-gray-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้รับอุปกรณ์ตามรายการข้างต้นในสภาพสมบูรณ์</p>
-          <p class="text-xs text-gray-300 text-center mt-1">🔒 ลายเซ็นนี้ใช้เพื่อยืนยันการรับอุปกรณ์ และถูกจัดเก็บอย่างปลอดภัยในระบบ</p>
+          <p class="text-center mt-1" style="font-size:11px;color:#F59E0B;">🔒 ลายเซ็นนี้ใช้เพื่อยืนยันการรับอุปกรณ์ และถูกจัดเก็บอย่างปลอดภัยในระบบ</p>
         </div>
         <button onclick="submitBorrow()" id="bfSubmitBtn" class="w-full gd-btn-primary text-sm font-semibold flex items-center justify-center gap-2">
           <i data-lucide="check" class="w-[18px] h-[18px] text-[#64748B]"></i> ยืนยันการยืม
@@ -5259,7 +5626,7 @@
         message: `${currentBorrowEq.name} · ผู้ยืม: ${borrower} · ${qty} ชิ้น`,
         icon: '📋', iconBg: '#FFF7ED', confirmText: 'ยืนยันการยืม', confirmColor: '#F97316',
         onConfirm: async () => {
-          btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
+          btn.disabled = true; btn.innerHTML = '⏳ กำลังดำเนินการ...';
           try {
             const canvas = document.getElementById('bfSignCanvas');
             const sig = canvas ? exportSignature(canvas) : '';
@@ -5489,7 +5856,7 @@
               <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium flex items-center gap-1 transition-colors" style="border:1px solid var(--mf-border); color:var(--mf-text-2); background:var(--mf-card);"><i data-lucide="eye" class="w-[18px] h-[18px]" style="color:var(--mf-text-3);"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
             </div>
             ${r.condition_note?`<p class="eq-meta">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
-          </div>`).join('') : emptyState('ยังไม่มีประวัติ','บันทึกการยืม-คืนจะปรากฏที่นี่','list')}
+          </div>`).join('') : emptyState('ยังไม่มีประวัติ','บันทึกการยืม-คืนจะปรากฏที่นี่','list','ยืมอุปกรณ์เลย →','switchTab(0)')}
         </div>
       </div>`;
       lucide.createIcons({'stroke-width': 1.5});
@@ -5531,7 +5898,7 @@
             <p class="kpi-number" id="dkpi4">0</p><p class="kpi-label">อุปกรณ์พร้อมใช้</p></div>
         </div>
         <div class="card mb-5">
-          <h4 class="eq-title mb-4">รายการเกินกำหนด</h4>
+          <h4 class="section-title mb-4" style="color:#E86B00;">รายการเกินกำหนด</h4>
           ${overdueList.length ? overdueList.map(r=>`<div class="flex items-center gap-3 py-2.5 border-b border-gray-100 last:border-0 text-sm">
             <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0"><i data-lucide="alert-triangle" class="w-[18px] h-[18px] text-[#64748B]"></i></div>
             <div class="flex-1 min-w-0">
@@ -5543,7 +5910,10 @@
           </div>`).join('') : emptyState('ไม่มีรายการเกินกำหนด','ทุกอุปกรณ์อยู่ในสถานะปกติ','check')}
         </div>
         <div class="card mb-5">
-          <h4 class="eq-title mb-4">กิจกรรมล่าสุด</h4>
+          <div class="flex items-center justify-between mb-4">
+            <h4 class="section-title">กิจกรรมล่าสุด</h4>
+            <button onclick="switchTab(2)" class="text-xs font-medium" style="color:#E86B00;">ดูทั้งหมด →</button>
+          </div>
           ${recent.length ? recent.map(r=>{
             const isRet = r.status==='returned';
             return `<div class="flex items-center gap-3 py-2 border-b border-gray-100 last:border-0">
@@ -5711,7 +6081,7 @@
           </select>
         </div>
         <div class="space-y-3 mb-6">
-          ${filtered.length === 0 ? emptyState('ไม่พบอุปกรณ์','ลองค้นหาด้วยคำอื่นหรือเปลี่ยนหมวดหมู่','search','เพิ่มอุปกรณ์','showAddEquipment()') :
+          ${filtered.length === 0 ? eqEmptyState :
           filtered.map(e=>`<div class="gd-card" style="padding: 20px;">
             <div class="flex items-center gap-3">
               ${e.image_url ? `<img src="${he(e.image_url)}" class="w-11 h-11 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div style="width:44px;height:44px;border-radius:12px;background:#F1F5F9;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${eqIconSvg(22)}</div>`}
@@ -5735,7 +6105,7 @@
         <!-- ===== CATEGORY MANAGEMENT ===== -->
         <div class="gd-card" style="padding: 20px;">
           <div class="flex items-center justify-between mb-3">
-            <h4 class="eq-title">หมวดหมู่</h4>
+            <h4 class="section-title" style="font-size:16px;font-weight:600;color:#1C1917;">หมวดหมู่</h4>
             ${_addCatMode ? '' : `<button onclick="showAddCatInput()" class="gd-btn-secondary flex items-center gap-1 !w-auto !py-1.5 !px-2.5 text-xs font-semibold">
               <i data-lucide="plus" class="w-[18px] h-[18px] text-[#64748B]"></i> เพิ่มหมวดหมู่</button>`}
           </div>
@@ -5955,6 +6325,7 @@
             </h4>
           </div>
           <p class="eq-meta mb-3">รายชื่อผู้รับรายงานประจำสัปดาห์</p>
+          <p class="eq-meta mb-2" style="font-size:11px;">บันทึกอัตโนมัติเมื่อเปิด/ปิด</p>
           <div id="notif-recipients-list" class="space-y-2 mb-3">
             ${skeletonCards(2)}
           </div>
@@ -6179,18 +6550,18 @@
       EQUIPMENT_CREATE: { label:'เพิ่มอุปกรณ์',   cls:'bg-amber-50 text-warn' },
       EQUIPMENT_UPDATE: { label:'แก้ไขอุปกรณ์',   cls:'bg-amber-50 text-warn' },
       EQUIPMENT_DELETE: { label:'ลบอุปกรณ์',      cls:'bg-red-50 text-danger' },
-      MEMBER_CREATE:    { label:'เพิ่มสมาชิก',    cls:'bg-gray-100 text-gray-600' },
+      MEMBER_CREATE:    { label:'เพิ่มสมาชิก',    cls:'bg-blue-50 text-blue-700' },
       MEMBER_DELETE:    { label:'ลบสมาชิก',       cls:'bg-red-50 text-danger' },
-      MEMBER_RESET_PIN: { label:'Reset PIN',      cls:'bg-gray-100 text-gray-600' },
+      MEMBER_RESET_PIN: { label:'Reset PIN',      cls:'bg-blue-50 text-blue-700' },
       OVERDUE_FLAGGED:  { label:'เกินกำหนด',      cls:'bg-red-50 text-danger' },
       CATEGORY_CREATE:  { label:'เพิ่มหมวดหมู่',  cls:'bg-amber-50 text-warn' },
       CATEGORY_DELETE:  { label:'ลบหมวดหมู่',     cls:'bg-red-50 text-danger' },
       CHANGE_PIN:       { label:'เปลี่ยน PIN',     cls:'bg-gray-100 text-gray-600' },
-      UPDATE_CATEGORIES:{ label:'ตั้งค่าหมวด',    cls:'bg-blue-50 text-blue-600' },
+      UPDATE_CATEGORIES:{ label:'ตั้งค่าหมวด',    cls:'bg-blue-50 text-blue-700' },
     };
     function auditTypeBadge(t) {
       const m = AUDIT_TYPE_META[t] || { label: t, cls: 'bg-gray-100 text-gray-500' };
-      return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${m.cls}">${he(m.label)}</span>`;
+      return `<span class="audit-badge inline-flex items-center ${m.cls}">${he(m.label)}</span>`;
     }
     function auditDetail(r) {
       const d = r.new_data || {};
@@ -6215,7 +6586,9 @@
       const filterTypes = ['BORROW','RETURN','EQUIPMENT_CREATE','EQUIPMENT_UPDATE','EQUIPMENT_DELETE','MEMBER_CREATE','MEMBER_DELETE','MEMBER_RESET_PIN','CATEGORY_CREATE','CATEGORY_DELETE'];
       const filtered = AUDIT_LOGS
         .filter(r => !auditFilter || r.action_type === auditFilter)
-        .filter(r => !auditSearch || (r.actor_name||'').toLowerCase().includes(auditSearch.toLowerCase()));
+        .filter(r => !auditSearch || (r.actor_name||'').toLowerCase().includes(auditSearch.toLowerCase()))
+        .filter(r => !auditDateFrom || (r.created_at || '').slice(0,10) >= auditDateFrom)
+        .filter(r => !auditDateTo || (r.created_at || '').slice(0,10) <= auditDateTo);
       el.innerHTML = `<div class="gd-container fade-in">
         <div class="gd-container-header">
           
@@ -6225,6 +6598,8 @@
           <input id="auditSearchInput" type="text" placeholder="ค้นหาผู้ดำเนินการ..." value="${he(auditSearch)}"
             oninput="auditSearch=this.value;debounce('auditSearch',_renderAuditList)"
             class="gd-input" style="flex:1;height:38px;">
+          <input type="date" value="${auditDateFrom}" onchange="auditDateFrom=this.value;_renderAuditList()" class="gd-input" style="width:150px;height:38px;" title="ตั้งแต่วันที่">
+          <input type="date" value="${auditDateTo}" onchange="auditDateTo=this.value;_renderAuditList()" class="gd-input" style="width:150px;height:38px;" title="ถึงวันที่">
           <button onclick="exportAuditCSV()" class="gd-btn-primary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-xs font-semibold whitespace-nowrap">
             <i data-lucide="download" class="w-[18px] h-[18px] text-[#64748B]"></i> Export CSV</button>
         </div>
@@ -6247,7 +6622,9 @@
     function exportAuditCSV() {
       const filtered = AUDIT_LOGS
         .filter(r => !auditFilter || r.action_type === auditFilter)
-        .filter(r => !auditSearch || (r.actor_name||'').toLowerCase().includes(auditSearch.toLowerCase()));
+        .filter(r => !auditSearch || (r.actor_name||'').toLowerCase().includes(auditSearch.toLowerCase()))
+        .filter(r => !auditDateFrom || (r.created_at || '').slice(0,10) >= auditDateFrom)
+        .filter(r => !auditDateTo || (r.created_at || '').slice(0,10) <= auditDateTo);
       const headers = ['วันที่/เวลา','ประเภท','ผู้ดำเนินการ','ตาราง','ID','รายละเอียด'];
       const lines = filtered.map(r => [
         fdFull(r.created_at), r.action_type||'', r.actor_name||'',
@@ -6397,6 +6774,7 @@
       } catch(e) { timeline.innerHTML = '<p class="text-slate-500 text-sm">โหลดประวัติไม่สำเร็จ</p>'; }
     }
     function closeRecordDetail() { document.getElementById('record-detail-modal').classList.add('hidden'); }
+    function printRecord() { window.print(); }
 
     // ===== ANALYTICS DASHBOARD =====
     let analyticsBarChartInstance = null;
@@ -6654,7 +7032,14 @@
         data: { labels, datasets: [{ data: values, backgroundColor: barFill, borderRadius: 4 }] },
         options: {
           responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.dataset.label || 'ยืม'}: ${ctx.parsed.y ?? ctx.parsed} รายการ`
+              }
+            }
+          },
           scales: {
             x: { ticks: { font: { size: 11, family: 'Noto Sans Thai' }, autoSkip: false } },
             y: { ticks: { font: { size: 11 } }, beginAtZero: true }
@@ -6695,6 +7080,22 @@
       analyticsDonutChartInstance = new Chart(canvas, {
         type: 'doughnut',
         data: { labels, datasets: [{ data: values, backgroundColor: colors.slice(0, labels.length), borderWidth: 0 }] },
+        plugins: [{
+          id: 'centerText',
+          beforeDraw(chart) {
+            const { ctx, chartArea } = chart;
+            if (!ctx || !chartArea) return;
+            const totalValue = values.reduce((a,b)=>a+b,0);
+            const cx = (chartArea.left + chartArea.right) / 2;
+            const cy = (chartArea.top + chartArea.bottom) / 2;
+            ctx.save();
+            ctx.font = 'bold 20px Noto Sans Thai';
+            ctx.fillStyle = '#1C1917';
+            ctx.textAlign = 'center';
+            ctx.fillText(String(totalValue), cx, cy + 8);
+            ctx.restore();
+          }
+        }],
         options: {
           responsive: true, maintainAspectRatio: false,
           plugins: { legend: { display: false } },
@@ -6742,7 +7143,14 @@
         },
         options: {
           responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y} รายการ`
+              }
+            }
+          },
           scales: {
             x: { ticks: { font: { size: 11, family: 'Noto Sans Thai' }, autoSkip: false, maxRotation: 45 } },
             y: { ticks: { font: { size: 11 } }, beginAtZero: true }
@@ -6907,7 +7315,10 @@
           <path d="M0,12 Q100,24 200,12 Q300,0 400,12 L400,24 L0,24 Z" fill="rgba(255,255,255,0.25)"></path>
         </svg>
         <h3 class="font-bold text-white text-lg relative z-10">รายละเอียดการยืม</h3>
-        <button onclick="closeRecordDetail()" class="text-white/80 hover:text-white text-xl leading-none relative z-10">✕</button>
+        <div class="relative z-10 flex items-center gap-2">
+          <button onclick="printRecord()" class="text-white/90 hover:text-white text-xs border border-white/40 rounded-lg px-2 py-1">Print</button>
+          <button onclick="closeRecordDetail()" class="text-white/80 hover:text-white text-xl leading-none">✕</button>
+        </div>
       </div>
       <div class="p-6 space-y-5">
         <!-- Equipment + Status -->
