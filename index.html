@@ -3549,17 +3549,20 @@
       position: sticky !important;
       top: 0 !important;
       z-index: 20 !important;
-      padding: 24px 20px 56px !important;
-      background: linear-gradient(145deg, #f97316, #ea580c) !important;
+      padding: 12px 16px 60px !important;
+      background: linear-gradient(150deg, #FB923C 0%, #F97316 30%, #EA580C 68%, #C2410C 100%) !important;
       border-bottom: 0 !important;
     }
 
     #screen-main > .gd-header.app-header .gd-inner {
       min-height: auto !important;
-      padding: 0 !important;
-      border-radius: 0 !important;
-      background: transparent !important;
-      box-shadow: none !important;
+      padding: 16px 18px !important;
+      border-radius: 20px !important;
+      background: rgba(255,255,255,0.13) !important;
+      backdrop-filter: blur(18px) saturate(160%) !important;
+      -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+      border: 1px solid rgba(255,255,255,0.26) !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.30), inset 0 -1px 0 rgba(0,0,0,0.06) !important;
     }
 
     #screen-main > .gd-header.app-header .gd-inner > div:first-child {
@@ -3631,12 +3634,16 @@
       width: 44px !important;
       height: 44px !important;
       font-size: 15px !important;
-      font-weight: 600 !important;
+      font-weight: 700 !important;
+      border-radius: 50% !important;
+      background: rgba(255,255,255,0.22) !important;
+      border: 2px solid rgba(255,255,255,0.40) !important;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15) !important;
     }
 
     #screen-main > .gd-header.app-header > svg.header-wave {
       display: block !important;
-      height: 56px !important;
+      height: 60px !important;
     }
 
     .top-tabs {
@@ -3677,13 +3684,12 @@
 
     @media (max-width: 600px) {
       #screen-main > .gd-header.app-header {
-        padding: 10px 14px 56px !important;
+        padding: 10px 12px 60px !important;
       }
 
       #screen-main > .gd-header.app-header .gd-inner {
-        min-height: auto !important;
-        max-height: none !important;
-        padding: 0 !important;
+        padding: 14px 14px !important;
+        border-radius: 16px !important;
       }
 
       #screen-main > .gd-header.app-header #main-user-name {
@@ -3871,15 +3877,47 @@
                 </button>
               </div>
             </div>
+            <!-- Hero stats banner -->
+            <div id="main-hero-stats" style="display:flex;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.2);">
+              <div style="flex:1;display:flex;align-items:center;gap:8px;">
+                <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                </div>
+                <div>
+                  <div id="hero-stat-available" style="font-size:16px;font-weight:700;color:#fff;line-height:1;margin-bottom:2px;font-family:'Noto Sans Thai','Inter',sans-serif;">—</div>
+                  <div style="font-size:10px;color:rgba(255,255,255,0.72);line-height:1.2;font-family:'Noto Sans Thai','Inter',sans-serif;">พร้อมใช้งาน</div>
+                </div>
+              </div>
+              <div style="width:1px;height:32px;background:rgba(255,255,255,0.2);"></div>
+              <div style="flex:1;display:flex;align-items:center;gap:8px;padding-left:12px;">
+                <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
+                </div>
+                <div>
+                  <div id="hero-stat-borrowed" style="font-size:16px;font-weight:700;color:#fff;line-height:1;margin-bottom:2px;font-family:'Noto Sans Thai','Inter',sans-serif;">—</div>
+                  <div style="font-size:10px;color:rgba(255,255,255,0.72);line-height:1.2;font-family:'Noto Sans Thai','Inter',sans-serif;">ยืมออกไป</div>
+                </div>
+              </div>
+              <div style="width:1px;height:32px;background:rgba(255,255,255,0.2);"></div>
+              <div style="flex:1;display:flex;align-items:center;gap:8px;padding-left:12px;">
+                <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div>
+                  <div id="hero-stat-overdue" style="font-size:16px;font-weight:700;color:#fff;line-height:1;margin-bottom:2px;font-family:'Noto Sans Thai','Inter',sans-serif;">—</div>
+                  <div style="font-size:10px;color:rgba(255,255,255,0.72);line-height:1.2;font-family:'Noto Sans Thai','Inter',sans-serif;">เกินกำหนด</div>
+                </div>
+              </div>
+            </div>
             <!-- Mobile tab bar inside header -->
             <div id="mainTabBar" style="display:none !important;" style="display:flex;overflow-x:auto;gap:8px;margin-top:12px;scrollbar-width:none;"></div>
             <!-- Desktop tab bar (underline style, shown below header) -->
             <div id="mainTabBar-desktop" style="opacity:0.6;"></div>
           </div>
           <!-- Wave -->
-          <svg class="header-wave" viewBox="0 0 400 56" preserveAspectRatio="none"
-               style="position:absolute;bottom:-1px;left:0;width:100%;height:56px;pointer-events:none;">
-            <path d="M0,28 Q100,56 200,28 Q300,0 400,28 L400,56 L0,56 Z" fill="#fafaf9"/>
+          <svg class="header-wave" viewBox="0 0 400 60" preserveAspectRatio="none"
+               style="position:absolute;bottom:-1px;left:0;width:100%;height:60px;pointer-events:none;">
+            <path d="M0,30 Q100,60 200,30 Q300,0 400,30 L400,60 L0,60 Z" fill="#fafaf9"/>
           </svg>
         </div>
         <!-- Desktop top tabs (outside gradient, below wave) -->
@@ -4925,6 +4963,14 @@
       document.getElementById('main-user-role').textContent = isMgr ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่ GA';
       const bar = document.getElementById('mainTabBar');
       const oc = BORROWS.filter(r => r.status === 'overdue').length;
+      const greetEl = document.getElementById('main-greeting');
+      if (greetEl) { const h = new Date().getHours(); greetEl.textContent = h < 12 ? 'อรุณสวัสดิ์ 🌤' : h < 18 ? 'สวัสดีตอนบ่าย ☀️' : 'สวัสดีตอนเย็น 🌙'; }
+      const hAvail = document.getElementById('hero-stat-available');
+      const hBorr  = document.getElementById('hero-stat-borrowed');
+      const hOver  = document.getElementById('hero-stat-overdue');
+      if (hAvail) hAvail.textContent = EQ.reduce((s,e) => s + Number(e.available_qty||0), 0);
+      if (hBorr)  hBorr.textContent  = BORROWS.filter(r => ['borrowed','overdue'].includes(r.status)).length;
+      if (hOver)  hOver.textContent  = oc;
       const badge = oc > 0 ? `<span class="ml-1 inline-flex items-center justify-center min-w-[16px] h-4 px-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">${oc > 9 ? '9+' : oc}</span>` : '';
       const summaryEl = document.getElementById('main-summary');
       if (summaryEl) {
