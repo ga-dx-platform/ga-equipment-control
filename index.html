@@ -5277,7 +5277,8 @@
           setTimeout(()=> {
             document.querySelectorAll('#pin-dots .pin-dot').forEach(d=>d.classList.remove('pin-success-flash'));
             buildMain(); goScreen('main'); lucide.createIcons({'stroke-width': 1.5}); startAutoLogout();
-            if (_pendingUnitCode) setTimeout(_handleQrUnitNav, 400);
+            const _pu = sessionStorage.getItem('pendingUnit');
+            if (_pu) { sessionStorage.removeItem('pendingUnit'); setTimeout(() => handleUnitScan(_pu), 400); }
           }, 200);
           if (CU.role === 'ga') setupCategoryRealtime();
         } else {
@@ -7378,7 +7379,12 @@
 
     // ===== INIT =====
     async function init(forceRefresh = false) {
-      _pendingUnitCode = new URLSearchParams(window.location.search).get('unit') || null;
+      const _urlUnit = new URLSearchParams(window.location.search).get('unit');
+      if (_urlUnit) {
+        sessionStorage.setItem('pendingUnit', _urlUnit);
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+      _pendingUnitCode = null;
       goScreen('loading');
       document.getElementById('loadingMsg').textContent = 'กำลังดึงข้อมูลผู้ใช้...';
       document.getElementById('loadingSlowHint').classList.add('hidden');
