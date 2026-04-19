@@ -6475,9 +6475,142 @@
       link.click();
     }
 
-    function openUnitHistory(uid)     { toast('coming soon: ประวัติ', 'info'); }
-    function openEditUnitModal(uid)   { toast('coming soon: แก้ไข unit', 'info'); }
-    function returnUnitByManager(uid) { toast('coming soon: คืน', 'info'); }
+    function openEditUnitModal(unitId) {
+      document.getElementById('editUnitModal')?.remove();
+      const modal = document.createElement('div');
+      modal.id = 'editUnitModal';
+      modal.style.cssText = 'position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px)';
+      modal.innerHTML = `
+        <div class="gd-modal-panel" style="max-width:360px;width:calc(100% - 32px)">
+          <h3 style="font-size:16px;font-weight:700;color:#1c1917;margin:0 0 16px">แก้ไข Unit</h3>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div>
+              <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:4px">สถานะ</label>
+              <select id="editUnitStatus" class="gd-input">
+                <option value="available">ว่าง</option>
+                <option value="damaged">ชำรุด</option>
+                <option value="lost">สูญหาย</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:4px">หมายเหตุ</label>
+              <textarea id="editUnitNotes" rows="3" class="gd-input" placeholder="หมายเหตุ (ถ้ามี)" style="resize:vertical"></textarea>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:20px">
+            <button id="saveUnitBtn" onclick="submitEditUnit('${he(unitId)}')" class="btn-primary-sm" style="flex:1">บันทึก</button>
+            <button onclick="document.getElementById('editUnitModal').remove()" class="mini-btn-gray" style="flex:1;padding:7px 14px;font-size:13px">ยกเลิก</button>
+          </div>
+        </div>`;
+      document.body.appendChild(modal);
+      modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+      sb.from('equipment_units').select('status,notes').eq('id', unitId).maybeSingle()
+        .then(({ data }) => {
+          if (!data) return;
+          document.getElementById('editUnitStatus').value = data.status || 'available';
+          document.getElementById('editUnitNotes').value = data.notes || '';
+        });
+    }
+
+    async function submitEditUnit(unitId) {
+      const status = document.getElementById('editUnitStatus')?.value;
+      const notes  = document.getElementById('editUnitNotes')?.value.trim() || null;
+      const btn = document.getElementById('saveUnitBtn');
+      if (btn) { btn.disabled = true; btn.textContent = 'กำลังบันทึก...'; }
+      try {
+        const { data: old } = await sb.from('equipment_units').select('status,notes').eq('id', unitId).maybeSingle();
+        const { error } = await sb.from('equipment_units').update({ status, notes }).eq('id', unitId);
+        if (error) throw error;
+        await logAction('UNIT_STATUS_UPDATE', 'equipment_units', unitId, old, { status, notes });
+        toast('บันทึกเรียบร้อยแล้ว', 'success');
+        document.getElementById('editUnitModal')?.remove();
+        await selectEquipment(selectedEquipmentId);
+      } catch(e) {
+        console.error(e);
+        toast('บันทึกไม่สำเร็จ: ' + (e.message || e), 'error');
+        if (btn) { btn.disabled = false; btn.textContent = 'บันทึก'; }
+      }
+    }
+
+    function returnUnitByManager(unitId) {
+      showConfirm({
+        title: 'คืนอุปกรณ์โดย Manager',
+        message: 'ยืนยันการคืนอุปกรณ์แทน GA?',
+        icon: '↩',
+        confirmText: 'ยืนยันคืน',
+        confirmColor: '#f97316',
+        onConfirm: async () => {
+          try {
+            const { data: record } = await sb.from('borrow_records')
+              .select('id')
+              .eq('unit_id', unitId)
+              .eq('status', 'borrowed')
+              .maybeSingle();
+            if (!record) { toast('ไม่พบรายการยืมที่ active', 'warning'); return; }
+            const now = new Date().toISOString();
+            const { error: e1 } = await sb.from('borrow_records')
+              .update({ status: 'returned', return_date: now })
+              .eq('id', record.id);
+            if (e1) throw e1;
+            const { error: e2 } = await sb.from('equipment_units')
+              .update({ status: 'available' })
+              .eq('id', unitId);
+            if (e2) throw e2;
+            await logAction('RETURN_BY_MANAGER', 'borrow_records', record.id, { status: 'borrowed' }, { status: 'returned', return_date: now });
+            toast('คืนอุปกรณ์เรียบร้อยแล้ว', 'success');
+            await selectEquipment(selectedEquipmentId);
+          } catch(e) {
+            console.error(e);
+            toast('คืนไม่สำเร็จ: ' + (e.message || e), 'error');
+          }
+        }
+      });
+    }
+
+    async function openUnitHistory(unitId) {
+      document.getElementById('unitHistoryModal')?.remove();
+      const modal = document.createElement('div');
+      modal.id = 'unitHistoryModal';
+      modal.style.cssText = 'position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px)';
+      modal.innerHTML = `
+        <div class="gd-modal-panel" style="max-width:480px;width:calc(100% - 32px);max-height:80vh;overflow-y:auto">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <h3 style="font-size:16px;font-weight:700;color:#1c1917;margin:0">ประวัติการยืม</h3>
+            <button onclick="document.getElementById('unitHistoryModal').remove()" style="background:none;border:none;color:#a8a29e;font-size:20px;cursor:pointer;line-height:1">×</button>
+          </div>
+          <div id="unitHistoryContent" style="font-size:13px;color:#a8a29e;text-align:center;padding:24px">กำลังโหลด...</div>
+        </div>`;
+      document.body.appendChild(modal);
+      modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+
+      const { data: records } = await sb.from('borrow_records')
+        .select('borrower_name, borrow_date, due_date, return_date, status, ga_name')
+        .eq('unit_id', unitId)
+        .order('borrow_date', { ascending: false });
+
+      const content = document.getElementById('unitHistoryContent');
+      if (!records?.length) {
+        content.innerHTML = '<p style="color:#a8a29e;font-size:13px">ยังไม่เคยถูกยืม</p>';
+        return;
+      }
+      const fmt = d => d ? new Date(d).toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' }) : '—';
+      const statusBadge = s => s === 'returned'
+        ? `<span class="eq-tag t-green">คืนแล้ว</span>`
+        : `<span class="eq-tag t-blue">ยืมอยู่</span>`;
+      content.innerHTML = records.map(r => `
+        <div style="background:#fafaf9;border:0.5px solid #e7e5e4;border-radius:8px;padding:10px 12px;margin-bottom:8px;text-align:left">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+            <span style="font-weight:600;color:#1c1917">${he(r.borrower_name || '—')}</span>
+            ${statusBadge(r.status)}
+          </div>
+          <div style="font-size:11px;color:#78716c;display:flex;gap:12px;flex-wrap:wrap">
+            <span>ยืม: ${fmt(r.borrow_date)}</span>
+            <span>กำหนดคืน: ${fmt(r.due_date)}</span>
+            ${r.return_date ? `<span>คืนจริง: ${fmt(r.return_date)}</span>` : ''}
+            ${r.ga_name ? `<span>GA: ${he(r.ga_name)}</span>` : ''}
+          </div>
+        </div>`).join('');
+    }
 
     async function printAllUnits(eqId) {
       const equipment = EQ.find(e => e.eq_id === eqId);
