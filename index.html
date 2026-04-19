@@ -6315,7 +6315,74 @@
     }
 
     // Stubs — implemented in later steps
-    function openAddUnitModal(eqId, eqName) { toast('coming soon: เพิ่ม unit','info'); }
+    function openAddUnitModal(eqId, eqName) {
+      document.getElementById('addUnitModal')?.remove();
+      const defaultPrefix = (eqName || '')
+        .toUpperCase().replace(/[^A-Z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 12);
+      const modal = document.createElement('div');
+      modal.id = 'addUnitModal';
+      modal.style.cssText = 'position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px)';
+      modal.innerHTML = `
+        <div class="gd-modal-panel" style="max-width:360px;width:calc(100% - 32px)">
+          <h3 style="font-size:16px;font-weight:700;color:#1c1917;margin:0 0 4px">เพิ่ม unit</h3>
+          <p style="font-size:12px;color:#a8a29e;margin:0 0 16px">${he(eqName)}</p>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div>
+              <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:4px">Prefix</label>
+              <input id="unitPrefix" type="text" value="${he(defaultPrefix)}" maxlength="20" placeholder="เช่น NB-001" class="gd-input">
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:4px">จำนวน unit</label>
+              <input id="unitCount" type="number" value="1" min="1" max="50" class="gd-input">
+            </div>
+            <div id="unitPreview" style="min-height:20px;font-size:11px;color:#78716c;font-family:'Courier New',monospace;background:#fafaf9;border-radius:8px;padding:8px 10px"></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:20px">
+            <button id="createUnitBtn" onclick="submitCreateUnits('${he(eqId)}')" class="btn-primary-sm" style="flex:1">สร้าง unit</button>
+            <button onclick="document.getElementById('addUnitModal').remove()" class="mini-btn-gray" style="flex:1;padding:7px 14px;font-size:13px">ยกเลิก</button>
+          </div>
+        </div>`;
+      document.body.appendChild(modal);
+      modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+      const updatePreview = () => {
+        const prefix = (document.getElementById('unitPrefix')?.value || '').trim();
+        const count  = Math.min(parseInt(document.getElementById('unitCount')?.value) || 1, 50);
+        const p = document.getElementById('unitPreview');
+        if (!p) return;
+        if (!prefix) { p.textContent = ''; return; }
+        const samples = Array.from({length: Math.min(count, 3)}, (_, i) =>
+          `${prefix}-${String(i + 1).padStart(2, '0')}`);
+        p.textContent = 'จะสร้าง: ' + samples.join(', ') + (count > 3 ? ', ...' : '');
+      };
+      document.getElementById('unitPrefix')?.addEventListener('input', updatePreview);
+      document.getElementById('unitCount')?.addEventListener('input', updatePreview);
+      updatePreview();
+      setTimeout(() => document.getElementById('unitPrefix')?.select(), 50);
+    }
+    async function submitCreateUnits(equipmentId) {
+      const prefix = (document.getElementById('unitPrefix')?.value || '').trim();
+      const count  = Math.min(parseInt(document.getElementById('unitCount')?.value) || 1, 50);
+      if (!prefix) { toast('กรุณากรอก prefix', 'warning'); return; }
+      const btn = document.getElementById('createUnitBtn');
+      if (btn) { btn.disabled = true; btn.textContent = 'กำลังสร้าง...'; }
+      try {
+        const rows = Array.from({length: count}, (_, i) => ({
+          equipment_id: equipmentId,
+          unit_code:    `${prefix}-${String(i + 1).padStart(2, '0')}`,
+          status:       'available'
+        }));
+        const { error } = await sb.from('equipment_units').insert(rows);
+        if (error) throw error;
+        await logAction('UNIT_CREATE', 'equipment_units', equipmentId, null, { prefix, count });
+        toast(`สร้าง ${count} unit เรียบร้อยแล้ว`, 'success');
+        document.getElementById('addUnitModal')?.remove();
+        await selectEquipment(equipmentId);
+      } catch(e) {
+        console.error(e);
+        toast('สร้าง unit ไม่สำเร็จ: ' + (e.message || e), 'error');
+        if (btn) { btn.disabled = false; btn.textContent = 'สร้าง unit'; }
+      }
+    }
     function openQRModal(uid, uc)           { toast('coming soon: QR','info'); }
     function openUnitHistory(uid)           { toast('coming soon: ประวัติ','info'); }
     function openEditUnitModal(uid)         { toast('coming soon: แก้ไข unit','info'); }
