@@ -6366,6 +6366,18 @@
       const btn = document.getElementById('createUnitBtn');
       if (btn) { btn.disabled = true; btn.textContent = 'กำลังสร้าง...'; }
       try {
+        // Check capacity: total existing units vs equipment.quantity cap
+        const equipment = EQ.find(e => e.eq_id === equipmentId);
+        const cap = equipment?.quantity ?? Infinity;
+        const { count: existingTotal } = await sb.from('equipment_units')
+          .select('*', { count: 'exact', head: true })
+          .eq('equipment_id', equipmentId);
+        if ((existingTotal || 0) + count > cap) {
+          const remaining = cap - (existingTotal || 0);
+          toast(`เพิ่มได้อีกแค่ ${remaining} unit (จำนวนที่ตั้งไว้: ${cap})`, 'warning');
+          if (btn) { btn.disabled = false; btn.textContent = 'สร้าง unit'; }
+          return;
+        }
         // Find highest existing running number for this prefix
         const { data: existing } = await sb.from('equipment_units')
           .select('unit_code')
