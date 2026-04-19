@@ -6102,40 +6102,94 @@
     }
 
     // ===== MGR: EQUIPMENT TAB =====
-    async function renderEquipmentTab() {
+    function renderEquipmentTab() {
       const el = document.getElementById('tab-equipment');
-      if (!el) return;
-      const catOptions = CATS.map(c =>
-        `<option value="${he(c.name)}"${eqCatFilter===c.name?' selected':''}>${he(c.name)}</option>`
-      ).join('');
+      const cats = CATS.map(c => c.name);
+      const q = eqSearch.toLowerCase();
+      const filtered = EQ.filter(e => {
+        const matchSearch = !q || (e.name||'').toLowerCase().includes(q) || (e.serial_no||'').toLowerCase().includes(q);
+        const matchCat = !eqCatFilter || e.category === eqCatFilter;
+        return matchSearch && matchCat;
+      });
+      const eqEmptyState = filtered.length === 0
+        ? `<p class="eq-meta text-center py-4">ไม่พบอุปกรณ์</p>`
+        : '';
       el.innerHTML = `<div class="gd-container fade-in">
+        <!-- Top bar -->
         <div class="eq-topbar">
-          <input id="eqSearchInput2" placeholder="ค้นหาอุปกรณ์..." class="eq-search" value="${he(eqSearch)}">
+          <input id="eqSearchInput" type="text" placeholder="ค้นหาอุปกรณ์..." class="eq-search" value="${he(eqSearch)}"
+            oninput="eqSearch=this.value;debounce('eqSearch',renderEquipmentTab)">
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <select id="eqCategoryFilter2" class="eq-filter-select">
+            <select id="eqCatSelect" onchange="eqCatFilter=this.value;renderEquipmentTab()"
+              class="eq-filter-select">
               <option value="">ทุกหมวดหมู่</option>
-              ${catOptions}
+              ${cats.map(c=>`<option value="${he(c)}"${eqCatFilter===c?' selected':''}>${he(c)}</option>`).join('')}
             </select>
             <button onclick="showAddEquipment()" class="btn-primary-sm">+ เพิ่มอุปกรณ์</button>
           </div>
         </div>
+        <!-- Legend -->
         <div class="availability-legend" style="margin-bottom:12px">
           <span><span class="leg-dot green"></span>ว่าง</span>
           <span><span class="leg-dot blue"></span>ยืมอยู่</span>
           <span><span class="leg-dot amber"></span>ชำรุด</span>
           <span><span class="leg-dot red"></span>สูญหาย</span>
         </div>
+        <!-- Split panel -->
         <div class="eq-split-panel">
+          <!-- LEFT: equipment list + category management (logic เดิม) -->
           <div class="eq-left-panel" id="eqLeftPanel">
-            <div id="eqListContainer"></div>
+            <div class="space-y-3 mb-3">
+              ${eqEmptyState}
+              ${filtered.map(e=>`<div class="eq-list-item" onclick="void(0)">
+                <div style="display:flex;align-items:center;gap:10px">
+                  ${e.image_url
+                    ? `<img src="${he(e.image_url)}" style="width:36px;height:36px;object-fit:cover;border-radius:8px;flex-shrink:0">`
+                    : `<div style="width:36px;height:36px;background:#fff7ed;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${eqIconSvg(18,'#f97316')}</div>`}
+                  <div style="flex:1;min-width:0">
+                    <p class="eq-item-name">${he(e.name)}</p>
+                    <p class="eq-item-meta">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+                    <span class="eq-tag ${e.available===0?'t-red':e.available<e.quantity?'t-amber':'t-green'}">
+                      ${e.available}/${e.quantity}
+                    </span>
+                    <div style="display:flex;gap:2px">
+                      <button data-id="${he(e.eq_id)}" onclick="event.stopPropagation();showEditEquipment(this.dataset.id)"
+                        class="mini-btn-gray" title="แก้ไข">✏️</button>
+                      <button data-id="${he(e.eq_id)}" onclick="event.stopPropagation();confirmDeleteEquip(this.dataset.id)"
+                        class="mini-btn-gray" style="color:#ef4444" title="ลบ">🗑</button>
+                    </div>
+                  </div>
+                </div>
+              </div>`).join('')}
+            </div>
+            <!-- Category management -->
             <div class="eq-category-section">
               <div class="eq-category-header">
                 <span class="section-label">หมวดหมู่</span>
-                <button onclick="openAddCategoryForm()" class="mini-btn-orange">+ เพิ่มหมวดหมู่</button>
+                ${_addCatMode ? '' : `<button onclick="showAddCatInput()" class="mini-btn-orange">+ เพิ่มหมวดหมู่</button>`}
               </div>
-              <div id="categoryList"></div>
+              ${_addCatMode ? `<div style="display:flex;gap:6px;margin-bottom:8px">
+                <input id="newCatInput" type="text" placeholder="ชื่อหมวดหมู่" maxlength="50" style="height:32px;font-size:12px;"
+                  onkeydown="if(event.key==='Enter')saveCategory();if(event.key==='Escape')cancelAddCat()">
+                <button onclick="saveCategory()" class="mini-btn-orange" style="white-space:nowrap">บันทึก</button>
+                <button onclick="cancelAddCat()" class="mini-btn-gray">ยกเลิก</button>
+              </div>` : ''}
+              ${CATS.length === 0
+                ? `<p style="font-size:12px;color:#a8a29e;text-align:center;padding:8px 0">ยังไม่มีหมวดหมู่</p>`
+                : CATS.map(c => {
+                    const inUse = EQ.some(e => e.category === c.name);
+                    return `<div class="category-item">
+                      <span>${he(c.name)}</span>
+                      <button data-id="${he(c.id)}" data-name="${he(c.name)}"
+                        onclick="deleteCategoryById(this.dataset.id,this.dataset.name)"
+                        class="mini-btn-gray" style="color:${inUse?'#e2e8f0':'#ef4444'}" ${inUse?'disabled':''}>ลบ</button>
+                    </div>`;
+                  }).join('')}
             </div>
           </div>
+          <!-- RIGHT: detail panel (empty state for now) -->
           <div class="eq-right-panel" id="eqRightPanel">
             <div class="eq-empty-detail" id="eqEmptyDetail">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FDBA74" stroke-width="1.5">
@@ -6148,16 +6202,7 @@
           </div>
         </div>
       </div>`;
-      document.getElementById('eqSearchInput2')?.addEventListener('input', e => {
-        eqSearch = e.target.value;
-        renderEquipmentList();
-      });
-      document.getElementById('eqCategoryFilter2')?.addEventListener('change', e => {
-        eqCatFilter = e.target.value;
-        renderEquipmentList();
-      });
-      await renderEquipmentList();
-      renderCategoryList();
+      if (_addCatMode) setTimeout(()=>document.getElementById('newCatInput')?.focus(), 50);
     }
     // ===== CATEGORY CRUD =====
     function showAddCatInput() { _addCatMode = true; renderEquipmentTab(); }
