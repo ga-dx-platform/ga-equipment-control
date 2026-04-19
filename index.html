@@ -6143,7 +6143,9 @@
             </div>
             <div class="space-y-3 mb-6">
               ${filtered.length === 0 ? eqEmptyState :
-              filtered.map(e=>`<div class="gd-card" style="padding: 20px;">
+              filtered.map(e=>`<div class="gd-card" data-eqid="${he(e.eq_id)}"
+                onclick="selectEquipment('${he(e.eq_id)}')"
+                style="padding:20px;cursor:pointer;${selectedEquipmentId===e.eq_id?'border:1.5px solid #f97316;background:#fff7ed;':''}">
                 <div class="flex items-center gap-3">
                   ${e.image_url ? `<img src="${he(e.image_url)}" class="w-11 h-11 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div style="width:44px;height:44px;border-radius:12px;background:#F1F5F9;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${eqIconSvg(22)}</div>`}
                   <div class="flex-1 min-w-0">
@@ -6155,8 +6157,8 @@
                       ${e.available}/${e.quantity}
                     </span>
                     <div class="flex gap-0.5 mt-1">
-                      <button data-id="${he(e.eq_id)}" onclick="showEditEquipment(this.dataset.id)" class="p-1.5 rounded-lg text-gray-300 hover:bg-orange-50" style="transition:all 150ms;" onmouseover="this.querySelector('i').style.color='var(--orange)'" onmouseout="this.querySelector('i').style.color=''"><i data-lucide="pencil" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
-                      <button data-id="${he(e.eq_id)}" onclick="confirmDeleteEquip(this.dataset.id)" class="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50"><i data-lucide="trash-2" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
+                      <button data-id="${he(e.eq_id)}" onclick="event.stopPropagation();showEditEquipment(this.dataset.id)" class="p-1.5 rounded-lg text-gray-300 hover:bg-orange-50" style="transition:all 150ms;" onmouseover="this.querySelector('i').style.color='var(--orange)'" onmouseout="this.querySelector('i').style.color=''"><i data-lucide="pencil" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
+                      <button data-id="${he(e.eq_id)}" onclick="event.stopPropagation();confirmDeleteEquip(this.dataset.id)" class="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50"><i data-lucide="trash-2" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
                     </div>
                   </div>
                 </div>
@@ -6209,6 +6211,118 @@
       lucide.createIcons({'stroke-width': 1.5});
       if (_addCatMode) setTimeout(()=>document.getElementById('newCatInput')?.focus(), 50);
     }
+
+    // ===== SELECT EQUIPMENT → RIGHT PANEL ====
+    async function selectEquipment(equipmentId) {
+      selectedEquipmentId = equipmentId;
+      // Update active state on all cards
+      document.querySelectorAll('[data-eqid]').forEach(el => {
+        const active = el.dataset.eqid === equipmentId;
+        el.style.border = active ? '1.5px solid #f97316' : '';
+        el.style.background = active ? '#fff7ed' : '';
+      });
+      const equipment = EQ.find(e => e.eq_id === equipmentId);
+      if (!equipment) return;
+      const { data: units } = await sb.from('equipment_units')
+        .select('*, borrow_records(borrower_name, borrow_date, due_date)')
+        .eq('equipment_id', equipmentId)
+        .order('unit_code');
+      renderUnitDetail(equipment, units || []);
+      document.getElementById('eqRightPanel')?.classList.add('mobile-open');
+    }
+
+    function renderUnitDetail(equipment, units) {
+      document.getElementById('eqEmptyDetail').style.display = 'none';
+      const content = document.getElementById('eqDetailContent');
+      content.style.display = 'block';
+      const avail   = units.filter(u => u.status === 'available').length;
+      const borrowed = units.filter(u => u.status === 'borrowed').length;
+      const damaged  = units.filter(u => u.status === 'damaged').length;
+      const eqId   = he(equipment.eq_id);
+      const eqName = he(equipment.name);
+      content.innerHTML = `
+        <div class="eq-detail-header">
+          <div>
+            <p class="eq-detail-title">${eqName}</p>
+            <div style="display:flex;gap:6px;margin-top:4px;flex-wrap:wrap">
+              <span class="eq-tag t-green">${avail} ว่าง</span>
+              ${borrowed > 0 ? `<span class="eq-tag t-blue">${borrowed} ยืม</span>` : ''}
+              ${damaged  > 0 ? `<span class="eq-tag t-amber">${damaged} ชำรุด</span>` : ''}
+            </div>
+          </div>
+          <div class="eq-detail-actions">
+            <button onclick="openAddUnitModal('${eqId}','${eqName}')" class="btn-primary-sm">+ เพิ่ม unit</button>
+            <button onclick="printAllUnits('${eqId}')" class="mini-btn-gray">พิมพ์ทั้งหมด</button>
+            <button onclick="event.stopPropagation();showEditEquipment('${eqId}')" class="mini-btn-gray">แก้ไข</button>
+            <button onclick="event.stopPropagation();confirmDeleteEquip('${eqId}')" class="mini-btn-gray" style="color:#ef4444">ลบ</button>
+          </div>
+        </div>
+        <div id="batchBar" style="display:none;background:#fff7ed;border-radius:8px;padding:8px 12px;margin-bottom:10px;align-items:center;gap:8px">
+          <input type="checkbox" id="selectAllUnits" onchange="toggleSelectAll(this.checked)">
+          <span style="font-size:12px;color:#c2410c" id="selectedCount">เลือก 0 รายการ</span>
+          <button onclick="batchPrintSelected('${eqId}')" class="mini-btn-orange">พิมพ์ที่เลือก</button>
+        </div>
+        <div id="unitList">
+          ${units.length === 0
+            ? `<div style="text-align:center;padding:40px 0">
+                 <p style="color:#a8a29e;font-size:13px">ยังไม่มี unit</p>
+                 <button onclick="openAddUnitModal('${eqId}','${eqName}')" class="btn-primary-sm" style="margin-top:8px">+ เพิ่ม unit แรก</button>
+               </div>`
+            : units.map(renderUnitRow).join('')}
+        </div>`;
+    }
+
+    function renderUnitRow(unit) {
+      const br  = unit.borrow_records?.[0];
+      const uid = he(unit.id);
+      const uc  = he(unit.unit_code);
+      const badge = {
+        available: `<span class="eq-tag t-green">ว่าง</span>`,
+        borrowed:  `<span class="eq-tag t-blue">ยืม${br ? ` — ${he(br.borrower_name)}` : ''}</span>`,
+        damaged:   `<span class="eq-tag t-amber">ชำรุด</span>`,
+        lost:      `<span class="eq-tag t-red">สูญหาย</span>`
+      }[unit.status] || '';
+      const acts = {
+        available: `<button onclick="openQRModal('${uid}','${uc}')"      class="mini-btn-gray">QR</button>
+                    <button onclick="openUnitHistory('${uid}')"           class="mini-btn-gray">ประวัติ</button>
+                    <button onclick="openEditUnitModal('${uid}')"         class="mini-btn-gray">แก้ไข</button>`,
+        borrowed:  `<button onclick="openQRModal('${uid}','${uc}')"      class="mini-btn-gray">QR</button>
+                    <button onclick="openUnitHistory('${uid}')"           class="mini-btn-gray">ประวัติ</button>
+                    <button onclick="returnUnitByManager('${uid}')"       class="mini-btn-orange">คืน</button>`,
+        damaged:   `<button onclick="openQRModal('${uid}','${uc}')"      class="mini-btn-gray">QR</button>
+                    <button onclick="openEditUnitModal('${uid}')"         class="mini-btn-orange">แก้ไข</button>`,
+        lost:      `<button onclick="openEditUnitModal('${uid}')"         class="mini-btn-orange">แก้ไข</button>`
+      }[unit.status] || '';
+      return `<div class="unit-row ${unit.status}" data-unit-id="${uid}">
+        <input type="checkbox" class="unit-checkbox" onchange="onUnitCheckChange()" value="${uid}">
+        <span class="unit-dot ${unit.status}"></span>
+        <span class="unit-code">${uc}</span>
+        ${badge}
+        <div style="display:flex;gap:4px;margin-left:auto">${acts}</div>
+      </div>`;
+    }
+
+    function onUnitCheckChange() {
+      const checked = document.querySelectorAll('.unit-checkbox:checked').length;
+      const bar = document.getElementById('batchBar');
+      const cnt = document.getElementById('selectedCount');
+      if (cnt) cnt.textContent = `เลือก ${checked} รายการ`;
+      if (bar) bar.style.display = checked > 0 ? 'flex' : 'none';
+    }
+    function toggleSelectAll(checked) {
+      document.querySelectorAll('.unit-checkbox').forEach(cb => cb.checked = checked);
+      onUnitCheckChange();
+    }
+
+    // Stubs — implemented in later steps
+    function openAddUnitModal(eqId, eqName) { toast('coming soon: เพิ่ม unit','info'); }
+    function openQRModal(uid, uc)           { toast('coming soon: QR','info'); }
+    function openUnitHistory(uid)           { toast('coming soon: ประวัติ','info'); }
+    function openEditUnitModal(uid)         { toast('coming soon: แก้ไข unit','info'); }
+    function returnUnitByManager(uid)       { toast('coming soon: คืน','info'); }
+    function printAllUnits(eqId)            { toast('coming soon: พิมพ์ทั้งหมด','info'); }
+    function batchPrintSelected(eqId)       { toast('coming soon: พิมพ์ที่เลือก','info'); }
+
     // ===== CATEGORY CRUD =====
     function showAddCatInput() { _addCatMode = true; renderEquipmentTab(); }
     function cancelAddCat() { _addCatMode = false; renderEquipmentTab(); }
