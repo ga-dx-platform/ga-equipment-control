@@ -4613,6 +4613,7 @@
     let AUDIT_LOGS = [], auditFilter = '', auditSearch = '', auditDateFrom = '', auditDateTo = '';
     let eqSearch = '', eqCatFilter = '';
     let selectedEquipmentId = null;
+    let _qrModalCtx = {};
 
     // ===== AUDIT LOG HELPER =====
     async function logAction(action_type, target_table, target_id, old_data, new_data) {
@@ -6406,12 +6407,128 @@
         if (btn) { btn.disabled = false; btn.textContent = 'สร้าง unit'; }
       }
     }
-    function openQRModal(uid, uc)           { toast('coming soon: QR','info'); }
-    function openUnitHistory(uid)           { toast('coming soon: ประวัติ','info'); }
-    function openEditUnitModal(uid)         { toast('coming soon: แก้ไข unit','info'); }
-    function returnUnitByManager(uid)       { toast('coming soon: คืน','info'); }
-    function printAllUnits(eqId)            { toast('coming soon: พิมพ์ทั้งหมด','info'); }
-    function batchPrintSelected(eqId)       { toast('coming soon: พิมพ์ที่เลือก','info'); }
+    function openQRModal(uid, uc) {
+      document.getElementById('qrModal')?.remove();
+      const equipment = EQ.find(e => e.eq_id === selectedEquipmentId);
+      _qrModalCtx = { uc, eqName: equipment?.name || '' };
+      const qrUrl = `${window.location.origin}${window.location.pathname}?unit=${encodeURIComponent(uc)}`;
+      const modal = document.createElement('div');
+      modal.id = 'qrModal';
+      modal.style.cssText = 'position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px)';
+      modal.innerHTML = `
+        <div style="background:#fff;border-radius:20px;padding:28px;width:320px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+          <h3 style="font-size:16px;font-weight:700;margin:0 0 4px;color:#1c1917">QR Code</h3>
+          <p style="font-size:13px;color:#a8a29e;margin:0 0 16px">${he(equipment?.name || '')}</p>
+          <div id="qrCodeDisplay" style="display:flex;justify-content:center;margin-bottom:12px;padding:16px;background:#f9f9f9;border-radius:12px"></div>
+          <div style="background:#fafaf9;border-radius:8px;padding:8px 12px;margin-bottom:20px">
+            <p style="font-size:11px;color:#a8a29e;margin:0 0 2px">Unit Code</p>
+            <p style="font-size:14px;font-weight:600;color:#1c1917;font-family:'Courier New',monospace;margin:0">${he(uc)}</p>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button onclick="printQRLabel()" class="btn-primary-sm" style="flex:1">🖨 พิมพ์ label</button>
+            <button onclick="downloadQRPng()" class="mini-btn-gray" style="flex:1;padding:7px 14px;font-size:12px">⬇ Download PNG</button>
+          </div>
+          <button onclick="document.getElementById('qrModal').remove()" style="margin-top:12px;background:none;border:none;color:#a8a29e;font-size:13px;cursor:pointer;font-family:'Noto Sans Thai',sans-serif">ปิด</button>
+        </div>`;
+      document.body.appendChild(modal);
+      modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+      new QRCode(document.getElementById('qrCodeDisplay'), {
+        text: qrUrl, width: 200, height: 200,
+        colorDark: '#1c1917', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
+
+    function printQRLabel() {
+      const { uc, eqName } = _qrModalCtx;
+      const qrUrl = `${window.location.origin}${window.location.pathname}?unit=${encodeURIComponent(uc)}`;
+      const w = window.open('', '_blank');
+      w.document.write(`<!DOCTYPE html><html><head>
+        <title>QR — ${uc}</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
+        <style>
+          @page{size:60mm 40mm;margin:0}
+          body{margin:0;padding:4mm;font-family:sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;height:40mm}
+          #qr canvas,#qr img{width:24mm!important;height:24mm!important}
+          .n{font-size:8pt;font-weight:bold;margin:1mm 0 0;text-align:center}
+          .c{font-size:7pt;color:#666;font-family:monospace}
+          .b{font-size:6pt;color:#999;margin-top:1mm}
+        </style>
+      </head><body>
+        <div id="qr"></div>
+        <p class="n">${eqName}</p><p class="c">${uc}</p>
+        <p class="b">GA Equipment Control</p>
+        <script>
+          new QRCode(document.getElementById('qr'),{text:'${qrUrl}',width:91,height:91,colorDark:'#000',correctLevel:QRCode.CorrectLevel.H});
+          setTimeout(()=>{window.print();window.close();},500);
+        <\/script>
+      </body></html>`);
+      w.document.close();
+    }
+
+    function downloadQRPng() {
+      const canvas = document.querySelector('#qrCodeDisplay canvas');
+      if (!canvas) { toast('ไม่พบ QR Code', 'error'); return; }
+      const link = document.createElement('a');
+      link.download = `QR-${_qrModalCtx.uc}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function openUnitHistory(uid)     { toast('coming soon: ประวัติ', 'info'); }
+    function openEditUnitModal(uid)   { toast('coming soon: แก้ไข unit', 'info'); }
+    function returnUnitByManager(uid) { toast('coming soon: คืน', 'info'); }
+
+    async function printAllUnits(eqId) {
+      const equipment = EQ.find(e => e.eq_id === eqId);
+      const eqName = equipment?.name || '';
+      const { data: units } = await sb.from('equipment_units')
+        .select('unit_code').eq('equipment_id', eqId).order('unit_code');
+      if (!units?.length) { toast('ยังไม่มี unit', 'warning'); return; }
+      batchPrintLabels(units.map(u => ({ unit_code: u.unit_code, eqName })));
+    }
+
+    async function batchPrintSelected(eqId) {
+      const checked = [...document.querySelectorAll('.unit-checkbox:checked')].map(cb => cb.value);
+      if (!checked.length) { toast('เลือก unit ที่ต้องการพิมพ์ก่อน', 'warning'); return; }
+      const equipment = EQ.find(e => e.eq_id === eqId);
+      const eqName = equipment?.name || '';
+      const { data: units } = await sb.from('equipment_units')
+        .select('unit_code').in('id', checked);
+      batchPrintLabels((units || []).map(u => ({ unit_code: u.unit_code, eqName })));
+    }
+
+    function batchPrintLabels(units) {
+      const base = `${window.location.origin}${window.location.pathname}`;
+      const labelsHTML = units.map(u => `
+        <div class="label">
+          <div id="qr-${u.unit_code}"></div>
+          <p class="n">${u.eqName}</p><p class="c">${u.unit_code}</p>
+          <p class="b">GA Equipment Control</p>
+        </div>`).join('');
+      const qrScripts = units.map(u =>
+        `new QRCode(document.getElementById('qr-${u.unit_code}'),{text:'${base}?unit=${encodeURIComponent(u.unit_code)}',width:91,height:91,colorDark:'#000',correctLevel:QRCode.CorrectLevel.H});`
+      ).join('\n');
+      const w = window.open('', '_blank');
+      w.document.write(`<!DOCTYPE html><html><head>
+        <title>Batch QR Labels</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
+        <style>
+          @page{margin:5mm}body{margin:0;font-family:sans-serif}
+          .grid{display:flex;flex-wrap:wrap;gap:2mm}
+          .label{width:60mm;height:40mm;padding:3mm;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0.5px solid #ddd;page-break-inside:avoid}
+          .label div canvas,.label div img{width:22mm!important;height:22mm!important}
+          .n{font-size:7pt;font-weight:bold;margin:1mm 0 0;text-align:center}
+          .c{font-size:6.5pt;color:#555;font-family:monospace}
+          .b{font-size:5.5pt;color:#999}
+        </style>
+      </head><body>
+        <div class="grid">${labelsHTML}</div>
+        <script>${qrScripts}
+        setTimeout(()=>{window.print();},800);<\/script>
+      </body></html>`);
+      w.document.close();
+    }
 
     // ===== CATEGORY CRUD =====
     function showAddCatInput() { _addCatMode = true; renderEquipmentTab(); }
