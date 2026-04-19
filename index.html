@@ -6732,6 +6732,13 @@
         confirmColor: '#ef4444',
         onConfirm: async () => {
           try {
+            const { count } = await sb.from('equipment_units')
+              .select('*', { count: 'exact', head: true })
+              .eq('equipment_id', selectedEquipmentId);
+            if (count <= 1) {
+              toast('ไม่สามารถลบ unit สุดท้ายได้ — ต้องมีอย่างน้อย 1 unit', 'warning');
+              return;
+            }
             const { error } = await sb.from('equipment_units').delete().eq('id', unitId);
             if (error) throw error;
             await logAction('UNIT_DELETE', 'equipment_units', unitId, { unit_code: unitCode }, null);
