@@ -4033,6 +4033,10 @@
       .eq-right-panel { display:none; }
       .eq-right-panel.mobile-open { display:block; }
     }
+    .eq-mobile-back { display:none; }
+    @media (max-width:767px) {
+      .eq-mobile-back { display:flex;align-items:center;gap:6px;background:none;border:none;color:#f97316;font-size:13px;font-weight:600;cursor:pointer;padding:0;margin-bottom:12px;font-family:'Noto Sans Thai',sans-serif; }
+    }
     .eq-left-panel { display:flex; flex-direction:column; gap:8px; }
     .eq-list-item { background:#fff; border:0.5px solid #e7e5e4; border-radius:10px; padding:12px; cursor:pointer; transition:all 0.15s ease; margin-bottom:6px; }
     .eq-list-item:hover { border-color:#fed7aa; background:#fff7ed; }
@@ -4614,6 +4618,7 @@
     let eqSearch = '', eqCatFilter = '';
     let selectedEquipmentId = null;
     let _qrModalCtx = {};
+    let _pendingUnitCode = null;
 
     // ===== AUDIT LOG HELPER =====
     async function logAction(action_type, target_table, target_id, old_data, new_data) {
@@ -5257,6 +5262,7 @@
           setTimeout(()=> {
             document.querySelectorAll('#pin-dots .pin-dot').forEach(d=>d.classList.remove('pin-success-flash'));
             buildMain(); goScreen('main'); lucide.createIcons({'stroke-width': 1.5}); startAutoLogout();
+            if (_pendingUnitCode) setTimeout(_handleQrUnitNav, 400);
           }, 200);
           if (CU.role === 'ga') setupCategoryRealtime();
         } else {
@@ -6281,6 +6287,7 @@
       const eqId   = he(equipment.eq_id);
       const eqName = he(equipment.name);
       content.innerHTML = `
+        <button class="eq-mobile-back" onclick="document.getElementById('eqRightPanel').classList.remove('mobile-open')">← กลับ</button>
         <div class="eq-detail-header">
           <div>
             <p class="eq-detail-title">${eqName}</p>
@@ -6323,15 +6330,18 @@
         lost:      `<span class="eq-tag t-red">สูญหาย</span>`
       }[unit.status] || '';
       const acts = {
-        available: `<button onclick="openQRModal('${uid}','${uc}')"      class="mini-btn-gray">QR</button>
-                    <button onclick="openUnitHistory('${uid}')"           class="mini-btn-gray">ประวัติ</button>
-                    <button onclick="openEditUnitModal('${uid}')"         class="mini-btn-gray">แก้ไข</button>`,
-        borrowed:  `<button onclick="openQRModal('${uid}','${uc}')"      class="mini-btn-gray">QR</button>
-                    <button onclick="openUnitHistory('${uid}')"           class="mini-btn-gray">ประวัติ</button>
-                    <button onclick="returnUnitByManager('${uid}')"       class="mini-btn-orange">คืน</button>`,
-        damaged:   `<button onclick="openQRModal('${uid}','${uc}')"      class="mini-btn-gray">QR</button>
-                    <button onclick="openEditUnitModal('${uid}')"         class="mini-btn-orange">แก้ไข</button>`,
-        lost:      `<button onclick="openEditUnitModal('${uid}')"         class="mini-btn-orange">แก้ไข</button>`
+        available: `<button onclick="openQRModal('${uid}','${uc}')"              class="mini-btn-gray">QR</button>
+                    <button onclick="openUnitHistory('${uid}')"                  class="mini-btn-gray">ประวัติ</button>
+                    <button onclick="openEditUnitModal('${uid}')"                class="mini-btn-gray">แก้ไข</button>
+                    <button onclick="deleteUnit('${uid}','${uc}')"               class="mini-btn-gray" style="color:#ef4444">ลบ</button>`,
+        borrowed:  `<button onclick="openQRModal('${uid}','${uc}')"              class="mini-btn-gray">QR</button>
+                    <button onclick="openUnitHistory('${uid}')"                  class="mini-btn-gray">ประวัติ</button>
+                    <button onclick="returnUnitByManager('${uid}')"              class="mini-btn-orange">คืน</button>`,
+        damaged:   `<button onclick="openQRModal('${uid}','${uc}')"              class="mini-btn-gray">QR</button>
+                    <button onclick="openEditUnitModal('${uid}')"                class="mini-btn-orange">แก้ไข</button>
+                    <button onclick="deleteUnit('${uid}','${uc}')"               class="mini-btn-gray" style="color:#ef4444">ลบ</button>`,
+        lost:      `<button onclick="openEditUnitModal('${uid}')"                class="mini-btn-orange">แก้ไข</button>
+                    <button onclick="deleteUnit('${uid}','${uc}')"               class="mini-btn-gray" style="color:#ef4444">ลบ</button>`
       }[unit.status] || '';
       return `<div class="unit-row ${unit.status}" data-unit-id="${uid}">
         <input type="checkbox" class="unit-checkbox" onchange="onUnitCheckChange()" value="${uid}">
@@ -6480,6 +6490,7 @@
 
     function printQRLabel() {
       const { uc, eqName } = _qrModalCtx;
+      logAction('UNIT_PRINT', 'equipment_units', null, null, { unit_code: uc, eq_name: eqName });
       const qrUrl = `${window.location.origin}${window.location.pathname}?unit=${encodeURIComponent(uc)}`;
       const w = window.open('', '_blank');
       w.document.write(`<!DOCTYPE html><html><head>
@@ -6671,6 +6682,7 @@
     }
 
     function batchPrintLabels(units) {
+      logAction('UNIT_PRINT', 'equipment_units', null, null, { unit_codes: units.map(u => u.unit_code), count: units.length });
       const base = `${window.location.origin}${window.location.pathname}`;
       const labelsHTML = units.map(u => `
         <div class="label">
@@ -6703,6 +6715,28 @@
     }
 
     // ===== CATEGORY CRUD =====
+    function deleteUnit(unitId, unitCode) {
+      showConfirm({
+        title: 'ลบ Unit',
+        message: `ลบ "${unitCode}" ออกจากระบบ? ไม่สามารถย้อนกลับได้`,
+        icon: '🗑',
+        confirmText: 'ลบ',
+        confirmColor: '#ef4444',
+        onConfirm: async () => {
+          try {
+            const { error } = await sb.from('equipment_units').delete().eq('id', unitId);
+            if (error) throw error;
+            await logAction('UNIT_DELETE', 'equipment_units', unitId, { unit_code: unitCode }, null);
+            toast(`ลบ ${unitCode} เรียบร้อยแล้ว`, 'success');
+            await selectEquipment(selectedEquipmentId);
+          } catch(e) {
+            console.error(e);
+            toast('ลบไม่สำเร็จ: ' + (e.message || e), 'error');
+          }
+        }
+      });
+    }
+
     function showAddCatInput() { _addCatMode = true; renderEquipmentTab(); }
     function cancelAddCat() { _addCatMode = false; renderEquipmentTab(); }
     async function saveCategory() {
@@ -7231,6 +7265,7 @@
 
     // ===== INIT =====
     async function init(forceRefresh = false) {
+      _pendingUnitCode = new URLSearchParams(window.location.search).get('unit') || null;
       goScreen('loading');
       document.getElementById('loadingMsg').textContent = 'กำลังดึงข้อมูลผู้ใช้...';
       document.getElementById('loadingSlowHint').classList.add('hidden');
@@ -7255,6 +7290,24 @@
     }
 
 
+
+    async function _handleQrUnitNav() {
+      if (!_pendingUnitCode) return;
+      const code = _pendingUnitCode;
+      _pendingUnitCode = null;
+      const { data: unit } = await sb.from('equipment_units')
+        .select('id, equipment_id, unit_code, status')
+        .eq('unit_code', code)
+        .maybeSingle();
+      if (!unit) { toast(`ไม่พบ unit: ${code}`, 'error'); return; }
+      if (CU?.role === 'manager') {
+        switchTab(3);
+        setTimeout(() => selectEquipment(unit.equipment_id), 300);
+      } else {
+        const statusTH = { available:'ว่าง', borrowed:'ยืมอยู่', damaged:'ชำรุด', lost:'สูญหาย' }[unit.status] || unit.status;
+        toast(`Unit ${unit.unit_code}: ${statusTH}`, 'info');
+      }
+    }
 
     // ===== RECORD DETAIL =====
     function renderTimelineItem(log) {
