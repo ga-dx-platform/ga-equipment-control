@@ -6111,87 +6111,91 @@
         const matchCat = !eqCatFilter || e.category === eqCatFilter;
         return matchSearch && matchCat;
       });
-      const eqEmptyState = filtered.length === 0
-        ? `<p class="eq-meta text-center py-4">ไม่พบอุปกรณ์</p>`
-        : '';
+      const eqEmptyState = eqCatFilter
+        ? `<p style="font-size:14px;color:#78716C;text-align:center;padding:24px 12px;">ไม่มีอุปกรณ์ในหมวด "${he(eqCatFilter)}"</p>`
+        : `<div style="text-align:center;padding:24px 12px;color:#a8a29e;font-size:13px;">ไม่พบอุปกรณ์</div>`;
       el.innerHTML = `<div class="gd-container fade-in">
-        <!-- Top bar -->
-        <div class="eq-topbar">
-          <input id="eqSearchInput" type="text" placeholder="ค้นหาอุปกรณ์..." class="eq-search" value="${he(eqSearch)}"
-            oninput="eqSearch=this.value;debounce('eqSearch',renderEquipmentTab)">
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <select id="eqCatSelect" onchange="eqCatFilter=this.value;renderEquipmentTab()"
-              class="eq-filter-select">
-              <option value="">ทุกหมวดหมู่</option>
-              ${cats.map(c=>`<option value="${he(c)}"${eqCatFilter===c?' selected':''}>${he(c)}</option>`).join('')}
-            </select>
-            <button onclick="showAddEquipment()" class="btn-primary-sm">+ เพิ่มอุปกรณ์</button>
-          </div>
-        </div>
-        <!-- Legend -->
-        <div class="availability-legend" style="margin-bottom:12px">
-          <span><span class="leg-dot green"></span>ว่าง</span>
-          <span><span class="leg-dot blue"></span>ยืมอยู่</span>
-          <span><span class="leg-dot amber"></span>ชำรุด</span>
-          <span><span class="leg-dot red"></span>สูญหาย</span>
-        </div>
-        <!-- Split panel -->
         <div class="eq-split-panel">
-          <!-- LEFT: equipment list + category management (logic เดิม) -->
+          <!-- LEFT: original logic unchanged -->
           <div class="eq-left-panel" id="eqLeftPanel">
-            <div class="space-y-3 mb-3">
-              ${eqEmptyState}
-              ${filtered.map(e=>`<div class="eq-list-item" onclick="void(0)">
-                <div style="display:flex;align-items:center;gap:10px">
-                  ${e.image_url
-                    ? `<img src="${he(e.image_url)}" style="width:36px;height:36px;object-fit:cover;border-radius:8px;flex-shrink:0">`
-                    : `<div style="width:36px;height:36px;background:#fff7ed;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${eqIconSvg(18,'#f97316')}</div>`}
-                  <div style="flex:1;min-width:0">
-                    <p class="eq-item-name">${he(e.name)}</p>
-                    <p class="eq-item-meta">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="eq-title">รายการอุปกรณ์ <span class="text-gray-400 font-normal">(${filtered.length}/${EQ.length})</span></h4>
+              <button onclick="showAddEquipment()" class="flex items-center gap-1.5 px-3 py-1.5 text-white text-xs font-semibold rounded-lg transition shadow-sm" style="background:#f97316;color:white;">
+                <i data-lucide="plus" class="w-[18px] h-[18px] text-[#64748B]"></i> เพิ่มอุปกรณ์</button>
+            </div>
+            <div class="availability-legend">
+              <span><span class="legend-dot green"></span>พร้อมใช้</span>
+              <span><span class="legend-dot amber"></span>เกือบหมด</span>
+              <span><span class="legend-dot red"></span>หมด</span>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-2 mb-4">
+              <div class="relative flex-1">
+                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"></i>
+                <input id="eqSearchInput" type="text" placeholder="ค้นหาชื่อหรือ Serial No." value="${he(eqSearch)}"
+                  oninput="eqSearch=this.value;debounce('eqSearch',renderEquipmentTab)"
+                  class="w-full pl-9 pr-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-brand">
+              </div>
+              <select id="eqCatSelect" onchange="eqCatFilter=this.value;renderEquipmentTab()"
+                class="text-xs border border-gray-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-1 focus:ring-brand text-gray-700 w-full sm:w-auto sm:min-w-[110px]">
+                <option value="">ทุกหมวด</option>
+                ${cats.map(c=>`<option value="${he(c)}"${eqCatFilter===c?' selected':''}>${he(c)}</option>`).join('')}
+              </select>
+            </div>
+            <div class="space-y-3 mb-6">
+              ${filtered.length === 0 ? eqEmptyState :
+              filtered.map(e=>`<div class="gd-card" style="padding: 20px;">
+                <div class="flex items-center gap-3">
+                  ${e.image_url ? `<img src="${he(e.image_url)}" class="w-11 h-11 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div style="width:44px;height:44px;border-radius:12px;background:#F1F5F9;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${eqIconSvg(22)}</div>`}
+                  <div class="flex-1 min-w-0">
+                    <p class="eq-title">${he(e.name)}</p>
+                    <p class="eq-meta">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
                   </div>
-                  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
-                    <span class="eq-tag ${e.available===0?'t-red':e.available<e.quantity?'t-amber':'t-green'}">
+                  <div class="flex flex-col items-end gap-1 shrink-0">
+                    <span class="text-xs px-2.5 py-1 rounded-full font-semibold" style="background:${e.available===0?'var(--danger-bg)':e.available<e.quantity?'#fef3c7':'var(--orange-light)'};color:${e.available===0?'var(--danger-text)':e.available<e.quantity?'#d97706':'var(--orange-dark)'};border:0.5px solid ${e.available===0?'#fecaca':e.available<e.quantity?'#fde68a':'var(--orange-border)'};">
                       ${e.available}/${e.quantity}
                     </span>
-                    <div style="display:flex;gap:2px">
-                      <button data-id="${he(e.eq_id)}" onclick="event.stopPropagation();showEditEquipment(this.dataset.id)"
-                        class="mini-btn-gray" title="แก้ไข">✏️</button>
-                      <button data-id="${he(e.eq_id)}" onclick="event.stopPropagation();confirmDeleteEquip(this.dataset.id)"
-                        class="mini-btn-gray" style="color:#ef4444" title="ลบ">🗑</button>
+                    <div class="flex gap-0.5 mt-1">
+                      <button data-id="${he(e.eq_id)}" onclick="showEditEquipment(this.dataset.id)" class="p-1.5 rounded-lg text-gray-300 hover:bg-orange-50" style="transition:all 150ms;" onmouseover="this.querySelector('i').style.color='var(--orange)'" onmouseout="this.querySelector('i').style.color=''"><i data-lucide="pencil" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
+                      <button data-id="${he(e.eq_id)}" onclick="confirmDeleteEquip(this.dataset.id)" class="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50"><i data-lucide="trash-2" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
                     </div>
                   </div>
                 </div>
               </div>`).join('')}
             </div>
-            <!-- Category management -->
-            <div class="eq-category-section">
-              <div class="eq-category-header">
-                <span class="section-label">หมวดหมู่</span>
-                ${_addCatMode ? '' : `<button onclick="showAddCatInput()" class="mini-btn-orange">+ เพิ่มหมวดหมู่</button>`}
+            <!-- ===== CATEGORY MANAGEMENT ===== -->
+            <div class="gd-card" style="padding: 20px;">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="section-title" style="font-size:16px;font-weight:600;color:#1C1917;">หมวดหมู่</h4>
+                ${_addCatMode ? '' : `<button onclick="showAddCatInput()" class="gd-btn-secondary flex items-center gap-1 !w-auto !py-1.5 !px-2.5 text-xs font-semibold">
+                  <i data-lucide="plus" class="w-[18px] h-[18px] text-[#64748B]"></i> เพิ่มหมวดหมู่</button>`}
               </div>
-              ${_addCatMode ? `<div style="display:flex;gap:6px;margin-bottom:8px">
-                <input id="newCatInput" type="text" placeholder="ชื่อหมวดหมู่" maxlength="50" style="height:32px;font-size:12px;"
+              ${_addCatMode ? `<div class="flex gap-2 mb-3">
+                <input id="newCatInput" type="text" placeholder="ชื่อหมวดหมู่ใหม่" maxlength="50"
+                  class="flex-1 px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand"
                   onkeydown="if(event.key==='Enter')saveCategory();if(event.key==='Escape')cancelAddCat()">
-                <button onclick="saveCategory()" class="mini-btn-orange" style="white-space:nowrap">บันทึก</button>
-                <button onclick="cancelAddCat()" class="mini-btn-gray">ยกเลิก</button>
+                <button onclick="saveCategory()" class="gd-btn-primary !w-auto !py-1.5 !px-3 text-xs font-semibold">บันทึก</button>
+                <button onclick="cancelAddCat()" class="px-3 py-2 text-xs text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition">ยกเลิก</button>
               </div>` : ''}
-              ${CATS.length === 0
-                ? `<p style="font-size:12px;color:#a8a29e;text-align:center;padding:8px 0">ยังไม่มีหมวดหมู่</p>`
-                : CATS.map(c => {
-                    const inUse = EQ.some(e => e.category === c.name);
-                    return `<div class="category-item">
-                      <span>${he(c.name)}</span>
-                      <button data-id="${he(c.id)}" data-name="${he(c.name)}"
-                        onclick="deleteCategoryById(this.dataset.id,this.dataset.name)"
-                        class="mini-btn-gray" style="color:${inUse?'#e2e8f0':'#ef4444'}" ${inUse?'disabled':''}>ลบ</button>
-                    </div>`;
-                  }).join('')}
+              ${CATS.length === 0 ? `<p class="eq-meta text-center py-4">ยังไม่มีหมวดหมู่ กด "+ เพิ่มหมวดหมู่" เพื่อเริ่มต้น</p>` :
+              `<div class="space-y-1.5">
+                ${CATS.map(c => {
+                  const inUse = EQ.some(e => e.category === c.name);
+                  return `<div class="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-slate-50">
+                    <span class="text-sm text-gray-700">${he(c.name)}</span>
+                    <button data-id="${he(c.id)}" data-name="${he(c.name)}"
+                      onclick="deleteCategoryById(this.dataset.id,this.dataset.name)"
+                      class="p-1.5 rounded-lg transition ${inUse ? 'text-gray-200 cursor-not-allowed' : 'text-gray-300 hover:text-red-500 hover:bg-red-50'}"
+                      ${inUse ? 'disabled title="มีอุปกรณ์ใช้หมวดหมู่นี้อยู่"' : 'title="ลบหมวดหมู่"'}>
+                      <i data-lucide="trash-2" class="w-[18px] h-[18px] text-[#64748B]"></i>
+                    </button>
+                  </div>`;
+                }).join('')}
+              </div>`}
             </div>
           </div>
-          <!-- RIGHT: detail panel (empty state for now) -->
+          <!-- RIGHT: empty state shell (wired in next step) -->
           <div class="eq-right-panel" id="eqRightPanel">
-            <div class="eq-empty-detail" id="eqEmptyDetail">
+            <div id="eqEmptyDetail" class="eq-empty-detail">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FDBA74" stroke-width="1.5">
                 <path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/>
                 <path d="M12 12h.01"/>
@@ -6202,6 +6206,7 @@
           </div>
         </div>
       </div>`;
+      lucide.createIcons({'stroke-width': 1.5});
       if (_addCatMode) setTimeout(()=>document.getElementById('newCatInput')?.focus(), 50);
     }
     // ===== CATEGORY CRUD =====
