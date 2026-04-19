@@ -14,6 +14,7 @@
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -4021,6 +4022,59 @@
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
     th { font-weight: 600 !important; font-size: 13px !important; }
     .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+
+    /* ── Equipment Manager Split Panel ── */
+    .eq-topbar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
+    .eq-search { width:100%; max-width:260px; height:36px; }
+    .eq-filter-select { font-size:13px; padding:7px 10px; border-radius:8px; border:0.5px solid #e7e5e4; background:#fafaf9; font-family:'Noto Sans Thai',sans-serif; height:36px; }
+    .eq-split-panel { display:grid; grid-template-columns:300px 1fr; gap:16px; min-height:500px; }
+    @media (max-width:767px) {
+      .eq-split-panel { grid-template-columns:1fr; }
+      .eq-right-panel { display:none; }
+      .eq-right-panel.mobile-open { display:block; }
+    }
+    .eq-left-panel { display:flex; flex-direction:column; gap:8px; }
+    .eq-list-item { background:#fff; border:0.5px solid #e7e5e4; border-radius:10px; padding:12px; cursor:pointer; transition:all 0.15s ease; margin-bottom:6px; }
+    .eq-list-item:hover { border-color:#fed7aa; background:#fff7ed; }
+    .eq-list-item.active { border:1.5px solid #f97316; background:#fff7ed; }
+    .eq-item-name { font-size:13px; font-weight:600; color:#1c1917; margin:0 0 2px; }
+    .eq-item-meta { font-size:11px; color:#a8a29e; margin:0; }
+    .eq-unit-dots { display:flex; gap:4px; flex-wrap:wrap; }
+    .unit-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+    .unit-dot.available { background:#10b981; }
+    .unit-dot.borrowed  { background:#3b82f6; }
+    .unit-dot.damaged   { background:#f59e0b; }
+    .unit-dot.lost      { background:#ef4444; }
+    .eq-right-panel { background:#fafaf9; border:0.5px solid #e7e5e4; border-radius:12px; padding:16px; min-height:400px; }
+    .eq-empty-detail { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; min-height:300px; gap:12px; color:#a8a29e; font-size:13px; }
+    .eq-detail-header { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:16px; padding-bottom:12px; border-bottom:0.5px solid #e7e5e4; flex-wrap:wrap; }
+    .eq-detail-title { font-size:15px; font-weight:700; color:#1c1917; margin:0; }
+    .eq-detail-actions { display:flex; gap:6px; flex-wrap:wrap; }
+    .unit-row { background:#fff; border-radius:8px; padding:8px 12px; display:flex; align-items:center; gap:10px; border:0.5px solid #e7e5e4; margin-bottom:6px; transition:box-shadow 0.15s; }
+    .unit-row:hover { box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+    .unit-row.borrowed { border-color:#bfdbfe; background:#f0f9ff; }
+    .unit-row.damaged  { border-color:#fde68a; background:#fffbeb; }
+    .unit-row.lost     { border-color:#fecaca; background:#fff5f5; }
+    .unit-code { font-size:12px; font-weight:600; color:#1c1917; flex:1; font-family:'Courier New',monospace; }
+    .unit-checkbox { width:16px; height:16px; accent-color:#f97316; cursor:pointer; flex-shrink:0; }
+    .eq-category-section { background:#fff; border:0.5px solid #e7e5e4; border-radius:10px; padding:12px; }
+    .eq-category-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+    .category-item { display:flex; align-items:center; justify-content:space-between; padding:6px 8px; border-radius:6px; font-size:12px; color:#1c1917; }
+    .category-item:hover { background:#fafaf9; }
+    .btn-primary-sm { background:#f97316; color:#fff; border:none; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:500; cursor:pointer; font-family:'Noto Sans Thai',sans-serif; white-space:nowrap; }
+    .btn-primary-sm:hover { background:#ea580c; }
+    .mini-btn-orange { background:#fff7ed; color:#c2410c; border:0.5px solid #fed7aa; border-radius:6px; padding:4px 10px; font-size:11px; cursor:pointer; font-family:'Noto Sans Thai',sans-serif; }
+    .mini-btn-gray { background:#fff; color:#78716c; border:0.5px solid #e7e5e4; border-radius:6px; padding:4px 10px; font-size:11px; cursor:pointer; font-family:'Noto Sans Thai',sans-serif; }
+    .leg-dot { width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:4px; }
+    .leg-dot.green { background:#10b981; }
+    .leg-dot.blue  { background:#3b82f6; }
+    .leg-dot.amber { background:#f59e0b; }
+    .leg-dot.red   { background:#ef4444; }
+    .eq-tag { display:inline-flex; align-items:center; padding:2px 8px; border-radius:999px; font-size:11px; font-weight:500; }
+    .eq-tag.t-green { background:#d1fae5; color:#065f46; }
+    .eq-tag.t-blue  { background:#dbeafe; color:#1d4ed8; }
+    .eq-tag.t-amber { background:#fef3c7; color:#92400e; }
+    .eq-tag.t-red   { background:#fee2e2; color:#991b1b; }
   </style>
 
 </head>
@@ -4558,6 +4612,7 @@
     let mgrHistorySearch = '', mgrHistoryGa = '', mgrHistoryFrom = '', mgrHistoryTo = '';
     let AUDIT_LOGS = [], auditFilter = '', auditSearch = '', auditDateFrom = '', auditDateTo = '';
     let eqSearch = '', eqCatFilter = '';
+    let selectedEquipmentId = null;
 
     // ===== AUDIT LOG HELPER =====
     async function logAction(action_type, target_table, target_id, old_data, new_data) {
@@ -6047,94 +6102,62 @@
     }
 
     // ===== MGR: EQUIPMENT TAB =====
-    function renderEquipmentTab() {
+    async function renderEquipmentTab() {
       const el = document.getElementById('tab-equipment');
-      const cats = CATS.map(c => c.name);
-      const q = eqSearch.toLowerCase();
-      const filtered = EQ.filter(e => {
-        const matchSearch = !q || (e.name||'').toLowerCase().includes(q) || (e.serial_no||'').toLowerCase().includes(q);
-        const matchCat = !eqCatFilter || e.category === eqCatFilter;
-        return matchSearch && matchCat;
-      });
+      if (!el) return;
+      const catOptions = CATS.map(c =>
+        `<option value="${he(c.name)}"${eqCatFilter===c.name?' selected':''}>${he(c.name)}</option>`
+      ).join('');
       el.innerHTML = `<div class="gd-container fade-in">
-        <div class="flex items-center justify-between mb-3">
-          <h4 class="eq-title">รายการอุปกรณ์ <span class="text-gray-400 font-normal">(${filtered.length}/${EQ.length})</span></h4>
-          <button onclick="showAddEquipment()" class="flex items-center gap-1.5 px-3 py-1.5 text-white text-xs font-semibold rounded-lg transition shadow-sm" style="background:#f97316;color:white;">
-            <i data-lucide="plus" class="w-[18px] h-[18px] text-[#64748B]"></i> เพิ่มอุปกรณ์</button>
-        </div>
-        <div class="availability-legend">
-          <span><span class="legend-dot green"></span>พร้อมใช้</span>
-          <span><span class="legend-dot amber"></span>เกือบหมด</span>
-          <span><span class="legend-dot red"></span>หมด</span>
-        </div>
-        <div class="flex flex-col sm:flex-row gap-2 mb-4">
-          <div class="relative flex-1">
-            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"></i>
-            <input id="eqSearchInput" type="text" placeholder="ค้นหาชื่อหรือ Serial No." value="${he(eqSearch)}"
-              oninput="eqSearch=this.value;debounce('eqSearch',renderEquipmentTab)"
-              class="w-full pl-9 pr-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-brand">
+        <div class="eq-topbar">
+          <input id="eqSearchInput2" placeholder="ค้นหาอุปกรณ์..." class="eq-search" value="${he(eqSearch)}">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <select id="eqCategoryFilter2" class="eq-filter-select">
+              <option value="">ทุกหมวดหมู่</option>
+              ${catOptions}
+            </select>
+            <button onclick="showAddEquipment()" class="btn-primary-sm">+ เพิ่มอุปกรณ์</button>
           </div>
-          <select id="eqCatSelect" onchange="eqCatFilter=this.value;renderEquipmentTab()"
-            class="text-xs border border-gray-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-1 focus:ring-brand text-gray-700 w-full sm:w-auto sm:min-w-[110px]">
-            <option value="">ทุกหมวด</option>
-            ${cats.map(c=>`<option value="${he(c)}"${eqCatFilter===c?' selected':''}>${he(c)}</option>`).join('')}
-          </select>
         </div>
-        <div class="space-y-3 mb-6">
-          ${filtered.length === 0 ? eqEmptyState :
-          filtered.map(e=>`<div class="gd-card" style="padding: 20px;">
-            <div class="flex items-center gap-3">
-              ${e.image_url ? `<img src="${he(e.image_url)}" class="w-11 h-11 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div style="width:44px;height:44px;border-radius:12px;background:#F1F5F9;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${eqIconSvg(22)}</div>`}
-              <div class="flex-1 min-w-0">
-                <p class="eq-title">${he(e.name)}</p>
-                <p class="eq-meta">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
+        <div class="availability-legend" style="margin-bottom:12px">
+          <span><span class="leg-dot green"></span>ว่าง</span>
+          <span><span class="leg-dot blue"></span>ยืมอยู่</span>
+          <span><span class="leg-dot amber"></span>ชำรุด</span>
+          <span><span class="leg-dot red"></span>สูญหาย</span>
+        </div>
+        <div class="eq-split-panel">
+          <div class="eq-left-panel" id="eqLeftPanel">
+            <div id="eqListContainer"></div>
+            <div class="eq-category-section">
+              <div class="eq-category-header">
+                <span class="section-label">หมวดหมู่</span>
+                <button onclick="openAddCategoryForm()" class="mini-btn-orange">+ เพิ่มหมวดหมู่</button>
               </div>
-              <div class="flex flex-col items-end gap-1 shrink-0">
-                <span class="text-xs px-2.5 py-1 rounded-full font-semibold" style="background:${e.available===0?'var(--danger-bg)':e.available<e.quantity?'#fef3c7':'var(--orange-light)'};color:${e.available===0?'var(--danger-text)':e.available<e.quantity?'#d97706':'var(--orange-dark)'};border:0.5px solid ${e.available===0?'#fecaca':e.available<e.quantity?'#fde68a':'var(--orange-border)'};">
-                  ${e.available}/${e.quantity}
-                </span>
-                <div class="flex gap-0.5 mt-1">
-                  <button data-id="${he(e.eq_id)}" onclick="showEditEquipment(this.dataset.id)" class="p-1.5 rounded-lg text-gray-300 hover:bg-orange-50" style="transition:all 150ms;" onmouseover="this.querySelector('i').style.color='var(--orange)'" onmouseout="this.querySelector('i').style.color=''"><i data-lucide="pencil" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
-                  <button data-id="${he(e.eq_id)}" onclick="confirmDeleteEquip(this.dataset.id)" class="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50"><i data-lucide="trash-2" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
-                </div>
-              </div>
+              <div id="categoryList"></div>
             </div>
-          </div>`).join('')}
-        </div>
-
-        <!-- ===== CATEGORY MANAGEMENT ===== -->
-        <div class="gd-card" style="padding: 20px;">
-          <div class="flex items-center justify-between mb-3">
-            <h4 class="section-title" style="font-size:16px;font-weight:600;color:#1C1917;">หมวดหมู่</h4>
-            ${_addCatMode ? '' : `<button onclick="showAddCatInput()" class="gd-btn-secondary flex items-center gap-1 !w-auto !py-1.5 !px-2.5 text-xs font-semibold">
-              <i data-lucide="plus" class="w-[18px] h-[18px] text-[#64748B]"></i> เพิ่มหมวดหมู่</button>`}
           </div>
-          ${_addCatMode ? `<div class="flex gap-2 mb-3">
-            <input id="newCatInput" type="text" placeholder="ชื่อหมวดหมู่ใหม่" maxlength="50"
-              class="flex-1 px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand"
-              onkeydown="if(event.key==='Enter')saveCategory();if(event.key==='Escape')cancelAddCat()">
-            <button onclick="saveCategory()" class="gd-btn-primary !w-auto !py-1.5 !px-3 text-xs font-semibold">บันทึก</button>
-            <button onclick="cancelAddCat()" class="px-3 py-2 text-xs text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition">ยกเลิก</button>
-          </div>` : ''}
-          ${CATS.length === 0 ? `<p class="eq-meta text-center py-4">ยังไม่มีหมวดหมู่ กด "+ เพิ่มหมวดหมู่" เพื่อเริ่มต้น</p>` :
-          `<div class="space-y-1.5">
-            ${CATS.map(c => {
-              const inUse = EQ.some(e => e.category === c.name);
-              return `<div class="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-slate-50">
-                <span class="text-sm text-gray-700">${he(c.name)}</span>
-                <button data-id="${he(c.id)}" data-name="${he(c.name)}"
-                  onclick="deleteCategoryById(this.dataset.id,this.dataset.name)"
-                  class="p-1.5 rounded-lg transition ${inUse ? 'text-gray-200 cursor-not-allowed' : 'text-gray-300 hover:text-red-500 hover:bg-red-50'}"
-                  ${inUse ? 'disabled title="มีอุปกรณ์ใช้หมวดหมู่นี้อยู่"' : 'title="ลบหมวดหมู่"'}>
-                  <i data-lucide="trash-2" class="w-[18px] h-[18px] text-[#64748B]"></i>
-                </button>
-              </div>`;
-            }).join('')}
-          </div>`}
+          <div class="eq-right-panel" id="eqRightPanel">
+            <div class="eq-empty-detail" id="eqEmptyDetail">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FDBA74" stroke-width="1.5">
+                <path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/>
+                <path d="M12 12h.01"/>
+              </svg>
+              <p>เลือกอุปกรณ์เพื่อดูรายละเอียด</p>
+            </div>
+            <div id="eqDetailContent" style="display:none"></div>
+          </div>
         </div>
       </div>`;
-      lucide.createIcons({'stroke-width': 1.5});
-      if (_addCatMode) setTimeout(()=>document.getElementById('newCatInput')?.focus(), 50);
+      document.getElementById('eqSearchInput2')?.addEventListener('input', e => {
+        eqSearch = e.target.value;
+        renderEquipmentList();
+      });
+      document.getElementById('eqCategoryFilter2')?.addEventListener('change', e => {
+        eqCatFilter = e.target.value;
+        renderEquipmentList();
+      });
+      await renderEquipmentList();
+      renderCategoryList();
     }
     // ===== CATEGORY CRUD =====
     function showAddCatInput() { _addCatMode = true; renderEquipmentTab(); }
