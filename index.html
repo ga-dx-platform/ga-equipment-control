@@ -4994,7 +4994,11 @@
           }]);
           if (brErr) throw brErr;
           if (params.unit_id) {
-            await sb.from('equipment_units').update({ status: 'borrowed' }).eq('id', params.unit_id);
+            const { error: unitErr } = await sb.from('equipment_units').update({ status: 'borrowed' }).eq('id', params.unit_id);
+            if (unitErr) {
+              await sb.from('borrow_records').delete().eq('record_id', rid).catch(() => {});
+              throw unitErr;
+            }
           }
           // Try new schema (id UUID) first, then legacy (eq_id text)
           let { data: eq } = await sb.from('equipment').select('available').eq('id', params.eq_id).maybeSingle();
@@ -6492,6 +6496,7 @@
       logAction('UNIT_PRINT', 'equipment_units', null, null, { unit_code: uc, eq_name: eqName });
       const qrUrl = `${window.location.origin}${window.location.pathname}?unit=${encodeURIComponent(uc)}`;
       const w = window.open('', '_blank');
+      if (!w) { toast('กรุณาอนุญาต popup เพื่อพิมพ์', 'warning'); return; }
       w.document.write(`<!DOCTYPE html><html><head>
         <title>QR — ${uc}</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
@@ -6597,14 +6602,17 @@
               .maybeSingle();
             if (!record) { toast('ไม่พบรายการยืมที่ active', 'warning'); return; }
             const now = new Date().toISOString();
-            const { error: e1 } = await sb.from('borrow_records')
-              .update({ status: 'returned', returned_at: now })
-              .eq('id', record.id);
-            if (e1) throw e1;
-            const { error: e2 } = await sb.from('equipment_units')
+            const { error: e1 } = await sb.from('equipment_units')
               .update({ status: 'available' })
               .eq('id', unitId);
-            if (e2) throw e2;
+            if (e1) throw e1;
+            const { error: e2 } = await sb.from('borrow_records')
+              .update({ status: 'returned', returned_at: now })
+              .eq('id', record.id);
+            if (e2) {
+              await sb.from('equipment_units').update({ status: 'borrowed' }).eq('id', unitId).catch(() => {});
+              throw e2;
+            }
             await logAction('RETURN_BY_MANAGER', 'borrow_records', record.id, { status: 'borrowed' }, { status: 'returned', returned_at: now });
             toast('คืนอุปกรณ์เรียบร้อยแล้ว', 'success');
             await selectEquipment(selectedEquipmentId);
@@ -6693,6 +6701,7 @@
         `new QRCode(document.getElementById('qr-${u.unit_code}'),{text:'${base}?unit=${encodeURIComponent(u.unit_code)}',width:91,height:91,colorDark:'#000',correctLevel:QRCode.CorrectLevel.H});`
       ).join('\n');
       const w = window.open('', '_blank');
+      if (!w) { toast('กรุณาอนุญาต popup เพื่อพิมพ์', 'warning'); return; }
       w.document.write(`<!DOCTYPE html><html><head>
         <title>Batch QR Labels</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
