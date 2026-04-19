@@ -15,6 +15,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -4228,6 +4229,12 @@
               </div>
               <!-- Glass action buttons -->
               <div style="display:flex;align-items:center;gap:6px;">
+                <button onclick="openQRScanner()" title="สแกน QR"
+                        style="display:flex;align-items:center;justify-content:center;
+                               background:#fff;border:1px solid #e2e8f0;color:#475569;
+                               border-radius:8px;width:36px;height:36px;padding:0;cursor:pointer;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M17 14h4"/><path d="M14 17v4"/><path d="M17 21h4v-4"/></svg>
+                </button>
                 <button onclick="openChangePinModal()" title="เปลี่ยน PIN"
                         style="display:flex;align-items:center;justify-content:center;
                                background:#fff;
@@ -4619,6 +4626,7 @@
     let selectedEquipmentId = null;
     let _qrModalCtx = {};
     let _pendingUnitCode = null;
+    let _preScanUnitId = null;
 
     // ===== AUDIT LOG HELPER =====
     async function logAction(action_type, target_table, target_id, old_data, new_data) {
@@ -5581,9 +5589,13 @@
             <div><div class="eq-kpi-val">${readyCount}</div><div class="eq-kpi-lbl">พร้อมยืมครบ</div></div>
           </div>
         </div>
-        <div class="mb-4">
-          <input type="text" placeholder="ค้นหาอุปกรณ์..." class="gd-input" value="${he(borrowSearchQ)}"
+        <div class="mb-4" style="display:flex;gap:8px;align-items:center">
+          <input type="text" placeholder="ค้นหาอุปกรณ์..." class="gd-input" style="flex:1" value="${he(borrowSearchQ)}"
             oninput="borrowSearchQ=this.value;debounce('borrowSearch',renderBorrowTab)">
+          <button onclick="openQRScanner()" style="background:#f97316;color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;font-family:'Noto Sans Thai',sans-serif">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M17 14h4"/><path d="M14 17v4"/><path d="M17 21h4v-4"/></svg>
+            สแกน
+          </button>
         </div>
         <div class="chip-row">
           <div class="chip ${borrowCatFilter===''?'active':''}" onclick="borrowCatFilter='';renderBorrowTab()">ทั้งหมด</div>
@@ -5712,6 +5724,78 @@
             ${available.map(u => `<option value="${he(u.id)}">${he(u.unit_code)}</option>`).join('')}
           </select>
         </div>`;
+      if (_preScanUnitId && available.find(u => u.id === _preScanUnitId)) {
+        const sel = document.getElementById('bfUnitId');
+        if (sel) sel.value = _preScanUnitId;
+        _preScanUnitId = null;
+      }
+    }
+
+    function openQRScanner() {
+      document.getElementById('qrScannerModal')?.remove();
+      const modal = document.createElement('div');
+      modal.id = 'qrScannerModal';
+      modal.style.cssText = 'position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px)';
+      modal.innerHTML = `
+        <div style="background:#fff;border-radius:16px;padding:20px;width:min(360px,calc(100vw - 32px));text-align:center">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h3 style="font-size:15px;font-weight:700;color:#1c1917;margin:0">สแกน QR Code</h3>
+            <button id="qrScanCloseBtn" style="background:none;border:none;color:#a8a29e;font-size:22px;cursor:pointer;line-height:1">×</button>
+          </div>
+          <div id="qrScanRegion" style="width:100%;border-radius:8px;overflow:hidden"></div>
+          <p style="font-size:12px;color:#a8a29e;margin-top:12px">วาง QR code ไว้ในกรอบ</p>
+        </div>`;
+      document.body.appendChild(modal);
+      const scanner = new Html5QrcodeScanner('qrScanRegion', { fps: 10, qrbox: 220 }, false);
+      const cleanup = () => { scanner.clear().catch(() => {}); modal.remove(); };
+      document.getElementById('qrScanCloseBtn').onclick = cleanup;
+      scanner.render(async (decoded) => {
+        cleanup();
+        let unitCode = decoded;
+        try { const u = new URL(decoded); unitCode = u.searchParams.get('unit') || decoded; } catch(_) {}
+        await handleUnitScan(unitCode);
+      }, () => {});
+    }
+
+    async function handleUnitScan(unitCode) {
+      const { data: unit } = await sb.from('equipment_units')
+        .select('id, equipment_id, unit_code, status')
+        .eq('unit_code', unitCode)
+        .maybeSingle();
+      if (!unit) { toast(`ไม่พบ unit "${unitCode}" ในระบบ`, 'error'); return; }
+
+      if (CU?.role === 'manager') {
+        switchTab(3);
+        setTimeout(() => selectEquipment(unit.equipment_id), 300);
+        return;
+      }
+
+      const statusTH = { available:'ว่าง', borrowed:'ยืมอยู่', damaged:'ชำรุด', lost:'สูญหาย' }[unit.status] || unit.status;
+
+      if (unit.status === 'available') {
+        const equipment = EQ.find(e => e.id === unit.equipment_id || e.eq_id === unit.equipment_id);
+        if (!equipment) { toast('ไม่พบข้อมูลอุปกรณ์', 'error'); return; }
+        _preScanUnitId = unit.id;
+        openBorrowForm(equipment.eq_id);
+        return;
+      }
+
+      if (unit.status === 'borrowed') {
+        const { data: rec } = await sb.from('borrow_records')
+          .select('record_id, ga_staff, borrower_name')
+          .eq('unit_id', unit.id)
+          .eq('status', 'borrowed')
+          .maybeSingle();
+        if (rec?.ga_staff === CU?.name) {
+          switchTab(1);
+          setTimeout(() => openReturnDetail(rec.record_id), 400);
+        } else {
+          toast(`อุปกรณ์นี้ถูกยืมโดย ${rec?.ga_staff || 'GA อื่น'} อยู่`, 'warning');
+        }
+        return;
+      }
+
+      toast(`อุปกรณ์นี้อยู่ในสถานะ${statusTH}`, 'warning');
     }
 
     async function submitBorrow() {
