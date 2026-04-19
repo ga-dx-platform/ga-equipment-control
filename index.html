@@ -6447,7 +6447,6 @@
         await logAction('UNIT_CREATE', 'equipment_units', equipmentId, null, { prefix, count });
         toast(`สร้าง ${count} unit เรียบร้อยแล้ว`, 'success');
         const reloadId = selectedEquipmentId || equipmentId;
-        console.log('[submitCreateUnits] selectedEquipmentId:', selectedEquipmentId, 'equipmentId param:', equipmentId, '→ reloading with:', reloadId);
         document.getElementById('addUnitModal')?.remove();
         await selectEquipment(reloadId);
       } catch(e) {
@@ -6599,14 +6598,14 @@
             if (!record) { toast('ไม่พบรายการยืมที่ active', 'warning'); return; }
             const now = new Date().toISOString();
             const { error: e1 } = await sb.from('borrow_records')
-              .update({ status: 'returned', return_date: now })
+              .update({ status: 'returned', returned_at: now })
               .eq('id', record.id);
             if (e1) throw e1;
             const { error: e2 } = await sb.from('equipment_units')
               .update({ status: 'available' })
               .eq('id', unitId);
             if (e2) throw e2;
-            await logAction('RETURN_BY_MANAGER', 'borrow_records', record.id, { status: 'borrowed' }, { status: 'returned', return_date: now });
+            await logAction('RETURN_BY_MANAGER', 'borrow_records', record.id, { status: 'borrowed' }, { status: 'returned', returned_at: now });
             toast('คืนอุปกรณ์เรียบร้อยแล้ว', 'success');
             await selectEquipment(selectedEquipmentId);
           } catch(e) {
@@ -6634,9 +6633,9 @@
       modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
 
       const { data: records } = await sb.from('borrow_records')
-        .select('borrower_name, borrow_date, due_date, return_date, status, ga_name')
+        .select('borrower_name, borrowed_at, due_date, returned_at, status, ga_staff')
         .eq('unit_id', unitId)
-        .order('borrow_date', { ascending: false });
+        .order('borrowed_at', { ascending: false });
 
       const content = document.getElementById('unitHistoryContent');
       if (!records?.length) {
@@ -6654,10 +6653,10 @@
             ${statusBadge(r.status)}
           </div>
           <div style="font-size:11px;color:#78716c;display:flex;gap:12px;flex-wrap:wrap">
-            <span>ยืม: ${fmt(r.borrow_date)}</span>
+            <span>ยืม: ${fmt(r.borrowed_at)}</span>
             <span>กำหนดคืน: ${fmt(r.due_date)}</span>
-            ${r.return_date ? `<span>คืนจริง: ${fmt(r.return_date)}</span>` : ''}
-            ${r.ga_name ? `<span>GA: ${he(r.ga_name)}</span>` : ''}
+            ${r.returned_at ? `<span>คืนจริง: ${fmt(r.returned_at)}</span>` : ''}
+            ${r.ga_staff ? `<span>GA: ${he(r.ga_staff)}</span>` : ''}
           </div>
         </div>`).join('');
     }
