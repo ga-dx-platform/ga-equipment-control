@@ -4983,6 +4983,13 @@
           return data || { sign_img: null, return_sign_img: null };
         }
         if (action === 'createBorrow') {
+          if (params.unit_id) {
+            const { data: unitCheck } = await sb.from('equipment_units')
+              .select('status').eq('id', params.unit_id).maybeSingle();
+            if (!unitCheck || unitCheck.status !== 'available') {
+              throw new Error('unit นี้ถูกยืมไปแล้ว กรุณาเลือก unit ใหม่');
+            }
+          }
           const rid = 'BR' + Date.now();
           const { error: brErr } = await sb.from('borrow_records').insert([{
             record_id: rid, eq_id: params.eq_id, eq_name: params.eq_name,
