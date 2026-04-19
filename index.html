@@ -6384,8 +6384,10 @@
         if (error) throw error;
         await logAction('UNIT_CREATE', 'equipment_units', equipmentId, null, { prefix, count });
         toast(`สร้าง ${count} unit เรียบร้อยแล้ว`, 'success');
+        const reloadId = selectedEquipmentId || equipmentId;
+        console.log('[submitCreateUnits] selectedEquipmentId:', selectedEquipmentId, 'equipmentId param:', equipmentId, '→ reloading with:', reloadId);
         document.getElementById('addUnitModal')?.remove();
-        await selectEquipment(selectedEquipmentId);  // reload fresh from DB
+        await selectEquipment(reloadId);
       } catch(e) {
         console.error(e);
         toast('สร้าง unit ไม่สำเร็จ: ' + (e.message || e), 'error');
