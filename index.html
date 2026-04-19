@@ -4984,9 +4984,13 @@
             qty_borrowed: params.qty, borrower_name: params.borrower_name,
             borrower_dept: params.borrower_dept, ga_staff: params.ga_staff,
             borrowed_at: new Date().toISOString(), due_date: params.due_date,
-            sign_img: params.sign_img || null, note: params.note || null, status: 'borrowed'
+            sign_img: params.sign_img || null, note: params.note || null, status: 'borrowed',
+            unit_id: params.unit_id || null
           }]);
           if (brErr) throw brErr;
+          if (params.unit_id) {
+            await sb.from('equipment_units').update({ status: 'borrowed' }).eq('id', params.unit_id);
+          }
           // Try new schema (id UUID) first, then legacy (eq_id text)
           let { data: eq } = await sb.from('equipment').select('available').eq('id', params.eq_id).maybeSingle();
           if (eq) {
@@ -5010,8 +5014,11 @@
           const { error } = await sb.from('borrow_records').update(patch).eq('record_id', params.record_id);
           if (error) throw error;
           await logAction('RETURN','borrow_records',params.record_id,null,{returned_at:new Date().toISOString()});
-          const { data: rec } = await sb.from('borrow_records').select('eq_id, qty_borrowed').eq('record_id', params.record_id).single();
+          const { data: rec } = await sb.from('borrow_records').select('eq_id, qty_borrowed, unit_id').eq('record_id', params.record_id).single();
           if (rec) {
+            if (rec.unit_id) {
+              await sb.from('equipment_units').update({ status: 'available' }).eq('id', rec.unit_id);
+            }
             // Try new schema (id UUID) first, then legacy (eq_id text)
             let { data: eq } = await sb.from('equipment').select('available, quantity').eq('id', rec.eq_id).maybeSingle();
             if (eq) {
@@ -5030,8 +5037,11 @@
           }).eq('record_id', params.record_id);
           if (error) throw error;
           await logAction('RETURN_BY_MANAGER','borrow_records',params.record_id,null,{returned_at:now,returned_by:CU?.name});
-          const { data: rec } = await sb.from('borrow_records').select('eq_id, qty_borrowed').eq('record_id', params.record_id).single();
+          const { data: rec } = await sb.from('borrow_records').select('eq_id, qty_borrowed, unit_id').eq('record_id', params.record_id).single();
           if (rec) {
+            if (rec.unit_id) {
+              await sb.from('equipment_units').update({ status: 'available' }).eq('id', rec.unit_id);
+            }
             let { data: eq } = await sb.from('equipment').select('available, quantity').eq('id', rec.eq_id).maybeSingle();
             if (eq) {
               await sb.from('equipment').update({ available: Math.min(eq.quantity, eq.available + rec.qty_borrowed) }).eq('id', rec.eq_id);
@@ -5633,6 +5643,7 @@
             <p class="eq-meta">${he(eq.category||'')}${eq.serial_no?' · '+he(eq.serial_no):''} · คงเหลือ ${eq.available}</p></div>
           </div>
         </div>
+        <div id="bfUnitWrap" style="margin-bottom:12px"></div>
         <div class="space-y-3 mb-6">
           <div><label class="text-xs font-medium text-gray-500 mb-1.5 block">จำนวนที่ยืม</label>
             <input type="number" id="bfQty" min="1" max="${eq.available}" value="1" class="gd-input">
@@ -5662,8 +5673,33 @@
         </button>`;
       goScreen('borrow-form'); lucide.createIcons({'stroke-width': 1.5});
       setTimeout(()=>initSignCanvas('bfSignCanvas'), 100);
+      _loadUnitDropdown(eq.eq_id);
     }
     function closeBorrowForm() { currentBorrowEq=null; goScreen('main'); switchTab(0); }
+
+    async function _loadUnitDropdown(eqId) {
+      const wrap = document.getElementById('bfUnitWrap');
+      if (!wrap) return;
+      const { data: allUnits } = await sb.from('equipment_units')
+        .select('id, unit_code, status')
+        .eq('equipment_id', eqId)
+        .order('unit_code');
+      if (!allUnits?.length) { wrap.innerHTML = ''; return; }
+      const available = allUnits.filter(u => u.status === 'available');
+      if (!available.length) {
+        wrap.innerHTML = `<div style="background:#fef2f2;border:0.5px solid #fecaca;border-radius:8px;padding:10px 12px;font-size:12px;color:#dc2626">ไม่มีหน่วยว่างในขณะนี้</div>`;
+        document.getElementById('bfSubmitBtn')?.setAttribute('disabled', 'true');
+        return;
+      }
+      wrap.innerHTML = `
+        <div>
+          <label class="text-xs font-medium text-gray-500 mb-1.5 block">เลือกหน่วยที่ต้องการยืม <span style="color:#dc2626">*</span></label>
+          <select id="bfUnitId" class="gd-input">
+            <option value="">— เลือก unit —</option>
+            ${available.map(u => `<option value="${he(u.id)}">${he(u.unit_code)}</option>`).join('')}
+          </select>
+        </div>`;
+    }
 
     async function submitBorrow() {
       const qty = parseInt(document.getElementById('bfQty')?.value)||1;
@@ -5671,6 +5707,9 @@
       const dept = document.getElementById('bfDept')?.value;
       const due = document.getElementById('bfDue')?.value;
       const note = document.getElementById('bfNote')?.value.trim();
+      const unitSelect = document.getElementById('bfUnitId');
+      const unitId = unitSelect?.value || null;
+      if (unitSelect && !unitId) { toast('กรุณาเลือก unit ที่ต้องการยืม'); return; }
       if (!borrower) { toast('กรุณากรอกชื่อผู้ยืม'); return; }
       if (!/^\d{6}$/.test(dept)) { toast('กรุณากรอกรหัสพนักงาน 6 หลัก'); return; }
       if (!due) { toast('กรุณาระบุกำหนดคืน'); return; }
@@ -5689,7 +5728,7 @@
             await api('createBorrow', {
               eq_id: currentBorrowEq.eq_id, eq_name: currentBorrowEq.name, qty,
               borrower_name: borrower, borrower_dept: dept, ga_staff: CU.name,
-              due_date: due, sign_img: sig, note
+              due_date: due, sign_img: sig, note, unit_id: unitId
             });
             EQ = await api('getEquipment');
             BORROWS = await api('getBorrows', { name:CU.name, role:CU.role });
