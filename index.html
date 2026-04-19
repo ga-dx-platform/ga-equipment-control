@@ -6385,7 +6385,7 @@
         await logAction('UNIT_CREATE', 'equipment_units', equipmentId, null, { prefix, count });
         toast(`สร้าง ${count} unit เรียบร้อยแล้ว`, 'success');
         document.getElementById('addUnitModal')?.remove();
-        await selectEquipment(equipmentId);
+        await selectEquipment(selectedEquipmentId);  // reload fresh from DB
       } catch(e) {
         console.error(e);
         toast('สร้าง unit ไม่สำเร็จ: ' + (e.message || e), 'error');
