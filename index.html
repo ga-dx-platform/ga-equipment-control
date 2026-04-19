@@ -6311,10 +6311,11 @@
             <button onclick="event.stopPropagation();confirmDeleteEquip('${eqId}')" class="mini-btn-gray" style="color:#ef4444">ลบ</button>
           </div>
         </div>
-        <div id="batchBar" style="display:none;background:#fff7ed;border-radius:8px;padding:8px 12px;margin-bottom:10px;align-items:center;gap:8px">
-          <input type="checkbox" id="selectAllUnits" onchange="toggleSelectAll(this.checked)">
-          <span style="font-size:12px;color:#c2410c" id="selectedCount">เลือก 0 รายการ</span>
+        <div id="batchBar" style="display:none;background:#fff7ed;border:0.5px solid #fed7aa;border-radius:8px;padding:8px 12px;margin-bottom:10px;align-items:center;gap:8px;flex-wrap:wrap">
+          <input type="checkbox" id="selectAllUnits" onchange="toggleSelectAll(this.checked)" title="เลือกทั้งหมด" style="width:15px;height:15px;accent-color:#f97316;cursor:pointer;flex-shrink:0">
+          <span style="font-size:12px;font-weight:600;color:#c2410c;flex:1;min-width:80px" id="selectedCount">เลือก 0 รายการ</span>
           <button onclick="batchPrintSelected('${eqId}')" class="mini-btn-orange">พิมพ์ที่เลือก</button>
+          <button onclick="batchEditStatus()" class="mini-btn-gray">เปลี่ยนสถานะ</button>
         </div>
         <div id="unitList">
           ${units.length === 0
@@ -6360,16 +6361,20 @@
     }
 
     function onUnitCheckChange() {
-      const checked = document.querySelectorAll('.unit-checkbox:checked').length;
-      const bar = document.getElementById('batchBar');
-      const cnt = document.getElementById('selectedCount');
-      if (cnt) cnt.textContent = `เลือก ${checked} รายการ`;
-      if (bar) bar.style.display = checked > 0 ? 'flex' : 'none';
+      const all     = document.querySelectorAll('.unit-checkbox');
+      const checked = [...all].filter(cb => cb.checked).length;
+      const bar     = document.getElementById('batchBar');
+      const cnt     = document.getElementById('selectedCount');
+      const selAll  = document.getElementById('selectAllUnits');
+      if (cnt)    cnt.textContent = `เลือก ${checked} รายการ`;
+      if (selAll) { selAll.checked = checked === all.length && all.length > 0; selAll.indeterminate = checked > 0 && checked < all.length; }
+      if (bar)    bar.style.display = checked > 0 ? 'flex' : 'none';
     }
     function toggleSelectAll(checked) {
       document.querySelectorAll('.unit-checkbox').forEach(cb => cb.checked = checked);
       onUnitCheckChange();
     }
+    function batchEditStatus() { toast('coming soon: เปลี่ยนสถานะหลายรายการ', 'info'); }
 
     // Stubs — implemented in later steps
     function openAddUnitModal(eqId, eqName) {
