@@ -4983,6 +4983,11 @@
           return data || { sign_img: null, return_sign_img: null };
         }
         if (action === 'createBorrow') {
+          if (params.unit_id) {
+            const { data: reserved, error: rpcErr } = await sb.rpc('reserve_unit', { p_unit_id: params.unit_id });
+            if (rpcErr) throw rpcErr;
+            if (!reserved) throw new Error('unit นี้ถูกยืมไปแล้ว กรุณาเลือก unit ใหม่');
+          }
           const rid = 'BR' + Date.now();
           const { error: brErr } = await sb.from('borrow_records').insert([{
             record_id: rid, eq_id: params.eq_id, eq_name: params.eq_name,
@@ -4992,13 +4997,11 @@
             sign_img: params.sign_img || null, note: params.note || null, status: 'borrowed',
             unit_id: params.unit_id || null
           }]);
-          if (brErr) throw brErr;
-          if (params.unit_id) {
-            const { error: unitErr } = await sb.from('equipment_units').update({ status: 'borrowed' }).eq('id', params.unit_id);
-            if (unitErr) {
-              await sb.from('borrow_records').delete().eq('record_id', rid).catch(() => {});
-              throw unitErr;
+          if (brErr) {
+            if (params.unit_id) {
+              await sb.from('equipment_units').update({ status: 'available' }).eq('id', params.unit_id).catch(() => {});
             }
+            throw brErr;
           }
           // Try new schema (id UUID) first, then legacy (eq_id text)
           let { data: eq } = await sb.from('equipment').select('available').eq('id', params.eq_id).maybeSingle();
