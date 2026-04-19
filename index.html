@@ -6224,7 +6224,7 @@
       const equipment = EQ.find(e => e.eq_id === equipmentId);
       if (!equipment) return;
       const { data: units } = await sb.from('equipment_units')
-        .select('*, borrow_records(borrower_name, borrow_date, due_date)')
+        .select('*')
         .eq('equipment_id', equipmentId)
         .order('unit_code');
       renderUnitDetail(equipment, units || []);
