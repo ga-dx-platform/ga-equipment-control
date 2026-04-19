@@ -6505,18 +6505,24 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
         <style>
           @page{size:60mm 40mm;margin:0}
-          body{margin:0;padding:4mm;font-family:sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;height:40mm}
-          #qr canvas,#qr img{width:24mm!important;height:24mm!important}
-          .n{font-size:8pt;font-weight:bold;margin:1mm 0 0;text-align:center}
-          .c{font-size:7pt;color:#666;font-family:monospace}
-          .b{font-size:6pt;color:#999;margin-top:1mm}
+          *{box-sizing:border-box;margin:0;padding:0}
+          html,body{width:60mm;height:40mm;overflow:hidden}
+          body{display:flex;align-items:center;justify-content:center;font-family:sans-serif}
+          .wrap{width:56mm;height:38mm;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.8mm}
+          #qr canvas,#qr img{width:28mm!important;height:28mm!important;display:block}
+          .n{font-size:8pt;font-weight:bold;color:#111;text-align:center;max-width:54mm;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+          .c{font-size:7pt;color:#444;font-family:monospace;text-align:center}
+          .b{font-size:6pt;color:#999;text-align:center}
         </style>
       </head><body>
-        <div id="qr"></div>
-        <p class="n">${eqName}</p><p class="c">${uc}</p>
-        <p class="b">GA Equipment Control</p>
+        <div class="wrap">
+          <div id="qr"></div>
+          <p class="n">${eqName}</p>
+          <p class="c">${uc}</p>
+          <p class="b">GA Equipment Control</p>
+        </div>
         <script>
-          new QRCode(document.getElementById('qr'),{text:'${qrUrl}',width:91,height:91,colorDark:'#000',correctLevel:QRCode.CorrectLevel.H});
+          new QRCode(document.getElementById('qr'),{text:'${qrUrl}',width:106,height:106,colorDark:'#000',correctLevel:QRCode.CorrectLevel.H});
           setTimeout(()=>{window.print();window.close();},500);
         <\/script>
       </body></html>`);
