@@ -4626,7 +4626,6 @@
     let selectedEquipmentId = null;
     let _qrModalCtx = {};
     let _pendingUnitCode = null;
-    let _preScanUnitId = null;
 
     // ===== AUDIT LOG HELPER =====
     async function logAction(action_type, target_table, target_id, old_data, new_data) {
@@ -5732,12 +5731,25 @@
             ${available.map(u => `<option value="${he(u.id)}">${he(u.unit_code)}</option>`).join('')}
           </select>
         </div>`;
-      if (_preScanUnitId && available.find(u => u.id === _preScanUnitId)) {
-        const sel = document.getElementById('bfUnitId');
-        if (sel) sel.value = _preScanUnitId;
-        _preScanUnitId = null;
-      }
     }
+
+    // Singleton camera preference manager — saves chosen deviceId across sessions
+    const CameraManager = (() => {
+      const LS_KEY = 'ga_pref_camera_id';
+      const load  = () => { try { return localStorage.getItem(LS_KEY) || null; } catch(_) { return null; } };
+      const save  = id => { try { if (id) localStorage.setItem(LS_KEY, id); } catch(_) {} };
+      const clear = ()  => { try { localStorage.removeItem(LS_KEY); } catch(_) {} };
+      // Returns ordered list of camera configs to attempt: saved id → back → front
+      function getCandidates() {
+        const saved = load();
+        const list = [];
+        if (saved) list.push(saved);                      // exact device, no re-prompt
+        list.push({ facingMode: 'environment' });         // back camera
+        list.push({ facingMode: 'user' });                // front camera fallback
+        return list;
+      }
+      return { load, save, clear, getCandidates };
+    })();
 
     function openQRScanner() {
       document.getElementById('qrScannerModal')?.remove();
@@ -5754,15 +5766,60 @@
           <p style="font-size:12px;color:#a8a29e;margin-top:12px">วาง QR code ไว้ในกรอบ</p>
         </div>`;
       document.body.appendChild(modal);
-      const scanner = new Html5QrcodeScanner('qrScanRegion', { fps: 10, qrbox: 220 }, false);
-      const cleanup = () => { scanner.clear().catch(() => {}); modal.remove(); };
+
+      const qrCode = new Html5Qrcode('qrScanRegion');
+      let isStarted = false;
+
+      const cleanup = async () => {
+        if (isStarted) { try { await qrCode.stop(); } catch(_) {} isStarted = false; }
+        try { qrCode.clear(); } catch(_) {}
+        modal.remove();
+      };
+
       document.getElementById('qrScanCloseBtn').onclick = cleanup;
-      scanner.render(async (decoded) => {
-        cleanup();
-        let unitCode = decoded;
-        try { const u = new URL(decoded); unitCode = u.searchParams.get('unit') || decoded; } catch(_) {}
-        await handleUnitScan(unitCode);
-      }, () => {});
+
+      (async () => {
+        const candidates = CameraManager.getCandidates();
+        for (const cam of candidates) {
+          try {
+            await qrCode.start(
+              cam,
+              { fps: 10, qrbox: { width: 220, height: 220 } },
+              async (decoded) => {
+                // Persist the actual deviceId so next open skips selection entirely
+                try {
+                  const deviceId = qrCode.getRunningTrackSettings?.()?.deviceId;
+                  if (deviceId) CameraManager.save(deviceId);
+                } catch(_) {}
+                await cleanup();
+                let unitCode = decoded;
+                try { const u = new URL(decoded); unitCode = u.searchParams.get('unit') || decoded; } catch(_) {}
+                await handleUnitScan(unitCode);
+              },
+              () => {} // per-frame decode errors are normal noise
+            );
+            isStarted = true;
+            // Also save deviceId right after start (before any QR is scanned)
+            try {
+              const deviceId = qrCode.getRunningTrackSettings?.()?.deviceId;
+              if (deviceId) CameraManager.save(deviceId);
+            } catch(_) {}
+            return; // camera opened successfully — stop trying candidates
+          } catch(err) {
+            const msg = err?.message || (typeof err === 'string' ? err : '');
+            if (/NotAllowed|Permission|Dismissed/i.test(msg)) {
+              // User denied permission — no point trying other candidates
+              modal.remove();
+              toast('กรุณาอนุญาตการใช้กล้องในการตั้งค่าเบราว์เซอร์', 'error');
+              return;
+            }
+            // This candidate failed (device gone / unsupported) — clear stale save and try next
+            if (typeof cam === 'string') CameraManager.clear();
+          }
+        }
+        modal.remove();
+        toast('ไม่สามารถเปิดกล้องได้', 'error');
+      })();
     }
 
     async function handleUnitScan(unitCode) {
