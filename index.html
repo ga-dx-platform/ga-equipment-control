@@ -5769,6 +5769,7 @@
 
       const qrCode = new Html5Qrcode('qrScanRegion');
       let isStarted = false;
+      let lastScan = 0;
 
       const cleanup = async () => {
         if (isStarted) { try { await qrCode.stop(); } catch(_) {} isStarted = false; }
@@ -5781,11 +5782,22 @@
       (async () => {
         const candidates = CameraManager.getCandidates();
         for (const cam of candidates) {
+          // Upgrade facingMode constraints without touching CameraManager
+          const camConfig = typeof cam === 'string'
+            ? cam
+            : { facingMode: { ideal: cam.facingMode }, width: { ideal: 1280 }, height: { ideal: 720 } };
           try {
             await qrCode.start(
-              cam,
-              { fps: 10, qrbox: { width: 220, height: 220 } },
+              camConfig,
+              {
+                fps: 10,
+                aspectRatio: 16 / 9,
+                qrbox: (w, h) => { const size = Math.min(w, h) * 0.8; return { width: size, height: size }; }
+              },
               async (decoded) => {
+                const now = Date.now();
+                if (now - lastScan < 2000) return;
+                lastScan = now;
                 // Persist the actual deviceId so next open skips selection entirely
                 try {
                   const deviceId = qrCode.getRunningTrackSettings?.()?.deviceId;
