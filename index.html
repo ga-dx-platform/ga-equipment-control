@@ -5153,14 +5153,16 @@
           return { ok: true };
         }
         if (action === 'getSettings') {
-          const { data, error } = await sb.from('system_settings').select('*').eq('id', 1).single();
+          const { data, error } = await sb.from('system_settings').select('*').eq('id', 1).maybeSingle();
           if (error) throw error;
           return data || { require_borrow_signature: false, require_return_rating: false };
         }
         if (action === 'updateSetting') {
           const { key, value } = params;
+          const ALLOWED_KEYS = ['require_borrow_signature', 'require_return_rating'];
+          if (!ALLOWED_KEYS.includes(key)) throw new Error('Invalid setting key: ' + key);
           const oldVal = SETTINGS[key];
-          const { error } = await sb.from('system_settings').update({ [key]: value }).eq('id', 1);
+          const { error } = await sb.from('system_settings').update({ [key]: value, updated_at: new Date().toISOString() }).eq('id', 1);
           if (error) throw error;
           SETTINGS[key] = value;
           await logAction('SETTING_UPDATE', 'system_settings', key, { [key]: oldVal }, { [key]: value });
@@ -5193,7 +5195,7 @@
     function sizeSignatureCanvas(canvas) {
       if (!canvas) return;
       const w = canvas.offsetWidth, h = canvas.offsetHeight;
-      if (!w || !h) return;
+      if (!w || !h) { hasSignatureStroke = false; return; }
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
       sctx = canvas.getContext('2d'); if (!sctx) return;
@@ -7513,7 +7515,7 @@
     }
 
     async function toggleSetting(key, btn) {
-      const newVal = btn.getAttribute('aria-checked') !== 'true';
+      const newVal = !SETTINGS[key];
       btn.disabled = true;
       try {
         await api('updateSetting', { key, value: newVal });
