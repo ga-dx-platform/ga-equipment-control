@@ -4320,6 +4320,7 @@
         <div id="tab-equipment" class="tab-content flex-1 overflow-auto hidden"></div>
         <div id="tab-members" class="tab-content flex-1 overflow-auto hidden"></div>
         <div id="tab-audit-log" class="tab-content flex-1 overflow-auto hidden"></div>
+        <div id="tab-settings" class="tab-content flex-1 overflow-auto hidden"></div>
         <!-- Analytics Tabs -->
         <div id="tab-analytics-mgr" class="tab-content flex-1 overflow-auto hidden"></div>
         <div id="tab-analytics-ga" class="tab-content flex-1 overflow-auto hidden"></div>
@@ -4626,6 +4627,7 @@
     let selectedEquipmentId = null;
     let _qrModalCtx = {};
     let _pendingUnitCode = null;
+    let SETTINGS = { require_borrow_signature: false, require_return_rating: false };
 
     // ===== AUDIT LOG HELPER =====
     async function logAction(action_type, target_table, target_id, old_data, new_data) {
@@ -5150,6 +5152,20 @@
           if (error) throw error;
           return { ok: true };
         }
+        if (action === 'getSettings') {
+          const { data, error } = await sb.from('system_settings').select('*').eq('id', 1).single();
+          if (error) throw error;
+          return data || { require_borrow_signature: false, require_return_rating: false };
+        }
+        if (action === 'updateSetting') {
+          const { key, value } = params;
+          const oldVal = SETTINGS[key];
+          const { error } = await sb.from('system_settings').update({ [key]: value }).eq('id', 1);
+          if (error) throw error;
+          SETTINGS[key] = value;
+          await logAction('SETTING_UPDATE', 'system_settings', key, { [key]: oldVal }, { [key]: value });
+          return { ok: true };
+        }
         throw new Error('Unknown action: '+action);
       } catch(err) { console.error('API Error:', err); throw err; }
     }
@@ -5261,16 +5277,18 @@
       document.querySelectorAll('#screen-pin .numpad-key').forEach(b=>b.style.pointerEvents='none');
       document.getElementById('pin-error').innerHTML = '<span style="color:var(--orange);display:flex;align-items:center;justify-content:center;gap:6px;"><svg class="animate-spin w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> กำลังตรวจสอบ...</span>';
       try {
-        const [res, eqData, brData, catData] = await Promise.all([
+        const [res, eqData, brData, catData, settingsData] = await Promise.all([
           api('verifyPin', { name:SU.name, pin:PB, role:SU.role }),
           api('getEquipment'),
           api('getBorrows', { name:SU.name, role:SU.role }),
-          api('getCategories')
+          api('getCategories'),
+          api('getSettings').catch(() => ({ require_borrow_signature: false, require_return_rating: false }))
         ]);
         if (res.ok) {
           pinReset(SU.name);
           CU = { ...SU, allowed_categories: res.allowed_categories ?? null };
           EQ = eqData; BORROWS = brData; CATS = catData;
+          if (settingsData) SETTINGS = { require_borrow_signature: settingsData.require_borrow_signature ?? false, require_return_rating: settingsData.require_return_rating ?? false };
           toast('ยินดีต้อนรับ ' + CU.name.split(' ')[0]);
           document.querySelectorAll('#pin-dots .pin-dot').forEach(d=>d.classList.add('pin-success-flash'));
           setTimeout(()=> {
@@ -5444,13 +5462,13 @@
       }
       const topInner = document.getElementById('top-tabs-inner');
       if (isMgr) {
-        const tabs = ['ภาพรวม','Analytics','ประวัติ','อุปกรณ์','สมาชิก','Audit'];
-        const icons = ['layout-dashboard','bar-chart-2','history','box','users','clipboard-list'];
+        const tabs = ['ภาพรวม','Analytics','ประวัติ','อุปกรณ์','สมาชิก','Audit','ตั้งค่า'];
+        const icons = ['layout-dashboard','bar-chart-2','history','box','users','clipboard-list','settings'];
         bar.innerHTML = tabs.map((t,i)=>
           `<button class="main-tab ${i===0?'tab-active':'tab-inactive'}" style="flex:1;padding:10px 12px;font-size:var(--fs-body);font-weight:600;text-align:center;" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
         if (topInner) topInner.innerHTML = tabs.map((t,i)=>
           `<button class="top-tab ${i===0?'active':''}" onclick="switchTab(${i})">${t}${i===0?badge:''}</button>`).join('');
-        const navLabels = ['ภาพรวม','สถิติ','ประวัติ','อุปกรณ์','สมาชิก','Audit'];
+        const navLabels = ['ภาพรวม','สถิติ','ประวัติ','อุปกรณ์','สมาชิก','Audit','ตั้งค่า'];
         const bn = document.getElementById('bottom-nav');
         if (bn) bn.innerHTML = navLabels.map((t,i)=>
           `<div class="bn-item nav-item bn-compact ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${icons[i]}" style="width:16px;height:16px;"></i><span class="bn-label">${t}${i===0?badge:''}</span></div>`).join('');
@@ -5492,7 +5510,7 @@
       document.querySelectorAll('#mainTabBar .main-tab').forEach((b,i)=> { b.classList.toggle('tab-active',i===idx); b.classList.toggle('tab-inactive',i!==idx); });
       document.querySelectorAll('#top-tabs-inner .top-tab').forEach((b,i)=> b.classList.toggle('active',i===idx));
       document.querySelectorAll('#bottom-nav .bn-item').forEach((b,i)=> b.classList.toggle('active',i===idx));
-      ['borrow','return','history','dashboard','analytics-mgr','analytics-ga','mgr-history','equipment','members','audit-log'].forEach(t=> { const el=document.getElementById('tab-'+t); if(el) el.style.display='none'; });
+      ['borrow','return','history','dashboard','analytics-mgr','analytics-ga','mgr-history','equipment','members','audit-log','settings'].forEach(t=> { const el=document.getElementById('tab-'+t); if(el) el.style.display='none'; });
       if (isMgr) {
         if(idx===0){ document.getElementById('tab-dashboard').style.display='block'; renderDashboard(); }
         if(idx===1){ document.getElementById('tab-analytics-mgr').style.display='block'; renderAnalyticsTab(); }
@@ -5500,6 +5518,7 @@
         if(idx===3){ document.getElementById('tab-equipment').style.display='block'; renderEquipmentTab(); }
         if(idx===4){ document.getElementById('tab-members').style.display='block'; renderMembersTab(); }
         if(idx===5){ document.getElementById('tab-audit-log').style.display='block'; renderAuditLogTab(); }
+        if(idx===6){ document.getElementById('tab-settings').style.display='block'; renderSettingsTab(); }
       } else {
         if(idx===0){ document.getElementById('tab-borrow').style.display='block'; renderBorrowTab(); }
         if(idx===1){ document.getElementById('tab-return').style.display='block'; renderReturnTab(); }
@@ -5689,7 +5708,7 @@
           <div><label class="text-xs font-medium text-gray-500 mb-1.5 block">หมายเหตุ <span class="font-normal text-gray-400" style="font-size:11px;">(ไม่บังคับ)</span></label>
             <textarea id="bfNote" rows="2" placeholder="เช่น ใช้งานประชุมลูกค้า" class="gd-input" style="height:auto;padding:10px 14px;"></textarea></div>
         </div>
-        <div class="signature-pad mb-6">
+        ${SETTINGS.require_borrow_signature ? `<div class="signature-pad mb-6">
           <div class="signature-pad__header">
             <span class="signature-pad__title">เซ็นชื่อในกล่องด้านล่าง <span style="color:#DC2626;">*</span></span>
             <button onclick="clearSignCanvas('bfSignCanvas')" class="signature-pad__clear"><i data-lucide="eraser" class="w-[18px] h-[18px] text-[#64748B]"></i> ล้าง</button>
@@ -5699,12 +5718,12 @@
           </div>
           <p class="text-sm text-gray-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้รับอุปกรณ์ตามรายการข้างต้นในสภาพสมบูรณ์</p>
           <p class="text-center mt-1" style="font-size:11px;color:#F59E0B;">🔒 ลายเซ็นนี้ใช้เพื่อยืนยันการรับอุปกรณ์ และถูกจัดเก็บอย่างปลอดภัยในระบบ</p>
-        </div>
+        </div>` : ''}
         <button onclick="submitBorrow()" id="bfSubmitBtn" class="w-full gd-btn-primary text-sm font-semibold flex items-center justify-center gap-2">
           <i data-lucide="check" class="w-[18px] h-[18px] text-[#64748B]"></i> ยืนยันการยืม
         </button>`;
       goScreen('borrow-form'); lucide.createIcons({'stroke-width': 1.5});
-      setTimeout(()=>initSignCanvas('bfSignCanvas'), 100);
+      if (SETTINGS.require_borrow_signature) setTimeout(()=>initSignCanvas('bfSignCanvas'), 100);
       if (!lockedUnit) _loadUnitDropdown(eq.eq_id);
     }
     function closeBorrowForm() { currentBorrowEq=null; goScreen('main'); switchTab(0); }
@@ -5886,7 +5905,7 @@
       if (!borrower) { toast('กรุณากรอกชื่อผู้ยืม'); return; }
       if (!/^\d{6}$/.test(dept)) { toast('กรุณากรอกรหัสพนักงาน 6 หลัก'); return; }
       if (!due) { toast('กรุณาระบุกำหนดคืน'); return; }
-      if (isCanvasBlank()) { toast('กรุณาเซ็นลายเซ็นก่อนยืนยัน'); return; }
+      if (SETTINGS.require_borrow_signature && isCanvasBlank()) { toast('กรุณาเซ็นลายเซ็นก่อนยืนยัน'); return; }
       if (qty < 1 || qty > currentBorrowEq.available) { toast('จำนวนไม่ถูกต้อง'); return; }
       const btn = document.getElementById('bfSubmitBtn');
       showConfirm({
@@ -5896,8 +5915,8 @@
         onConfirm: async () => {
           btn.disabled = true; btn.innerHTML = '⏳ กำลังดำเนินการ...';
           try {
-            const canvas = document.getElementById('bfSignCanvas');
-            const sig = canvas ? exportSignature(canvas) : '';
+            const canvas = SETTINGS.require_borrow_signature ? document.getElementById('bfSignCanvas') : null;
+            const sig = canvas ? exportSignature(canvas) : null;
             await api('createBorrow', {
               eq_id: currentBorrowEq.eq_id, eq_name: currentBorrowEq.name, qty,
               borrower_name: borrower, borrower_dept: dept, ga_staff: CU.name,
@@ -6020,7 +6039,7 @@
               class="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-brand resize-none"></textarea>
           </div>
         </div>
-        <div class="gd-card p-4 mb-4">
+        ${SETTINGS.require_return_rating ? `<div class="gd-card p-4 mb-4">
           <h4 class="text-sm font-semibold text-gray-700 mb-2.5 flex items-center gap-2">
             <i data-lucide="star" style="width:14px;height:14px;color:#f59e0b;"></i>
             ประเมินบริการ <span class="text-gray-400 font-normal text-xs ml-1">(ไม่บังคับ)</span>
@@ -6042,18 +6061,18 @@
           </div>
           <p class="text-sm text-gray-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้คืนอุปกรณ์ตามรายการข้างต้นเรียบร้อยแล้ว</p>
           <p class="eq-meta text-center mt-1">🔒 ลายเซ็นนี้ใช้เพื่อยืนยันการคืนอุปกรณ์ และถูกจัดเก็บอย่างปลอดภัยในระบบ</p>
-        </div>
+        </div>` : ''}
         <button onclick="submitReturn()" id="rdSubmitBtn" class="w-full gd-btn-primary text-sm font-semibold flex items-center justify-center gap-2">
           <i data-lucide="check" class="w-[18px] h-[18px] text-[#64748B]"></i> ยืนยันการคืน
         </button>`;
       goScreen('return-detail'); lucide.createIcons({'stroke-width': 1.5});
-      setTimeout(()=>initSignCanvas('rdSignCanvas'), 100);
+      if (SETTINGS.require_return_rating) setTimeout(()=>initSignCanvas('rdSignCanvas'), 100);
     }
     function closeReturnDetail() { currentReturnRecord=null; goScreen('main'); switchTab(1); }
 
     async function submitReturn() {
       if (!returnCondition) { toast('กรุณาเลือกสภาพอุปกรณ์ก่อนยืนยัน'); return; }
-      if (isCanvasBlank()) { toast('กรุณาเซ็นลายเซ็นยืนยันคืน'); return; }
+      if (SETTINGS.require_return_rating && isCanvasBlank()) { toast('กรุณาเซ็นลายเซ็นยืนยันคืน'); return; }
       const btn = document.getElementById('rdSubmitBtn');
       showConfirm({
         title: 'ยืนยันการคืน?',
@@ -6062,8 +6081,8 @@
         onConfirm: async () => {
           btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
           try {
-            const canvas = document.getElementById('rdSignCanvas');
-            const sig = canvas ? exportSignature(canvas) : '';
+            const canvas = SETTINGS.require_return_rating ? document.getElementById('rdSignCanvas') : null;
+            const sig = canvas ? exportSignature(canvas) : null;
             const note = (document.getElementById('rc-note')?.value || '').trim();
             const feedback = (document.getElementById('rc-feedback')?.value || '').trim();
             await api('returnBorrow', {
@@ -7347,6 +7366,7 @@
       CATEGORY_DELETE:  { label:'ลบหมวดหมู่',     cls:'bg-red-50 text-danger' },
       CHANGE_PIN:       { label:'เปลี่ยน PIN',     cls:'bg-gray-100 text-gray-600' },
       UPDATE_CATEGORIES:{ label:'ตั้งค่าหมวด',    cls:'bg-blue-50 text-blue-700' },
+      SETTING_UPDATE:   { label:'ตั้งค่าระบบ',    cls:'bg-indigo-50 text-indigo-600' },
     };
     function auditTypeBadge(t) {
       const m = AUDIT_TYPE_META[t] || { label: t, cls: 'bg-gray-100 text-gray-500' };
@@ -7359,6 +7379,12 @@
       if (r.action_type === 'RETURN_BY_MANAGER') return `record: ${he(r.target_id||'')}${d.returned_by?' · โดย '+he(d.returned_by):''}`;
       if (r.action_type?.startsWith('EQUIPMENT')) return `${he(d.name||'')}${d.category?' · '+he(d.category):''}${d.quantity?' · '+d.quantity+' ชิ้น':''}`;
       if (r.action_type?.startsWith('MEMBER')) return `${he(d.name||'')}${d.role?' ('+he(d.role)+')':''}`;
+      if (r.action_type === 'SETTING_UPDATE') {
+        const keyLabel = { require_borrow_signature:'ลายเซ็นการยืม', require_return_rating:'ลายเซ็น/ประเมินคืน' };
+        const label = keyLabel[r.target_id] || he(r.target_id||'');
+        const val = d[r.target_id] ? 'เปิด' : 'ปิด';
+        return `${label} → ${val}`;
+      }
       return r.target_id ? he(r.target_id) : '';
     }
     async function renderAuditLogTab() {
@@ -7450,6 +7476,53 @@
       const a = document.createElement('a');
       a.href = url; a.download = `history-${mode}-${new Date().toISOString().slice(0,10)}.csv`;
       a.click(); URL.revokeObjectURL(url);
+    }
+
+    // ===== SETTINGS TAB =====
+    function renderSettingsTab() {
+      const el = document.getElementById('tab-settings');
+      if (!el) return;
+      function toggleRow(key, labelTh, descTh, isOn) {
+        return `
+          <div class="flex items-center justify-between py-4 border-b border-gray-100 last:border-b-0">
+            <div class="flex-1 mr-4">
+              <p class="text-sm font-semibold text-gray-800">${labelTh}</p>
+              <p class="text-xs text-gray-400 mt-0.5">${descTh}</p>
+            </div>
+            <button type="button" onclick="toggleSetting('${key}', this)"
+              aria-checked="${isOn}"
+              style="position:relative;display:inline-flex;height:24px;width:44px;flex-shrink:0;cursor:pointer;border-radius:9999px;border:2px solid transparent;transition:background-color 0.2s;background:${isOn ? '#f97316' : '#e5e7eb'};outline:none;">
+              <span style="pointer-events:none;display:inline-block;height:20px;width:20px;border-radius:9999px;background:white;box-shadow:0 1px 3px rgba(0,0,0,0.15);transition:transform 0.2s;transform:${isOn ? 'translateX(20px)' : 'translateX(0)'}"></span>
+            </button>
+          </div>`;
+      }
+      el.innerHTML = `
+        <div class="gd-container fade-in">
+          <div class="gd-container-header">
+            <h2 class="page-title">ตั้งค่าระบบ</h2>
+            <p class="text-sm text-gray-400 mt-1">จัดการฟีเจอร์การยืม-คืนอุปกรณ์ (เฉพาะผู้ดูแลระบบ)</p>
+          </div>
+          <div class="gd-card p-5 mb-4">
+            <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1" style="letter-spacing:0.08em;">ฟีเจอร์การยืม-คืน</p>
+            <div>
+              ${toggleRow('require_borrow_signature', 'ต้องการลายเซ็นการยืม', 'ผู้ยืมต้องเซ็นชื่อก่อนยืนยันการยืมอุปกรณ์', SETTINGS.require_borrow_signature)}
+              ${toggleRow('require_return_rating', 'ต้องการลายเซ็นและประเมินบริการเมื่อคืน', 'ผู้คืนต้องเซ็นชื่อ และสามารถให้คะแนนบริการได้', SETTINGS.require_return_rating)}
+            </div>
+          </div>
+        </div>`;
+    }
+
+    async function toggleSetting(key, btn) {
+      const newVal = btn.getAttribute('aria-checked') !== 'true';
+      btn.disabled = true;
+      try {
+        await api('updateSetting', { key, value: newVal });
+        renderSettingsTab();
+        toast(newVal ? 'เปิดใช้งานแล้ว' : 'ปิดใช้งานแล้ว', 'success');
+      } catch(e) {
+        toast('ไม่สามารถบันทึกการตั้งค่าได้', 'error');
+        btn.disabled = false;
+      }
     }
 
     // ===== INIT =====
