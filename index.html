@@ -4095,8 +4095,12 @@
     }
     @media (min-width: 1024px) {
       #desktop-sidebar.sb-visible { display: flex; }
-      #app-root { padding-left: 256px; justify-content: flex-start; }
-      #main-wrapper { max-width: none !important; }
+      #app-root {
+        margin-left: 256px !important;
+        width: calc(100% - 256px) !important;
+        justify-content: flex-start;
+      }
+      #main-wrapper { max-width: none !important; width: 100% !important; }
       .app-header { display: none !important; }
       #top-tabs-bar { display: none !important; }
       #screen-main { padding-top: 24px; }
