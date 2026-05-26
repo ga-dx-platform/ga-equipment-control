@@ -2103,7 +2103,7 @@
     }
 
     /* ── Borrow tab density polish ───────────────────────── */
-    #tab-borrow .gd-container { max-width: 980px !important; }
+    #tab-borrow .gd-container { max-width: none !important; margin-left: 0 !important; margin-right: 0 !important; }
 
     /* Mini KPI strip above the list */
     .eq-kpi-strip {
@@ -5730,6 +5730,8 @@
             </button>
           </div>
         </div>
+        <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-start">
+          <div>
         <div class="eq-kpi-strip">
           <div class="eq-kpi t-all">
             <div class="eq-kpi-ico"><i data-lucide="boxes" style="width:18px;height:18px;"></i></div>
@@ -5760,6 +5762,7 @@
           <div class="chip ${borrowCatFilter===''?'active':''}" onclick="borrowCatFilter='';renderBorrowTab()">ทั้งหมด</div>
           ${cats.map(c=>`<div class="chip ${borrowCatFilter===c?'active':''}" onclick="borrowCatFilter='${he(c)}';renderBorrowTab()">${he(c)}</div>`).join('')}
         </div>
+          </div>
         <div class="view-${borrowViewMode}" id="eqGrid">
           ${filtered.length ? filtered.map(e => borrowViewMode === 'grid' ? `
             <div class="gd-card gd-card-grid-card cursor-pointer" style="--cat-accent:${catAccentColor(e.category)}" onclick="openBorrowForm('${he(e.eq_id)}')">
@@ -5805,6 +5808,7 @@
                 <button class="btn-action-borrow flex items-center gap-1.5"><i data-lucide="hand" class="w-4 h-4 text-[#F97316]"></i> ยืม</button>
               </div>
             </div>`;})()}`).join('') : emptyState('ไม่พบอุปกรณ์','ลองเปลี่ยนหมวดหมู่หรือคำค้นหา','search')}
+        </div>
         </div>
       </div>`;
       lucide.createIcons({'stroke-width': 1.5});
