@@ -4080,6 +4080,47 @@
     .eq-tag.t-blue  { background:#dbeafe; color:#1d4ed8; }
     .eq-tag.t-amber { background:#fef3c7; color:#92400e; }
     .eq-tag.t-red   { background:#fee2e2; color:#991b1b; }
+
+    /* ── Desktop Sidebar ─────────────────────────────────── */
+    #desktop-sidebar {
+      display: none;
+      flex-direction: column;
+      position: fixed;
+      left: 0; top: 0;
+      width: 256px;
+      height: 100vh;
+      background: #ffffff;
+      border-right: 1px solid #E2E8F0;
+      z-index: 30;
+    }
+    @media (min-width: 1024px) {
+      #desktop-sidebar.sb-visible { display: flex; }
+      #app-root { padding-left: 256px; justify-content: flex-start; }
+      #main-wrapper { max-width: none !important; }
+      .app-header { display: none !important; }
+      #top-tabs-bar { display: none !important; }
+      #screen-main { padding-top: 24px; }
+    }
+    .sb-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #64748B;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      transition: background 150ms ease, color 150ms ease;
+    }
+    .sb-item:hover { background: #F8FAFC; color: #0F172A; }
+    .sb-item.active { background: #FFF7ED; color: #EA580C; font-weight: 600; }
+    .sb-item.active i[data-lucide] { color: #EA580C; }
   </style>
 
 </head>
@@ -4093,8 +4134,52 @@
 
 
 <body class="h-full gd-shell">
+
+  <!-- Desktop sidebar (lg+ only, visible on main screen) -->
+  <aside id="desktop-sidebar">
+    <!-- Brand -->
+    <div style="padding:20px 20px 16px;border-bottom:1px solid #E2E8F0;flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:36px;height:36px;border-radius:10px;background:#F97316;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(249,115,22,0.25);">
+          <span style="color:#fff;font-size:14px;font-weight:700;font-family:'Noto Sans Thai','Inter',sans-serif;">EC</span>
+        </div>
+        <div>
+          <p style="margin:0;font-size:14px;font-weight:700;color:#0F172A;line-height:1.2;font-family:'Noto Sans Thai','Inter',sans-serif;">Equipment Control</p>
+          <p style="margin:0;font-size:11px;color:#94A3B8;font-family:'Noto Sans Thai','Inter',sans-serif;">GA Platform</p>
+        </div>
+      </div>
+    </div>
+    <!-- User profile -->
+    <div style="padding:14px 16px;border-bottom:1px solid #E2E8F0;flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div id="sb-avatar" style="width:36px;height:36px;border-radius:10px;background:#F97316;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;font-family:'Noto Sans Thai','Inter',sans-serif;"></div>
+        <div style="min-width:0;">
+          <p id="sb-name" style="margin:0;font-size:13px;font-weight:600;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
+          <p id="sb-role" style="margin:0;font-size:11px;color:#94A3B8;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
+        </div>
+      </div>
+    </div>
+    <!-- Nav -->
+    <nav id="sb-nav" style="flex:1;overflow-y:auto;padding:10px 10px;display:flex;flex-direction:column;gap:2px;scrollbar-width:none;"></nav>
+    <!-- Footer actions -->
+    <div style="padding:12px 10px;border-top:1px solid #E2E8F0;display:flex;gap:6px;flex-shrink:0;">
+      <button onclick="openQRScanner()" title="สแกน QR"
+        style="flex:1;display:flex;align-items:center;justify-content:center;background:#F8FAFC;border:1px solid #E2E8F0;color:#475569;border-radius:8px;height:36px;padding:0;cursor:pointer;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M17 14h4"/><path d="M14 17v4"/><path d="M17 21h4v-4"/></svg>
+      </button>
+      <button onclick="openChangePinModal()" title="เปลี่ยน PIN"
+        style="flex:1;display:flex;align-items:center;justify-content:center;background:#F8FAFC;border:1px solid #E2E8F0;color:#475569;border-radius:8px;height:36px;padding:0;cursor:pointer;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+      </button>
+      <button onclick="confirmLogout()" title="ออกจากระบบ"
+        style="flex:1;display:flex;align-items:center;justify-content:center;background:#FEF2F2;border:1px solid #FECACA;color:#DC2626;border-radius:8px;height:36px;padding:0;cursor:pointer;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </aside>
+
   <div id="app-root" class="h-full w-full flex justify-center overflow-auto">
-    <div class="w-full" style="max-width:1180px;height:100%;position:relative;">
+    <div id="main-wrapper" class="w-full" style="max-width:1180px;height:100%;position:relative;">
 
       <!-- LOADING -->
       <div id="screen-loading" class="screen active">
@@ -4726,6 +4811,8 @@
       if (!t) return;
       t.classList.add('active'); t.style.display = 'flex';
       syncBottomNavVisibility(name);
+      const sb = document.getElementById('desktop-sidebar');
+      if (sb) sb.classList.toggle('sb-visible', name === 'main');
     }
     function showModal(id) {
       const m = document.getElementById(id);
@@ -5440,6 +5527,12 @@
       av.textContent = (CU.name || '').trim().slice(0,2);
       document.getElementById('main-user-name').textContent = CU.name;
       document.getElementById('main-user-role').textContent = isMgr ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่ GA';
+      const sbAv = document.getElementById('sb-avatar');
+      if (sbAv) sbAv.textContent = (CU.name || '').trim().slice(0, 2);
+      const sbName = document.getElementById('sb-name');
+      if (sbName) sbName.textContent = CU.name;
+      const sbRole = document.getElementById('sb-role');
+      if (sbRole) sbRole.textContent = isMgr ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่ GA';
       const bar = document.getElementById('mainTabBar');
       const oc = BORROWS.filter(r => r.status === 'overdue').length;
       const greetEl = document.getElementById('main-greeting');
@@ -5486,6 +5579,20 @@
         if (bn) bn.innerHTML = tabs.map((t,i)=>
           `<div class="bn-item nav-item ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${icons[i]}" style="width:20px;height:20px;"></i><span class="bn-label">${t}${i===1?badge:''}</span></div>`).join('');
       }
+      const sbNav = document.getElementById('sb-nav');
+      if (sbNav) {
+        if (isMgr) {
+          const sbTabs = ['ภาพรวม','Analytics','ประวัติ','อุปกรณ์','สมาชิก','Audit','ตั้งค่า'];
+          const sbIcons = ['layout-dashboard','bar-chart-2','history','box','users','clipboard-list','settings'];
+          sbNav.innerHTML = sbTabs.map((t,i)=>
+            `<button class="sb-item ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${sbIcons[i]}" style="width:16px;height:16px;flex-shrink:0;"></i><span>${t}${i===0?badge:''}</span></button>`).join('');
+        } else {
+          const sbTabs = ['ยืมอุปกรณ์','คืนอุปกรณ์','ประวัติ','สถิติ'];
+          const sbIcons = ['package-plus','package-check','history','bar-chart-2'];
+          sbNav.innerHTML = sbTabs.map((t,i)=>
+            `<button class="sb-item ${i===0?'active':''}" onclick="switchTab(${i})"><i data-lucide="${sbIcons[i]}" style="width:16px;height:16px;flex-shrink:0;"></i><span>${t}${i===1?badge:''}</span></button>`).join('');
+        }
+      }
       showOverdueBanner();
       switchTab(0);
     }
@@ -5512,6 +5619,7 @@
       document.querySelectorAll('#mainTabBar .main-tab').forEach((b,i)=> { b.classList.toggle('tab-active',i===idx); b.classList.toggle('tab-inactive',i!==idx); });
       document.querySelectorAll('#top-tabs-inner .top-tab').forEach((b,i)=> b.classList.toggle('active',i===idx));
       document.querySelectorAll('#bottom-nav .bn-item').forEach((b,i)=> b.classList.toggle('active',i===idx));
+      document.querySelectorAll('#sb-nav .sb-item').forEach((b,i)=> b.classList.toggle('active',i===idx));
       ['borrow','return','history','dashboard','analytics-mgr','analytics-ga','mgr-history','equipment','members','audit-log','settings'].forEach(t=> { const el=document.getElementById('tab-'+t); if(el) el.style.display='none'; });
       if (isMgr) {
         if(idx===0){ document.getElementById('tab-dashboard').style.display='block'; renderDashboard(); }
