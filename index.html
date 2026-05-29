@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -131,7 +132,7 @@
     /* ── Base ─────────────────────────────────────────── */
     html, body {
       height: 100%; margin: 0;
-      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      font-family: 'Prompt', sans-serif;
       font-size: var(--fs-body); color: var(--text-primary);
       line-height: 1.7;
       word-break: keep-all;
@@ -139,9 +140,10 @@
       background-image: radial-gradient(rgba(15,23,42,0.055) 1px, transparent 1px);
       background-size: 20px 20px;
     }
+    body { font-family: 'Prompt', sans-serif; }
     *, *::before, *::after { box-sizing: border-box; }
-    * { font-family: 'Noto Sans Thai', sans-serif; -webkit-tap-highlight-color: transparent; }
-    p, span, td, li, label { line-height: 1.7; }
+    * { font-family: 'Prompt', sans-serif; -webkit-tap-highlight-color: transparent; }
+    p, span, td, li, label { line-height: 1.8; }
     ::-webkit-scrollbar { width: 0; height: 0; }
 
     /* ── Screens ──────────────────────────────────────── */
@@ -243,7 +245,7 @@
     /* ── Buttons ──────────────────────────────────────── */
     
     button {
-      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      font-family: 'Prompt', sans-serif;
       transition: all 120ms ease;
       cursor: pointer;
     }
@@ -282,7 +284,7 @@
 
     /* ── Inputs ───────────────────────────────────────── */
     input, select, textarea {
-      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      font-family: 'Prompt', sans-serif;
       background: var(--bg-input);
       border: 1px solid var(--border);
       border-radius: 10px;
@@ -304,7 +306,7 @@
       border-radius: 10px; padding: 0 var(--ga-space-lg);
       font-size: var(--ga-text-body); color: var(--text-primary);
       width: 100%; height: 40px;
-      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      font-family: 'Prompt', sans-serif;
     }
 
     /* ── Confirm dialog buttons ───────────────────────── */
@@ -366,7 +368,7 @@
     .kpi-number {
       font-size: 34px; font-weight: var(--ga-fw-semibold); line-height: 1;
       margin: var(--ga-space-sm) 0 0;
-      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      font-family: 'Prompt', sans-serif;
       color: var(--text-primary);
     }
     .kpi-label { font-size: var(--ga-text-small); color: var(--text-muted); margin-top: auto; padding-top: var(--ga-space-xs); }
@@ -443,7 +445,7 @@
       border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
       font-size: 22px; font-weight: 500;
-      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      font-family: 'Prompt', sans-serif;
       color: var(--text-primary); cursor: pointer;
       background: var(--bg-card); border: 1px solid var(--border);
       box-shadow: 0 2px 6px rgba(0,0,0,0.07);
@@ -596,7 +598,7 @@
       margin: 12px auto 0;
       max-width: max-content;
     }
-    .main-tab { white-space: nowrap; cursor: pointer; font-family: 'Noto Sans Thai', 'Inter', sans-serif; display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 16px; font-size: 14px; font-weight: 500; border-radius: 10px; border: none; }
+    .main-tab { white-space: nowrap; cursor: pointer; font-family: 'Prompt', sans-serif; display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 16px; font-size: 14px; font-weight: 500; border-radius: 10px; border: none; }
     .tab-active { color: #0F172A; background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
     .tab-inactive { color: #64748B; background: transparent; }
     .tab-inactive:hover { color: #334155; }
@@ -1091,7 +1093,7 @@
       color: var(--text-primary);
       height: 32px;
       width: auto;
-      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      font-family: 'Prompt', sans-serif;
     }
     .gd-filter-input:focus {
       outline: none;
@@ -1106,7 +1108,7 @@
       position: absolute; inset: 0;
       align-items: center; justify-content: center;
       font-size: 13px; color: #a8a29e;
-      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      font-family: 'Prompt', sans-serif;
     }
 
 
@@ -1130,16 +1132,16 @@
     .filter-bar { background:#fff; border:0.5px solid #e7e5e4; border-radius:12px; padding:14px 16px; margin-bottom:16px; }
     .filter-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
     .filter-title { font-size:12px; font-weight:500; color:#78716c; display:flex; align-items:center; gap:6px; }
-    .filter-reset-btn { font-size:11px; color:#f97316; background:none; border:none; cursor:pointer; padding:0; font-family:'Noto Sans Thai','Inter',sans-serif; }
+    .filter-reset-btn { font-size:11px; color:#f97316; background:none; border:none; cursor:pointer; padding:0; font-family:'Prompt', sans-serif; }
     .filter-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
     .filter-item { display:flex; flex-direction:column; gap:4px; }
     .filter-label { font-size:10px; color:#a8a29e; font-weight:500; text-transform:uppercase; letter-spacing:0.05em; }
-    .filter-item select, .filter-item input[type="date"] { font-size:12px; padding:7px 10px; border-radius:8px; border:0.5px solid #e7e5e4; background:#fafaf9; color:#1c1917; cursor:pointer; font-family:'Noto Sans Thai','Inter',sans-serif; width:100%; }
+    .filter-item select, .filter-item input[type="date"] { font-size:12px; padding:7px 10px; border-radius:8px; border:0.5px solid #e7e5e4; background:#fafaf9; color:#1c1917; cursor:pointer; font-family:'Prompt', sans-serif; width:100%; }
     .filter-item select:focus, .filter-item input[type="date"]:focus { outline:2px solid #f97316; outline-offset:1px; }
     .filter-daterange { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
     .active-chips { display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding-top:10px; border-top:0.5px solid #f5f5f4; margin-top:10px; }
     .chips-label { font-size:11px; color:#a8a29e; }
-    .filter-chip { display:flex; align-items:center; gap:4px; background:#fff7ed; color:#c2410c; border:0.5px solid #fed7aa; border-radius:20px; padding:3px 10px; font-size:11px; font-family:'Noto Sans Thai','Inter',sans-serif; }
+    .filter-chip { display:flex; align-items:center; gap:4px; background:#fff7ed; color:#c2410c; border:0.5px solid #fed7aa; border-radius:20px; padding:3px 10px; font-size:11px; font-family:'Prompt', sans-serif; }
     .chip-remove { cursor:pointer; opacity:0.6; font-size:13px; background:none; border:none; padding:0; color:#c2410c; }
     .analytics-kpi-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-bottom:16px; }
     .analytics-kpi { background:#fff; border:0.5px solid #e7e5e4; border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:4px; }
@@ -1149,7 +1151,7 @@
     .analytics-kpi.danger      { background:linear-gradient(135deg,#fff1f2 0%,#fff 60%); border-color:#fecdd3; }
     .kpi-label { font-size:11px; color:#a8a29e; }
     .kpi-label.red { color:#DC6B19; }
-    .kpi-value { font-size:28px; font-weight:600; line-height:1; color:#1c1917; font-family:'Noto Sans Thai','Inter',sans-serif; }
+    .kpi-value { font-size:28px; font-weight:600; line-height:1; color:#1c1917; font-family:'Prompt', sans-serif; }
     .kpi-value.orange { color:#f97316; }
     .kpi-value.green { color:#10b981; }
     .kpi-value.red { color:#DC6B19; }
@@ -1359,7 +1361,7 @@
       display: flex; align-items: center; gap: 10px;
       padding: 11px 14px; border-bottom: 1px solid #F1F5F9;
       cursor: pointer; font-size: 13px; color: #334155;
-      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      font-family: 'Prompt', sans-serif;
       background: white; transition: background .12s;
     }
     .cat-checkbox-row:last-child { border-bottom: none; }
@@ -1780,7 +1782,7 @@
       font-weight: 500 !important;
       margin: 0 0 2px !important;
       letter-spacing: 0.02em;
-      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      font-family: 'Prompt', sans-serif;
     }
     #main-avatar {
       background: rgba(255,255,255,0.22) !important;
@@ -4035,7 +4037,7 @@
     /* ── Equipment Manager Split Panel ── */
     .eq-topbar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
     .eq-search { width:100%; max-width:260px; height:36px; }
-    .eq-filter-select { font-size:13px; padding:7px 10px; border-radius:8px; border:0.5px solid #e7e5e4; background:#fafaf9; font-family:'Noto Sans Thai',sans-serif; height:36px; }
+    .eq-filter-select { font-size:13px; padding:7px 10px; border-radius:8px; border:0.5px solid #e7e5e4; background:#fafaf9; font-family:'Prompt', sans-serif; height:36px; }
     .eq-split-panel { display:grid; grid-template-columns:300px 1fr; gap:16px; min-height:500px; }
     @media (max-width:767px) {
       .eq-split-panel { grid-template-columns:1fr; }
@@ -4044,7 +4046,7 @@
     }
     .eq-mobile-back { display:none; }
     @media (max-width:767px) {
-      .eq-mobile-back { display:flex;align-items:center;gap:6px;background:none;border:none;color:#f97316;font-size:13px;font-weight:600;cursor:pointer;padding:0;margin-bottom:12px;font-family:'Noto Sans Thai',sans-serif; }
+      .eq-mobile-back { display:flex;align-items:center;gap:6px;background:none;border:none;color:#f97316;font-size:13px;font-weight:600;cursor:pointer;padding:0;margin-bottom:12px;font-family:'Prompt', sans-serif; }
     }
     .eq-left-panel { display:flex; flex-direction:column; gap:8px; }
     .eq-list-item { background:#fff; border:0.5px solid #e7e5e4; border-radius:10px; padding:12px; cursor:pointer; transition:all 0.15s ease; margin-bottom:6px; }
@@ -4074,10 +4076,10 @@
     .eq-category-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
     .category-item { display:flex; align-items:center; justify-content:space-between; padding:6px 8px; border-radius:6px; font-size:12px; color:#1c1917; }
     .category-item:hover { background:#fafaf9; }
-    .btn-primary-sm { background:#f97316; color:#fff; border:none; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:500; cursor:pointer; font-family:'Noto Sans Thai',sans-serif; white-space:nowrap; }
+    .btn-primary-sm { background:#f97316; color:#fff; border:none; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:500; cursor:pointer; font-family:'Prompt', sans-serif; white-space:nowrap; }
     .btn-primary-sm:hover { background:#ea580c; }
-    .mini-btn-orange { background:#fff7ed; color:#c2410c; border:0.5px solid #fed7aa; border-radius:6px; padding:4px 10px; font-size:11px; cursor:pointer; font-family:'Noto Sans Thai',sans-serif; }
-    .mini-btn-gray { background:#fff; color:#78716c; border:0.5px solid #e7e5e4; border-radius:6px; padding:4px 10px; font-size:11px; cursor:pointer; font-family:'Noto Sans Thai',sans-serif; }
+    .mini-btn-orange { background:#fff7ed; color:#c2410c; border:0.5px solid #fed7aa; border-radius:6px; padding:4px 10px; font-size:11px; cursor:pointer; font-family:'Prompt', sans-serif; }
+    .mini-btn-gray { background:#fff; color:#78716c; border:0.5px solid #e7e5e4; border-radius:6px; padding:4px 10px; font-size:11px; cursor:pointer; font-family:'Prompt', sans-serif; }
     .leg-dot { width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:4px; }
     .leg-dot.green { background:#10b981; }
     .leg-dot.blue  { background:#3b82f6; }
@@ -4130,7 +4132,7 @@
       background: transparent;
       width: 100%;
       text-align: left;
-      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      font-family: 'Prompt', sans-serif;
       transition: background 150ms ease, color 150ms ease;
     }
     .sb-item:hover { background: #F8FAFC; color: #0F172A; }
@@ -4156,11 +4158,11 @@
     <div style="padding:20px 20px 16px;border-bottom:1px solid #E2E8F0;flex-shrink:0;">
       <div style="display:flex;align-items:center;gap:10px;">
         <div style="width:36px;height:36px;border-radius:10px;background:#F97316;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(249,115,22,0.25);">
-          <span style="color:#fff;font-size:14px;font-weight:700;font-family:'Noto Sans Thai','Inter',sans-serif;">EC</span>
+          <span style="color:#fff;font-size:14px;font-weight:700;font-family:'Prompt', sans-serif;">EC</span>
         </div>
         <div>
-          <p style="margin:0;font-size:14px;font-weight:700;color:#0F172A;line-height:1.2;font-family:'Noto Sans Thai','Inter',sans-serif;">Equipment Control</p>
-          <p style="margin:0;font-size:11px;color:#94A3B8;font-family:'Noto Sans Thai','Inter',sans-serif;">GA Platform</p>
+          <p style="margin:0;font-size:14px;font-weight:700;color:#0F172A;line-height:1.2;font-family:'Prompt', sans-serif;">Equipment Control</p>
+          <p style="margin:0;font-size:11px;color:#94A3B8;font-family:'Prompt', sans-serif;">GA Platform</p>
         </div>
       </div>
     </div>
@@ -4194,12 +4196,12 @@
           </div>
           <div class="flex flex-col items-center gap-3">
             <div class="w-8 h-8 rounded-full" style="border:3px solid var(--orange-border);border-top-color:var(--orange);animation:spin .8s linear infinite;"></div>
-            <p class="text-sm text-gray-400 font-medium">กำลังโหลด...</p>
-            <p id="loadingMsg" class="text-xs text-gray-300"></p>
-            <p id="loadingSlowHint" class="hidden text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-3 py-1">
+            <p class="text-base text-gray-400 font-medium">กำลังโหลด...</p>
+            <p id="loadingMsg" class="text-sm text-gray-300"></p>
+            <p id="loadingSlowHint" class="hidden text-sm text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-3 py-1">
               เครือข่ายช้า กำลังพยายามเชื่อมต่อ...</p>
             <button id="loadingRetryBtn" onclick="init(true)"
-              class="hidden mt-1 px-4 py-2 text-sm font-semibold gd-btn-secondary">ลองใหม่</button>
+              class="hidden mt-1 px-4 py-2 text-base font-semibold gd-btn-secondary">ลองใหม่</button>
           </div>
         </div>
       </div>
@@ -4211,14 +4213,14 @@
             <div class="auth-block">
             <div class="auth-brand">
               <div style="width:48px;height:48px;border-radius:14px;background:#F97316;box-shadow:0 6px 18px rgba(249,115,22,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <span style="color:#fff;font-size:18px;font-weight:600;font-family:'Noto Sans Thai','Inter',sans-serif;">EC</span>
+                <span style="color:#fff;font-size:18px;font-weight:600;font-family:'Prompt', sans-serif;">EC</span>
               </div>
-              <p style="margin:0;font-size:14px;font-weight:600;color:#0f172a;font-family:'Noto Sans Thai','Inter',sans-serif;">Equipment Control</p>
+              <p style="margin:0;font-size:14px;font-weight:600;color:#0f172a;font-family:'Prompt', sans-serif;">Equipment Control</p>
             </div>
             <div class="auth-card fade-in">
               <div class="text-center mb-8">
-                <h1 style="font-size:var(--fs-page-title);font-weight:600;color:var(--text-primary);margin:0 0 10px;font-family:'Noto Sans Thai','Inter',sans-serif;">เข้าสู่ระบบ</h1>
-                <p style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
+                <h1 style="font-size:var(--fs-page-title);font-weight:600;color:var(--text-primary);margin:0 0 10px;font-family:'Prompt', sans-serif;">เข้าสู่ระบบ</h1>
+                <p style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Prompt', sans-serif;">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
               </div>
               <div class="mb-6">
                 <p class="section-title mb-3">เลือกผู้ใช้งาน</p>
@@ -4243,9 +4245,9 @@
             <div class="auth-block">
             <div class="auth-brand">
               <div style="width:48px;height:48px;border-radius:14px;background:#F97316;box-shadow:0 6px 18px rgba(249,115,22,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <span style="color:#fff;font-size:18px;font-weight:600;font-family:'Noto Sans Thai','Inter',sans-serif;">EC</span>
+                <span style="color:#fff;font-size:18px;font-weight:600;font-family:'Prompt', sans-serif;">EC</span>
               </div>
-              <p style="margin:0;font-size:14px;font-weight:600;color:#0f172a;font-family:'Noto Sans Thai','Inter',sans-serif;">Equipment Control</p>
+              <p style="margin:0;font-size:14px;font-weight:600;color:#0f172a;font-family:'Prompt', sans-serif;">Equipment Control</p>
             </div>
             <div class="auth-card fade-in" style="position:relative;">
               <button onclick="goScreen('login')"
@@ -4253,14 +4255,14 @@
                 <i data-lucide="arrow-left" style="width:16px;height:16px;color:#334155;"></i>
               </button>
               <div class="text-center mb-8">
-                <h1 style="font-size:var(--fs-page-title);font-weight:600;color:var(--text-primary);margin:0 0 6px;font-family:'Noto Sans Thai','Inter',sans-serif;">ยืนยันตัวตน</h1>
-                <p style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">กรุณากรอก PIN เพื่อเข้าใช้งาน</p>
+                <h1 style="font-size:var(--fs-page-title);font-weight:600;color:var(--text-primary);margin:0 0 6px;font-family:'Prompt', sans-serif;">ยืนยันตัวตน</h1>
+                <p style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Prompt', sans-serif;">กรุณากรอก PIN เพื่อเข้าใช้งาน</p>
               </div>
               <div class="text-center mb-6">
                 <div id="pin-avatar" class="ga-avatar mx-auto mb-3"></div>
                 <p id="pin-name"
-                  style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
-                <p style="font-size:13px;color:#9CA3AF;margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">กรอก PIN 6 หลัก</p>
+                  style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Prompt', sans-serif;"></p>
+                <p style="font-size:13px;color:#9CA3AF;margin:0;font-family:'Prompt', sans-serif;">กรอก PIN 6 หลัก</p>
               </div>
             <!-- PIN dots -->
             <div id="pin-dots" class="pin-dots-dark" style="display:flex;justify-content:center;gap:14px;margin-bottom:12px;">
@@ -4268,7 +4270,7 @@
               <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
             </div>
             <div id="pin-error"
-                 style="height:20px;text-align:center;font-size:var(--fs-secondary);color:#DC6B19;margin-bottom:20px;font-family:'Noto Sans Thai','Inter',sans-serif;"></div>
+                 style="height:20px;text-align:center;font-size:var(--fs-secondary);color:#DC6B19;margin-bottom:20px;font-family:'Prompt', sans-serif;"></div>
             <!-- Numpad -->
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:260px;margin:0 auto;">
               <div class="numpad-key" onclick="enterPin('1')">1</div>
@@ -4308,13 +4310,13 @@
                 <div>
                   <p id="main-greeting" style="margin:0 0 1px;"></p>
                   <p id="main-user-name"
-                     style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Noto Sans Thai','Inter',sans-serif;line-height:1.2;"></p>
+                     style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Prompt', sans-serif;line-height:1.2;"></p>
                   <span id="main-user-role"
                         style="display:inline-block;font-size:12px;color:#c2410c;
                                background:#fff7ed;
                                border:1px solid #fed7aa;
                                border-radius:20px;padding:3px 12px;
-                               font-family:'Noto Sans Thai','Inter',sans-serif;">GA Staff</span>
+                               font-family:'Prompt', sans-serif;">GA Staff</span>
                 </div>
               </div>
               <!-- Glass action buttons -->
@@ -4330,7 +4332,7 @@
                                background:#fff;
                                border:1px solid #e2e8f0;color:#475569;
                                border-radius:8px;width:36px;height:36px;padding:0;font-size:13px;
-                               font-family:'Noto Sans Thai','Inter',sans-serif;">
+                               font-family:'Prompt', sans-serif;">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>
                 </button>
                 <button onclick="confirmLogout()" title="ออกจากระบบ"
@@ -4338,7 +4340,7 @@
                                background:#fff;
                                border:1px solid #e2e8f0;color:#475569;
                                border-radius:8px;width:36px;height:36px;padding:0;font-size:13px;
-                               font-family:'Noto Sans Thai','Inter',sans-serif;">
+                               font-family:'Prompt', sans-serif;">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                 </button>
               </div>
@@ -4350,8 +4352,8 @@
                   <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
                 </div>
                 <div>
-                  <div id="hero-stat-available" style="font-size:16px;font-weight:700;color:#fff;line-height:1;margin-bottom:2px;font-family:'Noto Sans Thai','Inter',sans-serif;">—</div>
-                  <div style="font-size:10px;color:rgba(255,255,255,0.92);line-height:1.2;font-family:'Noto Sans Thai','Inter',sans-serif;">พร้อมใช้งาน</div>
+                  <div id="hero-stat-available" style="font-size:16px;font-weight:700;color:#fff;line-height:1;margin-bottom:2px;font-family:'Prompt', sans-serif;">—</div>
+                  <div style="font-size:10px;color:rgba(255,255,255,0.92);line-height:1.2;font-family:'Prompt', sans-serif;">พร้อมใช้งาน</div>
                 </div>
               </div>
               <div style="width:1px;height:32px;background:rgba(255,255,255,0.38);"></div>
@@ -4360,8 +4362,8 @@
                   <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
                 </div>
                 <div>
-                  <div id="hero-stat-borrowed" style="font-size:16px;font-weight:700;color:#fff;line-height:1;margin-bottom:2px;font-family:'Noto Sans Thai','Inter',sans-serif;">—</div>
-                  <div style="font-size:10px;color:rgba(255,255,255,0.92);line-height:1.2;font-family:'Noto Sans Thai','Inter',sans-serif;">ยืมออกไป</div>
+                  <div id="hero-stat-borrowed" style="font-size:16px;font-weight:700;color:#fff;line-height:1;margin-bottom:2px;font-family:'Prompt', sans-serif;">—</div>
+                  <div style="font-size:10px;color:rgba(255,255,255,0.92);line-height:1.2;font-family:'Prompt', sans-serif;">ยืมออกไป</div>
                 </div>
               </div>
               <div style="width:1px;height:32px;background:rgba(255,255,255,0.38);"></div>
@@ -4370,8 +4372,8 @@
                   <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 </div>
                 <div>
-                  <div id="hero-stat-overdue" style="font-size:16px;font-weight:700;color:#fff;line-height:1;margin-bottom:2px;font-family:'Noto Sans Thai','Inter',sans-serif;">—</div>
-                  <div style="font-size:10px;color:rgba(255,255,255,0.92);line-height:1.2;font-family:'Noto Sans Thai','Inter',sans-serif;">เกินกำหนด</div>
+                  <div id="hero-stat-overdue" style="font-size:16px;font-weight:700;color:#fff;line-height:1;margin-bottom:2px;font-family:'Prompt', sans-serif;">—</div>
+                  <div style="font-size:10px;color:rgba(255,255,255,0.92);line-height:1.2;font-family:'Prompt', sans-serif;">เกินกำหนด</div>
                 </div>
               </div>
             </div>
@@ -4394,7 +4396,7 @@
         <div class="gd-inner" style="padding:0 40px;">
           <div id="overdue-banner" style="display:none;margin-top:12px;border-radius:12px;padding:12px 16px;align-items:center;gap:12px;background:#fef2f2;border:1px solid #fecaca;">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC6B19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-            <p id="overdue-banner-text" style="font-size:14px;font-weight:500;color:#b91c1c;flex:1;margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
+            <p id="overdue-banner-text" style="font-size:14px;font-weight:500;color:#b91c1c;flex:1;margin:0;font-family:'Prompt', sans-serif;"></p>
             <button onclick="document.getElementById('overdue-banner').style.display='none'" style="padding:4px;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#b91c1c;flex-shrink:0;">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             </button>
@@ -4427,8 +4429,8 @@
             <i data-lucide="arrow-left" style="width:16px;height:16px;color:#334155;"></i>
           </button>
           <div style="flex:1;">
-            <p style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">ยืมอุปกรณ์</p>
-            <p id="bf-eq-name" style="font-size:var(--fs-helper);color:var(--text-secondary);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
+            <p style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0;font-family:'Prompt', sans-serif;">ยืมอุปกรณ์</p>
+            <p id="bf-eq-name" style="font-size:var(--fs-helper);color:var(--text-secondary);margin:0;font-family:'Prompt', sans-serif;"></p>
           </div>
         </div>
         <div class="flex-1 overflow-auto" id="bf-body" style="padding:24px 16px 32px;max-width:680px;margin:0 auto;width:100%;"></div>
@@ -4443,10 +4445,10 @@
             <i data-lucide="arrow-left" style="width:16px;height:16px;color:#334155;"></i>
           </button>
           <div style="flex:1;">
-            <p style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">คืนอุปกรณ์</p>
-            <p id="rd-eq-name" style="font-size:var(--fs-helper);color:var(--text-secondary);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
+            <p style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0;font-family:'Prompt', sans-serif;">คืนอุปกรณ์</p>
+            <p id="rd-eq-name" style="font-size:var(--fs-helper);color:var(--text-secondary);margin:0;font-family:'Prompt', sans-serif;"></p>
           </div>
-          <span id="rd-badge" style="font-size:11px;padding:3px 10px;border-radius:20px;font-family:'Noto Sans Thai','Inter',sans-serif;"></span>
+          <span id="rd-badge" style="font-size:11px;padding:3px 10px;border-radius:20px;font-family:'Prompt', sans-serif;"></span>
         </div>
         <div class="flex-1 overflow-auto" id="rd-body" style="padding:24px 16px 32px;max-width:680px;margin:0 auto;width:100%;"></div>
       </div>
@@ -4460,24 +4462,24 @@
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:380px;">
       <h3 id="equipModalTitle" class="font-bold text-gray-900 text-lg mb-4">เพิ่มอุปกรณ์</h3>
       <div class="space-y-3 ">
-        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่ออุปกรณ์</label>
+        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">ชื่ออุปกรณ์</label>
           <input type="text" id="eqName" placeholder="เช่น โน๊ตบุ๊ค Dell" class="gd-input"></div>
-        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">หมวดหมู่</label>
+        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">หมวดหมู่</label>
           <select id="eqCategory" class="gd-input">
             <option value="">เลือกหมวดหมู่</option>
           </select></div>
-        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">Serial No. <span class="font-normal text-gray-400">(ไม่บังคับ)</span></label>
+        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">Serial No. <span class="font-normal text-gray-400">(ไม่บังคับ)</span></label>
           <input type="text" id="eqSerial" placeholder="เช่น SN-12345" class="gd-input"></div>
-        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">จำนวนทั้งหมด</label>
+        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">จำนวนทั้งหมด</label>
           <input type="number" id="eqQty" placeholder="1" min="1" class="gd-input"></div>
         <div>
-          <label class="text-xs font-semibold text-gray-500 mb-1.5 block">รูปอุปกรณ์ <span class="font-normal text-gray-400">(ไม่บังคับ)</span></label>
+          <label class="text-sm font-semibold text-gray-500 mb-1.5 block">รูปอุปกรณ์ <span class="font-normal text-gray-400">(ไม่บังคับ)</span></label>
           <div id="equip-image-preview" class="hidden mt-1 mb-2">
             <img id="equip-image-preview-img" class="w-20 h-20 object-cover rounded-xl border border-gray-200"/>
           </div>
           <input type="file" id="equip-image-input" accept="image/*" capture="environment" class="hidden" onchange="previewEquipImage(this)"/>
           <button type="button" onclick="document.getElementById('equip-image-input').click()"
-                  class="px-3 py-2 rounded-xl text-sm border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">
+                  class="px-3 py-2 rounded-xl text-base border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">
             📷 เลือกรูป
           </button>
         </div>
@@ -4496,17 +4498,17 @@
       <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:20px;">
         <div id="confirm-icon-wrap" style="width:40px;height:40px;border-radius:50%;background:#F1F5F9;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;"></div>
         <div>
-          <h3 id="confirm-title" style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Noto Sans Thai','Inter',sans-serif;"></h3>
-          <p id="confirm-message" style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
+          <h3 id="confirm-title" style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Prompt', sans-serif;"></h3>
+          <p id="confirm-message" style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Prompt', sans-serif;"></p>
         </div>
       </div>
       <div style="display:flex;gap:10px;justify-content:flex-end;">
         <button id="confirm-cancel"
-                style="padding:8px 18px;border-radius:8px;font-size:var(--fs-secondary);font-weight:600;background:#F1F5F9;color:#334155;border:none;cursor:pointer;font-family:'Noto Sans Thai','Inter',sans-serif;">
+                style="padding:8px 18px;border-radius:8px;font-size:var(--fs-secondary);font-weight:600;background:#F1F5F9;color:#334155;border:none;cursor:pointer;font-family:'Prompt', sans-serif;">
           ยกเลิก
         </button>
         <button id="confirm-ok"
-                style="padding:8px 18px;border-radius:8px;font-size:var(--fs-secondary);font-weight:600;color:#fff;border:none;cursor:pointer;font-family:'Noto Sans Thai','Inter',sans-serif;">
+                style="padding:8px 18px;border-radius:8px;font-size:var(--fs-secondary);font-weight:600;color:#fff;border:none;cursor:pointer;font-family:'Prompt', sans-serif;">
           ยืนยัน
         </button>
       </div>
@@ -4519,14 +4521,14 @@
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:360px;">
       <h3 class="font-bold text-gray-900 text-lg mb-4">เพิ่มสมาชิกใหม่</h3>
       <div class="space-y-3 ">
-        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
+        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
           <input type="text" id="newUserName" placeholder="เช่น สมชาย ใจดี" class="gd-input"></div>
-        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ตำแหน่ง/สิทธิ์</label>
+        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">ตำแหน่ง/สิทธิ์</label>
           <select id="newUserRole" class="gd-input">
             <option value="ga">เจ้าหน้าที่ GA</option>
             <option value="mgr">ผู้ดูแลระบบ (Manager)</option>
           </select></div>
-        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">รหัส PIN (6 หลัก)</label>
+        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">รหัส PIN (6 หลัก)</label>
           <input type="password" id="newUserPin" maxlength="6" placeholder="••••••" class="gd-input text-center tracking-widest font-bold"></div>
       </div>
       <div class="flex gap-3 mt-6">
@@ -4542,9 +4544,9 @@
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:360px;">
       <h3 class="font-bold text-gray-900 text-lg mb-4">เพิ่มผู้รับรายงาน</h3>
       <div class="space-y-3 ">
-        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
+        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
           <input type="text" id="recipientName" placeholder="เช่น สมชาย จิตรดี" class="gd-input"></div>
-        <div><label class="text-xs font-semibold text-gray-500 mb-1.5 block">อีเมล</label>
+        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">อีเมล</label>
           <input type="email" id="recipientEmail" placeholder="example@company.com" class="gd-input"></div>
       </div>
       <div class="flex gap-3 mt-6">
@@ -4560,8 +4562,8 @@
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto" style="max-width:420px;max-height:90vh;overflow-y:auto;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
         <div>
-          <p style="font-size:15px;font-weight:600;color:#0F172A;margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">หมวดหมู่ที่เข้าถึงได้</p>
-          <p id="catModalUserName" style="font-size:13px;color:#64748B;margin:4px 0 0;font-family:'Noto Sans Thai','Inter',sans-serif;"></p>
+          <p style="font-size:15px;font-weight:600;color:#0F172A;margin:0;font-family:'Prompt', sans-serif;">หมวดหมู่ที่เข้าถึงได้</p>
+          <p id="catModalUserName" style="font-size:13px;color:#64748B;margin:4px 0 0;font-family:'Prompt', sans-serif;"></p>
         </div>
         <button onclick="closeCatModal()" style="width:32px;height:32px;border-radius:50%;border:1px solid #E2E8F0;background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
@@ -4571,19 +4573,19 @@
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
         <label class="cat-modal-radio-row" onclick="catModalSetMode('all')">
           <span id="catRadioAll" class="cat-modal-radio active"></span>
-          <span style="font-size:14px;font-family:'Noto Sans Thai','Inter',sans-serif;">เห็นทุกหมวดหมู่</span>
+          <span style="font-size:14px;font-family:'Prompt', sans-serif;">เห็นทุกหมวดหมู่</span>
         </label>
         <label class="cat-modal-radio-row" onclick="catModalSetMode('custom')">
           <span id="catRadioCustom" class="cat-modal-radio"></span>
-          <span style="font-size:14px;font-family:'Noto Sans Thai','Inter',sans-serif;">เลือกเฉพาะหมวด</span>
+          <span style="font-size:14px;font-family:'Prompt', sans-serif;">เลือกเฉพาะหมวด</span>
         </label>
       </div>
       <!-- Checkboxes (shown only in custom mode) -->
       <div id="catCheckboxList" style="display:none;border:1px solid #E2E8F0;border-radius:10px;overflow:hidden;margin-bottom:16px;"></div>
       <!-- Buttons -->
       <div style="display:flex;gap:8px;justify-content:flex-end;">
-        <button onclick="closeCatModal()" style="padding:8px 16px;border-radius:10px;border:1px solid #E2E8F0;background:white;font-size:13px;font-weight:500;color:#475569;cursor:pointer;font-family:'Noto Sans Thai','Inter',sans-serif;">ยกเลิก</button>
-        <button onclick="saveCatModal()" style="padding:8px 20px;border-radius:10px;border:none;background:#F97316;font-size:13px;font-weight:600;color:white;cursor:pointer;font-family:'Noto Sans Thai','Inter',sans-serif;">บันทึก</button>
+        <button onclick="closeCatModal()" style="padding:8px 16px;border-radius:10px;border:1px solid #E2E8F0;background:white;font-size:13px;font-weight:500;color:#475569;cursor:pointer;font-family:'Prompt', sans-serif;">ยกเลิก</button>
+        <button onclick="saveCatModal()" style="padding:8px 20px;border-radius:10px;border:none;background:#F97316;font-size:13px;font-weight:600;color:white;cursor:pointer;font-family:'Prompt', sans-serif;">บันทึก</button>
       </div>
     </div>
   </div>
@@ -4612,8 +4614,8 @@
         <div style="width:48px;height:48px;border-radius:50%;background:var(--orange-light);border:1px solid var(--orange-border);display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
           <i data-lucide="key-round" style="width:20px;height:20px;color:var(--orange);"></i>
         </div>
-        <p style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Noto Sans Thai','Inter',sans-serif;">เปลี่ยน PIN</p>
-        <p id="cp-step-label" style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Noto Sans Thai','Inter',sans-serif;">กรอก PIN เดิม</p>
+        <p style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Prompt', sans-serif;">เปลี่ยน PIN</p>
+        <p id="cp-step-label" style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Prompt', sans-serif;">กรอก PIN เดิม</p>
       </div>
       <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px;">
         <div id="cp-si-0" style="width:8px;height:8px;border-radius:50%;background:var(--orange);"></div>
@@ -4624,7 +4626,7 @@
         <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
         <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
       </div>
-      <div id="cp-error" style="height:20px;text-align:center;font-size:var(--fs-secondary);color:#DC6B19;margin-bottom:12px;font-family:'Noto Sans Thai','Inter',sans-serif;"></div>
+      <div id="cp-error" style="height:20px;text-align:center;font-size:var(--fs-secondary);color:#DC6B19;margin-bottom:12px;font-family:'Prompt', sans-serif;"></div>
       <div class="mb-4" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:260px;margin:0 auto 16px;">
         <div class="numpad-key" onclick="cpEnterPin('1')">1</div>
         <div class="numpad-key" onclick="cpEnterPin('2')">2</div>
@@ -4868,7 +4870,7 @@
       const icons = { success:'check-circle-2', error:'x-circle', warning:'alert-triangle', info:'info' };
       const bg = { success:'bg-emerald-700', error:'bg-red-700', warning:'bg-amber-700', info:'bg-slate-800' };
       const el = document.createElement('div');
-      el.className = `flex items-center gap-2.5 px-4 py-3 text-white text-sm font-medium rounded-xl shadow-lg ${bg[type]||bg.info} translate-x-full opacity-0 transition-all duration-300 pointer-events-auto`;
+      el.className = `flex items-center gap-2.5 px-4 py-3 text-white text-base font-medium rounded-xl shadow-lg ${bg[type]||bg.info} translate-x-full opacity-0 transition-all duration-300 pointer-events-auto`;
       el.innerHTML = `<i data-lucide="${icons[type]||'info'}" class="w-[18px] h-[18px] shrink-0"></i><p class="leading-tight">${he(msg)}</p>`;
       container.appendChild(el);
       lucide.createIcons({'stroke-width': 1.5});
@@ -4904,7 +4906,7 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#A8A29E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           <p style="font-size:14px;font-weight:600;color:#0F172A;margin:10px 0 2px;">ไม่พบ \"<span id="searchTerm">${he(term || sub || '')}</span>\"</p>
           <small style="font-size:12px;color:#9CA3AF;">ลองค้นหาด้วยคำอื่น</small>
-          ${ctaLabel && ctaAction ? `<button onclick="${ctaAction}" class="gd-btn-primary !w-auto !px-4 !py-2 text-sm font-semibold" style="margin-top:10px;">${he(ctaLabel)}</button>` : ''}
+          ${ctaLabel && ctaAction ? `<button onclick="${ctaAction}" class="gd-btn-primary !w-auto !px-4 !py-2 text-base font-semibold" style="margin-top:10px;">${he(ctaLabel)}</button>` : ''}
         </div>`;
       }
       return `<div style="display:flex;flex-direction:column;align-items:center;padding:40px 24px;text-align:center;">
@@ -4913,7 +4915,7 @@
         </div>
         <p style="font-size:14px;font-weight:600;color:#0F172A;margin:0 0 4px;">${he(title)}</p>
         <p class="empty-state-text">${he(sub)}</p>
-        ${ctaLabel && ctaAction ? `<button onclick="${ctaAction}" class="gd-btn-primary !w-auto !px-4 !py-2 text-sm font-semibold">${he(ctaLabel)}</button>` : ''}
+        ${ctaLabel && ctaAction ? `<button onclick="${ctaAction}" class="gd-btn-primary !w-auto !px-4 !py-2 text-base font-semibold">${he(ctaLabel)}</button>` : ''}
       </div>`;
     }
 
@@ -5712,7 +5714,7 @@
         <div class="gd-container-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
           <div>
             <h2 class="page-title">ยืมอุปกรณ์</h2>
-            <p class="text-sm text-slate-500 mt-1">เลือกอุปกรณ์ที่ต้องการยืม (คงเหลือ > 0)</p>
+            <p class="text-base text-slate-500 mt-1">เลือกอุปกรณ์ที่ต้องการยืม (คงเหลือ > 0)</p>
           </div>
           <div style="display:flex; gap:4px; background:var(--mf-hover); border:1px solid var(--mf-border-soft); border-radius:10px; padding:4px;">
             <button class="view-toggle-btn ${borrowViewMode==='list'?'active':'inactive'}"
@@ -5746,7 +5748,7 @@
         <div class="mb-4 max-w-2xl" style="display:flex;gap:8px;align-items:center">
           <input type="text" placeholder="ค้นหาอุปกรณ์..." class="gd-input" style="flex:1" value="${he(borrowSearchQ)}"
             oninput="borrowSearchQ=this.value;debounce('borrowSearch',renderBorrowTab)">
-          <button onclick="openQRScanner()" style="background:#f97316;color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;font-family:'Noto Sans Thai',sans-serif">
+          <button onclick="openQRScanner()" style="background:#f97316;color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;font-family:'Prompt', sans-serif">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M17 14h4"/><path d="M14 17v4"/><path d="M17 21h4v-4"/></svg>
             สแกน
           </button>
@@ -5831,16 +5833,16 @@
         </div>
         ${unitWrapHtml}
         <div class="space-y-3 mb-6">
-          <div><label class="text-xs font-medium text-gray-500 mb-1.5 block">จำนวนที่ยืม</label>
+          <div><label class="text-sm font-medium text-gray-500 mb-1.5 block">จำนวนที่ยืม</label>
             <input type="number" id="bfQty" min="1" max="${eq.available}" value="1" class="gd-input">
             <p style="font-size:11px;color:#9CA3AF;margin-top:6px;">ยืมได้สูงสุด ${eq.available} ชิ้น</p></div>
-          <div><label class="text-xs font-medium text-gray-500 mb-1.5 block">ชื่อผู้ยืม</label>
+          <div><label class="text-sm font-medium text-gray-500 mb-1.5 block">ชื่อผู้ยืม</label>
             <input type="text" id="bfBorrower" placeholder="ชื่อ-นามสกุลผู้ยืม" class="gd-input"></div>
-          <div><label class="text-xs font-medium text-gray-500 mb-1.5 block">รหัสพนักงาน</label>
+          <div><label class="text-sm font-medium text-gray-500 mb-1.5 block">รหัสพนักงาน</label>
             <input type="text" id="bfDept" maxlength="6" pattern="[0-9]{6}" placeholder="เช่น 087256" class="gd-input"></div>
-          <div><label class="text-xs font-medium text-gray-500 mb-1.5 block">กำหนดคืน</label>
+          <div><label class="text-sm font-medium text-gray-500 mb-1.5 block">กำหนดคืน</label>
             <input type="date" id="bfDue" value="${dueStr}" min="${todayStr}" class="gd-input"></div>
-          <div><label class="text-xs font-medium text-gray-500 mb-1.5 block">หมายเหตุ <span class="font-normal text-gray-400" style="font-size:11px;">(ไม่บังคับ)</span></label>
+          <div><label class="text-sm font-medium text-gray-500 mb-1.5 block">หมายเหตุ <span class="font-normal text-gray-400" style="font-size:11px;">(ไม่บังคับ)</span></label>
             <textarea id="bfNote" rows="2" placeholder="เช่น ใช้งานประชุมลูกค้า" class="gd-input" style="height:auto;padding:10px 14px;"></textarea></div>
         </div>
         ${SETTINGS.require_borrow_signature ? `<div class="signature-pad mb-6">
@@ -5851,10 +5853,10 @@
           <div class="signature-pad__frame">
             <canvas id="bfSignCanvas" class="sig-canvas" style="width:100%;height:140px;"></canvas>
           </div>
-          <p class="text-sm text-gray-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้รับอุปกรณ์ตามรายการข้างต้นในสภาพสมบูรณ์</p>
+          <p class="text-base text-gray-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้รับอุปกรณ์ตามรายการข้างต้นในสภาพสมบูรณ์</p>
           <p class="text-center mt-1" style="font-size:11px;color:#F59E0B;">🔒 ลายเซ็นนี้ใช้เพื่อยืนยันการรับอุปกรณ์ และถูกจัดเก็บอย่างปลอดภัยในระบบ</p>
         </div>` : ''}
-        <button onclick="submitBorrow()" id="bfSubmitBtn" class="w-full gd-btn-primary text-sm font-semibold flex items-center justify-center gap-2">
+        <button onclick="submitBorrow()" id="bfSubmitBtn" class="w-full gd-btn-primary text-base font-semibold flex items-center justify-center gap-2">
           <i data-lucide="check" class="w-[18px] h-[18px] text-[#64748B]"></i> ยืนยันการยืม
         </button>`;
       goScreen('borrow-form'); lucide.createIcons({'stroke-width': 1.5});
@@ -5879,7 +5881,7 @@
       }
       wrap.innerHTML = `
         <div>
-          <label class="text-xs font-medium text-gray-500 mb-1.5 block">เลือกหน่วยที่ต้องการยืม <span style="color:#dc2626">*</span></label>
+          <label class="text-sm font-medium text-gray-500 mb-1.5 block">เลือกหน่วยที่ต้องการยืม <span style="color:#dc2626">*</span></label>
           <select id="bfUnitId" class="gd-input">
             <option value="">— เลือก unit —</option>
             ${available.map(u => `<option value="${he(u.id)}">${he(u.unit_code)}</option>`).join('')}
@@ -6078,7 +6080,7 @@
         <div class="gd-container-header">
           
           <h2 class="page-title">คืนอุปกรณ์</h2>
-          <p class="text-sm text-slate-500 mt-1">รายการอุปกรณ์ที่กำลังยืมอยู่</p>
+          <p class="text-base text-slate-500 mt-1">รายการอุปกรณ์ที่กำลังยืมอยู่</p>
         </div>
         <div class="space-y-3 ">
           ${active.length ? active.map(r=>{
@@ -6095,7 +6097,7 @@
                     ${statusBadge(r.status)}
                   </div>
                   <p class="eq-meta">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)}</p>
-                  <div class="flex items-center justify-between text-xs mt-1.5">
+                  <div class="flex items-center justify-between text-sm mt-1.5">
                     <span class="text-gray-400">กำหนดคืน ${fd(r.due_date)}</span>
                     <span class="${isOD?'text-[#DC6B19] font-semibold':'text-gray-500'}">${isOD?'เกิน '+Math.abs(days)+' วัน':(days===0?'วันนี้':days+' วัน')}</span>
                   </div>
@@ -6145,7 +6147,7 @@
       document.getElementById('rd-body').innerHTML = `
         <div class="gd-card p-5 mb-4">
           <h4 class="eq-title mb-3 flex items-center gap-2"><i data-lucide="clipboard-list" style="width:16px;height:16px;color:var(--orange);"></i> รายละเอียด</h4>
-          <div class="space-y-2 text-sm">
+          <div class="space-y-2 text-base">
             <div class="flex justify-between"><span class="text-gray-400">อุปกรณ์</span><span class="font-medium">${he(rec.eq_name)}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">จำนวน</span><span class="font-medium">${rec.qty_borrowed} ชิ้น</span></div>
             <div class="flex justify-between"><span class="text-gray-400">ผู้ยืม</span><span class="font-medium">${he(rec.borrower_name)}</span></div>
@@ -6160,31 +6162,31 @@
           <h4 class="eq-title mb-3 flex items-center gap-2"><i data-lucide="clipboard-check" style="width:16px;height:16px;color:var(--orange);"></i> สภาพอุปกรณ์เมื่อคืน</h4>
           <div class="flex gap-2 mb-3">
             <button id="rc-normal" onclick="setReturnCondition('normal')"
-              class="flex-1 py-2.5 rounded-xl border-2 border-green-300 bg-green-50 text-green-700 text-xs font-semibold transition ring-green-400 hover:bg-green-100">
+              class="flex-1 py-2.5 rounded-xl border-2 border-green-300 bg-green-50 text-green-700 text-sm font-semibold transition ring-green-400 hover:bg-green-100">
               <span class="block text-base">✅</span>ปกติ</button>
             <button id="rc-damaged" onclick="setReturnCondition('damaged')"
-              class="flex-1 py-2.5 rounded-xl border-2 border-amber-300 bg-amber-50 text-amber-700 text-xs font-semibold transition ring-amber-400 hover:bg-amber-100">
+              class="flex-1 py-2.5 rounded-xl border-2 border-amber-300 bg-amber-50 text-amber-700 text-sm font-semibold transition ring-amber-400 hover:bg-amber-100">
               <span class="block text-base">⚠️</span>ชำรุด</button>
             <button id="rc-lost" onclick="setReturnCondition('lost')"
-              class="flex-1 py-2.5 rounded-xl border-2 border-red-300 bg-red-50 text-red-700 text-xs font-semibold transition ring-red-400 hover:bg-red-100">
+              class="flex-1 py-2.5 rounded-xl border-2 border-red-300 bg-red-50 text-red-700 text-sm font-semibold transition ring-red-400 hover:bg-red-100">
               <span class="block text-base">❌</span>สูญหาย</button>
           </div>
           <div id="rc-note-wrap" style="opacity:0.6;">
             <textarea id="rc-note" rows="2" placeholder="ระบุรายละเอียด (เช่น รอยแตก, หายไปบางส่วน)"
-              class="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-brand resize-none"></textarea>
+              class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-brand resize-none"></textarea>
           </div>
         </div>
         ${SETTINGS.require_return_rating ? `<div class="gd-card p-4 mb-4">
-          <h4 class="text-sm font-semibold text-gray-700 mb-2.5 flex items-center gap-2">
+          <h4 class="text-base font-semibold text-gray-700 mb-2.5 flex items-center gap-2">
             <i data-lucide="star" style="width:14px;height:14px;color:#f59e0b;"></i>
-            ประเมินบริการ <span class="text-gray-400 font-normal text-xs ml-1">(ไม่บังคับ)</span>
+            ประเมินบริการ <span class="text-gray-400 font-normal text-sm ml-1">(ไม่บังคับ)</span>
           </h4>
           <div class="flex justify-center gap-1 mb-2">
             ${[1,2,3,4,5].map(i=>`<button type="button" id="sr-star-${i}" onclick="setServiceRating(${i})"
               style="font-size:28px;color:#d1d5db;background:none;border:none;padding:2px 5px;cursor:pointer;line-height:1;transition:color 0.15s;">★</button>`).join('')}
           </div>
           <textarea id="rc-feedback" rows="2" placeholder="ข้อเสนอแนะ (ถ้ามี)..."
-            class="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-brand resize-none"></textarea>
+            class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-brand resize-none"></textarea>
         </div>
         <div class="signature-pad mb-6">
           <div class="signature-pad__header">
@@ -6194,10 +6196,10 @@
           <div class="signature-pad__frame">
             <canvas id="rdSignCanvas" class="sig-canvas" style="width:100%;height:140px;"></canvas>
           </div>
-          <p class="text-sm text-gray-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้คืนอุปกรณ์ตามรายการข้างต้นเรียบร้อยแล้ว</p>
+          <p class="text-base text-gray-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้คืนอุปกรณ์ตามรายการข้างต้นเรียบร้อยแล้ว</p>
           <p class="eq-meta text-center mt-1">🔒 ลายเซ็นนี้ใช้เพื่อยืนยันการคืนอุปกรณ์ และถูกจัดเก็บอย่างปลอดภัยในระบบ</p>
         </div>` : ''}
-        <button onclick="submitReturn()" id="rdSubmitBtn" class="w-full gd-btn-primary text-sm font-semibold flex items-center justify-center gap-2">
+        <button onclick="submitReturn()" id="rdSubmitBtn" class="w-full gd-btn-primary text-base font-semibold flex items-center justify-center gap-2">
           <i data-lucide="check" class="w-[18px] h-[18px] text-[#64748B]"></i> ยืนยันการคืน
         </button>`;
       goScreen('return-detail'); lucide.createIcons({'stroke-width': 1.5});
@@ -6275,7 +6277,7 @@
             <p class="eq-meta">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)}</p>
             <div class="flex items-center justify-between eq-meta mt-2">
               <div><span>ยืม ${fd(r.borrowed_at)}</span><span class="mx-1">·</span><span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span></div>
-              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium flex items-center gap-1 transition-colors" style="border:1px solid var(--mf-border); color:var(--mf-text-2); background:var(--mf-card);"><i data-lucide="eye" class="w-[18px] h-[18px]" style="color:var(--mf-text-3);"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
+              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-sm font-medium flex items-center gap-1 transition-colors" style="border:1px solid var(--mf-border); color:var(--mf-text-2); background:var(--mf-card);"><i data-lucide="eye" class="w-[18px] h-[18px]" style="color:var(--mf-text-3);"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
             </div>
             ${r.condition_note?`<p class="eq-meta">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : emptyState('ยังไม่มีประวัติ','บันทึกการยืม-คืนจะปรากฏที่นี่','list','ยืมอุปกรณ์เลย →','switchTab(0)')}
@@ -6321,20 +6323,20 @@
         </div>
         <div class="card mb-5">
           <h4 class="section-title mb-4" style="color:#E86B00;">รายการเกินกำหนด</h4>
-          ${overdueList.length ? overdueList.map(r=>`<div class="flex items-center gap-3 py-2.5 border-b border-gray-100 last:border-0 text-sm">
+          ${overdueList.length ? overdueList.map(r=>`<div class="flex items-center gap-3 py-2.5 border-b border-gray-100 last:border-0 text-base">
             <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0"><i data-lucide="alert-triangle" class="w-[18px] h-[18px] text-[#64748B]"></i></div>
             <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-900 truncate">${he(r.eq_name)}</p>
+              <p class="text-base font-medium text-gray-900 truncate">${he(r.eq_name)}</p>
               <p class="eq-meta">${he(r.borrower_name)} · เกิน ${Math.abs(daysUntil(r.due_date))} วัน</p>
             </div>
             <button data-rid="${he(r.record_id||r.id||'')}" onclick="returnByManager(this.dataset.rid)"
-              class="shrink-0 px-2.5 py-1.5 text-white text-xs font-semibold rounded-lg transition flex items-center gap-1" style="background:#f97316;color:white;"><i data-lucide="corner-up-left" class="w-[18px] h-[18px] text-[#64748B]"></i><span class="hidden sm:inline">คืนแทน</span></button>
+              class="shrink-0 px-2.5 py-1.5 text-white text-sm font-semibold rounded-lg transition flex items-center gap-1" style="background:#f97316;color:white;"><i data-lucide="corner-up-left" class="w-[18px] h-[18px] text-[#64748B]"></i><span class="hidden sm:inline">คืนแทน</span></button>
           </div>`).join('') : emptyState('ไม่มีรายการเกินกำหนด','ทุกอุปกรณ์อยู่ในสถานะปกติ','check')}
         </div>
         <div class="card mb-5">
           <div class="flex items-center justify-between mb-4">
             <h4 class="section-title">กิจกรรมล่าสุด</h4>
-            <button onclick="switchTab(2)" class="text-xs font-medium" style="color:#E86B00;">ดูทั้งหมด →</button>
+            <button onclick="switchTab(2)" class="text-sm font-medium" style="color:#E86B00;">ดูทั้งหมด →</button>
           </div>
           ${recent.length ? recent.map(r=>{
             const isRet = r.status==='returned';
@@ -6342,7 +6344,7 @@
               <div class="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style="background:${isRet?'var(--success-bg)':'var(--orange-light)'};">
                 <i data-lucide="${isRet?'corner-up-left':'corner-down-right'}" style="width:14px;height:14px;color:${isRet?'var(--success-text)':'var(--orange)'};"></i></div>
               <div class="flex-1 min-w-0">
-                <p class="text-xs font-medium text-gray-800 truncate">${he(r.eq_name)} · ${he(r.borrower_name)}</p>
+                <p class="text-sm font-medium text-gray-800 truncate">${he(r.eq_name)} · ${he(r.borrower_name)}</p>
                 <p class="eq-meta">GA: ${he(r.ga_staff||'—')} · ${fd(isRet?r.returned_at:r.borrowed_at)}</p>
               </div>
               ${statusBadge(r.status)}
@@ -6353,13 +6355,13 @@
           <h4 class="eq-title mb-3 flex items-center gap-2">
             <i data-lucide="star" style="width:16px;height:16px;color:#f59e0b;"></i>
             ประเมินบริการ
-            ${avgRating ? `<span class="text-amber-500 font-bold ml-1">${avgRating}</span><span class="text-gray-400 text-xs font-normal ml-1">(${rated.length} ครั้ง)</span>` : ''}
+            ${avgRating ? `<span class="text-amber-500 font-bold ml-1">${avgRating}</span><span class="text-gray-400 text-sm font-normal ml-1">(${rated.length} ครั้ง)</span>` : ''}
           </h4>
           ${rated.length ? `
           <div class="space-y-1.5 mb-4">
             ${ratingDist.map(d=>{
               const pct = Math.round(d.count/rated.length*100);
-              return `<div class="flex items-center gap-2 text-xs">
+              return `<div class="flex items-center gap-2 text-sm">
                 <span class="text-amber-400 w-5 text-right shrink-0">${d.star}★</span>
                 <div class="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
                   <div class="h-2 rounded-full bg-amber-400" style="width:${pct}%"></div>
@@ -6372,10 +6374,10 @@
             <p class="eq-meta mb-2">ความคิดเห็นล่าสุด</p>
             ${recentFeedback.map(r=>`<div class="py-2 border-b border-gray-50 last:border-0">
               <div class="flex items-center gap-1.5 mb-0.5">
-                <span class="text-amber-400 text-xs leading-none">${'★'.repeat(r.service_rating)}${'☆'.repeat(5-r.service_rating)}</span>
-                <span class="text-xs text-gray-500">${he(r.borrower_name)}</span>
+                <span class="text-amber-400 text-sm leading-none">${'★'.repeat(r.service_rating)}${'☆'.repeat(5-r.service_rating)}</span>
+                <span class="text-sm text-gray-500">${he(r.borrower_name)}</span>
               </div>
-              <p class="text-xs text-gray-700">${he(r.service_feedback)}</p>
+              <p class="text-sm text-gray-700">${he(r.service_feedback)}</p>
             </div>`).join('')}
           </div>` : ''}
           ` : emptyState('ยังไม่มีการประเมิน','ข้อมูลจะปรากฏเมื่อมีการประเมินบริการ','star')}
@@ -6459,7 +6461,7 @@
             <p class="eq-meta">ผู้ยืม: ${he(r.borrower_name)} · รหัส: ${he(r.borrower_dept)} · GA: ${he(r.ga_staff)}</p>
             <div class="flex items-center justify-between eq-meta mt-2">
               <div><span>ยืม ${fd(r.borrowed_at)}</span><span class="mx-1">·</span><span>${r.status==='returned'?'คืน '+fd(r.returned_at):'กำหนดคืน '+fd(r.due_date)}</span></div>
-              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-xs font-medium flex items-center gap-1 transition-colors" style="border:1px solid var(--mf-border); color:var(--mf-text-2); background:var(--mf-card);"><i data-lucide="eye" class="w-[18px] h-[18px]" style="color:var(--mf-text-3);"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
+              <button onclick="openRecordDetail('${he(r.record_id||r.id)}')" class="shrink-0 ml-2 px-2.5 py-1 rounded-lg text-sm font-medium flex items-center gap-1 transition-colors" style="border:1px solid var(--mf-border); color:var(--mf-text-2); background:var(--mf-card);"><i data-lucide="eye" class="w-[18px] h-[18px]" style="color:var(--mf-text-3);"></i><span class="hidden sm:inline">ดูรายละเอียด</span></button>
             </div>
             ${r.condition_note?`<p class="eq-meta">หมายเหตุสภาพ: ${he(r.condition_note)}</p>`:''}
           </div>`).join('') : emptyState('ไม่พบรายการ','ลองเปลี่ยนตัวกรองหรือช่วงวันที่','search')}
@@ -6487,7 +6489,7 @@
           <div class="eq-left-panel" id="eqLeftPanel">
             <div class="flex items-center justify-between mb-3">
               <h4 class="eq-title">รายการอุปกรณ์ <span class="text-gray-400 font-normal">(${filtered.length}/${EQ.length})</span></h4>
-              <button onclick="showAddEquipment()" class="flex items-center gap-1.5 px-3 py-1.5 text-white text-xs font-semibold rounded-lg transition shadow-sm" style="background:#f97316;color:white;">
+              <button onclick="showAddEquipment()" class="flex items-center gap-1.5 px-3 py-1.5 text-white text-sm font-semibold rounded-lg transition shadow-sm" style="background:#f97316;color:white;">
                 <i data-lucide="plus" class="w-[18px] h-[18px] text-[#64748B]"></i> เพิ่มอุปกรณ์</button>
             </div>
             <div class="availability-legend">
@@ -6500,10 +6502,10 @@
                 <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"></i>
                 <input id="eqSearchInput" type="text" placeholder="ค้นหาชื่อหรือ Serial No." value="${he(eqSearch)}"
                   oninput="eqSearch=this.value;debounce('eqSearch',renderEquipmentTab)"
-                  class="w-full pl-9 pr-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-brand">
+                  class="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-brand">
               </div>
               <select id="eqCatSelect" onchange="eqCatFilter=this.value;renderEquipmentTab()"
-                class="text-xs border border-gray-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-1 focus:ring-brand text-gray-700 w-full sm:w-auto sm:min-w-[110px]">
+                class="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-1 focus:ring-brand text-gray-700 w-full sm:w-auto sm:min-w-[110px]">
                 <option value="">ทุกหมวด</option>
                 ${cats.map(c=>`<option value="${he(c)}"${eqCatFilter===c?' selected':''}>${he(c)}</option>`).join('')}
               </select>
@@ -6520,7 +6522,7 @@
                     <p class="eq-meta">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
                   </div>
                   <div class="flex flex-col items-end gap-1 shrink-0">
-                    <span class="text-xs px-2.5 py-1 rounded-full font-semibold" style="background:${e.available===0?'var(--danger-bg)':e.available<e.quantity?'#fef3c7':'var(--orange-light)'};color:${e.available===0?'var(--danger-text)':e.available<e.quantity?'#d97706':'var(--orange-dark)'};border:0.5px solid ${e.available===0?'#fecaca':e.available<e.quantity?'#fde68a':'var(--orange-border)'};">
+                    <span class="text-sm px-2.5 py-1 rounded-full font-semibold" style="background:${e.available===0?'var(--danger-bg)':e.available<e.quantity?'#fef3c7':'var(--orange-light)'};color:${e.available===0?'var(--danger-text)':e.available<e.quantity?'#d97706':'var(--orange-dark)'};border:0.5px solid ${e.available===0?'#fecaca':e.available<e.quantity?'#fde68a':'var(--orange-border)'};">
                       ${e.available}/${e.quantity}
                     </span>
                     <div class="flex gap-0.5 mt-1">
@@ -6535,22 +6537,22 @@
             <div class="gd-card" style="padding: 20px;">
               <div class="flex items-center justify-between mb-3">
                 <h4 class="section-title" style="font-size:16px;font-weight:600;color:#1C1917;">หมวดหมู่</h4>
-                ${_addCatMode ? '' : `<button onclick="showAddCatInput()" class="gd-btn-secondary flex items-center gap-1 !w-auto !py-1.5 !px-2.5 text-xs font-semibold">
+                ${_addCatMode ? '' : `<button onclick="showAddCatInput()" class="gd-btn-secondary flex items-center gap-1 !w-auto !py-1.5 !px-2.5 text-sm font-semibold">
                   <i data-lucide="plus" class="w-[18px] h-[18px] text-[#64748B]"></i> เพิ่มหมวดหมู่</button>`}
               </div>
               ${_addCatMode ? `<div class="flex gap-2 mb-3">
                 <input id="newCatInput" type="text" placeholder="ชื่อหมวดหมู่ใหม่" maxlength="50"
-                  class="flex-1 px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand"
+                  class="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand"
                   onkeydown="if(event.key==='Enter')saveCategory();if(event.key==='Escape')cancelAddCat()">
-                <button onclick="saveCategory()" class="gd-btn-primary !w-auto !py-1.5 !px-3 text-xs font-semibold">บันทึก</button>
-                <button onclick="cancelAddCat()" class="px-3 py-2 text-xs text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition">ยกเลิก</button>
+                <button onclick="saveCategory()" class="gd-btn-primary !w-auto !py-1.5 !px-3 text-sm font-semibold">บันทึก</button>
+                <button onclick="cancelAddCat()" class="px-3 py-2 text-sm text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition">ยกเลิก</button>
               </div>` : ''}
               ${CATS.length === 0 ? `<p class="eq-meta text-center py-4">ยังไม่มีหมวดหมู่ กด "+ เพิ่มหมวดหมู่" เพื่อเริ่มต้น</p>` :
               `<div class="space-y-1.5">
                 ${CATS.map(c => {
                   const inUse = EQ.some(e => e.category === c.name);
                   return `<div class="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-slate-50">
-                    <span class="text-sm text-gray-700">${he(c.name)}</span>
+                    <span class="text-base text-gray-700">${he(c.name)}</span>
                     <button data-id="${he(c.id)}" data-name="${he(c.name)}"
                       onclick="deleteCategoryById(this.dataset.id,this.dataset.name)"
                       class="p-1.5 rounded-lg transition ${inUse ? 'text-gray-200 cursor-not-allowed' : 'text-gray-300 hover:text-red-500 hover:bg-red-50'}"
@@ -6802,7 +6804,7 @@
             <button onclick="printQRLabel()" class="btn-primary-sm" style="flex:1">🖨 พิมพ์ label</button>
             <button onclick="downloadQRPng()" class="mini-btn-gray" style="flex:1;padding:7px 14px;font-size:12px">⬇ Download PNG</button>
           </div>
-          <button onclick="document.getElementById('qrModal').remove()" style="margin-top:12px;background:none;border:none;color:#a8a29e;font-size:13px;cursor:pointer;font-family:'Noto Sans Thai',sans-serif">ปิด</button>
+          <button onclick="document.getElementById('qrModal').remove()" style="margin-top:12px;background:none;border:none;color:#a8a29e;font-size:13px;cursor:pointer;font-family:'Prompt', sans-serif">ปิด</button>
         </div>`;
       document.body.appendChild(modal);
       modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
@@ -7222,7 +7224,7 @@
       el.innerHTML = `<div class="gd-container fade-in">
         <div class="flex items-center justify-between mb-4">
           <h4 class="eq-title">รายชื่อสมาชิก</h4>
-          <button onclick="openUserModal()" class="gd-btn-primary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-xs">
+          <button onclick="openUserModal()" class="gd-btn-primary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-sm">
             <i data-lucide="user-plus" class="w-[18px] h-[18px] text-[#64748B]"></i> เพิ่มสมาชิก</button>
         </div>
         <div class="space-y-3 ">
@@ -7232,12 +7234,12 @@
               const catBadge = u.type === 'ga' ? (() => {
                 const ac = u.allowed_categories;
                 if (!ac || ac.length === 0)
-                  return `<span style="font-size:10px;padding:2px 8px;border-radius:999px;background:#EFF6FF;color:#3B82F6;border:1px solid #BFDBFE;font-family:'Noto Sans Thai','Inter',sans-serif;">ทุกหมวด</span>`;
-                return `<span style="font-size:10px;padding:2px 8px;border-radius:999px;background:#FFF7ED;color:#F97316;border:1px solid #FED7AA;font-family:'Noto Sans Thai','Inter',sans-serif;">${ac.length} หมวด</span>`;
+                  return `<span style="font-size:10px;padding:2px 8px;border-radius:999px;background:#EFF6FF;color:#3B82F6;border:1px solid #BFDBFE;font-family:'Prompt', sans-serif;">ทุกหมวด</span>`;
+                return `<span style="font-size:10px;padding:2px 8px;border-radius:999px;background:#FFF7ED;color:#F97316;border:1px solid #FED7AA;font-family:'Prompt', sans-serif;">${ac.length} หมวด</span>`;
               })() : '';
               const catBtn = u.type === 'ga'
                 ? `<button data-name="${he(u.name)}" onclick="openCatModal(this.dataset.name)"
-                     style="padding:6px 8px;border-radius:8px;border:1px solid #E2E8F0;background:white;cursor:pointer;display:flex;align-items:center;gap:4px;font-size:12px;color:#475569;font-weight:500;font-family:'Noto Sans Thai','Inter',sans-serif;" title="ตั้งค่าหมวดหมู่">
+                     style="padding:6px 8px;border-radius:8px;border:1px solid #E2E8F0;background:white;cursor:pointer;display:flex;align-items:center;gap:4px;font-size:12px;color:#475569;font-weight:500;font-family:'Prompt', sans-serif;" title="ตั้งค่าหมวดหมู่">
                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg>
                      หมวด</button>`
                 : '';
@@ -7246,7 +7248,7 @@
                   ${avEl(u.name, u.type)}
                   <div>
                     <div style="display:flex;align-items:center;gap:6px;">
-                      <p class="font-medium text-gray-900 text-sm">${he(u.name)}</p>
+                      <p class="font-medium text-gray-900 text-base">${he(u.name)}</p>
                       ${catBadge}
                     </div>
                     <p class="${u.type==='mgr'?'role-badge-mgr':'role-badge-ga'}">${u.type==='mgr'?'ผู้ดูแลระบบ':'เจ้าหน้าที่ GA'}</p>
@@ -7273,9 +7275,9 @@
             ${skeletonCards(2)}
           </div>
           <div class="flex gap-2">
-            <button onclick="openRecipientModal()" class="flex items-center gap-1.5 px-3 py-2 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 hover:bg-gray-50 transition">
+            <button onclick="openRecipientModal()" class="flex items-center gap-1.5 px-3 py-2 border border-gray-200 rounded-lg text-sm font-semibold text-gray-600 hover:bg-gray-50 transition">
               <i data-lucide="plus" class="w-[18px] h-[18px] text-[#64748B]"></i> เพิ่มเมลล์</button>
-            <button id="sendTestReportBtn" onclick="sendTestReport()" class="gd-btn-secondary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-xs">
+            <button id="sendTestReportBtn" onclick="sendTestReport()" class="gd-btn-secondary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-sm">
               <i data-lucide="send" class="w-[18px] h-[18px] text-[#64748B]"></i> ส่งทดสอบตอนนี้</button>
           </div>
         </div>
@@ -7395,7 +7397,7 @@
         renderRecipientsList();
       } catch(e) {
         const el = document.getElementById('notif-recipients-list');
-        if (el) el.innerHTML = `<p class="text-xs text-red-400 text-center py-2">โหลดไม่สำเร็จ</p>`;
+        if (el) el.innerHTML = `<p class="text-sm text-red-400 text-center py-2">โหลดไม่สำเร็จ</p>`;
       }
     }
     function renderRecipientsList() {
@@ -7409,14 +7411,14 @@
         <div class="flex items-center gap-2.5 min-w-0 flex-1 pr-2">
           <span class="text-base shrink-0">${r.is_active ? '✅' : '⬜'}</span>
           <div class="min-w-0">
-            <p class="text-sm font-medium text-gray-900 truncate">${he(r.name)}</p>
+            <p class="text-base font-medium text-gray-900 truncate">${he(r.name)}</p>
             <p class="eq-meta truncate">${he(r.email)}</p>
           </div>
         </div>
         <div class="flex items-center gap-1 shrink-0">
           <button data-id="${r.id}" data-active="${r.is_active}"
             onclick="toggleRecipient(this.dataset.id, this.dataset.active==='true')"
-            class="text-xs px-2.5 py-1 rounded-lg border font-semibold transition ${r.is_active ? 'border-amber-200 text-amber-600 hover:bg-amber-50' : 'border-green-200 text-green-600 hover:bg-green-50'}">
+            class="text-sm px-2.5 py-1 rounded-lg border font-semibold transition ${r.is_active ? 'border-amber-200 text-amber-600 hover:bg-amber-50' : 'border-green-200 text-green-600 hover:bg-green-50'}">
             ${r.is_active ? 'ปิด' : 'เปิด'}</button>
           <button data-id="${r.id}" data-label="${he(r.name+' · '+r.email)}"
             onclick="confirmDeleteRecipient(this.dataset.id, this.dataset.label)"
@@ -7526,7 +7528,7 @@
       const el = document.getElementById('tab-audit-log');
       el.innerHTML = `<div class="gd-container fade-in"><div class="gd-container-header"><h2 class="page-title">ประวัติการดำเนินการ</h2></div>${skeletonCards(5)}</div>`;
       const { data, error } = await sb.from('app_audit_logs').select('*').order('created_at', { ascending: false }).limit(300);
-      if (error) { el.innerHTML = `<div class="gd-container fade-in"><p class="text-sm text-danger text-center py-10">โหลดข้อมูลไม่สำเร็จ</p></div>`; return; }
+      if (error) { el.innerHTML = `<div class="gd-container fade-in"><p class="text-base text-danger text-center py-10">โหลดข้อมูลไม่สำเร็จ</p></div>`; return; }
       AUDIT_LOGS = data || [];
       _renderAuditList();
     }
@@ -7550,7 +7552,7 @@
             class="gd-input" style="flex:1;height:38px;">
           <input type="date" value="${auditDateFrom}" onchange="auditDateFrom=this.value;_renderAuditList()" class="gd-input" style="width:150px;height:38px;" title="ตั้งแต่วันที่">
           <input type="date" value="${auditDateTo}" onchange="auditDateTo=this.value;_renderAuditList()" class="gd-input" style="width:150px;height:38px;" title="ถึงวันที่">
-          <button onclick="exportAuditCSV()" class="gd-btn-primary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-xs font-semibold whitespace-nowrap">
+          <button onclick="exportAuditCSV()" class="gd-btn-primary flex items-center gap-1.5 !w-auto !py-1.5 !px-3 text-sm font-semibold whitespace-nowrap">
             <i data-lucide="download" class="w-[18px] h-[18px] text-[#64748B]"></i> Export CSV</button>
         </div>
         <div class="audit-filter-pills">
@@ -7563,7 +7565,7 @@
               ${auditTypeBadge(r.action_type)}
               <span class="eq-meta shrink-0">${fdFull(r.created_at)}</span>
             </div>
-            <p class="text-xs text-gray-500 mt-1">${he(r.actor_name||'—')}<span class="text-gray-300 mx-1">·</span>${auditDetail(r)}</p>
+            <p class="text-sm text-gray-500 mt-1">${he(r.actor_name||'—')}<span class="text-gray-300 mx-1">·</span>${auditDetail(r)}</p>
           </div>`).join('') : emptyState('ยังไม่มีบันทึก','กิจกรรมในระบบจะปรากฏที่นี่','list')}
         </div>
       </div>`;
@@ -7621,8 +7623,8 @@
         return `
           <div class="flex items-center justify-between py-4 border-b border-gray-100 last:border-b-0">
             <div class="flex-1 mr-4">
-              <p class="text-sm font-semibold text-gray-800">${labelTh}</p>
-              <p class="text-xs text-gray-400 mt-0.5">${descTh}</p>
+              <p class="text-base font-semibold text-gray-800">${labelTh}</p>
+              <p class="text-sm text-gray-400 mt-0.5">${descTh}</p>
             </div>
             <button type="button" onclick="toggleSetting('${key}', this)"
               aria-checked="${isOn}"
@@ -7635,10 +7637,10 @@
         <div class="gd-container fade-in">
           <div class="gd-container-header">
             <h2 class="page-title">ตั้งค่าระบบ</h2>
-            <p class="text-sm text-gray-400 mt-1">จัดการฟีเจอร์การยืม-คืนอุปกรณ์ (เฉพาะผู้ดูแลระบบ)</p>
+            <p class="text-base text-gray-400 mt-1">จัดการฟีเจอร์การยืม-คืนอุปกรณ์ (เฉพาะผู้ดูแลระบบ)</p>
           </div>
           <div class="gd-card p-5 mb-4">
-            <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1" style="letter-spacing:0.08em;">ฟีเจอร์การยืม-คืน</p>
+            <p class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-1" style="letter-spacing:0.08em;">ฟีเจอร์การยืม-คืน</p>
             <div>
               ${toggleRow('require_borrow_signature', 'ต้องการลายเซ็นการยืม', 'ผู้ยืมต้องเซ็นชื่อก่อนยืนยันการยืมอุปกรณ์', SETTINGS.require_borrow_signature)}
               ${toggleRow('require_return_rating', 'ต้องการลายเซ็นและประเมินบริการเมื่อคืน', 'ผู้คืนต้องเซ็นชื่อ และสามารถให้คะแนนบริการได้', SETTINGS.require_return_rating)}
@@ -7726,16 +7728,16 @@
           <div class="w-px flex-1 bg-white/10 mt-1"></div>
         </div>
         <div class="pb-3">
-          <p class="${a.color} font-medium text-sm">${a.label}</p>
-          <p class="text-slate-400 text-xs mt-0.5">โดย ${he(log.actor_name||'-')}</p>
-          <p class="text-slate-500 text-xs">${fdFull(log.created_at)}</p>
+          <p class="${a.color} font-medium text-base">${a.label}</p>
+          <p class="text-slate-400 text-sm mt-0.5">โดย ${he(log.actor_name||'-')}</p>
+          <p class="text-slate-500 text-sm">${fdFull(log.created_at)}</p>
         </div>
       </div>`;
     }
     async function openRecordDetail(recordId) {
       document.getElementById('record-detail-modal').classList.remove('hidden');
       const r = BORROWS.find(b => (b.record_id||b.id) === recordId);
-      if (!r) { document.getElementById('detail-timeline').innerHTML = '<p class="text-slate-500 text-sm">ไม่พบข้อมูล</p>'; return; }
+      if (!r) { document.getElementById('detail-timeline').innerHTML = '<p class="text-slate-500 text-base">ไม่พบข้อมูล</p>'; return; }
       // Lazy-load signatures (not in list query to save bandwidth).
       if (r.sign_img === undefined) {
         try {
@@ -7763,7 +7765,7 @@
       };
       const s = statusMap[r.status] || { label: r.status, cls: 'bg-stone-100 text-stone-700' };
       const badge = document.getElementById('detail-status-badge');
-      badge.textContent = s.label; badge.className = `shrink-0 px-3 py-1 rounded-full text-xs font-bold ${s.cls}`;
+      badge.textContent = s.label; badge.className = `shrink-0 px-3 py-1 rounded-full text-sm font-bold ${s.cls}`;
       // Borrow note
       const noteSection = document.getElementById('detail-note-section');
       if (r.note) { noteSection.classList.remove('hidden'); document.getElementById('detail-note').textContent = r.note; }
@@ -7788,11 +7790,11 @@
       if (r.return_sign_img) { document.getElementById('detail-return-signature').src = safeImgUrl(r.return_sign_img); retSignSection.classList.remove('hidden'); }
       else { retSignSection.classList.add('hidden'); }
       const timeline = document.getElementById('detail-timeline');
-      timeline.innerHTML = '<p class="text-slate-500 text-xs">กำลังโหลดประวัติ...</p>';
+      timeline.innerHTML = '<p class="text-slate-500 text-sm">กำลังโหลดประวัติ...</p>';
       try {
         const { data: logs } = await sb.from('app_audit_logs').select('*').eq('target_id', recordId).order('created_at', { ascending: true }).limit(100);
-        timeline.innerHTML = logs?.length ? logs.map(renderTimelineItem).join('') : '<p class="text-slate-500 text-sm">ไม่มีประวัติการดำเนินการ</p>';
-      } catch(e) { timeline.innerHTML = '<p class="text-slate-500 text-sm">โหลดประวัติไม่สำเร็จ</p>'; }
+        timeline.innerHTML = logs?.length ? logs.map(renderTimelineItem).join('') : '<p class="text-slate-500 text-base">ไม่มีประวัติการดำเนินการ</p>';
+      } catch(e) { timeline.innerHTML = '<p class="text-slate-500 text-base">โหลดประวัติไม่สำเร็จ</p>'; }
     }
     function closeRecordDetail() { document.getElementById('record-detail-modal').classList.add('hidden'); }
     function printRecord() { window.print(); }
@@ -7819,7 +7821,7 @@
       el.innerHTML = `<div class="gd-container fade-in">
         <div class="gd-container-header">
           <h2 class="page-title">${isMgr ? 'สถิติภาพรวม' : 'สถิติการยืม'}</h2>
-          <p class="text-sm text-slate-500 mt-1">${isMgr ? 'ภาพรวมการยืมอุปกรณ์ทั้งหมด' : 'ข้อมูลการยืมของคุณ'}</p>
+          <p class="text-base text-slate-500 mt-1">${isMgr ? 'ภาพรวมการยืมอุปกรณ์ทั้งหมด' : 'ข้อมูลการยืมของคุณ'}</p>
         </div>
         <div class="filter-bar">
           <div class="filter-top">
@@ -8062,7 +8064,7 @@
             }
           },
           scales: {
-            x: { ticks: { font: { size: 11, family: 'Noto Sans Thai' }, autoSkip: false } },
+            x: { ticks: { font: { size: 11, family: 'Prompt' }, autoSkip: false } },
             y: { ticks: { font: { size: 11 } }, beginAtZero: true }
           }
         }
@@ -8110,7 +8112,7 @@
             const cx = (chartArea.left + chartArea.right) / 2;
             const cy = (chartArea.top + chartArea.bottom) / 2;
             ctx.save();
-            ctx.font = 'bold 20px Noto Sans Thai';
+            ctx.font = 'bold 20px Prompt';
             ctx.fillStyle = '#1C1917';
             ctx.textAlign = 'center';
             ctx.fillText(String(totalValue), cx, cy + 8);
@@ -8173,7 +8175,7 @@
             }
           },
           scales: {
-            x: { ticks: { font: { size: 11, family: 'Noto Sans Thai' }, autoSkip: false, maxRotation: 45 } },
+            x: { ticks: { font: { size: 11, family: 'Prompt' }, autoSkip: false, maxRotation: 45 } },
             y: { ticks: { font: { size: 11 } }, beginAtZero: true }
           }
         }
@@ -8337,7 +8339,7 @@
         </svg>
         <h3 class="font-bold text-white text-lg relative z-10">รายละเอียดการยืม</h3>
         <div class="relative z-10 flex items-center gap-2">
-          <button onclick="printRecord()" class="text-white/90 hover:text-white text-xs border border-white/40 rounded-lg px-2 py-1">Print</button>
+          <button onclick="printRecord()" class="text-white/90 hover:text-white text-sm border border-white/40 rounded-lg px-2 py-1">Print</button>
           <button onclick="closeRecordDetail()" class="text-white/80 hover:text-white text-xl leading-none">✕</button>
         </div>
       </div>
@@ -8351,12 +8353,12 @@
             </div>
             <span id="detail-equipment-name" class="font-bold text-xl leading-tight text-[#1c1917]"></span>
           </div>
-          <span id="detail-status-badge" class="shrink-0 px-3 py-1 rounded-full text-xs font-bold"></span>
+          <span id="detail-status-badge" class="shrink-0 px-3 py-1 rounded-full text-sm font-bold"></span>
         </div>
         <!-- Basic Info -->
         <div class="rounded-xl p-4 space-y-3" style="background:#f9f8f7;">
-          <h4 class="text-[#f97316] font-semibold text-sm">ข้อมูลการยืม</h4>
-          <div class="grid grid-cols-2 gap-3 text-sm">
+          <h4 class="text-[#f97316] font-semibold text-base">ข้อมูลการยืม</h4>
+          <div class="grid grid-cols-2 gap-3 text-base">
             <div><p class="text-stone-500">ผู้ยืม</p><p id="detail-borrower-name" class="font-medium text-[#1c1917]"></p></div>
             <div><p class="text-stone-500">รหัสพนักงาน</p><p id="detail-borrower-dept" class="font-medium text-[#1c1917]"></p></div>
             <div><p class="text-stone-500">จำนวน</p><p id="detail-qty" class="font-medium text-[#1c1917]"></p></div>
@@ -8365,37 +8367,37 @@
             <div><p class="text-stone-500">กำหนดคืน</p><p id="detail-due-date" class="font-medium text-[#1c1917]"></p></div>
           </div>
           <div id="detail-note-section" class="hidden pt-1 border-t border-stone-200">
-            <p class="text-stone-500 text-sm">หมายเหตุ</p>
-            <p id="detail-note" class="text-[#1c1917] text-sm mt-1"></p>
+            <p class="text-stone-500 text-base">หมายเหตุ</p>
+            <p id="detail-note" class="text-[#1c1917] text-base mt-1"></p>
           </div>
         </div>
         <!-- Borrow Signature -->
         <div id="detail-signature-section" class="rounded-xl p-4" style="background:#f9f8f7;">
-          <h4 class="text-[#f97316] font-semibold text-sm mb-3">ลายเซ็นผู้ยืม</h4>
+          <h4 class="text-[#f97316] font-semibold text-base mb-3">ลายเซ็นผู้ยืม</h4>
           <img id="detail-signature" src="" alt="ลายเซ็น" class="bg-white rounded-lg max-h-24 object-contain w-full"/>
-          <p class="text-xs text-stone-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้รับอุปกรณ์ตามรายการข้างต้นในสภาพสมบูรณ์</p>
+          <p class="text-sm text-stone-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้รับอุปกรณ์ตามรายการข้างต้นในสภาพสมบูรณ์</p>
         </div>
         <!-- Return Info -->
         <div id="detail-return-section" class="hidden rounded-xl p-4 space-y-3" style="background:#f9f8f7;">
-          <h4 class="text-[#f97316] font-semibold text-sm">ข้อมูลการคืน</h4>
-          <div class="grid grid-cols-2 gap-3 text-sm">
+          <h4 class="text-[#f97316] font-semibold text-base">ข้อมูลการคืน</h4>
+          <div class="grid grid-cols-2 gap-3 text-base">
             <div><p class="text-stone-500">วันที่คืน</p><p id="detail-return-date" class="text-[#1c1917] font-medium"></p></div>
             <div><p class="text-stone-500">สภาพตอนคืน</p><p id="detail-condition" class="text-[#1c1917] font-medium"></p></div>
           </div>
           <div id="detail-condition-note-section" class="hidden pt-1 border-t border-stone-200">
-            <p class="text-stone-500 text-sm">หมายเหตุสภาพ</p>
-            <p id="detail-condition-note" class="text-[#1c1917] text-sm mt-1"></p>
+            <p class="text-stone-500 text-base">หมายเหตุสภาพ</p>
+            <p id="detail-condition-note" class="text-[#1c1917] text-base mt-1"></p>
           </div>
         </div>
         <!-- Return Signature -->
         <div id="detail-return-sign-section" class="hidden rounded-xl p-4" style="background:#f9f8f7;">
-          <h4 class="text-[#f97316] font-semibold text-sm mb-3">ลายเซ็นยืนยันคืน</h4>
+          <h4 class="text-[#f97316] font-semibold text-base mb-3">ลายเซ็นยืนยันคืน</h4>
           <img id="detail-return-signature" src="" alt="ลายเซ็นคืน" class="bg-white rounded-lg max-h-24 object-contain w-full"/>
-          <p class="text-xs text-stone-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้คืนอุปกรณ์ตามรายการข้างต้นเรียบร้อยแล้ว</p>
+          <p class="text-sm text-stone-500 text-center mt-2 leading-snug">ข้าพเจ้ายืนยันว่าได้คืนอุปกรณ์ตามรายการข้างต้นเรียบร้อยแล้ว</p>
         </div>
         <!-- Timeline -->
         <div class="rounded-xl p-4" style="background:#f9f8f7;">
-          <h4 class="text-[#f97316] font-semibold text-sm mb-4">ประวัติการดำเนินการ</h4>
+          <h4 class="text-[#f97316] font-semibold text-base mb-4">ประวัติการดำเนินการ</h4>
           <div id="detail-timeline" class="space-y-3"></div>
         </div>
       </div>
