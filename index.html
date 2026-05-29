@@ -1028,10 +1028,16 @@
     #eqGrid.view-grid  {
       display: grid !important;
       grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
+      gap: 16px;
     }
     @media (min-width: 768px) {
       #eqGrid.view-grid { grid-template-columns: repeat(3, 1fr) !important; }
+    }
+    @media (min-width: 1024px) {
+      #eqGrid.view-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 24px; }
+    }
+    @media (min-width: 1536px) {
+      #eqGrid.view-grid { grid-template-columns: repeat(5, 1fr) !important; }
     }
 
 
@@ -2103,7 +2109,9 @@
     }
 
     /* ── Borrow tab density polish ───────────────────────── */
-    #tab-borrow .gd-container { max-width: none !important; margin-left: 0 !important; margin-right: 0 !important; }
+    #tab-borrow .gd-container { max-width: none !important; margin-left: 0 !important; margin-right: 0 !important; padding: 0 24px !important; }
+    @media (min-width: 1024px) { #tab-borrow .gd-container { padding: 0 32px !important; } }
+    @media (min-width: 1280px) { #tab-borrow .gd-container { padding: 0 48px !important; } }
 
     /* Mini KPI strip above the list */
     .eq-kpi-strip {
@@ -5712,7 +5720,7 @@
       const eqEmptyState = eqCatFilter
         ? `<p style="font-size:14px;color:#78716C;text-align:center;padding:24px 12px;">ไม่มีอุปกรณ์ในหมวด \"<span>${he(eqCatFilter)}</span>\"</p>`
         : emptyState('ไม่พบอุปกรณ์', eqSearch || 'คำค้นหา', 'search','เพิ่มอุปกรณ์','showAddEquipment()');
-      el.innerHTML = `<div class="gd-container fade-in">
+      el.innerHTML = `<div class="gd-container fade-in w-full lg:max-w-none lg:px-8 xl:px-12">
         <div class="gd-container-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
           <div>
             <h2 class="page-title">ยืมอุปกรณ์</h2>
@@ -5729,8 +5737,6 @@
             </button>
           </div>
         </div>
-        <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-start">
-          <div>
         <div class="eq-kpi-strip">
           <div class="eq-kpi t-all">
             <div class="eq-kpi-ico"><i data-lucide="boxes" style="width:18px;height:18px;"></i></div>
@@ -5749,7 +5755,7 @@
             <div><div class="eq-kpi-val">${readyCount}</div><div class="eq-kpi-lbl">พร้อมยืมครบ</div></div>
           </div>
         </div>
-        <div class="mb-4" style="display:flex;gap:8px;align-items:center">
+        <div class="mb-4 max-w-2xl" style="display:flex;gap:8px;align-items:center">
           <input type="text" placeholder="ค้นหาอุปกรณ์..." class="gd-input" style="flex:1" value="${he(borrowSearchQ)}"
             oninput="borrowSearchQ=this.value;debounce('borrowSearch',renderBorrowTab)">
           <button onclick="openQRScanner()" style="background:#f97316;color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;font-family:'Noto Sans Thai',sans-serif">
@@ -5761,7 +5767,6 @@
           <div class="chip ${borrowCatFilter===''?'active':''}" onclick="borrowCatFilter='';renderBorrowTab()">ทั้งหมด</div>
           ${cats.map(c=>`<div class="chip ${borrowCatFilter===c?'active':''}" onclick="borrowCatFilter='${he(c)}';renderBorrowTab()">${he(c)}</div>`).join('')}
         </div>
-          </div>
         <div class="view-${borrowViewMode}" id="eqGrid">
           ${filtered.length ? filtered.map(e => borrowViewMode === 'grid' ? `
             <div class="gd-card gd-card-grid-card cursor-pointer" style="--cat-accent:${catAccentColor(e.category)}" onclick="openBorrowForm('${he(e.eq_id)}')">
@@ -5807,7 +5812,6 @@
                 <button class="btn-action-borrow flex items-center gap-1.5"><i data-lucide="hand" class="w-4 h-4 text-[#F97316]"></i> ยืม</button>
               </div>
             </div>`;})()}`).join('') : emptyState('ไม่พบอุปกรณ์','ลองเปลี่ยนหมวดหมู่หรือคำค้นหา','search')}
-        </div>
         </div>
       </div>`;
       lucide.createIcons({'stroke-width': 1.5});
