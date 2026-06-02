@@ -1589,13 +1589,12 @@
       50%       { opacity: 0.65; transform: scale(1.08); }
     }
 
-    /* ── 13. Chart card left accent ─────────────────────────── */
+    /* ── 13. Chart card hover accent ────────────────────────── */
     .chart-card {
-      border-left: 3px solid #fed7aa !important;
       transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
     }
     .chart-card:hover {
-      border-left-color: #f97316 !important;
+      border-color: rgba(249,115,22,0.30) !important;
       box-shadow: 0 4px 16px rgba(249,115,22,0.08) !important;
     }
 
@@ -1818,9 +1817,9 @@
       border-color: var(--mf-border) !important;
       box-shadow: var(--mf-shadow-md) !important;
     }
-    /* Preserve category-colored left stripe on equipment list cards */
+    /* Category-colored full border on equipment list cards */
     .gd-card.eq-cat-stripe, .card.eq-cat-stripe {
-      border-left: 4px solid var(--cat-accent, #E2E8F0) !important;
+      border-color: color-mix(in srgb, var(--cat-accent, #E2E8F0) 35%, #E2E8F0) !important;
     }
     /* Tint the equipment icon box by category accent */
     .eq-cat-stripe .grid-icon-box {
@@ -2308,12 +2307,10 @@
     }
 
     .user-list-item {
-      transition: background 0.15s ease, border-left 0.15s ease;
-      border-left: 3px solid transparent;
+      transition: background 0.15s ease;
     }
     .user-list-item:hover {
       background: #FFF5F0 !important;
-      border-left: 3px solid #F97316;
     }
 
     .btn-logout-confirm {
@@ -2485,12 +2482,10 @@
     }
 
     .user-list-item {
-      transition: background 0.15s ease, border-left 0.15s ease;
-      border-left: 3px solid transparent;
+      transition: background 0.15s ease;
     }
     .user-list-item:hover {
       background: #FFF5F0 !important;
-      border-left: 3px solid #F97316;
     }
 
     .btn-logout-confirm {
@@ -2662,12 +2657,10 @@
     }
 
     .user-list-item {
-      transition: background 0.15s ease, border-left 0.15s ease;
-      border-left: 3px solid transparent;
+      transition: background 0.15s ease;
     }
     .user-list-item:hover {
       background: #FFF5F0 !important;
-      border-left: 3px solid #F97316;
     }
 
 
@@ -2986,12 +2979,10 @@
     }
 
     .user-list-item {
-      transition: background 0.15s ease, border-left 0.15s ease;
-      border-left: 3px solid transparent;
+      transition: background 0.15s ease;
     }
     .user-list-item:hover {
       background: #FFF5F0 !important;
-      border-left: 3px solid #F97316;
     }
 
 
@@ -3470,12 +3461,10 @@
     }
 
     .user-list-item {
-      transition: background 0.15s ease, border-left 0.15s ease;
-      border-left: 3px solid transparent;
+      transition: background 0.15s ease;
     }
     .user-list-item:hover {
       background: #FFF5F0 !important;
-      border-left: 3px solid #F97316;
     }
 
 
@@ -4248,8 +4237,7 @@
 
     /* 12. Desktop sidebar active item */
     .sb-item.active {
-      background: linear-gradient(90deg, #FFF7ED 0%, #FFFBF7 100%) !important;
-      border-left: 3px solid #F97316 !important;
+      background: #FEE9D4 !important;
       color: #C2410C !important;
       font-weight: 700 !important;
     }
