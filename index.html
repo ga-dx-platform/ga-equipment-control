@@ -708,8 +708,11 @@
       --tx-all: var(--tx-color), var(--tx-bg), var(--tx-border), var(--tx-transform), var(--tx-shadow);
     }
     
-    * { outline: none; }
-    
+    .numpad-key:focus-visible,
+    .user-card:focus-visible,
+    .top-tab:focus-visible,
+    .bn-item:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2); }
+
     .top-tab { transition: var(--tx-all) !important; cursor: pointer; }
     .top-tab:not(.active):hover { background: #E2E8F0 !important; }
     .top-tab.active { box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important; }
