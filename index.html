@@ -33,6 +33,20 @@
     }
   </script>
   <style>
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+
     :root {
       /* ── Brand ──────────────────────────────────────────── */
       --orange-gradient: linear-gradient(135deg, #f97316 0%, #ea580c 52%, #c2410c 100%);
@@ -791,19 +805,6 @@
 
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -870,19 +871,6 @@
     }
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -907,19 +895,6 @@
     .eq-meta { font-size: 13px !important; color: #64748B !important; line-height: 1.2 !important; margin-top: 0 !important; }
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1010,19 +985,6 @@
     }
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1079,19 +1041,6 @@
     }
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1138,19 +1087,6 @@
     }
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1198,19 +1134,6 @@
     
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1291,19 +1214,6 @@
     
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1413,19 +1323,6 @@
     }
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1649,19 +1546,6 @@
     }
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -2667,19 +2551,6 @@
     }
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
   <style>
     /* MeetFlow compact topbar rebalance */
@@ -2989,19 +2860,6 @@
     }
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
   <style>
     /* MeetFlow compact topbar rebalance */
@@ -3136,19 +2994,6 @@
     }
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
   <style>
     /* Hero banner topbar (final override) */
@@ -3471,19 +3316,6 @@
     }
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
   <style>
     /* MeetFlow compact topbar rebalance */
@@ -3618,19 +3450,6 @@
     }
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
   <style>
     /* Hero banner topbar (final override) */
@@ -3778,19 +3597,6 @@
     }
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -3976,19 +3782,6 @@
     }
 
 
-    /* Typography hierarchy */
-    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 0.875rem; color: #64748B; }
-    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
-    .qty-label { font-size: 0.75rem; }
-    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
-    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
-    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
 
     /* ── Equipment Manager Split Panel ── */
     .eq-topbar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
