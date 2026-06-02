@@ -4601,7 +4601,7 @@
         <div>
           <label class="text-sm font-semibold text-gray-500 mb-1.5 block">รูปอุปกรณ์ <span class="font-normal text-gray-400">(ไม่บังคับ)</span></label>
           <div id="equip-image-preview" class="hidden mt-1 mb-2">
-            <img id="equip-image-preview-img" class="w-20 h-20 object-cover rounded-xl border border-gray-200"/>
+            <img id="equip-image-preview-img" alt="ตัวอย่างรูปอุปกรณ์" class="w-20 h-20 object-cover rounded-xl border border-gray-200"/>
           </div>
           <input type="file" id="equip-image-input" accept="image/*" capture="environment" class="hidden" onchange="previewEquipImage(this)"/>
           <button type="button" onclick="document.getElementById('equip-image-input').click()"
@@ -5952,7 +5952,7 @@
       document.getElementById('bf-body').innerHTML = `
         <div class="gd-card p-5 mb-4">
           <div class="flex items-center gap-3 mb-1">
-            ${eq.image_url ? `<img src="${he(eq.image_url)}" style="width:36px; height:36px; min-width:36px; object-fit:cover; border-radius:8px; border:1px solid #E2E8F0;" class="shrink-0"/>` : `<div style="width:36px; height:36px; min-width:36px; border-radius:8px; background:#F1F5F9; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center;" class="shrink-0"><i data-lucide="box" style="width:20px;height:20px;color:var(--orange);"></i></div>`}
+            ${eq.image_url ? `<img src="${he(eq.image_url)}" alt="${he(eq.name)} — รูปอุปกรณ์" style="width:36px; height:36px; min-width:36px; object-fit:cover; border-radius:8px; border:1px solid #E2E8F0;" class="shrink-0"/>` : `<div style="width:36px; height:36px; min-width:36px; border-radius:8px; background:#F1F5F9; border:1px solid #E2E8F0; display:flex; align-items:center; justify-content:center;" class="shrink-0"><i data-lucide="box" style="width:20px;height:20px;color:var(--orange);"></i></div>`}
             <div><p class="font-semibold text-gray-900">${he(eq.name)}</p>
             <p class="eq-meta">${he(eq.category||'')}${eq.serial_no?' · '+he(eq.serial_no):''} · คงเหลือ ${eq.available}</p></div>
           </div>
@@ -6282,7 +6282,7 @@
             <div class="flex justify-between"><span class="text-gray-400">กำหนดคืน</span><span class="font-medium ${isOD?'text-red-600':''}">${fd(rec.due_date)}${isOD?' (เกินกำหนด!)':''}</span></div>
             ${rec.note?`<div class="flex justify-between"><span class="text-gray-400">หมายเหตุ</span><span class="font-medium">${he(rec.note)}</span></div>`:''}
           </div>
-          ${rec.sign_img?`<div class="mt-3 pt-3 border-t border-gray-100"><p class="eq-meta mb-2">ลายเซ็นตอนยืม</p><img src="${safeImgUrl(rec.sign_img)}" class="w-full h-20 object-contain bg-white rounded-lg border border-gray-200 p-1"></div>`:''}
+          ${rec.sign_img?`<div class="mt-3 pt-3 border-t border-gray-100"><p class="eq-meta mb-2">ลายเซ็นตอนยืม</p><img src="${safeImgUrl(rec.sign_img)}" alt="ลายเซ็นการยืม ${rec.borrower_name}" class="w-full h-20 object-contain bg-white rounded-lg border border-gray-200 p-1"></div>`:''}
         </div>
         <div class="gd-card p-5 mb-4">
           <h4 class="eq-title mb-3 flex items-center gap-2"><i data-lucide="clipboard-check" style="width:16px;height:16px;color:var(--orange);"></i> สภาพอุปกรณ์เมื่อคืน</h4>
@@ -6642,7 +6642,7 @@
                 onclick="selectEquipment('${he(e.eq_id)}')"
                 style="padding:20px;cursor:pointer;${selectedEquipmentId===e.eq_id?'border:1.5px solid #f97316;background:#fff7ed;':''}">
                 <div class="flex items-center gap-3">
-                  ${e.image_url ? `<img src="${he(e.image_url)}" class="w-11 h-11 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div style="width:44px;height:44px;border-radius:12px;background:#F1F5F9;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${eqIconSvg(22)}</div>`}
+                  ${e.image_url ? `<img src="${he(e.image_url)}" alt="${he(e.name)}" class="w-11 h-11 object-cover rounded-xl border border-gray-200 shrink-0"/>` : `<div style="width:44px;height:44px;border-radius:12px;background:#F1F5F9;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${eqIconSvg(22)}</div>`}
                   <div class="flex-1 min-w-0">
                     <p class="eq-title">${he(e.name)}</p>
                     <p class="eq-meta">${he(e.category||'ไม่ระบุ')}${e.serial_no?' · '+he(e.serial_no):''}</p>
@@ -7876,7 +7876,7 @@
       const eqRecord = EQ.find(e => e.eq_id === r.eq_id || e.id === r.eq_id);
       const imgEl = document.getElementById('detail-equipment-image');
       const phEl = document.getElementById('detail-equipment-placeholder');
-      if (eqRecord?.image_url) { imgEl.src = safeImgUrl(eqRecord.image_url); imgEl.classList.remove('hidden'); phEl.style.display = 'none'; }
+      if (eqRecord?.image_url) { imgEl.src = safeImgUrl(eqRecord.image_url); imgEl.alt = he(r.eq_name) || 'รูปอุปกรณ์'; imgEl.classList.remove('hidden'); phEl.style.display = 'none'; }
       else { imgEl.classList.add('hidden'); phEl.style.display = 'flex'; }
       document.getElementById('detail-borrower-name').textContent = r.borrower_name || '-';
       document.getElementById('detail-borrower-dept').textContent = r.borrower_dept || '-';
@@ -8474,7 +8474,7 @@
         <div class="flex items-center justify-between gap-3">
           <div class="flex items-center gap-3 min-w-0">
             <div class="shrink-0">
-              <img id="detail-equipment-image" src="" alt="" class="w-14 h-14 object-cover rounded-xl border border-stone-200 hidden"/>
+              <img id="detail-equipment-image" src="" alt="รูปอุปกรณ์" class="w-14 h-14 object-cover rounded-xl border border-stone-200 hidden"/>
               <div id="detail-equipment-placeholder" style="width:56px;height:56px;border-radius:14px;background:#F1F5F9;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg></div>
             </div>
             <span id="detail-equipment-name" class="font-bold text-xl leading-tight text-[#1c1917]"></span>
