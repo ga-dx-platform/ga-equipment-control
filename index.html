@@ -9,8 +9,8 @@
   <title>GA Equipment Control</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -66,14 +66,14 @@
          below are computed from these — do not set raw px here.
       ═══════════════════════════════════════════════════════ */
 
-      /* Typography scale */
-      --ga-text-display:   20px;   /* page/modal headings */
-      --ga-text-title:     18px;   /* card / sub-page titles */
-      --ga-text-section:   16px;   /* section headings, panel titles */
-      --ga-text-body:      14px;   /* primary content */
-      --ga-text-secondary: 13px;   /* meta / description */
-      --ga-text-small:     12px;   /* helper text, subtitles */
-      --ga-text-caption:   11px;   /* uppercase labels, badges */
+      /* Typography scale (rem, 16px base) */
+      --ga-text-display:   1.375rem; /* 22px — page/modal headings */
+      --ga-text-title:     1.125rem; /* 18px — card / sub-page titles */
+      --ga-text-section:   1rem;     /* 16px — section headings, panel titles */
+      --ga-text-body:      1rem;     /* 16px — primary content */
+      --ga-text-secondary: 0.875rem; /* 14px — meta / description */
+      --ga-text-small:     0.75rem;  /* 12px — helper text, subtitles */
+      --ga-text-caption:   0.6875rem;/* 11px — uppercase labels, badges */
 
       /* Font weight */
       --ga-fw-semibold: 600;
@@ -133,9 +133,12 @@
     html, body {
       height: 100%; margin: 0;
       font-family: 'Prompt', sans-serif;
-      font-size: var(--fs-body); color: var(--text-primary);
-      line-height: 1.7;
+      font-size: var(--ga-text-body); color: var(--text-primary);
+      line-height: 1.6;
       word-break: keep-all;
+      font-optical-sizing: auto;
+      font-kerning: normal;
+      text-rendering: optimizeLegibility;
       background: var(--bg-page);
       background-image: radial-gradient(rgba(15,23,42,0.055) 1px, transparent 1px);
       background-size: 20px 20px;
@@ -182,11 +185,10 @@
       box-shadow: 0 6px 18px rgba(15,23,42,0.06), 0 18px 38px rgba(15,23,42,0.08);
     }
 
-    .page-title { font-size: 20px; font-weight: 600; color: #0F172A; }
-    .section-title { font-size: 16px; font-weight: 600; color: #0F172A; }
-    .eq-title { font-size: 15px; font-weight: 600; color: #0F172A; }
-    .eq-meta { font-size: 13px; color: #64748B; }
-    .badge-text { font-size: 12px; font-weight: 500; }
+    .page-title { font-size: var(--ga-text-display); font-weight: 700; color: #1C1917; }
+    .eq-title { font-size: var(--ga-text-secondary); font-weight: 600; color: #0F172A; }
+    .eq-meta { font-size: var(--ga-text-small); color: #64748B; }
+    .badge-text { font-size: var(--ga-text-small); font-weight: 500; }
 
     /* ── Page layout ──────────────────────────────────── */
     
@@ -239,9 +241,6 @@
 
 
     
-    .eq-title { font-size: 15px; font-weight: 600; color: #0F172A; }
-    .eq-meta { font-size: 13px; color: #64748B; }
-    .page-title { font-size: 18px; font-weight: 600; color: #0F172A; }
     /* ── Buttons ──────────────────────────────────────── */
     
     button {
@@ -259,7 +258,7 @@
       padding: 0 14px;
       height: 36px;
       display: inline-flex; align-items: center; justify-content: center;
-      font-size: 13px;
+      font-size: 0.875rem;
       font-weight: 600;
     }
     .gd-btn-primary:hover, .btn-primary:hover {
@@ -276,7 +275,7 @@
       padding: 0 14px;
       height: 36px;
       display: inline-flex; align-items: center; justify-content: center;
-      font-size: 13px;
+      font-size: 0.875rem;
       font-weight: 600;
     }
     .gd-btn-secondary:hover, .btn-secondary:hover { background: #F8FAFC; border-color: #CBD5E1; transform: translateY(-1px); }
@@ -323,18 +322,17 @@
       padding: 24px;
       max-width: 520px !important;
     }
-    .modal-title { font-size: 18px; font-weight: 700; }
-    .modal-label { font-size: 14px; font-weight: 500; }
+    .modal-title { font-size: 1.125rem; font-weight: 700; }
+    .modal-label { font-size: 0.875rem; font-weight: 500; }
     .modal-placeholder { font-style: normal; }
 
 
     /* ── Section title ────────────────────────────────── */
     .section-title {
-      font-size: var(--ga-text-caption);
+      font-size: var(--ga-text-section);
       font-weight: var(--ga-fw-semibold);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-muted);
+      color: #1C1917;
+      letter-spacing: normal;
     }
     /* ── Status badges ────────────────────────────────── */
     
@@ -342,7 +340,7 @@
       display: inline-flex; align-items: center; justify-content: center;
       padding: 4px 10px;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 0.75rem;
       font-weight: 500;
       white-space: nowrap;
     }
@@ -366,10 +364,11 @@
       box-shadow: var(--ga-shadow-sm);
     }
     .kpi-number {
-      font-size: 34px; font-weight: var(--ga-fw-semibold); line-height: 1;
+      font-size: 2.125rem; font-weight: var(--ga-fw-semibold); line-height: 1;
       margin: var(--ga-space-sm) 0 0;
       font-family: 'Prompt', sans-serif;
       color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
     }
     .kpi-label { font-size: var(--ga-text-small); color: var(--text-muted); margin-top: auto; padding-top: var(--ga-space-xs); }
     .kpi-card.orange .kpi-number { color: var(--orange); }
@@ -444,7 +443,7 @@
       height: 52px;
       border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 22px; font-weight: 500;
+      font-size: 1.375rem; font-weight: 500;
       font-family: 'Prompt', sans-serif;
       color: var(--text-primary); cursor: pointer;
       background: var(--bg-card); border: 1px solid var(--border);
@@ -570,7 +569,7 @@
     .top-tab {
       height: 36px;
       padding: 0 16px;
-      font-size: 14px;
+      font-size: 0.875rem;
       font-weight: 500;
       border-radius: 10px;
       color: #64748B;
@@ -598,7 +597,7 @@
       margin: 12px auto 0;
       max-width: max-content;
     }
-    .main-tab { white-space: nowrap; cursor: pointer; font-family: 'Prompt', sans-serif; display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 16px; font-size: 14px; font-weight: 500; border-radius: 10px; border: none; }
+    .main-tab { white-space: nowrap; cursor: pointer; font-family: 'Prompt', sans-serif; display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 16px; font-size: 0.875rem; font-weight: 500; border-radius: 10px; border: none; }
     .tab-active { color: #0F172A; background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
     .tab-inactive { color: #64748B; background: transparent; }
     .tab-inactive:hover { color: #334155; }
@@ -671,21 +670,6 @@
     }
 
     #screen-main .gd-header > svg { display: none; }
-
-
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -698,7 +682,7 @@
       display: inline-flex !important; gap: 8px !important; padding: 6px !important; background: #F1F5F9 !important; border-radius: 12px !important; margin-bottom: 24px !important;
     }
     .top-tab {
-      height: 36px !important; padding: 0 16px !important; font-size: 14px !important; font-weight: 500 !important; border-radius: 10px !important; color: #64748B !important; background: transparent !important; display: flex !important; align-items: center !important; justify-content: center !important; transition: all .15s ease !important; border: 0 !important;
+      height: 36px !important; padding: 0 16px !important; font-size: 0.875rem !important; font-weight: 500 !important; border-radius: 10px !important; color: #64748B !important; background: transparent !important; display: flex !important; align-items: center !important; justify-content: center !important; transition: all .15s ease !important; border: 0 !important;
     }
     .top-tab.active, .tab-active { color: #0F172A !important; background: white !important; box-shadow: 0 1px 2px rgba(0,0,0,0.06) !important; }
     .ga-list-container { max-width: 880px !important; margin-left: auto !important; margin-right: auto !important; }
@@ -706,31 +690,11 @@
       background: white !important; border: 1px solid #E2E8F0 !important; border-radius: var(--radius-card) !important; padding: 20px 24px !important; min-height: 72px !important; box-shadow: var(--shadow-card) !important; transition: all .15s ease !important;
     }
     .gd-card:hover, .card:hover { transform: translateY(-2px) !important; box-shadow: 0 2px 4px rgba(0,0,0,0.04), 0 8px 16px rgba(0,0,0,0.06) !important; }
-    .btn-action-borrow { font-size: 13px !important; font-weight: 500 !important; color: #E86B00 !important; background: transparent !important; transition: all .15s ease !important; border-radius: 10px !important; padding: 6px 14px !important;}
+    .btn-action-borrow { font-size: 0.8125rem !important; font-weight: 500 !important; color: #E86B00 !important; background: transparent !important; transition: all .15s ease !important; border-radius: 10px !important; padding: 6px 14px !important;}
     .btn-action-borrow:hover { background: #FFF7ED !important; }
     button:hover { filter: brightness(0.97); }
     .kpi-card { padding: 20px !important; height: auto !important; }
-    .kpi-number { font-size: 28px !important; font-weight: 600 !important; color: #0F172A !important; }
-    .kpi-label { font-size: 13px !important; color: #64748B !important; }
     .kpi-icon-wrap { width: 40px !important; height: 40px !important; border-radius: 10px !important; display: flex !important; align-items: center !important; justify-content: center !important;}
-    .page-title { font-size: 20px !important; font-weight: 600 !important; color:#0F172A !important;}
-    .section-title { font-size: 18px !important; font-weight: 600 !important; color:#0F172A !important;}
-    .eq-title { font-size: 15px !important; font-weight: 600 !important;}
-
-
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -824,19 +788,19 @@
 
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -903,19 +867,19 @@
     }
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -940,19 +904,19 @@
     .eq-meta { font-size: 13px !important; color: #64748B !important; line-height: 1.2 !important; margin-top: 0 !important; }
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1043,19 +1007,19 @@
     }
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1112,19 +1076,19 @@
     }
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1171,19 +1135,19 @@
     }
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1231,19 +1195,19 @@
     
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1324,19 +1288,19 @@
     
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1446,19 +1410,19 @@
     }
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -1683,19 +1647,19 @@
     }
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -2707,19 +2671,19 @@
     }
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
   <style>
     /* MeetFlow compact topbar rebalance */
@@ -3031,19 +2995,19 @@
     }
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
   <style>
     /* MeetFlow compact topbar rebalance */
@@ -3178,19 +3142,19 @@
     }
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
   <style>
     /* Hero banner topbar (final override) */
@@ -3515,19 +3479,19 @@
     }
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
   <style>
     /* MeetFlow compact topbar rebalance */
@@ -3662,19 +3626,19 @@
     }
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
   <style>
     /* Hero banner topbar (final override) */
@@ -3822,19 +3786,19 @@
     }
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   </style>
 
   <style>
@@ -4020,19 +3984,19 @@
     }
 
 
-    /* Batch 3 typography hierarchy */
-    .page-title { font-size: 22px !important; font-weight: 700 !important; color: #1C1917 !important; }
-    .section-title { font-size: 16px !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
-    .section-subtitle { font-size: 14px; color: #9CA3AF; }
-    .equipment-name, .eq-title { font-weight: 600 !important; }
-    .equipment-serial, .eq-meta { font-size: 12px; color: #A8A29E; }
-    .qty-label { font-size: 12px; }
-    .stat-number, .kpi-number { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
-    .stat-label, .kpi-label { font-size: 12px !important; color: #A8A29E !important; }
-    .kpi-value { font-size: 30px !important; font-weight: 700 !important; line-height: 1 !important; }
+    /* Typography hierarchy */
+    .page-title { font-size: 1.375rem !important; font-weight: 700 !important; color: #1C1917 !important; }
+    .section-title { font-size: 1rem !important; font-weight: 600 !important; color: #1C1917 !important; letter-spacing: normal !important; text-transform: none !important; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; }
+    .equipment-name, .eq-title { font-size: 0.875rem !important; font-weight: 600 !important; }
+    .equipment-serial, .eq-meta { font-size: 0.75rem; color: #64748B; }
+    .qty-label { font-size: 0.75rem; }
+    .stat-number, .kpi-number { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
+    .stat-label, .kpi-label { font-size: 0.75rem !important; color: #64748B !important; }
+    .kpi-value { font-size: 1.875rem !important; font-weight: 700 !important; line-height: 1 !important; font-variant-numeric: tabular-nums !important; }
     .filter-chip.active { font-weight: 600; background: #F97316; color: white; }
-    th { font-weight: 600 !important; font-size: 13px !important; }
-    .audit-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    th { font-weight: 600 !important; font-size: 0.8125rem !important; }
+    .audit-badge { font-size: 0.6875rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
 
     /* ── Equipment Manager Split Panel ── */
     .eq-topbar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
