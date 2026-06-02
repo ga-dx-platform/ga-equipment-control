@@ -4140,6 +4140,177 @@
     .sb-item.active i[data-lucide] { color: #EA580C; }
   </style>
 
+  <style>
+    /* ═══════════════════════════════════════════════════
+       BOLDER — hierarchy amplification layer
+       Commit the brand. Sharpen the scale. Drop the cream.
+    ═══════════════════════════════════════════════════ */
+
+    /* 1. Body: swap cream for neutral — orange owns the warmth */
+    html, body {
+      background: #F5F5F5 !important;
+      background-image: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px) !important;
+      background-size: 22px 22px !important;
+      color: #1C1917 !important;
+    }
+    .gd-shell { background: #F5F5F5 !important; }
+    .login-shell, .auth-shell {
+      background: linear-gradient(180deg, #fff 0%, #F5F5F5 70%) !important;
+    }
+
+    /* 2. Header gradient: committed orange, no coral fade */
+    #screen-main > .gd-header .gd-inner {
+      background: linear-gradient(135deg, #FB923C 0%, #F97316 38%, #EA580C 72%, #C2410C 100%) !important;
+      box-shadow: 0 8px 28px rgba(194, 65, 12, 0.28), inset 0 1px 0 rgba(255,255,255,0.18) !important;
+    }
+
+    /* 3. Hero stats in header: bigger numbers */
+    #hero-stat-available,
+    #hero-stat-borrowed,
+    #hero-stat-overdue {
+      font-size: 22px !important;
+      font-weight: 800 !important;
+      letter-spacing: -0.02em !important;
+    }
+
+    /* 4. KPI numbers: dramatic scale jump */
+    .kpi-number, .kpi-value, .stat-number {
+      font-size: 44px !important;
+      font-weight: 700 !important;
+      line-height: 1 !important;
+      letter-spacing: -0.03em !important;
+    }
+    .kpi-label, .stat-label {
+      font-size: 11px !important;
+      font-weight: 500 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.05em !important;
+    }
+    /* Compact KPI grid: slightly less extreme in dense grids */
+    .dash-kpi-grid .kpi-number {
+      font-size: 36px !important;
+    }
+    .eq-kpi-strip .eq-kpi-val {
+      font-size: 26px !important;
+      font-weight: 800 !important;
+      letter-spacing: -0.03em !important;
+    }
+
+    /* 5. Primary KPI card (orange class) -> full orange surface */
+    .kpi-card.orange {
+      background: linear-gradient(135deg, #FB923C 0%, #F97316 45%, #EA580C 100%) !important;
+      border-color: #C2410C !important;
+      box-shadow: 0 6px 20px rgba(194, 65, 12, 0.25) !important;
+    }
+    .kpi-card.orange .kpi-number { color: #fff !important; }
+    .kpi-card.orange .kpi-label  { color: rgba(255,255,255,0.82) !important; }
+    .kpi-card.orange i[data-lucide],
+    .kpi-card.orange svg { stroke: rgba(255,255,255,0.9) !important; color: rgba(255,255,255,0.9) !important; }
+    .kpi-card.orange > div:first-child {
+      background: rgba(255,255,255,0.22) !important;
+      border: 1px solid rgba(255,255,255,0.3) !important;
+    }
+    .kpi-card.orange:hover {
+      box-shadow: 0 10px 28px rgba(194, 65, 12, 0.35) !important;
+      transform: translateY(-3px) !important;
+    }
+    .kpi-card.orange:hover .kpi-number { color: #fff !important; }
+
+    /* 6. Page titles: more authority */
+    .page-title {
+      font-size: 26px !important;
+      font-weight: 700 !important;
+      letter-spacing: -0.02em !important;
+      color: #1C1917 !important;
+    }
+
+    /* 7. Section titles: clearer hierarchy */
+    .section-title {
+      font-size: 18px !important;
+      font-weight: 700 !important;
+      letter-spacing: -0.01em !important;
+      color: #1C1917 !important;
+    }
+
+    /* 8. Primary button: stronger presence */
+    .gd-btn-primary, .btn-primary {
+      height: 42px !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      padding: 0 18px !important;
+    }
+
+    /* 9. Bottom nav active: full pill, not a hairline */
+    .bn-item.active::before {
+      top: 8px !important;
+      height: calc(100% - 16px) !important;
+      width: 60px !important;
+      border-radius: 12px !important;
+      background: rgba(249, 115, 22, 0.14) !important;
+      box-shadow: none !important;
+    }
+    .bn-item.active { color: #EA580C !important; }
+    .bn-item .bn-label { font-size: 11px !important; font-weight: 600 !important; }
+
+    /* 10. Auth screen: confident brand entry */
+    .auth-brand > div:first-child {
+      width: 56px !important;
+      height: 56px !important;
+      border-radius: 16px !important;
+      box-shadow: 0 8px 24px rgba(249, 115, 22, 0.35), 0 2px 8px rgba(0,0,0,0.12) !important;
+    }
+    .auth-brand > div:first-child span { font-size: 20px !important; }
+    .auth-brand > p {
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      color: #1C1917 !important;
+    }
+    .auth-card::before {
+      height: 5px !important;
+      background: linear-gradient(90deg, #FB923C 0%, #F97316 45%, #EA580C 100%) !important;
+    }
+    .auth-card h1 {
+      font-size: 22px !important;
+      font-weight: 700 !important;
+      color: #1C1917 !important;
+      letter-spacing: -0.02em !important;
+    }
+
+    /* 11. Tab active: stronger weight */
+    .top-tab.active {
+      font-weight: 700 !important;
+      border-bottom-width: 3px !important;
+    }
+
+    /* 12. Desktop sidebar active item */
+    .sb-item.active {
+      background: linear-gradient(90deg, #FFF7ED 0%, #FFFBF7 100%) !important;
+      border-left: 3px solid #F97316 !important;
+      color: #C2410C !important;
+      font-weight: 700 !important;
+    }
+
+    /* 13. Card hover: stronger orange hint */
+    .gd-card:hover, .card:hover {
+      border-color: rgba(249, 115, 22, 0.35) !important;
+      box-shadow: 0 8px 24px rgba(249, 115, 22, 0.10), 0 2px 8px rgba(0,0,0,0.06) !important;
+    }
+
+    /* 14. Active filter chip: higher contrast */
+    .chip.active, .filter-chip.active {
+      background: linear-gradient(135deg, #F97316 0%, #EA580C 100%) !important;
+      color: #fff !important;
+      font-weight: 700 !important;
+      box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35) !important;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .kpi-card, .gd-card, .card, .chip, .bn-item { transition: none !important; }
+      .kpi-card:hover, .gd-card:hover, .card:hover { transform: none !important; }
+    }
+  </style>
+
 </head>
 
 
