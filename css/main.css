@@ -547,21 +547,34 @@
       gap: 4px;
     }
     .top-tab {
-      height: 36px;
-      padding: 0 16px;
-      font-size: 0.875rem;
-      font-weight: 500;
-      border-radius: 10px;
-      color: #64748B;
+      height: auto;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.25;
+      color: #6B5B4F;
       border: 0;
+      border-radius: 999px;
       background: transparent;
+      box-shadow: none;
+      margin-bottom: 0;
       display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
     }
     .top-tab.active {
-      color: #0F172A;
-      background: white;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      color: #fff;
+      background: linear-gradient(135deg, #F97316, #EA580C);
+      box-shadow: 0 2px 8px rgba(249, 115, 22, 0.28);
+      border-bottom: 0;
+      font-weight: 700;
     }
+    .top-tab:not(.active):hover {
+      color: var(--mf-orange-d);
+      background: #FFF1E6;
+      transition: background 0.2s ease;
+    }
+    
     .top-tab.active::after { display: none; }
 
     /* ── In-header tab bar (compat) ───────────────────── */
@@ -659,10 +672,8 @@
     .top-tabs-inner {
       display: inline-flex !important; gap: 8px !important; padding: 6px !important; background: #F1F5F9 !important; border-radius: 12px !important; margin-bottom: 24px !important;
     }
-    .top-tab {
-      height: 36px !important; padding: 0 16px !important; font-size: 0.875rem !important; font-weight: 500 !important; border-radius: 10px !important; color: #64748B !important; background: transparent !important; display: flex !important; align-items: center !important; justify-content: center !important; transition: all .15s ease !important; border: 0 !important;
-    }
-    .top-tab.active, .tab-active { color: #0F172A !important; background: white !important; box-shadow: 0 1px 2px rgba(0,0,0,0.06) !important; }
+    
+    .tab-active { color: #0F172A !important; background: white !important; box-shadow: 0 1px 2px rgba(0,0,0,0.06) !important; }
     .ga-list-container { max-width: 880px !important; margin-left: auto !important; margin-right: auto !important; }
     .gd-card, .card {
       background: white !important; border: 1px solid #E2E8F0 !important; border-radius: var(--radius-card) !important; padding: 20px 24px !important; min-height: 72px !important; box-shadow: var(--shadow-card) !important; transition: all .15s ease !important;
@@ -689,10 +700,6 @@
     .user-card:focus-visible,
     .top-tab:focus-visible,
     .bn-item:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2); }
-
-    .top-tab { transition: var(--tx-all) !important; cursor: pointer; }
-    .top-tab:not(.active):hover { background: #E2E8F0 !important; }
-    .top-tab.active { box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important; }
 
     .gd-card, .card {
       transition: var(--tx-all) !important;
@@ -1236,27 +1243,6 @@
       width: 100% !important;
       margin-bottom: 0 !important;
     }
-    .top-tab {
-      border-radius: 0 !important;
-      height: 42px !important;
-      border-bottom: 2px solid transparent !important;
-      margin-bottom: -1.5px !important;
-      font-weight: 500 !important;
-      color: #64748B !important;
-      background: transparent !important;
-      box-shadow: none !important;
-    }
-    .top-tab.active {
-      color: #f97316 !important;
-      border-bottom: 2px solid #f97316 !important;
-      background: transparent !important;
-      box-shadow: none !important;
-      font-weight: 500 !important;
-    }
-    .top-tab:not(.active):hover {
-      color: #334155 !important;
-      background: rgba(0,0,0,0.04) !important;
-    }
 
 /* ── block 12 ── */
     /* ═══════════════════════════════════════════════════════
@@ -1578,29 +1564,6 @@
       gap: 4px !important;
       width: auto !important;
       box-shadow: var(--mf-shadow-sm) !important;
-    }
-    .top-tab {
-      height: 36px !important;
-      padding: 0 16px !important;
-      font-size: 13px !important;
-      font-weight: 500 !important;
-      color: var(--mf-text-2) !important;
-      background: transparent !important;
-      border: 0 !important;
-      border-radius: 10px !important;
-      box-shadow: none !important;
-      margin-bottom: 0 !important;
-    }
-    .top-tab:hover:not(.active) {
-      color: var(--mf-orange-d) !important;
-      background: var(--mf-hover) !important;
-    }
-    .top-tab.active {
-      color: #fff !important;
-      background: var(--mf-hero-grad) !important;
-      border-bottom: 0 !important;
-      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.30) !important;
-      font-weight: 600 !important;
     }
 
     /* ── Cards ───────────────────────────────────────────── */
@@ -2048,20 +2011,6 @@
       max-width: 100% !important;
       box-shadow: none !important;
     }
-    .top-tab {
-      padding: 7px 16px !important;
-      font-size: 13px !important;
-      font-weight: 600 !important;
-      color: #6B5B4F !important;
-      border-radius: 999px !important;
-      transition: all .15s ease !important;
-      height: auto !important;
-    }
-    .top-tab.active {
-      background: linear-gradient(135deg,#F97316,#EA580C) !important;
-      color: #fff !important;
-      box-shadow: 0 2px 8px rgba(249,115,22,0.28) !important;
-    }
 
     @media (max-width: 600px) {
       #screen-main > .gd-header.app-header {
@@ -2243,10 +2192,6 @@
       height: 48px !important;
     }
 
-    .top-tab:not(.active):hover {
-      background: #FFF0E8 !important;
-      transition: background 0.2s ease;
-    }
     .bottom-nav .nav-item:not(.active):hover,
     .bottom-nav .bn-item:not(.active):hover {
       background: #FFF0E8;
@@ -2391,26 +2336,6 @@
       background: #FFFFFF !important;
       max-width: fit-content !important;
       margin-bottom: 0 !important;
-    }
-
-    .top-tab {
-      padding: 7px 16px !important;
-      font-size: 13px !important;
-      font-weight: 600 !important;
-      line-height: 1.25 !important;
-      color: #6B5B4F !important;
-      border-radius: 999px !important;
-      transition: all 0.15s ease !important;
-    }
-
-    .top-tab.active {
-      background: linear-gradient(135deg, #F97316, #EA580C) !important;
-      color: #fff !important;
-      box-shadow: 0 2px 8px rgba(249, 115, 22, 0.28) !important;
-    }
-
-    .top-tab:hover:not(.active) {
-      background: #FFF1E6 !important;
     }
 
     @media (max-width: 600px) {
@@ -2680,10 +2605,6 @@
     }
 
     /* 11. Tab active: stronger weight */
-    .top-tab.active {
-      font-weight: 700 !important;
-      border-bottom-width: 3px !important;
-    }
 
     /* 12. Desktop sidebar active item */
     .sb-item.active {
