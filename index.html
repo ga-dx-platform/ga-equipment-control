@@ -156,6 +156,7 @@
       background: var(--bg-page);
       background-image: radial-gradient(rgba(15,23,42,0.055) 1px, transparent 1px);
       background-size: 20px 20px;
+      overscroll-behavior: none;
     }
     body { font-family: 'Prompt', sans-serif; }
     *, *::before, *::after { box-sizing: border-box; }
@@ -509,7 +510,7 @@
     }
 
     /* ── Login ────────────────────────────────────────── */
-    .login-shell { min-height: 100%; background: linear-gradient(180deg, #f8fbff 0%, var(--bg-page) 56%); }
+    .login-shell { min-height: 100%; background: linear-gradient(180deg, #f8fbff 0%, var(--bg-page) 56%); overscroll-behavior-y: contain; }
     .auth-shell {
       min-height: 100vh;
       padding: 14px 16px 24px;
@@ -1065,7 +1066,7 @@
     .analytics-kpi.tint-green  { background:linear-gradient(135deg,#ecfdf5 0%,#fff 60%); border-color:#a7f3d0; }
     .analytics-kpi.tint-blue   { background:linear-gradient(135deg,#eff6ff 0%,#fff 60%); border-color:#bfdbfe; }
     .analytics-kpi.danger      { background:linear-gradient(135deg,#fff1f2 0%,#fff 60%); border-color:#fecdd3; }
-    .kpi-label { font-size:11px; color:#a8a29e; }
+    .kpi-label { font-size:11px; color:#78716c; }
     .kpi-label.red { color:#DC6B19; }
     .kpi-value { font-size:28px; font-weight:600; line-height:1; color:#1c1917; font-family:'Prompt', sans-serif; }
     .kpi-value.orange { color:#f97316; }
@@ -1288,7 +1289,7 @@
       .dash-kpi-grid { grid-template-columns: repeat(4, 1fr); gap: 14px; }
     }
     .dash-kpi-grid .kpi-card { padding: 14px !important; min-height: 0 !important; height: auto !important; }
-    .kpi-label { font-size: 11px !important; color: #a8a29e !important; margin-top: 6px !important; padding-top: 0 !important; }
+    .kpi-label { font-size: 11px !important; color: #78716c !important; margin-top: 6px !important; padding-top: 0 !important; }
 
     /* 4 ── Top tabs underline style */
     .top-tabs-inner {
@@ -1745,7 +1746,7 @@
       border-color: var(--mf-border) !important;
     }
     .kpi-card:hover .kpi-number { color: var(--mf-orange-d) !important; }
-    .kpi-label { color: var(--mf-text-3) !important; font-size: 12px !important; }
+    .kpi-label { color: #78716c !important; font-size: 12px !important; }
     .kpi-icon-wrap {
       background: var(--mf-hover) !important;
       color: var(--mf-orange-d) !important;
@@ -2018,7 +2019,8 @@
     .eq-stock-fill {
       height: 100%; border-radius: 999px;
       background: linear-gradient(90deg, #F97316, #FB923C);
-      transition: width .3s ease;
+      transition: transform .3s ease;
+      transform-origin: left;
     }
     .eq-stock-fill.low  { background: linear-gradient(90deg, #D97706, #F59E0B); }
     .eq-stock-fill.out  { background: linear-gradient(90deg, #B91C1C, #DC6B19); }
@@ -2143,9 +2145,7 @@
     .legend-dot.amber { background: #F59E0B; }
     .legend-dot.red   { background: #DC6B19; }
 
-    .tab-content {
-      animation: fadeIn 0.15s ease;
-    }
+    /* .tab-content animation removed — children use .fade-in directly */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -2174,7 +2174,7 @@
       100% { transform: scale(1); }
     }
 
-    .progress-bar { transition: width 0.6s ease; }
+    .progress-bar { transition: transform 0.6s ease; transform-origin: left; }
     .progress-bar.high   { background: #10B981 !important; }
     .progress-bar.medium { background: #F59E0B !important; }
     .progress-bar.low    { background: #DC6B19 !important; }
@@ -2285,9 +2285,7 @@
     .legend-dot.amber { background: #F59E0B; }
     .legend-dot.red   { background: #DC6B19; }
 
-    .tab-content {
-      animation: fadeIn 0.15s ease;
-    }
+    /* .tab-content animation removed — children use .fade-in directly */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -2316,7 +2314,7 @@
       100% { transform: scale(1); }
     }
 
-    .progress-bar { transition: width 0.6s ease; }
+    .progress-bar { transition: transform 0.6s ease; transform-origin: left; }
     .progress-bar.high   { background: #10B981 !important; }
     .progress-bar.medium { background: #F59E0B !important; }
     .progress-bar.low    { background: #DC6B19 !important; }
@@ -2460,9 +2458,7 @@
     .legend-dot.amber { background: #F59E0B; }
     .legend-dot.red   { background: #DC6B19; }
 
-    .tab-content {
-      animation: fadeIn 0.15s ease;
-    }
+    /* .tab-content animation removed — children use .fade-in directly */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -2491,7 +2487,7 @@
       100% { transform: scale(1); }
     }
 
-    .progress-bar { transition: width 0.6s ease; }
+    .progress-bar { transition: transform 0.6s ease; transform-origin: left; }
     .progress-bar.high   { background: #10B981 !important; }
     .progress-bar.medium { background: #F59E0B !important; }
     .progress-bar.low    { background: #DC6B19 !important; }
@@ -2548,449 +2544,6 @@
     }
     .user-list-item:hover {
       background: #FFF5F0 !important;
-    }
-
-
-  </style>
-  <style>
-    /* MeetFlow compact topbar rebalance */
-    body,
-    .gd-shell,
-    #app-root {
-      background: #FFF8F4 !important;
-    }
-
-    #screen-main > .gd-header.app-header {
-      position: sticky !important;
-      top: 0 !important;
-      z-index: 20 !important;
-      padding: 12px 20px 0 !important;
-      background: transparent !important;
-      border: 0 !important;
-      box-shadow: none !important;
-    }
-    #screen-main > .gd-header.app-header .gd-inner {
-      background: linear-gradient(120deg, #F97316 0%, #FB7B53 45%, #FB8A7A 100%) !important;
-      border-radius: 16px !important;
-      padding: 14px 20px !important;
-      box-shadow: 0 6px 18px rgba(249,115,22,0.16), inset 0 1px 0 rgba(255,255,255,0.18) !important;
-    }
-    #screen-main > .gd-header.app-header #main-avatar {
-      width: 40px !important;
-      height: 40px !important;
-      border-radius: 999px !important;
-      background: rgba(255,255,255,0.25) !important;
-      border: 1.5px solid rgba(255,255,255,0.4) !important;
-      color: #fff !important;
-    }
-    #screen-main > .gd-header.app-header #main-greeting {
-      font-size: 11.5px !important;
-      opacity: 0.85 !important;
-      color: rgba(255,255,255,0.92) !important;
-      margin: 0 0 1px !important;
-      line-height: 1.15 !important;
-    }
-    #screen-main > .gd-header.app-header #main-user-name {
-      color: #fff !important;
-      font-size: 15px !important;
-      font-weight: 600 !important;
-      margin: 0 0 2px !important;
-      max-width: 220px !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      white-space: nowrap !important;
-    }
-    #screen-main > .gd-header.app-header #main-user-role {
-      font-size: 10.5px !important;
-      letter-spacing: 0.04em !important;
-      padding: 2px 8px !important;
-      border-radius: 999px !important;
-      background: rgba(255,255,255,0.22) !important;
-      border: 1px solid rgba(255,255,255,0.30) !important;
-      color: #fff !important;
-    }
-    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]) {
-      width: 44px !important;
-      height: 44px !important;
-      border-radius: 10px !important;
-      background: rgba(255,255,255,0.20) !important;
-      border: 1px solid rgba(255,255,255,0.28) !important;
-      color: #fff !important;
-      backdrop-filter: blur(8px) !important;
-      -webkit-backdrop-filter: blur(8px) !important;
-    }
-    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]) svg,
-    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]) i[data-lucide] {
-      width: 14px !important;
-      height: 14px !important;
-      stroke: #fff !important;
-      color: #fff !important;
-    }
-    #screen-main > .gd-header.app-header > svg.header-wave { display: none !important; }
-
-    .top-tabs {
-      padding: 12px 24px 0 !important;
-      background: transparent !important;
-      margin-bottom: 0 !important;
-    }
-    .top-tabs-inner {
-      display: inline-flex !important;
-      gap: 4px !important;
-      background: #FFFFFF !important;
-      border: 1px solid #F1E6DA !important;
-      border-radius: 999px !important;
-      padding: 4px !important;
-      width: fit-content !important;
-      max-width: 100% !important;
-      box-shadow: none !important;
-    }
-    .top-tab {
-      padding: 7px 16px !important;
-      height: auto !important;
-      font-size: 13px !important;
-      font-weight: 600 !important;
-      color: #6B5B4F !important;
-      border-radius: 999px !important;
-      border: 0 !important;
-      margin: 0 !important;
-      transition: all 0.15s ease !important;
-      background: transparent !important;
-    }
-    .top-tab.active {
-      background: linear-gradient(135deg,#F97316,#EA580C) !important;
-      color: #fff !important;
-      box-shadow: 0 2px 8px rgba(249,115,22,0.28) !important;
-    }
-    .top-tab:hover:not(.active) { background: #FFF1E6 !important; }
-
-    @media (max-width: 600px) {
-      #screen-main > .gd-header.app-header {
-        padding: 10px 16px 0 !important;
-      }
-      #screen-main > .gd-header.app-header .gd-inner {
-        padding: 12px 16px !important;
-        border-radius: 14px !important;
-      }
-      #screen-main > .gd-header.app-header #main-user-name {
-        max-width: 145px !important;
-      }
-      .top-tabs {
-        padding: 10px 16px 0 !important;
-      }
-      .top-tabs-inner {
-        overflow-x: auto !important;
-        scrollbar-width: none !important;
-      }
-      .top-tabs-inner::-webkit-scrollbar { display: none !important; }
-    }
-
-    .btn-logout-confirm {
-      background: #EF4444 !important;
-      color: #ffffff !important;
-      border: none !important;
-    }
-    .btn-logout-cancel {
-      background: transparent !important;
-      color: #6B7280 !important;
-      border: 1.5px solid #E5E7EB !important;
-    }
-
-    .audit-filter-pills {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      padding-bottom: 4px;
-      margin-bottom: 20px;
-      padding-right: 8px;
-    }
-    .audit-filter-pills::-webkit-scrollbar { display: none; }
-
-    .section-title {
-      font-weight: 700 !important;
-      font-size: 18px !important;
-      color: #1C1917 !important;
-      text-transform: none !important;
-      letter-spacing: normal !important;
-    }
-    .section-subtitle {
-      color: #9CA3AF !important;
-      font-size: 13px !important;
-    }
-
-    .stat-card {
-      background: #ffffff !important;
-      border: 0.5px solid #E7E5E4 !important;
-    }
-    .kpi-card.danger,
-    .kpi-card.success {
-      background: #ffffff !important;
-      border-color: #E7E5E4 !important;
-    }
-
-    .empty-state-icon-wrap {
-      width: 64px;
-      height: 64px;
-      border-radius: 14px;
-      background: #FFF7ED;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 12px;
-    }
-    .empty-state-icon {
-      width: 64px;
-      height: 64px;
-      color: #FDBA74;
-    }
-    .empty-state-text {
-      color: #9CA3AF;
-      font-size: 14px;
-      margin: 8px 0 16px;
-      line-height: 1.5;
-    }
-
-    .availability-legend {
-      display: flex;
-      gap: 16px;
-      font-size: 11px;
-      color: #A8A29E;
-      margin-bottom: 12px;
-    }
-    .legend-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 4px;
-    }
-    .legend-dot.green { background: #10B981; }
-    .legend-dot.amber { background: #F59E0B; }
-    .legend-dot.red   { background: #DC6B19; }
-
-    .tab-content {
-      animation: fadeIn 0.15s ease;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .card {
-      transition: transform 0.15s ease, box-shadow 0.15s ease !important;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04) !important;
-    }
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06) !important;
-    }
-
-    button {
-      transition: transform 0.1s ease;
-    }
-    button:active { transform: scale(0.97); }
-
-    .pin-dot.filled {
-      animation: pinPulse 0.15s ease;
-    }
-    @keyframes pinPulse {
-      0%   { transform: scale(1); }
-      50%  { transform: scale(1.3); }
-      100% { transform: scale(1); }
-    }
-
-    .progress-bar { transition: width 0.6s ease; }
-    .progress-bar.high   { background: #10B981 !important; }
-    .progress-bar.medium { background: #F59E0B !important; }
-    .progress-bar.low    { background: #DC6B19 !important; }
-
-    .app-header {
-      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-    }
-    #screen-main > .gd-header.app-header {
-      background: linear-gradient(145deg, #f97316, #ea580c) !important;
-      padding: 20px 20px 52px !important;
-      position: relative !important;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.12) !important;
-    }
-    #screen-main > .gd-header.app-header #main-user-name {
-      color: #ffffff !important;
-    }
-    #screen-main > .gd-header.app-header #main-user-role {
-      background: rgba(255,255,255,0.2) !important;
-      border: 1px solid rgba(255,255,255,0.3) !important;
-      color: #ffffff !important;
-      border-radius: 20px !important;
-      padding: 3px 12px !important;
-      font-size: 12px !important;
-    }
-    #main-avatar {
-      background: rgba(255,255,255,0.25) !important;
-      border: 1.5px solid rgba(255,255,255,0.4) !important;
-      color: #ffffff !important;
-      border-radius: 9999px !important;
-    }
-    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]):not(#main-hero-cta) {
-      background: rgba(255,255,255,0.2) !important;
-      border: 1px solid rgba(255,255,255,0.3) !important;
-      color: #ffffff !important;
-      border-radius: 8px !important;
-    }
-    #screen-main > .gd-header > svg.header-wave {
-      display: block !important;
-      height: 48px !important;
-    }
-
-    .top-tab:not(.active):hover {
-      background: #FFF0E8 !important;
-      transition: background 0.2s ease;
-    }
-    .bottom-nav .nav-item:not(.active):hover,
-    .bottom-nav .bn-item:not(.active):hover {
-      background: #FFF0E8;
-      border-radius: 8px;
-    }
-
-    .user-list-item {
-      transition: background 0.15s ease;
-    }
-    .user-list-item:hover {
-      background: #FFF5F0 !important;
-    }
-
-
-  </style>
-  <style>
-    /* MeetFlow compact topbar rebalance */
-    body,
-    .gd-shell,
-    #app-root {
-      background: #FFF8F4 !important;
-    }
-
-    #screen-main > .gd-header.app-header {
-      position: sticky !important;
-      top: 0 !important;
-      z-index: 20 !important;
-      padding: 12px 20px 0 !important;
-      background: transparent !important;
-      border: 0 !important;
-      box-shadow: none !important;
-    }
-    #screen-main > .gd-header.app-header .gd-inner {
-      background: linear-gradient(120deg, #F97316 0%, #FB7B53 45%, #FB8A7A 100%) !important;
-      border-radius: 16px !important;
-      padding: 14px 20px !important;
-      box-shadow: 0 6px 18px rgba(249,115,22,0.16), inset 0 1px 0 rgba(255,255,255,0.18) !important;
-    }
-    #screen-main > .gd-header.app-header #main-avatar {
-      width: 40px !important;
-      height: 40px !important;
-      border-radius: 999px !important;
-      background: rgba(255,255,255,0.25) !important;
-      border: 1.5px solid rgba(255,255,255,0.4) !important;
-      color: #fff !important;
-    }
-    #screen-main > .gd-header.app-header #main-greeting {
-      font-size: 11.5px !important;
-      opacity: 0.85 !important;
-      color: rgba(255,255,255,0.92) !important;
-      margin: 0 0 1px !important;
-      line-height: 1.15 !important;
-    }
-    #screen-main > .gd-header.app-header #main-user-name {
-      color: #fff !important;
-      font-size: 15px !important;
-      font-weight: 600 !important;
-      margin: 0 0 2px !important;
-      max-width: 220px !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      white-space: nowrap !important;
-    }
-    #screen-main > .gd-header.app-header #main-user-role {
-      font-size: 10.5px !important;
-      letter-spacing: 0.04em !important;
-      padding: 2px 8px !important;
-      border-radius: 999px !important;
-      background: rgba(255,255,255,0.22) !important;
-      border: 1px solid rgba(255,255,255,0.30) !important;
-      color: #fff !important;
-    }
-    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]):not(#main-hero-cta) {
-      width: 44px !important;
-      height: 44px !important;
-      border-radius: 10px !important;
-      background: rgba(255,255,255,0.20) !important;
-      border: 1px solid rgba(255,255,255,0.28) !important;
-      color: #fff !important;
-      backdrop-filter: blur(8px) !important;
-      -webkit-backdrop-filter: blur(8px) !important;
-    }
-    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]) svg,
-    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]) i[data-lucide] {
-      width: 14px !important;
-      height: 14px !important;
-      stroke: #fff !important;
-      color: #fff !important;
-    }
-    #screen-main > .gd-header.app-header > svg.header-wave { display: none !important; }
-
-    .top-tabs {
-      padding: 12px 24px 0 !important;
-      background: transparent !important;
-      margin-bottom: 0 !important;
-    }
-    .top-tabs-inner {
-      display: inline-flex !important;
-      gap: 4px !important;
-      background: #FFFFFF !important;
-      border: 1px solid #F1E6DA !important;
-      border-radius: 999px !important;
-      padding: 4px !important;
-      width: fit-content !important;
-      max-width: 100% !important;
-      box-shadow: none !important;
-    }
-    .top-tab {
-      padding: 7px 16px !important;
-      height: auto !important;
-      font-size: 13px !important;
-      font-weight: 600 !important;
-      color: #6B5B4F !important;
-      border-radius: 999px !important;
-      border: 0 !important;
-      margin: 0 !important;
-      transition: all 0.15s ease !important;
-      background: transparent !important;
-    }
-    .top-tab.active {
-      background: linear-gradient(135deg,#F97316,#EA580C) !important;
-      color: #fff !important;
-      box-shadow: 0 2px 8px rgba(249,115,22,0.28) !important;
-    }
-    .top-tab:hover:not(.active) { background: #FFF1E6 !important; }
-
-    @media (max-width: 600px) {
-      #screen-main > .gd-header.app-header {
-        padding: 10px 16px 0 !important;
-      }
-      #screen-main > .gd-header.app-header .gd-inner {
-        padding: 12px 16px !important;
-        border-radius: 14px !important;
-      }
-      #screen-main > .gd-header.app-header #main-user-name {
-        max-width: 145px !important;
-      }
-      .top-tabs {
-        padding: 10px 16px 0 !important;
-      }
-      .top-tabs-inner {
-        overflow-x: auto !important;
-        scrollbar-width: none !important;
-      }
-      .top-tabs-inner::-webkit-scrollbar { display: none !important; }
     }
 
 
@@ -3225,9 +2778,7 @@
     .legend-dot.amber { background: #F59E0B; }
     .legend-dot.red   { background: #DC6B19; }
 
-    .tab-content {
-      animation: fadeIn 0.15s ease;
-    }
+    /* .tab-content animation removed — children use .fade-in directly */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -3256,7 +2807,7 @@
       100% { transform: scale(1); }
     }
 
-    .progress-bar { transition: width 0.6s ease; }
+    .progress-bar { transition: transform 0.6s ease; transform-origin: left; }
     .progress-bar.high   { background: #10B981 !important; }
     .progress-bar.medium { background: #F59E0B !important; }
     .progress-bar.low    { background: #DC6B19 !important; }
@@ -3313,287 +2864,6 @@
     }
     .user-list-item:hover {
       background: #FFF5F0 !important;
-    }
-
-
-  </style>
-  <style>
-    /* MeetFlow compact topbar rebalance */
-    body,
-    .gd-shell,
-    #app-root {
-      background: #FFF8F4 !important;
-    }
-
-    #screen-main > .gd-header.app-header {
-      position: sticky !important;
-      top: 0 !important;
-      z-index: 20 !important;
-      padding: 12px 20px 0 !important;
-      background: transparent !important;
-      border: 0 !important;
-      box-shadow: none !important;
-    }
-    #screen-main > .gd-header.app-header .gd-inner {
-      background: linear-gradient(120deg, #F97316 0%, #FB7B53 45%, #FB8A7A 100%) !important;
-      border-radius: 16px !important;
-      padding: 14px 20px !important;
-      box-shadow: 0 6px 18px rgba(249,115,22,0.16), inset 0 1px 0 rgba(255,255,255,0.18) !important;
-    }
-    #screen-main > .gd-header.app-header #main-avatar {
-      width: 40px !important;
-      height: 40px !important;
-      border-radius: 999px !important;
-      background: rgba(255,255,255,0.25) !important;
-      border: 1.5px solid rgba(255,255,255,0.4) !important;
-      color: #fff !important;
-    }
-    #screen-main > .gd-header.app-header #main-greeting {
-      font-size: 11.5px !important;
-      opacity: 0.85 !important;
-      color: rgba(255,255,255,0.92) !important;
-      margin: 0 0 1px !important;
-      line-height: 1.15 !important;
-    }
-    #screen-main > .gd-header.app-header #main-user-name {
-      color: #fff !important;
-      font-size: 15px !important;
-      font-weight: 600 !important;
-      margin: 0 0 2px !important;
-      max-width: 220px !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      white-space: nowrap !important;
-    }
-    #screen-main > .gd-header.app-header #main-user-role {
-      font-size: 10.5px !important;
-      letter-spacing: 0.04em !important;
-      padding: 2px 8px !important;
-      border-radius: 999px !important;
-      background: rgba(255,255,255,0.22) !important;
-      border: 1px solid rgba(255,255,255,0.30) !important;
-      color: #fff !important;
-    }
-    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]):not(#main-hero-cta) {
-      width: 44px !important;
-      height: 44px !important;
-      border-radius: 10px !important;
-      background: rgba(255,255,255,0.20) !important;
-      border: 1px solid rgba(255,255,255,0.28) !important;
-      color: #fff !important;
-      backdrop-filter: blur(8px) !important;
-      -webkit-backdrop-filter: blur(8px) !important;
-    }
-    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]) svg,
-    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]) i[data-lucide] {
-      width: 14px !important;
-      height: 14px !important;
-      stroke: #fff !important;
-      color: #fff !important;
-    }
-    #screen-main > .gd-header.app-header > svg.header-wave { display: none !important; }
-
-    .top-tabs {
-      padding: 12px 24px 0 !important;
-      background: transparent !important;
-      margin-bottom: 0 !important;
-    }
-    .top-tabs-inner {
-      display: inline-flex !important;
-      gap: 4px !important;
-      background: #FFFFFF !important;
-      border: 1px solid #F1E6DA !important;
-      border-radius: 999px !important;
-      padding: 4px !important;
-      width: fit-content !important;
-      max-width: 100% !important;
-      box-shadow: none !important;
-    }
-    .top-tab {
-      padding: 7px 16px !important;
-      height: auto !important;
-      font-size: 13px !important;
-      font-weight: 600 !important;
-      color: #6B5B4F !important;
-      border-radius: 999px !important;
-      border: 0 !important;
-      margin: 0 !important;
-      transition: all 0.15s ease !important;
-      background: transparent !important;
-    }
-    .top-tab.active {
-      background: linear-gradient(135deg,#F97316,#EA580C) !important;
-      color: #fff !important;
-      box-shadow: 0 2px 8px rgba(249,115,22,0.28) !important;
-    }
-    .top-tab:hover:not(.active) { background: #FFF1E6 !important; }
-
-    @media (max-width: 600px) {
-      #screen-main > .gd-header.app-header {
-        padding: 10px 16px 0 !important;
-      }
-      #screen-main > .gd-header.app-header .gd-inner {
-        padding: 12px 16px !important;
-        border-radius: 14px !important;
-      }
-      #screen-main > .gd-header.app-header #main-user-name {
-        max-width: 145px !important;
-      }
-      .top-tabs {
-        padding: 10px 16px 0 !important;
-      }
-      .top-tabs-inner {
-        overflow-x: auto !important;
-        scrollbar-width: none !important;
-      }
-      .top-tabs-inner::-webkit-scrollbar { display: none !important; }
-    }
-
-
-  </style>
-  <style>
-    /* Hero banner topbar (final override) */
-    #screen-main {
-      background: #FFF8F4 !important;
-    }
-    #screen-main > .gd-header.app-header {
-      position: sticky !important;
-      top: 0 !important;
-      z-index: 20 !important;
-      padding: 10px 20px 0 !important;
-      background: #FFF8F4 !important;
-    }
-    #screen-main > .gd-header.app-header .gd-inner {
-      background: linear-gradient(120deg, #F97316 0%, #FB7B53 45%, #FB8A7A 100%) !important;
-      border-radius: 16px !important;
-      padding: 14px 20px !important;
-      min-height: 92px !important;
-      box-shadow: 0 6px 18px rgba(249,115,22,0.16), inset 0 1px 0 rgba(255,255,255,0.18) !important;
-      overflow: visible !important;
-    }
-    #screen-main > .gd-header > svg.header-wave {
-      display: none !important;
-    }
-    #main-avatar {
-      width: 40px !important;
-      height: 40px !important;
-      background: rgba(255,255,255,0.25) !important;
-      border: 1.5px solid rgba(255,255,255,0.4) !important;
-      color: #fff !important;
-      box-shadow: none !important;
-    }
-    #main-greeting {
-      margin: 0 0 1px !important;
-      font-size: 11.5px !important;
-      color: rgba(255,255,255,0.92) !important;
-      opacity: 0.85 !important;
-      line-height: 1.2 !important;
-    }
-    #main-summary {
-      margin: 0 0 2px !important;
-      font-size: 11px !important;
-      color: rgba(255,255,255,0.90) !important;
-      line-height: 1.2 !important;
-      max-width: 360px !important;
-      white-space: nowrap !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-    }
-    #screen-main > .gd-header.app-header #main-user-name {
-      font-size: 15px !important;
-      font-weight: 600 !important;
-      color: #fff !important;
-      margin: 0 0 2px !important;
-      white-space: nowrap !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      max-width: 260px !important;
-    }
-    #screen-main > .gd-header.app-header #main-user-role {
-      font-size: 10.5px !important;
-      letter-spacing: .04em !important;
-      color: #fff !important;
-      border-radius: 999px !important;
-      padding: 2px 8px !important;
-      background: rgba(255,255,255,0.22) !important;
-      border: 1px solid rgba(255,255,255,0.30) !important;
-    }
-    #main-hero-cta {
-      height: 32px !important;
-      min-width: 78px !important;
-      border-radius: 10px !important;
-      background: rgba(255,255,255,0.20) !important;
-      border: 1px solid rgba(255,255,255,0.28) !important;
-      backdrop-filter: blur(8px) !important;
-      color: #fff !important;
-      white-space: nowrap !important;
-    }
-    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]):not(#main-hero-cta) {
-      width: 44px !important;
-      height: 44px !important;
-      border-radius: 10px !important;
-      background: rgba(255,255,255,0.20) !important;
-      border: 1px solid rgba(255,255,255,0.28) !important;
-      backdrop-filter: blur(8px) !important;
-      color: #fff !important;
-    }
-    #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]):not(#main-hero-cta) svg {
-      width: 14px !important;
-      height: 14px !important;
-    }
-    .top-tabs {
-      padding: 12px 24px 0 !important;
-      margin-bottom: 10px !important;
-    }
-    .top-tabs-inner {
-      background: #fff !important;
-      border: 1px solid #F1E6DA !important;
-      border-radius: 999px !important;
-      padding: 4px !important;
-      gap: 4px !important;
-      width: fit-content !important;
-      max-width: 100% !important;
-      box-shadow: none !important;
-    }
-    .top-tab {
-      padding: 7px 16px !important;
-      font-size: 13px !important;
-      font-weight: 600 !important;
-      color: #6B5B4F !important;
-      border-radius: 999px !important;
-      transition: all .15s ease !important;
-      height: auto !important;
-    }
-    .top-tab.active {
-      background: linear-gradient(135deg,#F97316,#EA580C) !important;
-      color: #fff !important;
-      box-shadow: 0 2px 8px rgba(249,115,22,0.28) !important;
-    }
-    .top-tab:hover:not(.active) {
-      background: #FFF1E6 !important;
-    }
-    @media (max-width: 600px) {
-      #screen-main > .gd-header.app-header {
-        padding: 8px 12px 0 !important;
-      }
-      #screen-main > .gd-header.app-header .gd-inner {
-        padding: 12px 16px !important;
-        min-height: 82px !important;
-      }
-      #screen-main > .gd-header.app-header #main-user-name {
-        max-width: 140px !important;
-      }
-      #main-summary {
-        max-width: 190px !important;
-      }
-      .top-tabs {
-        padding: 10px 12px 0 !important;
-      }
-      .top-tabs-inner {
-        overflow-x: auto !important;
-        scrollbar-width: none !important;
-      }
-      .top-tabs-inner::-webkit-scrollbar { display: none !important; }
     }
 
 
@@ -3675,10 +2945,10 @@
     }
 
     #screen-main > .gd-header.app-header button:not([onclick*="goScreen"]):not(#main-hero-cta) {
-      width: 36px !important;
-      height: 36px !important;
-      min-width: 36px !important;
-      min-height: 36px !important;
+      width: 44px !important;
+      height: 44px !important;
+      min-width: 44px !important;
+      min-height: 44px !important;
       padding: 0 !important;
       border-radius: 10px !important;
       border: 1px solid rgba(255, 255, 255, 0.28) !important;
@@ -3952,7 +3222,7 @@
       box-shadow: 0 6px 20px rgba(194, 65, 12, 0.25) !important;
     }
     .kpi-card.orange .kpi-number { color: #fff !important; }
-    .kpi-card.orange .kpi-label  { color: rgba(255,255,255,0.82) !important; }
+    .kpi-card.orange .kpi-label  { color: #fff !important; text-shadow: 0 1px 3px rgba(0,0,0,0.32) !important; }
     .kpi-card.orange i[data-lucide],
     .kpi-card.orange svg { stroke: rgba(255,255,255,0.9) !important; color: rgba(255,255,255,0.9) !important; }
     .kpi-card.orange > div:first-child {
@@ -4138,8 +3408,8 @@
             </div>
             <div class="auth-card fade-in">
               <div class="text-center mb-8">
-                <h1 style="font-size:var(--fs-page-title);font-weight:600;color:var(--text-primary);margin:0 0 10px;font-family:'Prompt', sans-serif;">เข้าสู่ระบบ</h1>
-                <p style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Prompt', sans-serif;">ระบบยืม-คืนอุปกรณ์สำนักงาน GA</p>
+                <h1 style="font-size:var(--fs-page-title);font-weight:700;color:var(--text-primary);margin:0 0 6px;font-family:'Prompt', sans-serif;">ยินดีต้อนรับ</h1>
+                <p style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Prompt', sans-serif;">เลือกบัญชีเพื่อเข้าใช้งาน</p>
               </div>
               <div class="mb-6">
                 <p class="section-title mb-3">เลือกผู้ใช้งาน</p>
@@ -4169,7 +3439,7 @@
               <p style="margin:0;font-size:14px;font-weight:600;color:#0f172a;font-family:'Prompt', sans-serif;">Equipment Control</p>
             </div>
             <div class="auth-card fade-in" style="position:relative;">
-              <button onclick="goScreen('login')"
+              <button onclick="goScreen('login')" aria-label="ย้อนกลับ"
                 style="position:absolute;top:18px;left:18px;width:44px;height:44px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;">
                 <i data-lucide="arrow-left" style="width:16px;height:16px;color:#334155;"></i>
               </button>
@@ -4192,23 +3462,23 @@
                  style="height:20px;text-align:center;font-size:var(--fs-secondary);color:#DC6B19;margin-bottom:20px;font-family:'Prompt', sans-serif;"></div>
             <!-- Numpad -->
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:260px;margin:0 auto;">
-              <div class="numpad-key" onclick="enterPin('1')">1</div>
-              <div class="numpad-key" onclick="enterPin('2')">2</div>
-              <div class="numpad-key" onclick="enterPin('3')">3</div>
-              <div class="numpad-key" onclick="enterPin('4')">4</div>
-              <div class="numpad-key" onclick="enterPin('5')">5</div>
-              <div class="numpad-key" onclick="enterPin('6')">6</div>
-              <div class="numpad-key" onclick="enterPin('7')">7</div>
-              <div class="numpad-key" onclick="enterPin('8')">8</div>
-              <div class="numpad-key" onclick="enterPin('9')">9</div>
-              <div class="numpad-key" style="opacity:0;pointer-events:none;"></div>
-              <div class="numpad-key" onclick="enterPin('0')">0</div>
-              <div class="numpad-key" onclick="deletePin()">
+              <button type="button" class="numpad-key" onclick="enterPin('1')" aria-label="1">1</button>
+              <button type="button" class="numpad-key" onclick="enterPin('2')" aria-label="2">2</button>
+              <button type="button" class="numpad-key" onclick="enterPin('3')" aria-label="3">3</button>
+              <button type="button" class="numpad-key" onclick="enterPin('4')" aria-label="4">4</button>
+              <button type="button" class="numpad-key" onclick="enterPin('5')" aria-label="5">5</button>
+              <button type="button" class="numpad-key" onclick="enterPin('6')" aria-label="6">6</button>
+              <button type="button" class="numpad-key" onclick="enterPin('7')" aria-label="7">7</button>
+              <button type="button" class="numpad-key" onclick="enterPin('8')" aria-label="8">8</button>
+              <button type="button" class="numpad-key" onclick="enterPin('9')" aria-label="9">9</button>
+              <span class="numpad-key" style="opacity:0;pointer-events:none;" aria-hidden="true"></span>
+              <button type="button" class="numpad-key" onclick="enterPin('0')" aria-label="0">0</button>
+              <button type="button" class="numpad-key" onclick="deletePin()" aria-label="ลบ">
                 <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
                   <path d="M8 1H21V15H8L1 8L8 1Z" stroke="#78716c" stroke-width="1.5" stroke-linejoin="round"/>
                   <path d="M13 5.5L18 10.5M18 5.5L13 10.5" stroke="#78716c" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
-              </div>
+              </button>
             </div>
             </div>
             </div>
@@ -4240,27 +3510,28 @@
               </div>
               <!-- Glass action buttons -->
               <div style="display:flex;align-items:center;gap:6px;">
-                <button onclick="openQRScanner()" title="สแกน QR"
-                        style="display:flex;align-items:center;justify-content:center;
+                <button onclick="openQRScanner()" title="สแกน QR" aria-label="สแกน QR Code"
+                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
                                background:#fff;border:1px solid #e2e8f0;color:#475569;
                                border-radius:8px;width:36px;height:36px;padding:0;cursor:pointer;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M17 14h4"/><path d="M14 17v4"/><path d="M17 21h4v-4"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M17 14h4"/><path d="M14 17v4"/><path d="M17 21h4v-4"/></svg>
+                  <span style="font-size:8px;font-weight:600;line-height:1;font-family:'Prompt',sans-serif;">สแกน</span>
                 </button>
-                <button onclick="openChangePinModal()" title="เปลี่ยน PIN"
-                        style="display:flex;align-items:center;justify-content:center;
-                               background:#fff;
-                               border:1px solid #e2e8f0;color:#475569;
-                               border-radius:8px;width:36px;height:36px;padding:0;font-size:13px;
+                <button onclick="openChangePinModal()" title="เปลี่ยน PIN" aria-label="เปลี่ยน PIN"
+                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+                               background:#fff;border:1px solid #e2e8f0;color:#475569;
+                               border-radius:8px;width:36px;height:36px;padding:0;cursor:pointer;
                                font-family:'Prompt', sans-serif;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+                  <span style="font-size:8px;font-weight:600;line-height:1;font-family:'Prompt',sans-serif;">PIN</span>
                 </button>
-                <button onclick="confirmLogout()" title="ออกจากระบบ"
-                        style="display:flex;align-items:center;justify-content:center;
-                               background:#fff;
-                               border:1px solid #e2e8f0;color:#475569;
-                               border-radius:8px;width:36px;height:36px;padding:0;font-size:13px;
+                <button onclick="confirmLogout()" title="ออกจากระบบ" aria-label="ออกจากระบบ"
+                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+                               background:#fff;border:1px solid #e2e8f0;color:#475569;
+                               border-radius:8px;width:36px;height:36px;padding:0;cursor:pointer;
                                font-family:'Prompt', sans-serif;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  <span style="font-size:8px;font-weight:600;line-height:1;font-family:'Prompt',sans-serif;">ออก</span>
                 </button>
               </div>
             </div>
@@ -4272,7 +3543,7 @@
                 </div>
                 <div>
                   <div id="hero-stat-available" style="font-size:16px;font-weight:700;color:#fff;line-height:1;margin-bottom:2px;font-family:'Prompt', sans-serif;">—</div>
-                  <div style="font-size:10px;color:rgba(255,255,255,0.92);line-height:1.2;font-family:'Prompt', sans-serif;">พร้อมใช้งาน</div>
+                  <div style="font-size:12px;font-weight:600;color:#fff;line-height:1.2;font-family:'Prompt', sans-serif;text-shadow:0 1px 4px rgba(0,0,0,0.38);">พร้อมใช้งาน</div>
                 </div>
               </div>
               <div style="width:1px;height:32px;background:rgba(255,255,255,0.38);"></div>
@@ -4282,7 +3553,7 @@
                 </div>
                 <div>
                   <div id="hero-stat-borrowed" style="font-size:16px;font-weight:700;color:#fff;line-height:1;margin-bottom:2px;font-family:'Prompt', sans-serif;">—</div>
-                  <div style="font-size:10px;color:rgba(255,255,255,0.92);line-height:1.2;font-family:'Prompt', sans-serif;">ยืมออกไป</div>
+                  <div style="font-size:12px;font-weight:600;color:#fff;line-height:1.2;font-family:'Prompt', sans-serif;text-shadow:0 1px 4px rgba(0,0,0,0.38);">ยืมออกไป</div>
                 </div>
               </div>
               <div style="width:1px;height:32px;background:rgba(255,255,255,0.38);"></div>
@@ -4292,7 +3563,7 @@
                 </div>
                 <div>
                   <div id="hero-stat-overdue" style="font-size:16px;font-weight:700;color:#fff;line-height:1;margin-bottom:2px;font-family:'Prompt', sans-serif;">—</div>
-                  <div style="font-size:10px;color:rgba(255,255,255,0.92);line-height:1.2;font-family:'Prompt', sans-serif;">เกินกำหนด</div>
+                  <div style="font-size:12px;font-weight:600;color:#fff;line-height:1.2;font-family:'Prompt', sans-serif;text-shadow:0 1px 4px rgba(0,0,0,0.38);">เกินกำหนด</div>
                 </div>
               </div>
             </div>
@@ -4312,11 +3583,11 @@
           <div class="top-tabs-inner" id="top-tabs-inner"></div>
         </div>
         <!-- Overdue Banner -->
-        <div class="gd-inner" style="padding:0 40px;">
+        <div class="gd-inner" style="padding:0 24px;">
           <div id="overdue-banner" style="display:none;margin-top:12px;border-radius:12px;padding:12px 16px;align-items:center;gap:12px;background:#fef2f2;border:1px solid #fecaca;">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC6B19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
             <p id="overdue-banner-text" style="font-size:14px;font-weight:500;color:#b91c1c;flex:1;margin:0;font-family:'Prompt', sans-serif;"></p>
-            <button onclick="document.getElementById('overdue-banner').style.display='none'" style="padding:4px;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#b91c1c;flex-shrink:0;">
+            <button onclick="document.getElementById('overdue-banner').style.display='none'" aria-label="ปิดแจ้งเตือน" style="padding:4px;border-radius:8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#b91c1c;flex-shrink:0;">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             </button>
           </div>
@@ -4342,7 +3613,7 @@
       <!-- BORROW FORM (overlay) -->
       <div id="screen-borrow-form" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--bg-page);">
         <div class="gd-header" style="position:sticky;top:0;z-index:10;padding:14px 16px 16px;display:flex;align-items:center;gap:12px;">
-          <button onclick="closeBorrowForm()"
+          <button onclick="closeBorrowForm()" aria-label="ย้อนกลับ"
                   style="width:32px;height:32px;border-radius:50%;background:#fff;
                          border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;">
             <i data-lucide="arrow-left" style="width:16px;height:16px;color:#334155;"></i>
@@ -4358,7 +3629,7 @@
       <!-- RETURN DETAIL (overlay) -->
       <div id="screen-return-detail" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--bg-page);">
         <div class="gd-header" style="position:sticky;top:0;z-index:10;padding:14px 16px 16px;display:flex;align-items:center;gap:12px;">
-          <button onclick="closeReturnDetail()"
+          <button onclick="closeReturnDetail()" aria-label="ย้อนกลับ"
                   style="width:32px;height:32px;border-radius:50%;background:#fff;
                          border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;">
             <i data-lucide="arrow-left" style="width:16px;height:16px;color:#334155;"></i>
@@ -4376,7 +3647,7 @@
   </div><!-- end app-root -->
 
   <!-- Equipment Modal (Add/Edit) -->
-  <div id="equipModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
+  <div id="equipModal" role="dialog" aria-modal="true" aria-labelledby="equipModalTitle" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
     <div class="absolute inset-0 bg-black/40" onclick="closeEquipModal()"></div>
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:380px;">
       <h3 id="equipModalTitle" class="font-bold text-gray-900 text-lg mb-4">เพิ่มอุปกรณ์</h3>
@@ -4390,7 +3661,7 @@
         <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">Serial No. <span class="font-normal text-gray-400">(ไม่บังคับ)</span></label>
           <input type="text" id="eqSerial" placeholder="เช่น SN-12345" class="gd-input"></div>
         <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">จำนวนทั้งหมด</label>
-          <input type="number" id="eqQty" placeholder="1" min="1" class="gd-input"></div>
+          <input type="number" id="eqQty" placeholder="1" min="1" inputmode="numeric" class="gd-input"></div>
         <div>
           <label class="text-sm font-semibold text-gray-500 mb-1.5 block">รูปอุปกรณ์ <span class="font-normal text-gray-400">(ไม่บังคับ)</span></label>
           <div id="equip-image-preview" class="hidden mt-1 mb-2">
@@ -4411,7 +3682,7 @@
   </div>
 
   <!-- Confirm Dialog -->
-  <div id="confirm-dialog" class="hidden fixed inset-0 z-[300] flex items-center justify-center">
+  <div id="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title" class="hidden fixed inset-0 z-[300] flex items-center justify-center">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
     <div class="relative w-full mx-4" style="max-width:380px;background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(15,23,42,0.15);padding:24px;">
       <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:20px;">
@@ -4435,10 +3706,10 @@
   </div>
 
   <!-- User Modal (Add) -->
-  <div id="userModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
+  <div id="userModal" role="dialog" aria-modal="true" aria-labelledby="userModalTitle" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
     <div class="absolute inset-0 bg-black/40" onclick="closeUserModal()"></div>
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:360px;">
-      <h3 class="font-bold text-gray-900 text-lg mb-4">เพิ่มสมาชิกใหม่</h3>
+      <h3 id="userModalTitle" class="font-bold text-gray-900 text-lg mb-4">เพิ่มสมาชิกใหม่</h3>
       <div class="space-y-3 ">
         <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
           <input type="text" id="newUserName" placeholder="เช่น สมชาย ใจดี" class="gd-input"></div>
@@ -4448,7 +3719,7 @@
             <option value="mgr">ผู้ดูแลระบบ (Manager)</option>
           </select></div>
         <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">รหัส PIN (6 หลัก)</label>
-          <input type="password" id="newUserPin" maxlength="6" placeholder="••••••" class="gd-input text-center tracking-widest font-bold"></div>
+          <input type="password" id="newUserPin" maxlength="6" placeholder="••••••" inputmode="numeric" class="gd-input text-center tracking-widest font-bold"></div>
       </div>
       <div class="flex gap-3 mt-6">
         <button onclick="closeUserModal()" class="flex-1 gd-btn-secondary">ยกเลิก</button>
@@ -4458,10 +3729,10 @@
   </div>
 
   <!-- Add Recipient Modal -->
-  <div id="recipientModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
+  <div id="recipientModal" role="dialog" aria-modal="true" aria-labelledby="recipientModalTitle" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
     <div class="absolute inset-0 bg-black/40" onclick="closeRecipientModal()"></div>
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:360px;">
-      <h3 class="font-bold text-gray-900 text-lg mb-4">เพิ่มผู้รับรายงาน</h3>
+      <h3 id="recipientModalTitle" class="font-bold text-gray-900 text-lg mb-4">เพิ่มผู้รับรายงาน</h3>
       <div class="space-y-3 ">
         <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
           <input type="text" id="recipientName" placeholder="เช่น สมชาย จิตรดี" class="gd-input"></div>
@@ -4476,15 +3747,15 @@
   </div>
 
   <!-- Category Access Modal -->
-  <div id="catModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
+  <div id="catModal" role="dialog" aria-modal="true" aria-labelledby="catModalTitle" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
     <div class="absolute inset-0 bg-black/40" onclick="closeCatModal()"></div>
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto" style="max-width:420px;max-height:90vh;overflow-y:auto;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
         <div>
-          <p style="font-size:15px;font-weight:600;color:#0F172A;margin:0;font-family:'Prompt', sans-serif;">หมวดหมู่ที่เข้าถึงได้</p>
+          <p id="catModalTitle" style="font-size:15px;font-weight:600;color:#0F172A;margin:0;font-family:'Prompt', sans-serif;">หมวดหมู่ที่เข้าถึงได้</p>
           <p id="catModalUserName" style="font-size:13px;color:#64748B;margin:4px 0 0;font-family:'Prompt', sans-serif;"></p>
         </div>
-        <button onclick="closeCatModal()" style="width:32px;height:32px;border-radius:50%;border:1px solid #E2E8F0;background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+        <button onclick="closeCatModal()" aria-label="ปิด" style="width:32px;height:32px;border-radius:50%;border:1px solid #E2E8F0;background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
       </div>
@@ -4510,13 +3781,13 @@
   </div>
 
   <!-- Logout Modal -->
-  <div id="logoutModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
+  <div id="logoutModal" role="dialog" aria-modal="true" aria-labelledby="logoutModalTitle" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
     <div class="absolute inset-0 bg-black/40" onclick="closeLogoutModal()"></div>
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:320px;">
       <div class="flex flex-col items-center text-center mb-5">
         <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-3">
           <i data-lucide="log-out" class="w-[18px] h-[18px] text-[#64748B]"></i></div>
-        <p class="font-semibold text-gray-900 text-base">ออกจากระบบ?</p>
+        <p id="logoutModalTitle" class="font-semibold text-gray-900 text-base">ออกจากระบบ?</p>
       </div>
       <div class="flex gap-3">
         <button onclick="closeLogoutModal()" class="flex-1 py-2.5 btn-logout-cancel">ยกเลิก</button>
@@ -4526,14 +3797,14 @@
   </div>
 
   <!-- Change PIN Modal -->
-  <div id="changePinModal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
+  <div id="changePinModal" role="dialog" aria-modal="true" aria-labelledby="changePinModalTitle" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
     <div class="absolute inset-0 bg-black/40" onclick="closeChangePinModal()"></div>
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:340px;">
       <div class="flex flex-col items-center text-center mb-4">
         <div style="width:48px;height:48px;border-radius:50%;background:var(--orange-light);border:1px solid var(--orange-border);display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
           <i data-lucide="key-round" style="width:20px;height:20px;color:var(--orange);"></i>
         </div>
-        <p style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Prompt', sans-serif;">เปลี่ยน PIN</p>
+        <p id="changePinModalTitle" style="font-size:var(--fs-section);font-weight:600;color:var(--text-primary);margin:0 0 4px;font-family:'Prompt', sans-serif;">เปลี่ยน PIN</p>
         <p id="cp-step-label" style="font-size:var(--fs-secondary);color:var(--text-secondary);margin:0;font-family:'Prompt', sans-serif;">กรอก PIN เดิม</p>
       </div>
       <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px;">
@@ -4547,25 +3818,25 @@
       </div>
       <div id="cp-error" style="height:20px;text-align:center;font-size:var(--fs-secondary);color:#DC6B19;margin-bottom:12px;font-family:'Prompt', sans-serif;"></div>
       <div class="mb-4" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:260px;margin:0 auto 16px;">
-        <div class="numpad-key" onclick="cpEnterPin('1')">1</div>
-        <div class="numpad-key" onclick="cpEnterPin('2')">2</div>
-        <div class="numpad-key" onclick="cpEnterPin('3')">3</div>
-        <div class="numpad-key" onclick="cpEnterPin('4')">4</div>
-        <div class="numpad-key" onclick="cpEnterPin('5')">5</div>
-        <div class="numpad-key" onclick="cpEnterPin('6')">6</div>
-        <div class="numpad-key" onclick="cpEnterPin('7')">7</div>
-        <div class="numpad-key" onclick="cpEnterPin('8')">8</div>
-        <div class="numpad-key" onclick="cpEnterPin('9')">9</div>
-        <div class="numpad-key" style="opacity:0;pointer-events:none;"></div>
-        <div class="numpad-key" onclick="cpEnterPin('0')">0</div>
-        <div class="numpad-key" onclick="cpDeletePin()"><i data-lucide="delete" class="w-[18px] h-[18px] text-[#64748B]"></i></div>
+        <button type="button" class="numpad-key" onclick="cpEnterPin('1')" aria-label="1">1</button>
+        <button type="button" class="numpad-key" onclick="cpEnterPin('2')" aria-label="2">2</button>
+        <button type="button" class="numpad-key" onclick="cpEnterPin('3')" aria-label="3">3</button>
+        <button type="button" class="numpad-key" onclick="cpEnterPin('4')" aria-label="4">4</button>
+        <button type="button" class="numpad-key" onclick="cpEnterPin('5')" aria-label="5">5</button>
+        <button type="button" class="numpad-key" onclick="cpEnterPin('6')" aria-label="6">6</button>
+        <button type="button" class="numpad-key" onclick="cpEnterPin('7')" aria-label="7">7</button>
+        <button type="button" class="numpad-key" onclick="cpEnterPin('8')" aria-label="8">8</button>
+        <button type="button" class="numpad-key" onclick="cpEnterPin('9')" aria-label="9">9</button>
+        <div class="numpad-key" style="opacity:0;pointer-events:none;" aria-hidden="true"></div>
+        <button type="button" class="numpad-key" onclick="cpEnterPin('0')" aria-label="0">0</button>
+        <button type="button" class="numpad-key" onclick="cpDeletePin()" aria-label="ลบ"><i data-lucide="delete" class="w-[18px] h-[18px] text-[#64748B]"></i></button>
       </div>
       <button onclick="closeChangePinModal()" class="w-full gd-btn-secondary">ยกเลิก</button>
     </div>
   </div>
 
   <!-- Toast container -->
-  <div id="toast-container"
+  <div id="toast-container" role="status" aria-live="polite" aria-atomic="false"
     class="fixed top-6 right-6 z-[200] flex flex-col gap-2 items-end pointer-events-none">
   </div>
 
@@ -5010,7 +4281,7 @@
           if (params.unit_id) {
             const { data: reserved, error: rpcErr } = await sb.rpc('reserve_unit', { p_unit_id: params.unit_id });
             if (rpcErr) throw rpcErr;
-            if (!reserved) throw new Error('unit นี้ถูกยืมไปแล้ว กรุณาเลือก unit ใหม่');
+            if (!reserved) throw new Error('รหัสชุดนี้ถูกยืมไปแล้ว กรุณาเลือกรหัสชุดใหม่');
           }
           const rid = 'BR' + Date.now();
           const { error: brErr } = await sb.from('borrow_records').insert([{
@@ -5290,7 +4561,7 @@
     async function checkPin() {
       const now = Date.now();
       const rec = pinGetAttempts(SU?.name);
-      if (rec.lockedUntil > now) { document.getElementById('pin-error').textContent = `ล็อกชั่วคราว ${Math.ceil((rec.lockedUntil-now)/1000)} วินาที`; PB=''; updatePinDots(); return; }
+      if (rec.lockedUntil > now) { document.getElementById('pin-error').innerHTML = `ล็อกชั่วคราว ${Math.ceil((rec.lockedUntil-now)/1000)} วินาที<br><span style="font-size:11px;color:rgba(255,255,255,0.7);">ไม่ทราบ PIN? ติดต่อผู้ดูแลระบบ</span>`; PB=''; updatePinDots(); return; }
       document.querySelectorAll('#screen-pin .numpad-key').forEach(b=>b.style.pointerEvents='none');
       document.getElementById('pin-error').innerHTML = '<span style="color:var(--orange);display:flex;align-items:center;justify-content:center;gap:6px;"><svg class="animate-spin w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> กำลังตรวจสอบ...</span>';
       try {
@@ -5318,7 +4589,7 @@
         } else {
           const updated = pinRecordFail(SU.name);
           const rem = PIN_MAX_ATTEMPTS - (updated.count % PIN_MAX_ATTEMPTS || PIN_MAX_ATTEMPTS);
-          if (updated.lockedUntil > Date.now()) { document.getElementById('pin-error').textContent = `ล็อกชั่วคราว ${Math.ceil((updated.lockedUntil-Date.now())/1000)} วินาที`; }
+          if (updated.lockedUntil > Date.now()) { document.getElementById('pin-error').innerHTML = `ล็อกชั่วคราว ${Math.ceil((updated.lockedUntil-Date.now())/1000)} วินาที<br><span style="font-size:11px;color:rgba(255,255,255,0.7);">ไม่ทราบ PIN? ติดต่อผู้ดูแลระบบ</span>`; }
           else document.getElementById('pin-error').textContent = `PIN ไม่ถูกต้อง (เหลือ ${rem} ครั้ง)`;
           document.querySelectorAll('#pin-dots .pin-dot').forEach(d=>{ d.classList.remove('filled'); d.classList.add('error'); });
           setTimeout(()=>{ PB=''; updatePinDots(); document.querySelectorAll('#pin-dots .pin-dot').forEach(d=>d.classList.remove('error')); }, 700);
@@ -5439,7 +4710,14 @@
     }
     function startAutoLogout() {
       stopAutoLogout();
-      _alWarnTimer = setTimeout(()=>toast('ระบบจะออกอัตโนมัติใน 1 นาที','warning'), AUTO_LOGOUT_MS - 60000);
+      _alWarnTimer = setTimeout(()=>{
+        showConfirm({
+          title: 'กำลังจะออกจากระบบ',
+          message: 'ไม่มีการใช้งานนาน ระบบจะออกอัตโนมัติใน 60 วินาที',
+          icon: '⏰', iconBg: '#FEF3C7', confirmText: 'ยังคงอยู่', confirmColor: '#F97316',
+          onConfirm: resetAutoLogout
+        });
+      }, AUTO_LOGOUT_MS - 60000);
       _alTimer = setTimeout(()=>{ if(CU){ toast('ออกจากระบบอัตโนมัติ'); setTimeout(logout, 2000); } }, AUTO_LOGOUT_MS);
     }
     function resetAutoLogout() { if(CU) startAutoLogout(); }
@@ -5620,50 +4898,12 @@
         if (diff < 365) return `ยืม ${Math.floor(diff/30)} เดือนก่อน`;
         return `ยืม >1 ปีก่อน`;
       };
-      // Stats
-      const totalItems = visibleEq.reduce((s,e)=> s + (e.quantity||0), 0);
-      const outItems   = visibleEq.reduce((s,e)=> s + ((e.quantity||0) - (e.available||0)), 0);
-      const lowCount   = visibleEq.filter(e => e.available > 0 && e.available <= 2).length;
-      const readyCount = visibleEq.filter(e => e.available === e.quantity && e.quantity > 0).length;
       const el = document.getElementById('tab-borrow');
       const eqEmptyState = eqCatFilter
         ? `<p style="font-size:14px;color:#78716C;text-align:center;padding:24px 12px;">ไม่มีอุปกรณ์ในหมวด \"<span>${he(eqCatFilter)}</span>\"</p>`
         : emptyState('ไม่พบอุปกรณ์', eqSearch || 'คำค้นหา', 'search','เพิ่มอุปกรณ์','showAddEquipment()');
       el.innerHTML = `<div class="gd-container fade-in w-full lg:max-w-none lg:px-8 xl:px-12">
-        <div class="gd-container-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
-          <div>
-            <h2 class="page-title">ยืมอุปกรณ์</h2>
-            <p class="text-base text-slate-500 mt-1">เลือกอุปกรณ์ที่ต้องการยืม (คงเหลือ > 0)</p>
-          </div>
-          <div style="display:flex; gap:4px; background:var(--mf-hover); border:1px solid var(--mf-border-soft); border-radius:10px; padding:4px;">
-            <button class="view-toggle-btn ${borrowViewMode==='list'?'active':'inactive'}"
-              onclick="setBorrowViewMode('list')" title="List view">
-              <i data-lucide="list" style="width:16px;height:16px;"></i>
-            </button>
-            <button class="view-toggle-btn ${borrowViewMode==='grid'?'active':'inactive'}"
-              onclick="setBorrowViewMode('grid')" title="Grid view">
-              <i data-lucide="layout-grid" style="width:16px;height:16px;"></i>
-            </button>
-          </div>
-        </div>
-        <div class="eq-kpi-strip">
-          <div class="eq-kpi t-all">
-            <div class="eq-kpi-ico"><i data-lucide="boxes" style="width:18px;height:18px;"></i></div>
-            <div><div class="eq-kpi-val">${totalItems}</div><div class="eq-kpi-lbl">ทั้งหมด</div></div>
-          </div>
-          <div class="eq-kpi t-out">
-            <div class="eq-kpi-ico"><i data-lucide="arrow-up-right" style="width:18px;height:18px;"></i></div>
-            <div><div class="eq-kpi-val">${outItems}</div><div class="eq-kpi-lbl">ยืมออก</div></div>
-          </div>
-          <div class="eq-kpi t-low">
-            <div class="eq-kpi-ico"><i data-lucide="alert-triangle" style="width:18px;height:18px;"></i></div>
-            <div><div class="eq-kpi-val">${lowCount}</div><div class="eq-kpi-lbl">ใกล้หมด</div></div>
-          </div>
-          <div class="eq-kpi t-ready">
-            <div class="eq-kpi-ico"><i data-lucide="check-circle" style="width:18px;height:18px;"></i></div>
-            <div><div class="eq-kpi-val">${readyCount}</div><div class="eq-kpi-lbl">พร้อมยืมครบ</div></div>
-          </div>
-        </div>
+        <h2 class="page-title" style="margin-bottom:12px;">ยืมอุปกรณ์</h2>
         <div class="mb-4 max-w-2xl" style="display:flex;gap:8px;align-items:center">
           <input type="text" placeholder="ค้นหาอุปกรณ์..." class="gd-input" style="flex:1" value="${he(borrowSearchQ)}"
             oninput="borrowSearchQ=this.value;debounce('borrowSearch',renderBorrowTab)">
@@ -5671,10 +4911,20 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M17 14h4"/><path d="M14 17v4"/><path d="M17 21h4v-4"/></svg>
             สแกน
           </button>
+          <div style="display:flex;gap:2px;background:var(--mf-hover);border:1px solid var(--mf-border-soft);border-radius:10px;padding:3px;flex-shrink:0;">
+            <button class="view-toggle-btn ${borrowViewMode==='list'?'active':'inactive'}"
+              onclick="setBorrowViewMode('list')" title="รายการ" aria-label="มุมมองรายการ">
+              <i data-lucide="list" style="width:16px;height:16px;"></i>
+            </button>
+            <button class="view-toggle-btn ${borrowViewMode==='grid'?'active':'inactive'}"
+              onclick="setBorrowViewMode('grid')" title="ตาราง" aria-label="มุมมองตาราง">
+              <i data-lucide="layout-grid" style="width:16px;height:16px;"></i>
+            </button>
+          </div>
         </div>
         <div class="chip-row">
           <div class="chip ${borrowCatFilter===''?'active':''}" onclick="borrowCatFilter='';renderBorrowTab()">ทั้งหมด</div>
-          ${cats.map(c=>`<div class="chip ${borrowCatFilter===c?'active':''}" onclick="borrowCatFilter='${he(c)}';renderBorrowTab()">${he(c)}</div>`).join('')}
+          ${cats.map(c=>`<div class="chip ${borrowCatFilter===c?'active':''}" data-cat="${he(c)}" onclick="borrowCatFilter=this.dataset.cat;renderBorrowTab()">${he(c)}</div>`).join('')}
         </div>
         <div class="view-${borrowViewMode}" id="eqGrid">
           ${filtered.length ? filtered.map(e => borrowViewMode === 'grid' ? `
@@ -5712,7 +4962,7 @@
                   <span>คงเหลือ</span>
                   <span style="font-weight:600;color:var(--mf-text);">${e.available}/${e.quantity}</span>
                 </div>
-                <div class="eq-stock-bar"><div class="eq-stock-fill progress-bar ${cls}" style="width:${pct}%"></div></div>
+                <div class="eq-stock-bar"><div class="eq-stock-fill progress-bar ${cls}" style="width:100%;transform:scaleX(${(pct/100).toFixed(3)})"></div></div>
               </div>
               <div class="grid-badge">
                 <span class="status-badge ${e.available<=2?'status-borrowed':'status-returned'}">คงเหลือ ${e.available}/${e.quantity}</span>
@@ -5732,6 +4982,7 @@
       if (!eq) { toast('ไม่พบอุปกรณ์','error'); return; }
       currentBorrowEq = eq;
       document.getElementById('bf-eq-name').textContent = eq.name + ' (คงเหลือ ' + eq.available + ')';
+      const savedDept = localStorage.getItem('ga_bf_dept') || '';
       const defaultDue = new Date(); defaultDue.setDate(defaultDue.getDate()+7);
       const dueStr = defaultDue.toISOString().slice(0,10);
       const todayStr = new Date().toISOString().slice(0,10);
@@ -5756,9 +5007,9 @@
             <input type="number" id="bfQty" min="1" max="${eq.available}" value="1" class="gd-input">
             <p style="font-size:11px;color:#9CA3AF;margin-top:6px;">ยืมได้สูงสุด ${eq.available} ชิ้น</p></div>
           <div><label class="text-sm font-medium text-gray-500 mb-1.5 block">ชื่อผู้ยืม</label>
-            <input type="text" id="bfBorrower" placeholder="ชื่อ-นามสกุลผู้ยืม" class="gd-input"></div>
+            <input type="text" id="bfBorrower" placeholder="ชื่อ-นามสกุลผู้ยืม" class="gd-input" value="${he(CU?.name||'')}"></div>
           <div><label class="text-sm font-medium text-gray-500 mb-1.5 block">รหัสพนักงาน</label>
-            <input type="text" id="bfDept" maxlength="6" pattern="[0-9]{6}" placeholder="เช่น 087256" class="gd-input"></div>
+            <input type="text" id="bfDept" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" placeholder="เช่น 087256" class="gd-input" value="${he(savedDept)}"></div>
           <div><label class="text-sm font-medium text-gray-500 mb-1.5 block">กำหนดคืน</label>
             <input type="date" id="bfDue" value="${dueStr}" min="${todayStr}" class="gd-input"></div>
           <div><label class="text-sm font-medium text-gray-500 mb-1.5 block">หมายเหตุ <span class="font-normal text-gray-400" style="font-size:11px;">(ไม่บังคับ)</span></label>
@@ -5776,9 +5027,10 @@
           <p class="text-center mt-1" style="font-size:11px;color:#F59E0B;">🔒 ลายเซ็นนี้ใช้เพื่อยืนยันการรับอุปกรณ์ และถูกจัดเก็บอย่างปลอดภัยในระบบ</p>
         </div>` : ''}
         <button onclick="submitBorrow()" id="bfSubmitBtn" class="w-full gd-btn-primary text-base font-semibold flex items-center justify-center gap-2">
-          <i data-lucide="check" class="w-[18px] h-[18px] text-[#64748B]"></i> ยืนยันการยืม
+          <i data-lucide="check" class="w-[18px] h-[18px] text-white"></i> ยืนยันการยืม
         </button>`;
       goScreen('borrow-form'); lucide.createIcons({'stroke-width': 1.5});
+      document.getElementById('bfDept')?.addEventListener('input', e => localStorage.setItem('ga_bf_dept', e.target.value));
       if (SETTINGS.require_borrow_signature) setTimeout(()=>initSignCanvas('bfSignCanvas'), 100);
       if (!lockedUnit) _loadUnitDropdown(eq.eq_id);
     }
@@ -5802,7 +5054,7 @@
         <div>
           <label class="text-sm font-medium text-gray-500 mb-1.5 block">เลือกหน่วยที่ต้องการยืม <span style="color:#dc2626">*</span></label>
           <select id="bfUnitId" class="gd-input">
-            <option value="">— เลือก unit —</option>
+            <option value="">— เลือกรหัสชุด —</option>
             ${available.map(u => `<option value="${he(u.id)}">${he(u.unit_code)}</option>`).join('')}
           </select>
         </div>`;
@@ -5957,7 +5209,7 @@
       const note = document.getElementById('bfNote')?.value.trim();
       const unitSelect = document.getElementById('bfUnitId');
       const unitId = unitSelect?.value || document.getElementById('bfLockedUnitId')?.value || null;
-      if (unitSelect && !unitId) { toast('กรุณาเลือก unit ที่ต้องการยืม'); return; }
+      if (unitSelect && !unitId) { toast('กรุณาเลือกรหัสชุดอุปกรณ์ที่ต้องการยืม'); return; }
       if (!borrower) { toast('กรุณากรอกชื่อผู้ยืม'); return; }
       if (!/^\d{6}$/.test(dept)) { toast('กรุณากรอกรหัสพนักงาน 6 หลัก'); return; }
       if (!due) { toast('กรุณาระบุกำหนดคืน'); return; }
