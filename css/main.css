@@ -233,20 +233,23 @@
     button:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2); }
 
     .gd-btn-primary, .btn-primary {
-      background: #F97316;
+      background: var(--mf-hero-grad);
       color: white; border: none;
       border-radius: 10px;
-      padding: 0 14px;
-      height: 36px;
+      padding: 0 18px;
+      height: 42px;
       display: inline-flex; align-items: center; justify-content: center;
-      font-size: 0.875rem;
+      font-size: 14px;
       font-weight: 600;
+      box-shadow: 0 4px 14px rgba(249, 115, 22, 0.30), inset 0 1px 0 rgba(255,255,255,0.18);
     }
-    .gd-btn-primary:hover, .btn-primary:hover {
-      background: #EA580C; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transform: translateY(-1px);
+    .gd-btn-primary:hover:not(:disabled), .btn-primary:hover:not(:disabled) {
+      box-shadow: 0 6px 18px rgba(249, 115, 22, 0.40), inset 0 1px 0 rgba(255,255,255,0.18);
+      transform: translateY(-1px);
+      filter: brightness(1.04);
     }
     .gd-btn-primary:disabled, .gd-btn-primary.is-disabled {
-      background: #CBD5E1; color: #F8FAFC; pointer-events: none;
+      background: #CBD5E1; color: #F8FAFC; box-shadow: none; pointer-events: none;
     }
     .gd-btn-secondary, .btn-secondary {
       border: 1px solid #E2E8F0;
@@ -1318,19 +1321,6 @@
       color: white !important;
     }
 
-    /* ── 3. Primary button gradient + glow ─────────────────── */
-    .gd-btn-primary, .btn-primary {
-      background: linear-gradient(135deg, #fb923c 0%, #f97316 45%, #ea580c 100%) !important;
-      box-shadow: 0 2px 10px rgba(249,115,22,0.35), inset 0 1px 0 rgba(255,255,255,0.15) !important;
-    }
-    .gd-btn-primary:hover:not(:disabled), .btn-primary:hover:not(:disabled) {
-      box-shadow: 0 4px 16px rgba(249,115,22,0.45), inset 0 1px 0 rgba(255,255,255,0.15) !important;
-      filter: brightness(1.04) !important;
-    }
-    .gd-btn-primary:disabled, .gd-btn-primary.is-disabled {
-      background: #CBD5E1 !important;
-      box-shadow: none !important;
-    }
 
     /* ── 4. KPI card top accent bar ────────────────────────── */
     .kpi-card { position: relative !important; overflow: hidden !important; }
@@ -1814,14 +1804,6 @@
       box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15) !important;
     }
 
-    /* ── Primary buttons ─────────────────────────────────── */
-    .gd-btn-primary, .btn-primary {
-      background: var(--mf-hero-grad) !important;
-      box-shadow: 0 4px 14px rgba(249, 115, 22, 0.30), inset 0 1px 0 rgba(255,255,255,0.18) !important;
-    }
-    .gd-btn-primary:hover:not(:disabled), .btn-primary:hover:not(:disabled) {
-      box-shadow: 0 6px 18px rgba(249, 115, 22, 0.40), inset 0 1px 0 rgba(255,255,255,0.18) !important;
-    }
 
     /* ── Bottom nav (mobile) ─────────────────────────────── */
     #bottom-nav {
@@ -3211,13 +3193,6 @@
       color: #1C1917 !important;
     }
 
-    /* 8. Primary button: stronger presence */
-    .gd-btn-primary, .btn-primary {
-      height: 42px !important;
-      font-size: 14px !important;
-      font-weight: 600 !important;
-      padding: 0 18px !important;
-    }
 
     /* 9. Bottom nav active: full pill, not a hairline */
     .bn-item.active::before {
