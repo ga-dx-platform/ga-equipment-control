@@ -1529,17 +1529,18 @@
       --mf-hero-grad:   linear-gradient(120deg, #F97316 0%, #FB7B53 45%, #FB8A7A 100%);
     }
 
-    /* ── Page background ─────────────────────────────────── */
+    /* ── Page background (GA brand: cool surface + dot grid, no cream) ── */
     html, body {
-      background: var(--mf-bg) !important;
-      background-image: none !important;
-      color: var(--mf-text) !important;
+      background-color: var(--bg-page) !important;
+      background-image: radial-gradient(rgba(15,23,42,0.055) 1px, transparent 1px) !important;
+      background-size: 20px 20px !important;
+      color: var(--text-primary) !important;
     }
-    .gd-shell { background: var(--mf-bg) !important; }
+    .gd-shell { background-color: var(--bg-page) !important; }
 
     /* ── Header becomes compact hero banner ─────────────── */
     #screen-main > .gd-header {
-      background: var(--mf-bg) !important;
+      background: var(--bg-page) !important;
       border-bottom: none !important;
       padding: 16px 20px 0 !important;
     }
@@ -1833,7 +1834,7 @@
     /* ── Login / Auth — refresh colors, keep layout ──────── */
     .login-shell,
     .auth-shell {
-      background: linear-gradient(180deg, #FFFCF8 0%, var(--mf-bg) 60%) !important;
+      background: linear-gradient(180deg, #f8fbff 0%, var(--bg-page) 60%) !important;
     }
     .auth-shell::before {
       background: radial-gradient(circle, rgba(249, 115, 22, 0.14) 0%, transparent 70%) !important;
