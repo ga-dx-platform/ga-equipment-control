@@ -1553,7 +1553,7 @@
       box-shadow: var(--mf-shadow-md);
       border-color: var(--mf-border);
     }
-    .kpi-card:hover .kpi-number { color: var(--mf-orange-d); }
+    .kpi-card:hover .kpi-number { color: var(--mf-orange-d) !important; }
     .kpi-label { color: #78716c !important; font-size: 12px !important; }
     .kpi-icon-wrap {
       background: var(--mf-hover) !important;
@@ -2460,19 +2460,19 @@
       border-color: #C2410C;
       box-shadow: 0 6px 20px rgba(194, 65, 12, 0.25);
     }
-    .kpi-card.orange .kpi-number { color: #fff; }
-    .kpi-card.orange .kpi-label  { color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.32); }
+    .kpi-card.orange .kpi-number { color: #fff !important; }
+    .kpi-card.orange .kpi-label  { color: #fff !important; text-shadow: 0 1px 3px rgba(0,0,0,0.32) !important; }
     .kpi-card.orange i[data-lucide],
-    .kpi-card.orange svg { stroke: rgba(255,255,255,0.9); color: rgba(255,255,255,0.9); }
+    .kpi-card.orange svg { stroke: rgba(255,255,255,0.9) !important; color: rgba(255,255,255,0.9) !important; }
     .kpi-card.orange > div:first-child {
-      background: rgba(255,255,255,0.22);
-      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.22) !important;
+      border: 1px solid rgba(255,255,255,0.3) !important;
     }
     .kpi-card.orange:hover {
       box-shadow: 0 10px 28px rgba(194, 65, 12, 0.35);
       transform: translateY(-3px);
     }
-    .kpi-card.orange:hover .kpi-number { color: #fff; }
+    .kpi-card.orange:hover .kpi-number { color: #fff !important; }
 
     /* 6. Page titles: more authority */
     .page-title {
