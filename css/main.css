@@ -630,19 +630,23 @@
       padding-bottom: calc(env(safe-area-inset-bottom, 0) + 4px);
     }
     .bn-item {
-      flex: 1; display: flex; flex-direction: column; align-items: center;
-      justify-content: center; gap: 3px; padding: 10px 4px;
-      cursor: pointer; position: relative; transition: all 150ms ease;
-      color: var(--text-muted);
+      flex: 1;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100%;
+      gap: 3px; padding: 10px 4px;
+      cursor: pointer; position: relative;
+      transition: color .15s ease;
+      color: #64748B;
     }
-    .bn-item.active { color: var(--orange); }
+    .bn-item.active { color: #EA580C; }
     .bn-item.active::before {
       content: ''; position: absolute;
       top: 8px; left: 50%; transform: translateX(-50%);
-      width: 40px; height: 30px;
-      background: rgba(249, 115, 22, 0.1);
-      border-radius: 10px;
+      width: 60px; height: calc(100% - 16px);
+      background: rgba(249, 115, 22, 0.14);
+      border-radius: 12px;
     }
+
     .bn-label { font-size: var(--ga-text-caption); font-weight: var(--ga-fw-semibold); line-height: 1; }
 
     @media (max-width: 767px) {
@@ -801,20 +805,6 @@
       box-shadow: 0 -1px 3px rgba(0,0,0,0.02);
     }
 
-    .bn-item {
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      justify-content: center !important;
-      flex: 1 !important;
-      height: 100% !important;
-      color: #64748B !important;
-      cursor: pointer !important;
-      transition: color .15s ease !important;
-    }
-    .bn-item.active {
-      color: #F97316 !important;
-    }
     .bn-item i, .bn-item svg[data-lucide] {
       width: 20px !important;
       height: 20px !important;
@@ -1372,14 +1362,6 @@
     }
 
     /* ── 11. Bottom nav pill indicator ─────────────────────── */
-    .bn-item.active::before {
-      top: 6px !important;
-      height: 3px !important;
-      width: 28px !important;
-      border-radius: 99px !important;
-      background: linear-gradient(90deg, #f97316, #fb923c) !important;
-      box-shadow: 0 2px 8px rgba(249,115,22,0.4) !important;
-    }
 
     /* ── 12. Overdue banner icon pulse ─────────────────────── */
     #overdue-banner svg:first-child {
@@ -1733,11 +1715,6 @@
     #bottom-nav {
       background: rgba(255, 248, 244, 0.92) !important;
       border-top: 1px solid var(--mf-border-soft) !important;
-    }
-    .bn-item.active { color: var(--mf-orange-d) !important; }
-    .bn-item.active::before {
-      background: linear-gradient(90deg, var(--mf-orange) 0%, var(--mf-coral-1) 100%) !important;
-      box-shadow: 0 2px 8px rgba(249, 115, 22, 0.36) !important;
     }
 
     /* ── Login / Auth — refresh colors, keep layout ──────── */
@@ -2569,15 +2546,7 @@
     }
 
     /* 9. Bottom nav active: full pill, not a hairline */
-    .bn-item.active::before {
-      top: 8px !important;
-      height: calc(100% - 16px) !important;
-      width: 60px !important;
-      border-radius: 12px !important;
-      background: rgba(249, 115, 22, 0.14) !important;
-      box-shadow: none !important;
-    }
-    .bn-item.active { color: #EA580C !important; }
+
     .bn-item .bn-label { font-size: 11px !important; font-weight: 600 !important; }
 
     /* 10. Auth screen: confident brand entry */
