@@ -340,13 +340,16 @@
 
     /* ── KPI cards ────────────────────────────────────── */
     .kpi-card {
-      background: var(--bg-card);
-      border-radius: var(--ga-radius-lg);
-      border: 1px solid var(--border);
-      padding: var(--ga-space-xl) var(--ga-space-xl) var(--ga-space-xl);
+      background: var(--mf-card);
+      border: 1px solid var(--mf-border-soft);
+      border-radius: 18px;
+      padding: 18px;
       min-height: 152px;
+      height: auto;
       display: flex; flex-direction: column;
-      box-shadow: var(--ga-shadow-sm);
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--mf-shadow-sm);
     }
     .kpi-number {
       font-size: 2.125rem; font-weight: var(--ga-fw-semibold); line-height: 1;
@@ -356,8 +359,7 @@
       font-variant-numeric: tabular-nums;
     }
     .kpi-label { font-size: var(--ga-text-small); color: var(--text-muted); margin-top: auto; padding-top: var(--ga-space-xs); }
-    .kpi-card.orange .kpi-number { color: var(--orange); }
-    .kpi-card.danger  { background: #fff5f5; border-color: #fecaca; }
+    
     .kpi-card.danger  .kpi-number { color: #DC6B19; }
     .kpi-card.success .kpi-number { color: #10b981; }
     /* compat */
@@ -692,7 +694,7 @@
     .btn-action-borrow { font-size: 0.8125rem !important; font-weight: 500 !important; color: #E86B00 !important; background: transparent !important; transition: all .15s ease !important; border-radius: 10px !important; padding: 10px 16px !important;}
     .btn-action-borrow:hover { background: #FFF7ED !important; }
     button:hover { filter: brightness(0.97); }
-    .kpi-card { padding: 20px !important; height: auto !important; }
+    
     .kpi-icon-wrap { width: 40px !important; height: 40px !important; border-radius: 10px !important; display: flex !important; align-items: center !important; justify-content: center !important;}
 
 /* ── block 3 ── */
@@ -741,7 +743,6 @@
     .fade-in { animation: fadeInSaaS .18s ease forwards !important; }
 
     .kpi-number { color: #0F172A !important; transition: color .15s ease; }
-    .kpi-card:hover .kpi-number { color: #F97316 !important; }
 
     /* Skeleton updates */
     .skeleton-card {
@@ -1257,17 +1258,6 @@
     }
 
     /* ── 4. KPI card top accent bar ────────────────────────── */
-    .kpi-card { position: relative !important; overflow: hidden !important; }
-    .kpi-card::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #f97316, #fbbf24);
-      border-radius: 0;
-    }
-    .kpi-card.danger::after  { background: linear-gradient(90deg, #DC6B19, #f87171); }
-    .kpi-card.success::after { background: linear-gradient(90deg, #10b981, #34d399); }
 
     /* Analytics KPI top accent */
     .analytics-kpi { position: relative !important; overflow: hidden !important; }
@@ -1551,15 +1541,7 @@
     .gd-card-grid-card .gc-icon svg { stroke: var(--cat-accent, #64748B) !important; }
 
     /* ── KPI cards ───────────────────────────────────────── */
-    .kpi-card {
-      background: var(--mf-card) !important;
-      border: 1px solid var(--mf-border-soft) !important;
-      border-radius: 18px !important;
-      padding: 18px !important;
-      box-shadow: var(--mf-shadow-sm) !important;
-      overflow: hidden !important;
-    }
-    .kpi-card::after { display: none !important; }
+
     .kpi-number {
       color: var(--mf-text) !important;
       font-size: 30px !important;
@@ -1576,14 +1558,6 @@
     .kpi-icon-wrap {
       background: var(--mf-hover) !important;
       color: var(--mf-orange-d) !important;
-    }
-    .kpi-card.danger {
-      background: #FFF5F1 !important;
-      border-color: #FBDDD0 !important;
-    }
-    .kpi-card.success {
-      background: #F0FAF4 !important;
-      border-color: #D4EEDC !important;
     }
 
     /* ── Analytics KPI ───────────────────────────────────── */
