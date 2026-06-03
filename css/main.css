@@ -3121,17 +3121,21 @@
        Commit the brand. Sharpen the scale. Drop the cream.
     ═══════════════════════════════════════════════════ */
 
-    /* 1. Body: swap cream for neutral — orange owns the warmth */
+    /* 1. Body: cool brand surface via --bg-page token — orange owns the warmth */
     html, body {
-      background: #F5F5F5 !important;
-      background-image: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px) !important;
-      background-size: 22px 22px !important;
-      color: #1C1917 !important;
+      background-color: var(--bg-page) !important;
+      background-image: radial-gradient(rgba(15,23,42,0.055) 1px, transparent 1px) !important;
+      background-size: 20px 20px !important;
+      color: var(--text-primary) !important;
     }
-    .gd-shell { background: #F5F5F5 !important; }
+    .gd-shell { background-color: var(--bg-page) !important; }
     .login-shell, .auth-shell {
-      background: linear-gradient(180deg, #fff 0%, #F5F5F5 70%) !important;
+      background-color: var(--bg-page) !important;
+      background-image: radial-gradient(rgba(15,23,42,0.055) 1px, transparent 1px) !important;
+      background-size: 20px 20px !important;
     }
+    /* Auth screens match the main app: cool dot-grid, no ambient glow orbs */
+    .auth-shell::before, .auth-shell::after { display: none !important; }
 
     /* 2. Header gradient: committed orange, no coral fade */
     #screen-main > .gd-header .gd-inner {
