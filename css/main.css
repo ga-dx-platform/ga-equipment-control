@@ -157,13 +157,22 @@
     /* ── Cards ────────────────────────────────────────── */
 
     .gd-card, .card {
-      background: white !important; border: 1px solid #E2E8F0 !important; border-radius: var(--radius-card) !important; padding: 20px 24px !important; min-height: 72px !important; box-shadow: var(--shadow-card) !important; transition: all .15s ease !important;
+      background: var(--mf-card);
+      border: 1px solid var(--mf-border-soft);
+      border-radius: 18px;
+      padding: var(--space-16) 20px;
+      min-height: 68px;
+      margin-bottom: var(--space-12);
+      box-shadow: var(--mf-shadow-sm);
+      transition: var(--tx-all);
+      cursor: pointer;
+    }
+    .gd-card:hover, .card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(249, 115, 22, 0.35);
+      box-shadow: 0 8px 24px rgba(249, 115, 22, 0.10), 0 2px 8px rgba(0,0,0,0.06);
     }
     .gd-card > :first-child { margin-top: 2px; }
-    .gd-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(15,23,42,0.06), 0 18px 38px rgba(15,23,42,0.08);
-    }
 
     .page-title { font-size: var(--ga-text-display); font-weight: 700; color: #1C1917; }
     .eq-title { font-size: var(--ga-text-secondary); font-weight: 600; color: #0F172A; }
@@ -679,10 +688,7 @@
     
     .tab-active { color: #0F172A !important; background: white !important; box-shadow: 0 1px 2px rgba(0,0,0,0.06) !important; }
     .ga-list-container { max-width: 880px !important; margin-left: auto !important; margin-right: auto !important; }
-    .gd-card, .card {
-      background: white !important; border: 1px solid #E2E8F0 !important; border-radius: var(--radius-card) !important; padding: 20px 24px !important; min-height: 72px !important; box-shadow: var(--shadow-card) !important; transition: all .15s ease !important;
-    }
-    .gd-card:hover, .card:hover { transform: translateY(-2px) !important; box-shadow: 0 2px 4px rgba(0,0,0,0.04), 0 8px 16px rgba(0,0,0,0.06) !important; }
+
     .btn-action-borrow { font-size: 0.8125rem !important; font-weight: 500 !important; color: #E86B00 !important; background: transparent !important; transition: all .15s ease !important; border-radius: 10px !important; padding: 10px 16px !important;}
     .btn-action-borrow:hover { background: #FFF7ED !important; }
     button:hover { filter: brightness(0.97); }
@@ -704,16 +710,6 @@
     .user-card:focus-visible,
     .top-tab:focus-visible,
     .bn-item:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2); }
-
-    .gd-card, .card {
-      transition: var(--tx-all) !important;
-      cursor: pointer !important;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
-    }
-    .gd-card:hover, .card:hover {
-      transform: translateY(-2px) !important;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.06) !important;
-    }
 
     .btn-action-borrow { transition: var(--tx-all) !important; }
     .btn-action-borrow:hover { color: #EA580C !important; }
@@ -828,14 +824,6 @@
 
 /* ── block 5 ── */
     /* Final Density Optimization */
-    .gd-card, .card {
-      min-height: 68px !important;
-      padding: 18px 24px !important;
-      border-color: #E2E8F0 !important;
-    }
-    .gd-card:hover, .card:hover {
-      border-color: #CBD5E1 !important; /* Slightly more contrast than #E2E8F0 but subtle */
-    }
 
     .status-badge {
       font-size: 12px !important;
@@ -1134,10 +1122,7 @@
     }
 
     /* Standard Card Properties */
-    .gd-card, .card {
-      padding: var(--space-16) 20px !important;
-      margin-bottom: var(--space-12) !important;
-    }
+    
     .space-y-3 > * + * { margin-top: var(--space-12) !important; } /* Explicit mapping */
 
     /* Standard Dashboard / Grid spacing */
@@ -1350,10 +1335,6 @@
     }
 
     /* ── 9. Card hover orange hint ──────────────────────────── */
-    .gd-card:hover, .card:hover {
-      border-color: rgba(249,115,22,0.28) !important;
-      box-shadow: 0 6px 20px rgba(249,115,22,0.08), 0 2px 6px rgba(0,0,0,0.04) !important;
-    }
 
     /* ── 10. Active chip glow + stronger gradient ───────────── */
     .chip.active {
@@ -1549,17 +1530,7 @@
     }
 
     /* ── Cards ───────────────────────────────────────────── */
-    .gd-card, .card {
-      background: var(--mf-card) !important;
-      border: 1px solid var(--mf-border-soft) !important;
-      border-radius: 18px !important;
-      box-shadow: var(--mf-shadow-sm) !important;
-    }
-    .gd-card:hover, .card:hover {
-      transform: translateY(-2px) !important;
-      border-color: var(--mf-border) !important;
-      box-shadow: var(--mf-shadow-md) !important;
-    }
+
     /* Category-colored full border on equipment list cards */
     .gd-card.eq-cat-stripe, .card.eq-cat-stripe {
       border-color: color-mix(in srgb, var(--cat-accent, #E2E8F0) 35%, #E2E8F0) !important;
@@ -2583,10 +2554,6 @@
     }
 
     /* 13. Card hover: stronger orange hint */
-    .gd-card:hover, .card:hover {
-      border-color: rgba(249, 115, 22, 0.35) !important;
-      box-shadow: 0 8px 24px rgba(249, 115, 22, 0.10), 0 2px 8px rgba(0,0,0,0.06) !important;
-    }
 
     /* 14. Active filter chip: higher contrast */
     .chip.active, .filter-chip.active {
