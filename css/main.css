@@ -581,8 +581,8 @@
       font-weight: 700;
     }
     .top-tab:not(.active):hover {
-      color: var(--mf-orange-d);
-      background: #FFF7ED;
+      color: #334155;
+      background: #F1F5F9;
       transition: background 0.2s ease;
     }
     
@@ -2116,7 +2116,7 @@
 
     .bottom-nav .nav-item:not(.active):hover,
     .bottom-nav .bn-item:not(.active):hover {
-      background: #FFF7ED;
+      background: #F1F5F9;
       border-radius: 8px;
     }
 
