@@ -2461,25 +2461,66 @@
       letter-spacing: -0.03em !important;
     }
 
-    /* 5. Primary KPI card (orange class) -> full orange surface */
+    /* 5. Colored KPI cards — each surface signals its semantic role */
+    .kpi-card.orange,
+    .kpi-card.blue,
+    .kpi-card.danger,
+    .kpi-card.success {
+      border-color: transparent;
+    }
+    .kpi-card.orange .kpi-number, .kpi-card.blue .kpi-number,
+    .kpi-card.danger .kpi-number, .kpi-card.success .kpi-number { color: #fff !important; }
+    .kpi-card.orange .kpi-label, .kpi-card.blue .kpi-label,
+    .kpi-card.danger .kpi-label, .kpi-card.success .kpi-label { color: rgba(255,255,255,0.88) !important; font-size: 14px !important; }
+    .kpi-card.orange i[data-lucide], .kpi-card.blue i[data-lucide],
+    .kpi-card.danger i[data-lucide], .kpi-card.success i[data-lucide],
+    .kpi-card.orange svg, .kpi-card.blue svg,
+    .kpi-card.danger svg, .kpi-card.success svg { stroke: rgba(255,255,255,0.9) !important; color: rgba(255,255,255,0.9) !important; }
+    .kpi-card.orange > div:first-child, .kpi-card.blue > div:first-child,
+    .kpi-card.danger > div:first-child, .kpi-card.success > div:first-child {
+      background: rgba(255,255,255,0.20) !important;
+      border: 1px solid rgba(255,255,255,0.28) !important;
+    }
+    .kpi-card.orange:hover, .kpi-card.blue:hover,
+    .kpi-card.danger:hover, .kpi-card.success:hover { transform: translateY(-3px); }
+    .kpi-card.orange:hover .kpi-number, .kpi-card.blue:hover .kpi-number,
+    .kpi-card.danger:hover .kpi-number, .kpi-card.success:hover .kpi-number { color: #fff !important; }
+
+    /* Orange — อุปกรณ์พร้อมใช้ (available, brand) */
     .kpi-card.orange {
-      background: linear-gradient(135deg, #ea580c 0%, #f97316 50%, #ea580c 100%);
-      border-color: #c2410c;
-      box-shadow: 0 6px 20px rgba(234, 88, 12, 0.25);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 55%),
+        linear-gradient(135deg, #ea580c 0%, #f97316 50%, #ea580c 100%);
+      box-shadow: 0 6px 20px rgba(234, 88, 12, 0.28);
     }
-    .kpi-card.orange .kpi-number { color: #fff !important; }
-    .kpi-card.orange .kpi-label  { color: #fff !important; font-size: 14px !important; }
-    .kpi-card.orange i[data-lucide],
-    .kpi-card.orange svg { stroke: rgba(255,255,255,0.9) !important; color: rgba(255,255,255,0.9) !important; }
-    .kpi-card.orange > div:first-child {
-      background: rgba(255,255,255,0.22) !important;
-      border: 1px solid rgba(255,255,255,0.3) !important;
+    .kpi-card.orange:hover { box-shadow: 0 10px 28px rgba(234, 88, 12, 0.40); }
+
+    /* Blue — กำลังยืม (active borrow, in-progress) */
+    .kpi-card.blue {
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 55%),
+        linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #2563eb 100%);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.28);
     }
-    .kpi-card.orange:hover {
-      box-shadow: 0 10px 28px rgba(194, 65, 12, 0.35);
-      transform: translateY(-3px);
+    .kpi-card.blue:hover { box-shadow: 0 10px 28px rgba(37, 99, 235, 0.40); }
+
+    /* Danger/Red — เกินกำหนด (overdue, alert) */
+    .kpi-card.danger {
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 55%),
+        linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #dc2626 100%);
+      box-shadow: 0 6px 20px rgba(220, 38, 38, 0.28);
     }
-    .kpi-card.orange:hover .kpi-number { color: #fff !important; }
+    .kpi-card.danger:hover { box-shadow: 0 10px 28px rgba(220, 38, 38, 0.40); }
+
+    /* Success/Green — คืนวันนี้ (return today, done) */
+    .kpi-card.success {
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 55%),
+        linear-gradient(135deg, #059669 0%, #047857 50%, #059669 100%);
+      box-shadow: 0 6px 20px rgba(5, 150, 105, 0.28);
+    }
+    .kpi-card.success:hover { box-shadow: 0 10px 28px rgba(5, 150, 105, 0.40); }
 
     /* 6. Page titles: more authority */
     .page-title {

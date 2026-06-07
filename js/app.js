@@ -1636,17 +1636,17 @@
           <h2 class="page-title">ภาพรวมระบบ</h2>
         </div>
         <div class="dash-kpi-grid">
-          <div class="kpi-card orange">
-            <div style="width:32px;height:32px;border-radius:8px;background:var(--orange-light);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="clock-3" style="width:20px;height:20px;color:var(--orange);"></i></div>
+          <div class="kpi-card blue">
+            <div style="width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="clock-3" style="width:20px;height:20px;"></i></div>
             <p class="kpi-number" id="dkpi1">0</p><p class="kpi-label">กำลังยืม</p></div>
           <div class="kpi-card danger">
-            <div style="width:32px;height:32px;border-radius:8px;background:var(--danger-bg);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="alert-triangle" style="width:20px;height:20px;color:#DC6B19;"></i></div>
+            <div style="width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="alert-triangle" style="width:20px;height:20px;"></i></div>
             <p class="kpi-number" id="dkpi2">0</p><p class="kpi-label">เกินกำหนด</p></div>
           <div class="kpi-card success">
-            <div style="width:32px;height:32px;border-radius:8px;background:var(--success-bg);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="check-circle" style="width:20px;height:20px;color:var(--success-text);"></i></div>
+            <div style="width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="check-circle" style="width:20px;height:20px;"></i></div>
             <p class="kpi-number" id="dkpi3">0</p><p class="kpi-label">คืนวันนี้</p></div>
           <div class="kpi-card orange">
-            <div style="width:32px;height:32px;border-radius:8px;background:var(--orange-light);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="box" style="width:20px;height:20px;color:var(--orange);"></i></div>
+            <div style="width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><i data-lucide="box" style="width:20px;height:20px;"></i></div>
             <p class="kpi-number" id="dkpi4">0</p><p class="kpi-label">อุปกรณ์พร้อมใช้</p></div>
         </div>
         <div class="card mb-5">
