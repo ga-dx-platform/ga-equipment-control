@@ -4,7 +4,14 @@
       "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\micky\\\\Project\\\\ga-equipment-control\\\\ga-equipment-control\" -Force)",
       "Bash(Select-Object Name, PSIsContainer)",
       "Bash(Format-Table -AutoSize)",
-      "PowerShell(Get-ChildItem -Path \"c:\\\\Users\\\\micky\\\\Project\\\\ga-equipment-control\\\\ga-equipment-control\" -Recurse -Directory | Select-Object FullName | ForEach-Object {$_.FullName.Substring\\(60\\)} | Sort-Object)"
+      "PowerShell(Get-ChildItem -Path \"c:\\\\Users\\\\micky\\\\Project\\\\ga-equipment-control\\\\ga-equipment-control\" -Recurse -Directory | Select-Object FullName | ForEach-Object {$_.FullName.Substring\\(60\\)} | Sort-Object)",
+      "PowerShell(if \\($env:GITHUB_PERSONAL_ACCESS_TOKEN\\) { \"Token is set \\(length: $\\($env:GITHUB_PERSONAL_ACCESS_TOKEN.Length\\)\\)\" } else { \"Token is NOT set\" })",
+      "PowerShell([System.Environment]::GetEnvironmentVariable\\(\"GITHUB_PERSONAL_ACCESS_TOKEN\", \"User\"\\) | ForEach-Object { if \\($_\\) { \"Stored in User env vars\" } else { \"Not in User env vars\" } }; [System.Environment]::GetEnvironmentVariable\\(\"GITHUB_PERSONAL_ACCESS_TOKEN\", \"Machine\"\\) | ForEach-Object { if \\($_\\) { \"Stored in Machine env vars\" } else { \"Not in Machine env vars\" } })",
+      "Bash(node .claude/skills/impeccable/scripts/context.mjs)",
+      "Bash(node .claude/skills/impeccable/scripts/context-signals.mjs)",
+      "Bash(node .claude/skills/impeccable/scripts/detect.mjs --json index.html)",
+      "Skill(impeccable)",
+      "Skill(impeccable:*)"
     ]
   }
 }

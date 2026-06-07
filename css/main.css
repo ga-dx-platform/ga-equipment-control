@@ -229,7 +229,7 @@
 
     button {
       font-family: 'Prompt', sans-serif;
-      transition: all 120ms ease;
+      transition: background 120ms ease, color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
       cursor: pointer;
     }
     button:active { transform: scale(0.98); }
@@ -575,8 +575,8 @@
     }
     .top-tab.active {
       color: #fff;
-      background: linear-gradient(135deg, #F97316, #EA580C);
-      box-shadow: 0 2px 8px rgba(249, 115, 22, 0.28);
+      background: #c2410c;
+      box-shadow: 0 2px 8px rgba(194, 65, 12, 0.35);
       border-bottom: 0;
       font-weight: 700;
     }
@@ -898,13 +898,13 @@
     .gd-card-grid-card .gc-badge { margin-bottom: 10px; }
     .gd-card-grid-card .gc-btn {
       width: 100%; font-size: 13px; font-weight: 500;
-      color: white; background: #F97316;
+      color: white; background: #c2410c;
       border: none; border-radius: 10px;
       padding: 7px 0; cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 6px;
       transition: background .15s ease; margin-top: auto;
     }
-    .gd-card-grid-card .gc-btn:hover { background: #EA580C !important; }
+    .gd-card-grid-card .gc-btn:hover { background: #9a3412 !important; }
 
     /* Equipment grid containers */
     #eqGrid.view-list  { display: flex; flex-direction: column; gap: 12px; }
@@ -1421,7 +1421,7 @@
       --mf-shadow-sm:   var(--ga-shadow-sm);
       --mf-shadow-md:   var(--ga-shadow-md);
       --mf-shadow-lg:   var(--ga-shadow-lg);
-      --mf-hero-grad:   linear-gradient(120deg, #F97316 0%, #FB7B53 45%, #FB8A7A 100%);
+      --mf-hero-grad:   linear-gradient(120deg, #c2410c 0%, #ea580c 50%, #c2410c 100%);
     }
 
     /* ── Page background (GA brand: cool surface + dot grid, no cream) ── */
@@ -1842,7 +1842,7 @@
       background: var(--bg-page) !important;
     }
     #screen-main > .gd-header.app-header .gd-inner {
-      background: linear-gradient(120deg, #F97316 0%, #FB7B53 45%, #FB8A7A 100%) !important;
+      background: linear-gradient(120deg, #c2410c 0%, #ea580c 50%, #c2410c 100%) !important;
       border-radius: 16px !important;
       padding: 14px 20px !important;
       min-height: 92px !important;
@@ -2148,7 +2148,7 @@
       border-radius: 20px !important;
       background:
         linear-gradient(135deg, rgba(255,255,255,0.14) 0%, transparent 55%),
-        linear-gradient(150deg, #FB923C 0%, #F97316 30%, #EA580C 68%, #C2410C 100%) !important;
+        linear-gradient(150deg, #c2410c 0%, #ea580c 50%, #c2410c 100%) !important;
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
       border: 1px solid rgba(255,255,255,0.24) !important;
@@ -2331,8 +2331,8 @@
     .eq-category-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
     .category-item { display:flex; align-items:center; justify-content:space-between; padding:6px 8px; border-radius:6px; font-size:12px; color:#1c1917; }
     .category-item:hover { background:#fafaf9; }
-    .btn-primary-sm { background:#f97316; color:#fff; border:none; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:500; cursor:pointer; font-family:'Prompt', sans-serif; white-space:nowrap; }
-    .btn-primary-sm:hover { background:#ea580c; }
+    .btn-primary-sm { background:#c2410c; color:#fff; border:none; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:500; cursor:pointer; font-family:'Prompt', sans-serif; white-space:nowrap; }
+    .btn-primary-sm:hover { background:#9a3412; }
     .mini-btn-orange { background:#fff7ed; color:#c2410c; border:0.5px solid #fed7aa; border-radius:6px; padding:4px 10px; font-size:11px; cursor:pointer; font-family:'Prompt', sans-serif; }
     .mini-btn-gray { background:#fff; color:#64748B; border:0.5px solid #e7e5e4; border-radius:6px; padding:4px 10px; font-size:11px; cursor:pointer; font-family:'Prompt', sans-serif; }
     .leg-dot { width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:4px; }
@@ -2418,7 +2418,7 @@
 
     /* 2. Header gradient: committed orange, no coral fade */
     #screen-main > .gd-header .gd-inner {
-      background: linear-gradient(135deg, #FB923C 0%, #F97316 38%, #EA580C 72%, #C2410C 100%) !important;
+      background: linear-gradient(135deg, #c2410c 0%, #ea580c 45%, #c2410c 100%) !important;
       box-shadow: 0 8px 28px rgba(194, 65, 12, 0.28), inset 0 1px 0 rgba(255,255,255,0.18) !important;
     }
 
@@ -2456,12 +2456,12 @@
 
     /* 5. Primary KPI card (orange class) -> full orange surface */
     .kpi-card.orange {
-      background: linear-gradient(135deg, #FB923C 0%, #F97316 45%, #EA580C 100%);
-      border-color: #C2410C;
+      background: linear-gradient(135deg, #c2410c 0%, #ea580c 50%, #c2410c 100%);
+      border-color: #9a3412;
       box-shadow: 0 6px 20px rgba(194, 65, 12, 0.25);
     }
     .kpi-card.orange .kpi-number { color: #fff !important; }
-    .kpi-card.orange .kpi-label  { color: #fff !important; text-shadow: 0 1px 3px rgba(0,0,0,0.32) !important; }
+    .kpi-card.orange .kpi-label  { color: #fff !important; font-size: 14px !important; }
     .kpi-card.orange i[data-lucide],
     .kpi-card.orange svg { stroke: rgba(255,255,255,0.9) !important; color: rgba(255,255,255,0.9) !important; }
     .kpi-card.orange > div:first-child {
@@ -2531,15 +2531,21 @@
 
     /* 14. Active filter chip: higher contrast */
     .chip.active, .filter-chip.active {
-      background: linear-gradient(135deg, #F97316 0%, #EA580C 100%) !important;
+      background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%) !important;
       color: #fff !important;
       font-weight: 700 !important;
-      box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35) !important;
+      box-shadow: 0 4px 14px rgba(194, 65, 12, 0.35) !important;
     }
 
     /* Reduced motion */
     @media (prefers-reduced-motion: reduce) {
-      .kpi-card, .gd-card, .card, .chip, .bn-item { transition: none !important; }
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
       .kpi-card:hover, .gd-card:hover, .card:hover { transform: none !important; }
     }
 

@@ -57,21 +57,21 @@
     <!-- Footer actions -->
     <div style="padding:12px 10px;border-top:1px solid #E2E8F0;display:flex;gap:6px;flex-shrink:0;">
       <button onclick="openQRScanner()" title="สแกน QR"
-        style="flex:1;display:flex;align-items:center;justify-content:center;background:#F8FAFC;border:1px solid #E2E8F0;color:#475569;border-radius:8px;height:36px;padding:0;cursor:pointer;">
+        style="flex:1;display:flex;align-items:center;justify-content:center;background:#F8FAFC;border:1px solid #E2E8F0;color:#475569;border-radius:8px;height:44px;padding:0;cursor:pointer;">
         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M17 14h4"/><path d="M14 17v4"/><path d="M17 21h4v-4"/></svg>
       </button>
       <button onclick="openChangePinModal()" title="เปลี่ยน PIN"
-        style="flex:1;display:flex;align-items:center;justify-content:center;background:#F8FAFC;border:1px solid #E2E8F0;color:#475569;border-radius:8px;height:36px;padding:0;cursor:pointer;">
+        style="flex:1;display:flex;align-items:center;justify-content:center;background:#F8FAFC;border:1px solid #E2E8F0;color:#475569;border-radius:8px;height:44px;padding:0;cursor:pointer;">
         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>
       </button>
       <button onclick="confirmLogout()" title="ออกจากระบบ"
-        style="flex:1;display:flex;align-items:center;justify-content:center;background:#FEF2F2;border:1px solid #FECACA;color:#DC2626;border-radius:8px;height:36px;padding:0;cursor:pointer;">
+        style="flex:1;display:flex;align-items:center;justify-content:center;background:#FEF2F2;border:1px solid #FECACA;color:#DC2626;border-radius:8px;height:44px;padding:0;cursor:pointer;">
         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       </button>
     </div>
   </aside>
 
-  <div id="app-root" class="h-full w-full flex justify-center overflow-auto">
+  <main id="app-root" class="h-full w-full flex justify-center overflow-auto">
     <div id="main-wrapper" class="w-full" style="max-width:1180px;height:100%;position:relative;">
 
       <!-- LOADING -->
@@ -212,7 +212,7 @@
                                background:#fff;border:1px solid #e2e8f0;color:#475569;
                                border-radius:8px;width:36px;height:36px;padding:0;cursor:pointer;">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M17 14h4"/><path d="M14 17v4"/><path d="M17 21h4v-4"/></svg>
-                  <span style="font-size:8px;font-weight:600;line-height:1;font-family:'Prompt',sans-serif;">สแกน</span>
+                  <span style="font-size:11px;font-weight:600;line-height:1;font-family:'Prompt',sans-serif;">สแกน</span>
                 </button>
                 <button onclick="openChangePinModal()" title="เปลี่ยน PIN" aria-label="เปลี่ยน PIN"
                         style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
@@ -220,7 +220,7 @@
                                border-radius:8px;width:36px;height:36px;padding:0;cursor:pointer;
                                font-family:'Prompt', sans-serif;">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>
-                  <span style="font-size:8px;font-weight:600;line-height:1;font-family:'Prompt',sans-serif;">PIN</span>
+                  <span style="font-size:11px;font-weight:600;line-height:1;font-family:'Prompt',sans-serif;">PIN</span>
                 </button>
                 <button onclick="confirmLogout()" title="ออกจากระบบ" aria-label="ออกจากระบบ"
                         style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
@@ -228,7 +228,7 @@
                                border-radius:8px;width:36px;height:36px;padding:0;cursor:pointer;
                                font-family:'Prompt', sans-serif;">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                  <span style="font-size:8px;font-weight:600;line-height:1;font-family:'Prompt',sans-serif;">ออก</span>
+                  <span style="font-size:11px;font-weight:600;line-height:1;font-family:'Prompt',sans-serif;">ออก</span>
                 </button>
               </div>
             </div>
@@ -240,7 +240,7 @@
                 </div>
                 <div>
                   <div id="hero-stat-available" style="font-size:16px;font-weight:700;color:#fff;line-height:1;margin-bottom:2px;font-family:'Prompt', sans-serif;">—</div>
-                  <div style="font-size:12px;font-weight:600;color:#fff;line-height:1.2;font-family:'Prompt', sans-serif;text-shadow:0 1px 4px rgba(0,0,0,0.38);">พร้อมใช้งาน</div>
+                  <div style="font-size:14px;font-weight:600;color:#fff;line-height:1.2;font-family:'Prompt', sans-serif;">พร้อมใช้งาน</div>
                 </div>
               </div>
               <div style="width:1px;height:32px;background:rgba(255,255,255,0.38);"></div>
@@ -250,7 +250,7 @@
                 </div>
                 <div>
                   <div id="hero-stat-borrowed" style="font-size:16px;font-weight:700;color:#fff;line-height:1;margin-bottom:2px;font-family:'Prompt', sans-serif;">—</div>
-                  <div style="font-size:12px;font-weight:600;color:#fff;line-height:1.2;font-family:'Prompt', sans-serif;text-shadow:0 1px 4px rgba(0,0,0,0.38);">ยืมออกไป</div>
+                  <div style="font-size:14px;font-weight:600;color:#fff;line-height:1.2;font-family:'Prompt', sans-serif;">ยืมออกไป</div>
                 </div>
               </div>
               <div style="width:1px;height:32px;background:rgba(255,255,255,0.38);"></div>
@@ -260,7 +260,7 @@
                 </div>
                 <div>
                   <div id="hero-stat-overdue" style="font-size:16px;font-weight:700;color:#fff;line-height:1;margin-bottom:2px;font-family:'Prompt', sans-serif;">—</div>
-                  <div style="font-size:12px;font-weight:600;color:#fff;line-height:1.2;font-family:'Prompt', sans-serif;text-shadow:0 1px 4px rgba(0,0,0,0.38);">เกินกำหนด</div>
+                  <div style="font-size:14px;font-weight:600;color:#fff;line-height:1.2;font-family:'Prompt', sans-serif;">เกินกำหนด</div>
                 </div>
               </div>
             </div>
@@ -311,8 +311,8 @@
       <div id="screen-borrow-form" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--bg-page);">
         <div class="gd-header" style="position:sticky;top:0;z-index:10;padding:14px 16px 16px;display:flex;align-items:center;gap:12px;">
           <button onclick="closeBorrowForm()" aria-label="ย้อนกลับ"
-                  style="width:32px;height:32px;border-radius:50%;background:#fff;
-                         border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;">
+                  style="width:44px;height:44px;border-radius:50%;background:#fff;
+                         border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
             <i data-lucide="arrow-left" style="width:16px;height:16px;color:#334155;"></i>
           </button>
           <div style="flex:1;">
@@ -327,8 +327,8 @@
       <div id="screen-return-detail" class="screen" style="position:absolute;inset:0;z-index:50;background:var(--bg-page);">
         <div class="gd-header" style="position:sticky;top:0;z-index:10;padding:14px 16px 16px;display:flex;align-items:center;gap:12px;">
           <button onclick="closeReturnDetail()" aria-label="ย้อนกลับ"
-                  style="width:32px;height:32px;border-radius:50%;background:#fff;
-                         border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;">
+                  style="width:44px;height:44px;border-radius:50%;background:#fff;
+                         border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
             <i data-lucide="arrow-left" style="width:16px;height:16px;color:#334155;"></i>
           </button>
           <div style="flex:1;">
@@ -341,7 +341,7 @@
       </div>
 
     </div><!-- end max-width wrapper -->
-  </div><!-- end app-root -->
+  </main><!-- end app-root -->
 
   <!-- Equipment Modal (Add/Edit) -->
   <div id="equipModal" role="dialog" aria-modal="true" aria-labelledby="equipModalTitle" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200" style="z-index:300;">
@@ -452,7 +452,7 @@
           <p id="catModalTitle" style="font-size:15px;font-weight:600;color:#0F172A;margin:0;font-family:'Prompt', sans-serif;">หมวดหมู่ที่เข้าถึงได้</p>
           <p id="catModalUserName" style="font-size:13px;color:#64748B;margin:4px 0 0;font-family:'Prompt', sans-serif;"></p>
         </div>
-        <button onclick="closeCatModal()" aria-label="ปิด" style="width:32px;height:32px;border-radius:50%;border:1px solid #E2E8F0;background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+        <button onclick="closeCatModal()" aria-label="ปิด" style="width:44px;height:44px;border-radius:50%;border:1px solid #E2E8F0;background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
       </div>
