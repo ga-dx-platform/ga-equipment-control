@@ -15,7 +15,7 @@
 
     :root {
       /* ── Brand ──────────────────────────────────────────── */
-      --orange-gradient: linear-gradient(135deg, #f97316 0%, #ea580c 52%, #c2410c 100%);
+      --orange-gradient: linear-gradient(135deg, #ea580c 0%, #c2410c 52%, #ea580c 100%);
       --orange:          #f97316;
       --orange-dark:     #c2410c;
       --orange-light:    #fff7ed;
@@ -1286,6 +1286,14 @@
       to   { transform: translateY(0)    scale(1);    opacity: 1; }
     }
 
+    .modal-close-btn {
+      min-width: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     /* ── 7. Auth screen ambient orbs ───────────────────────── */
     .auth-shell { position: relative !important; overflow: hidden !important; }
     .auth-shell::before,
@@ -1635,7 +1643,6 @@
     .chart-card {
       background: var(--mf-card) !important;
       border: 1px solid var(--mf-border-soft) !important;
-      border-left: 1px solid var(--mf-border-soft) !important;
       border-radius: 16px !important;
       padding: 18px !important;
       box-shadow: var(--mf-shadow-sm) !important;

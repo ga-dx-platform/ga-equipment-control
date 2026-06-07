@@ -2680,8 +2680,14 @@
     function closeCatModal() { hideModal('catModal'); }
     function catModalSetMode(mode) {
       _catModalMode = mode;
-      document.getElementById('catRadioAll').classList.toggle('active', mode === 'all');
-      document.getElementById('catRadioCustom').classList.toggle('active', mode === 'custom');
+      const rAll = document.getElementById('catRadioAll');
+      const rCustom = document.getElementById('catRadioCustom');
+      rAll.classList.toggle('active', mode === 'all');
+      rCustom.classList.toggle('active', mode === 'custom');
+      rAll.setAttribute('aria-checked', mode === 'all' ? 'true' : 'false');
+      rCustom.setAttribute('aria-checked', mode === 'custom' ? 'true' : 'false');
+      rAll.tabIndex = mode === 'all' ? 0 : -1;
+      rCustom.tabIndex = mode === 'custom' ? 0 : -1;
       const list = document.getElementById('catCheckboxList');
       if (mode === 'custom') {
         list.style.display = 'block';
@@ -3133,6 +3139,13 @@
     let analyticsLineChartInstance = null;
 
     function renderAnalyticsTab() {
+      if (typeof Chart === 'undefined') {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';
+        s.onload = () => renderAnalyticsTab();
+        document.head.appendChild(s);
+        return;
+      }
       const isMgr = CU.role === 'mgr';
       // Clear both containers to prevent duplicate canvas IDs
       ['tab-analytics-mgr','tab-analytics-ga'].forEach(id => {

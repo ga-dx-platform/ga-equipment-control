@@ -12,11 +12,10 @@
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap">
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" defer></script>
   <script>
     tailwind.config = {
       theme: {
@@ -210,14 +209,14 @@
                 <button onclick="openQRScanner()" title="สแกน QR" aria-label="สแกน QR Code"
                         style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
                                background:#fff;border:1px solid #e2e8f0;color:#475569;
-                               border-radius:8px;width:36px;height:36px;padding:0;cursor:pointer;">
+                               border-radius:8px;width:44px;height:44px;padding:0;cursor:pointer;">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M17 14h4"/><path d="M14 17v4"/><path d="M17 21h4v-4"/></svg>
                   <span style="font-size:11px;font-weight:600;line-height:1;font-family:'Prompt',sans-serif;">สแกน</span>
                 </button>
                 <button onclick="openChangePinModal()" title="เปลี่ยน PIN" aria-label="เปลี่ยน PIN"
                         style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
                                background:#fff;border:1px solid #e2e8f0;color:#475569;
-                               border-radius:8px;width:36px;height:36px;padding:0;cursor:pointer;
+                               border-radius:8px;width:44px;height:44px;padding:0;cursor:pointer;
                                font-family:'Prompt', sans-serif;">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>
                   <span style="font-size:11px;font-weight:600;line-height:1;font-family:'Prompt',sans-serif;">PIN</span>
@@ -225,7 +224,7 @@
                 <button onclick="confirmLogout()" title="ออกจากระบบ" aria-label="ออกจากระบบ"
                         style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
                                background:#fff;border:1px solid #e2e8f0;color:#475569;
-                               border-radius:8px;width:36px;height:36px;padding:0;cursor:pointer;
+                               border-radius:8px;width:44px;height:44px;padding:0;cursor:pointer;
                                font-family:'Prompt', sans-serif;">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                   <span style="font-size:11px;font-weight:600;line-height:1;font-family:'Prompt',sans-serif;">ออก</span>
@@ -349,18 +348,18 @@
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:380px;">
       <h3 id="equipModalTitle" class="font-bold text-gray-900 text-lg mb-4">เพิ่มอุปกรณ์</h3>
       <div class="space-y-3 ">
-        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">ชื่ออุปกรณ์</label>
+        <div><label for="eqName" class="text-sm font-semibold text-gray-500 mb-1.5 block">ชื่ออุปกรณ์</label>
           <input type="text" id="eqName" placeholder="เช่น โน๊ตบุ๊ค Dell" class="gd-input"></div>
-        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">หมวดหมู่</label>
+        <div><label for="eqCategory" class="text-sm font-semibold text-gray-500 mb-1.5 block">หมวดหมู่</label>
           <select id="eqCategory" class="gd-input">
             <option value="">เลือกหมวดหมู่</option>
           </select></div>
-        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">Serial No. <span class="font-normal text-gray-400">(ไม่บังคับ)</span></label>
+        <div><label for="eqSerial" class="text-sm font-semibold text-gray-500 mb-1.5 block">Serial No. <span class="font-normal text-gray-400">(ไม่บังคับ)</span></label>
           <input type="text" id="eqSerial" placeholder="เช่น SN-12345" class="gd-input"></div>
-        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">จำนวนทั้งหมด</label>
+        <div><label for="eqQty" class="text-sm font-semibold text-gray-500 mb-1.5 block">จำนวนทั้งหมด</label>
           <input type="number" id="eqQty" placeholder="1" min="1" inputmode="numeric" class="gd-input"></div>
         <div>
-          <label class="text-sm font-semibold text-gray-500 mb-1.5 block">รูปอุปกรณ์ <span class="font-normal text-gray-400">(ไม่บังคับ)</span></label>
+          <label for="equip-image-input" class="text-sm font-semibold text-gray-500 mb-1.5 block">รูปอุปกรณ์ <span class="font-normal text-gray-400">(ไม่บังคับ)</span></label>
           <div id="equip-image-preview" class="hidden mt-1 mb-2">
             <img id="equip-image-preview-img" alt="ตัวอย่างรูปอุปกรณ์" class="w-20 h-20 object-cover rounded-xl border border-gray-200"/>
           </div>
@@ -408,14 +407,14 @@
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:360px;">
       <h3 id="userModalTitle" class="font-bold text-gray-900 text-lg mb-4">เพิ่มสมาชิกใหม่</h3>
       <div class="space-y-3 ">
-        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
+        <div><label for="newUserName" class="text-sm font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
           <input type="text" id="newUserName" placeholder="เช่น สมชาย ใจดี" class="gd-input"></div>
-        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">ตำแหน่ง/สิทธิ์</label>
+        <div><label for="newUserRole" class="text-sm font-semibold text-gray-500 mb-1.5 block">ตำแหน่ง/สิทธิ์</label>
           <select id="newUserRole" class="gd-input">
             <option value="ga">เจ้าหน้าที่ GA</option>
             <option value="mgr">ผู้ดูแลระบบ (Manager)</option>
           </select></div>
-        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">รหัส PIN (6 หลัก)</label>
+        <div><label for="newUserPin" class="text-sm font-semibold text-gray-500 mb-1.5 block">รหัส PIN (6 หลัก)</label>
           <input type="password" id="newUserPin" maxlength="6" placeholder="••••••" inputmode="numeric" class="gd-input text-center tracking-widest font-bold"></div>
       </div>
       <div class="flex gap-3 mt-6">
@@ -431,9 +430,9 @@
     <div class="relative w-full gd-modal-panel mx-4 md:mx-auto max-h-[90vh] overflow-y-auto" style="max-width:360px;">
       <h3 id="recipientModalTitle" class="font-bold text-gray-900 text-lg mb-4">เพิ่มผู้รับรายงาน</h3>
       <div class="space-y-3 ">
-        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
+        <div><label for="recipientName" class="text-sm font-semibold text-gray-500 mb-1.5 block">ชื่อ-นามสกุล</label>
           <input type="text" id="recipientName" placeholder="เช่น สมชาย จิตรดี" class="gd-input"></div>
-        <div><label class="text-sm font-semibold text-gray-500 mb-1.5 block">อีเมล</label>
+        <div><label for="recipientEmail" class="text-sm font-semibold text-gray-500 mb-1.5 block">อีเมล</label>
           <input type="email" id="recipientEmail" placeholder="example@company.com" class="gd-input"></div>
       </div>
       <div class="flex gap-3 mt-6">
@@ -457,13 +456,15 @@
         </button>
       </div>
       <!-- Mode radio -->
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+      <div role="radiogroup" aria-label="โหมดการเข้าถึง" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
         <label class="cat-modal-radio-row" onclick="catModalSetMode('all')">
-          <span id="catRadioAll" class="cat-modal-radio active"></span>
+          <span id="catRadioAll" class="cat-modal-radio active" role="radio" aria-label="เห็นทุกหมวดหมู่" aria-checked="true" tabindex="0"
+                onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();catModalSetMode('all')}"></span>
           <span style="font-size:14px;font-family:'Prompt', sans-serif;">เห็นทุกหมวดหมู่</span>
         </label>
         <label class="cat-modal-radio-row" onclick="catModalSetMode('custom')">
-          <span id="catRadioCustom" class="cat-modal-radio"></span>
+          <span id="catRadioCustom" class="cat-modal-radio" role="radio" aria-label="เลือกเฉพาะหมวด" aria-checked="false" tabindex="-1"
+                onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();catModalSetMode('custom')}"></span>
           <span style="font-size:14px;font-family:'Prompt', sans-serif;">เลือกเฉพาะหมวด</span>
         </label>
       </div>
@@ -538,7 +539,7 @@
   </div>
 
   <!-- Record Detail Modal -->
-  <div id="record-detail-modal" class="hidden fixed inset-0 z-[300] flex items-center justify-center">
+  <div id="record-detail-modal" role="dialog" aria-modal="true" aria-labelledby="record-detail-title" class="hidden fixed inset-0 z-[300] flex items-center justify-center">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeRecordDetail()"></div>
     <div class="relative bg-white border border-stone-200 rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto text-[#1c1917]">
       <!-- Header -->
@@ -546,10 +547,10 @@
         <svg viewBox="0 0 400 24" preserveAspectRatio="none" class="absolute bottom-0 left-0 w-full h-6 pointer-events-none">
           <path d="M0,12 Q100,24 200,12 Q300,0 400,12 L400,24 L0,24 Z" fill="rgba(255,255,255,0.25)"></path>
         </svg>
-        <h3 class="font-bold text-white text-lg relative z-10">รายละเอียดการยืม</h3>
+        <h3 id="record-detail-title" class="font-bold text-white text-lg relative z-10">รายละเอียดการยืม</h3>
         <div class="relative z-10 flex items-center gap-2">
           <button onclick="printRecord()" class="text-white/90 hover:text-white text-sm border border-white/40 rounded-lg px-2 py-1">Print</button>
-          <button onclick="closeRecordDetail()" class="text-white/80 hover:text-white text-xl leading-none">✕</button>
+          <button onclick="closeRecordDetail()" aria-label="ปิด" class="modal-close-btn text-white/80 hover:text-white text-xl leading-none">✕</button>
         </div>
       </div>
       <div class="p-6 space-y-5">
